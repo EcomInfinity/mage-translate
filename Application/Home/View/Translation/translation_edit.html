@@ -1,0 +1,7 @@
+			<table border="1">
+				<tr><th>Type</th><th>Info</th></tr>
+				<foreach name="translation_detail" item="vo">
+				<tr><td><{$vo.type}></td><td><input type="text" id="transla-id" translation-id="<{$vo.id}>" value="<{$vo.info}>" /></td></tr>
+				</foreach>
+				<tr><td colspan="2"><form action="__URL__/translation_edit" method="post" id="testa" enctype="multipart/form-data"><input type="file" name="images" id="test" en-id="<{$en_id}>" /></form></td></tr>
+			</table>

@@ -1,0 +1,6 @@
+			<table border="1">
+				<tr><th>ID</th><th>Title</th><th>Info</th><th>Operation</th></tr>
+				<foreach name="translation_list" item="vo">
+					<tr><td><{$vo.id}></td><td><{$vo.title}></td><td><{$vo.info}></td><td><a href="javascript:void(0);" translation-id="<{$vo.id}>" id="edit_translation">Operation</a></td></tr>
+				</foreach>
+			</table>
