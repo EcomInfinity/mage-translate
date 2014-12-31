@@ -6,49 +6,57 @@ jQuery.extend({
 	{
 			//create frame
             var frameId = 'jUploadFrame' + id;
-            var iframeHtml = '<iframe id="' + frameId + '" name="' + frameId + '" style="position:absolute; top:-9999px; left:-9999px"';
-			if(window.ActiveXObject)
-			{
+            
+            if(window.ActiveXObject) {
+                var io = document.createElement('<iframe id="' + frameId + '" name="' + frameId + '" />');
                 if(typeof uri== 'boolean'){
-					iframeHtml += ' src="' + 'javascript:false' + '"';
-
+                    io.src = 'javascript:false';
                 }
                 else if(typeof uri== 'string'){
-					iframeHtml += ' src="' + uri + '"';
+                    io.src = uri;
+                }
+            }
+            else {
+                var io = document.createElement('iframe');
+                io.id = frameId;
+                io.name = frameId;
+            }
+            io.style.position = 'absolute';
+            io.style.top = '-1000px';
+            io.style.left = '-1000px';
 
-                }	
-			}
-			iframeHtml += ' />';
-			jQuery(iframeHtml).appendTo(document.body);
+            document.body.appendChild(io);
 
-            return jQuery('#' + frameId).get(0);			
+            return io			
     },
-    createUploadForm: function(id, fileElementId, data)
+
+    handleError: function( s, xhr, status, e ) {
+        // If a local callback was specified, fire it
+        if ( s.error ) {
+            s.error.call( s.context || window, xhr, status, e );
+        }
+
+        // Fire the global callback
+        if ( s.global ) {
+            (s.context ? jQuery(s.context) : jQuery.event).trigger( "ajaxError", [xhr, s, e] );
+        }
+    },
+    createUploadForm: function(id, fileElementId)
 	{
 		//create form	
 		var formId = 'jUploadForm' + id;
 		var fileId = 'jUploadFile' + id;
-		var form = jQuery('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');	
-		if(data)
-		{
-			for(var i in data)
-			{
-				jQuery('<input type="hidden" name="' + i + '" value="' + data[i] + '" />').appendTo(form);
-			}			
-		}		
-		var oldElement = jQuery('#' + fileElementId);
-		var newElement = jQuery(oldElement).clone();
-		jQuery(oldElement).attr('id', fileId);
-		jQuery(oldElement).before(newElement);
-		jQuery(oldElement).appendTo(form);
-
-
-		
+		var form = $('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');	
+		var oldElement = $('#' + fileElementId);
+		var newElement = $(oldElement).clone();
+		$(oldElement).attr('id', fileId);
+		$(oldElement).before(newElement);
+		$(oldElement).appendTo(form);
 		//set attributes
-		jQuery(form).css('position', 'absolute');
-		jQuery(form).css('top', '-1200px');
-		jQuery(form).css('left', '-1200px');
-		jQuery(form).appendTo('body');		
+		$(form).css('position', 'absolute');
+		$(form).css('top', '-1200px');
+		$(form).css('left', '-1200px');
+		$(form).appendTo('body');		
 		return form;
     },
 
@@ -56,7 +64,7 @@ jQuery.extend({
         // TODO introduce global settings, allowing the client to modify them for all requests, not only timeout		
         s = jQuery.extend({}, jQuery.ajaxSettings, s);
         var id = new Date().getTime()        
-		var form = jQuery.createUploadForm(id, s.fileElementId, (typeof(s.data)=='undefined'?false:s.data));
+		var form = jQuery.createUploadForm(id, s.fileElementId);
 		var io = jQuery.createUploadIframe(id, s.secureuri);
 		var frameId = 'jUploadFrame' + id;
 		var formId = 'jUploadForm' + id;		
@@ -133,8 +141,8 @@ jQuery.extend({
                 setTimeout(function()
 									{	try 
 										{
-											jQuery(io).remove();
-											jQuery(form).remove();	
+											$(io).remove();
+											$(form).remove();	
 											
 										} catch(e) 
 										{
@@ -157,27 +165,31 @@ jQuery.extend({
         }
         try 
 		{
-
-			var form = jQuery('#' + formId);
-			jQuery(form).attr('action', s.url);
-			jQuery(form).attr('method', 'POST');
-			jQuery(form).attr('target', frameId);
+           // var io = $('#' + frameId);
+			var form = $('#' + formId);
+			$(form).attr('action', s.url);
+			$(form).attr('method', 'POST');
+			$(form).attr('target', frameId);
             if(form.encoding)
 			{
-				jQuery(form).attr('encoding', 'multipart/form-data');      			
+                form.encoding = 'multipart/form-data';				
             }
             else
-			{	
-				jQuery(form).attr('enctype', 'multipart/form-data');			
+			{				
+                form.enctype = 'multipart/form-data';
             }			
-            jQuery(form).submit();
+            $(form).submit();
 
         } catch(e) 
 		{			
             jQuery.handleError(s, xml, null, e);
         }
-		
-		jQuery('#' + frameId).load(uploadCallback	);
+        if(window.attachEvent){
+            document.getElementById(frameId).attachEvent('onload', uploadCallback);
+        }
+        else{
+            document.getElementById(frameId).addEventListener('load', uploadCallback, false);
+        } 		
         return {abort: function () {}};	
 
     },
@@ -194,7 +206,7 @@ jQuery.extend({
         // evaluate scripts within html
         if ( type == "html" )
             jQuery("<div>").html(data).evalScripts();
-
+			//alert($('param', data).each(function(){alert($(this).attr('value'));}));
         return data;
     }
 })

@@ -10,8 +10,11 @@ return array(
 	'DB_USER' => 'root',
 	'DB_PWD' => '123456',
 	'DB_PREFIX' =>'rs_',
-	'SHOW_PAGE_TRACE'=>True,
-	'DB_SQL_LOG' => true,
+	//'SHOW_PAGE_TRACE'=>True,
+	//'DB_SQL_LOG' => true,
 	'MODULE_ALLOW_LIST'    =>    array('Home'),
 	'DEFAULT_MODULE' => 'Home',
+	'TMPL_PARSE_STRING' => array(
+	'__UPLOADS__' => __ROOT__.'/Uploads',
+	),
 );

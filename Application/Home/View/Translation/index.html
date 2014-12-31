@@ -1,40 +1,35 @@
 <html>
 <head>
+	
 	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-	<!-- <load href="__PUBLIC__/js/utility.js" />
-	<load href="__PUBLIC__/js/main.js" /> -->
-	<script type="text/javascript">
-	$.fn.serializeObject = function() {
-		var o = {};
-		var a = this.serializeArray();
-		$.each(a, function() {
-			if (o[this.name]) {
-				if (!o[this.name].push) {
-					o[this.name] = [o[this.name]];
-				}
-				o[this.name].push(this.value || '');
-			} else {
-				o[this.name] = this.value || '';
-			}
-		});
-		return o;
-	};
-	</script>
+<!-- 	<load href="__PUBLIC__/js/jquery.js" />
+	<load href="__PUBLIC__/js/jquery.min.js" />
+	<load href="__PUBLIC__/js/jquery.min.map" /> -->
+<!-- 	<load href="__PUBLIC__/js/underscore.js" />
+	<load href="__PUBLIC__/js/backbone.js" />
+	<load href="__PUBLIC__/js/backbone.localStorage.js" />
+	<load href="__PUBLIC__/js/base.js" /> -->
+	<load href="__PUBLIC__/js/utility.js" />
+	<load href="__PUBLIC__/js/main.js" />
 	<load href="__PUBLIC__/js/ajaxfileupload.js" />
+	<load href="__PUBLIC__/css/main.css" />
 </head>
 <body>
 	<div style="width:960px;margin:0 auto;">
 		<div class="nav">
 			<ul>
-				<li id="translation_add">New</li>
-				<li>List</li>
+				<li class="translation_add"><a href="javascript:void(0);">New</a></li>
+				<li><a href="#">List</a></li>
 			</ul>
 		</div>
-		<div class="search">
-			<input type="text" name="search" id="search" />
+		<div>
+			<input type="text" name="search" class="search" />
+		</div>
+		<div class="export">
+			<a href="javascript:void(0);">Export</a>
 		</div>
 		<div class="block block-translation-list" style="border:1px solid red;">
-		<include file="Translation/translation_list" />
+			<include file="Translation/translation_list" />
 		</div>
 		<div class="block block-translation-detail" style="border:1px solid red;">
 		</div>
@@ -42,87 +37,5 @@
 			<include file="Translation/translation_add" />
 		</div>
 	</div>
-	<script type="text/javascript">
-	(function($) {
-		$(function(){
-			 $('body').on('click', '#edit_translation', function() {
-			 	var translation_id = $(this).attr("translation-id");
-			 	$.post("__URL__/translation_edit",{id:translation_id},function(data){
-			 		$('.block-translation-detail').html(data);
-			 	});
-			 });
-			 $('body').on('change', '#transla-id', function(){
-			 	var translation_id = $(this).attr("translation-id"),
-			 		translation_info = $(this).val();
-			 	$.post('__URL__/translation_edit',{edit_id:translation_id,edit_info:translation_info},function(data){
-			 			if(data==1){
-			 				$.post('__URL__/translation_list',{render:1},function(data){
-			 					$('.block-translation-list').html(data);
-			 				});
-			 			}
-			 	});
-			 });
-			 $('body').on('click', '#translation_add', function(){	
-			 	$(".block-translation-add").toggle();
-			 });
-
-			 $('body').on('click', '.btn-add', function() {
-			 	var $form = $(this).closest('form'),
-			 		data_form = $form.serializeObject();
-					 $.post('__URL__/translation_add',data_form,function(data){
-							$('.block-translation-add').html(data);
-					 });
-			 });
-
-			 // $('body').on('click', '#translation_submit', function(){	
-			 // 	var en = $("input[name='en']").val(),
-			 // 		de = $("input[name='de']").val(),
-				//  	nl = $("input[name='nl']").val(),
-				//  	fn = $("input[name='fn']").val();
-				//  $.post('__URL__/translation_add',{en:en,de:de,nl:nl,fn:fn},function(data){
-				// 		$('.block-translation-add').html(data);
-				//  });
-			 // });
-			 $('body').on('change', '#lang_select', function(){
-			 	var same_id = $(this).val();
-			 	if(same_id != 0){
-			 		$("input[name='images']").hide();
-			 	}else{
-			 		$("input[name='images']").show();
-			 	}
-			 });
-			 $('body').on('change','#images',function(){
-			 	var en_id = $(this).attr('en-id');
-			 	ajaxFileUpload('__URL__/translation_edit/en_id/'+en_id);
-			 });
-			 $('body').on('keypress','#search',function(event){
-			 	if(event.keyCode == '13'){
-			 		var search = $(this).val();
-			 		$.post('__URL__/translation_list',{search:search,render_search:1},function(data){
-			 			$('.block-translation-list').html(data);
-			 		});
-			 	}
-			 });
-		});
-	})(jQuery); 
-	</script>
-    <script type="text/javascript">
-          function ajaxFileUpload(url){
-               $.ajaxFileUpload(
-                   {
-		                url:url,            
-		                secureuri:false,
-		                fileElementId:'images',                      
-		                dataType: 'xml',                                  
-		                success: function (data, status)            
-		                {      
-		                    $('#result').html('Add success');
-		                },
-		                error: function (data, status, e)            
-		                {
-		                    $('#result').html('Add Fail');
-		                }
-            		}                  
-               );              
-          }
-      </script>
+</body>
+</html>

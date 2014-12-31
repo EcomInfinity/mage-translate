@@ -5,18 +5,24 @@
  					<input type="hidden" value="<{$vo}>" name="transla-id"/>
 					<php>}</php>
  					<php>if($k!='id'){</php>
-		 				<tr><td><{$k|strtoupper}></td><td><input type="text"  value="<{$vo}>" /></td></tr> 
+		 				<tr><td><{$k|strtoupper}></td><td><input type="text"  lang_type="<{$k}>" class="lang_edit" value="<{$vo}>" /></td></tr> 
 					<php>}</php>
 				</foreach>
  			</table>
 			<div>
-			<form action="__URL__/translation_edit" method="post" id="testa" enctype="multipart/form-data"><input type="file" name="images" id="images" en-id="<{$en_id}>" /></form>
-			<div id="result"></div><br><br>
-			<div class="images_list">
-				<ul>
-				<foreach name="images_list" item="vo">
-					<li><img src="__UPLOADS__/Translation/<{$vo.image_name}>" alt=""></li>
-				</foreach>
-			</ul>
-			</div>
+				<form action="__URL__/translation_edit" method="post" enctype="multipart/form-data">
+					<input type="file" name="images" id="images" en-id="<{$en_id}>" />
+				</form>
+				<div class="images_list">
+					<ul>
+						<foreach name="images_list" item="vo">
+							<li>
+								<img src="__UPLOADS__/Translation/<{$vo.image_name}>" alt="">
+								<div class="btn-set">
+									<a href="javascript:void(0);" class="del_image" image-id="<{$vo.id}>" image-name="<{$vo.image_name}>">Del</a>
+								</div>
+							</li>
+						</foreach>
+					</ul>
+				</div>
 			</div>
