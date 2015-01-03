@@ -1,28 +1,36 @@
- 			<table>
-				<tr><th>Type</th><th>Info</th></tr> 
-				<foreach name="translation_detail" item="vo" key="k">
- 					<php>if($k=='id'){</php>
- 					<input type="hidden" value="<{$vo}>" name="transla-id"/>
-					<php>}</php>
- 					<php>if($k!='id'){</php>
-		 				<tr><td><{$k|strtoupper}></td><td><input type="text"  lang_type="<{$k}>" class="lang_edit" value="<{$vo}>" /></td></tr> 
-					<php>}</php>
-				</foreach>
- 			</table>
-			<div>
-				<form action="__URL__/translation_edit" method="post" enctype="multipart/form-data">
-					<input type="file" name="images" id="images" en-id="<{$en_id}>" />
-				</form>
-				<div class="images_list">
-					<ul>
-						<foreach name="images_list" item="vo">
-							<li>
-								<img src="__UPLOADS__/Translation/<{$vo.image_name}>" alt="">
-								<div class="btn-set">
-									<a href="javascript:void(0);" class="del_image" image-id="<{$vo.id}>" image-name="<{$vo.image_name}>">Del</a>
-								</div>
-							</li>
-						</foreach>
-					</ul>
+
+<!-- <form action=""> -->
+<div class="col col5 fl">
+	<div class="form-holder">
+		<foreach name="translation_detail" item="vo" key="k">
+		<php> if ($k == 'id') {</php>
+		<input type="hidden" value="<{$vo}>" name="transla-id"/>
+		<php> continue </php>
+		<php> } </php>
+		<div class="entry">
+			<label for="edit-<{$k}>"><{$k|strtoupper}></label>
+			<input id="edit-<{$k}>" type="text" lang_type="<{$k}>" class="lang_edit" value="<{$vo}>">
+		</div>
+		</foreach>
+		<form action="__URL__/translation_edit" method="post" enctype="multipart/form-data">
+			<input type="file" name="images" id="images" en-id="<{$en_id}>" />
+		</form>
+	</div>
+	<div class="btn-set">
+		<a href="#" class="btn btn-cancel btn-default">Cancel</a>
+	</div>
+</div>
+<!-- </form> -->
+
+<div class="images_list col col5 fr">
+	<ul>
+		<foreach name="images_list" item="vo">
+			<li>
+				<img src="__UPLOADS__/Translation/<{$vo.image_name}>" alt="">
+				<div class="btn-set">
+					<a href="javascript:void(0);" class="btn btn-image-delete" image-id="<{$vo.id}>" image-name="<{$vo.image_name}>">X</a>
 				</div>
-			</div>
+			</li>
+		</foreach>
+	</ul>
+</div>

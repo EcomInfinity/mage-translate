@@ -1,8 +1,29 @@
-			<table border="1">
-				<tr><th>ID</th><th>EN</th><th>DE</th><th>NL</th><th>FR</th><th>Remarks</th><th>Operation</th></tr>
-				<foreach name="translation_list" item="vo">
-					<tr><td><{$vo.id}></td><td><{$vo.en}></td><td><{$vo.de}></td><td><{$vo.nl}></td><td><{$vo.fr}></td><td><{$vo.remarks}></td><td><a href="javascript:void(0);" translation-id="<{$vo.id}>" class="edit_translation">Edit</a>  
-						<a href="javascript:void(0);" translation-id="<{$vo.id}>" class="del_translation">Delect</a>
-					</td></tr>
-				</foreach>
-			</table>
+<table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>EN</th>
+      <th>DE</th>
+      <th>NL</th>
+      <th>FR</th>
+      <th>Remarks</th>
+      <th>Operation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <foreach name="translation_list" item="vo">
+    <tr  data-id="<{$vo.id}>">
+      <td><{$vo.id}></td>
+      <td><{$vo.en}></td>
+      <td><{$vo.de}></td>
+      <td><{$vo.nl}></td>
+      <td><{$vo.fr}></td>
+      <td><{$vo.remarks}></td>
+      <td>
+        <a href="#" class="btn-edit">Edit</a>
+        <a href="#" class="btn-delete">Delect</a>
+      </td>
+    </tr>
+  </foreach>  
+  </tbody>
+</table>

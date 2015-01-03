@@ -1,21 +1,34 @@
 (function($) {
 		$(function(){
 			//click Edit
-			 $('body').on('click', '.edit_translation', function() {
-			 	var lang_id = $(this).attr("translation-id");
-			 	$.post("Translation/translation_edit",{id:lang_id},function(data){
-			 		$('.block-translation-detail').html(data);
-			 	});
+			 $('body').on('click', '.btn-edit', function() {
+			 	var id = $(this).closest('tr').data('id');
+			 	$.post(
+			 		"Translation/translation_edit",
+			 		{ id: id },
+			 		function(data){
+				 		$('.block-translation-detail').html(data).show()
+				 	});
 			 });
+
 			 //click Delect
-			 $('body').on('click', '.del_translation', function(){
-			 	var lang_id = $(this).attr("translation-id");
-			 	$.post("Translation/translation_del",{id:lang_id},function(data){
-	 				$.post('Translation/translation_list',{render:1},function(data){
-	 					$('.block-translation-list').html(data);
-	 				});
-			 	});
+			 $('body').on('click', '.btn-delete', function(){
+			 	var id = $(this).closest('tr').data('id');
+			 	$.post(
+			 		"Translation/translation_del",
+			 		{ id: id },
+			 		function(data) {
+		 				$.post('Translation/translation_list',{render:1},function(data){
+		 					$('.block-translation-list').html(data);
+		 				});
+				 	});
 			 });
+
+			 $('.block').on('click', '.btn-cancel', function() {
+			 	$(this).closest('.block').hide();
+			 	return false;
+			 });
+
 			 //edit lang info
 			 $('body').on('change', '.lang_edit', function(){
 			 	var lang_type = $(this).attr("lang_type"),
@@ -30,9 +43,11 @@
 			 			}
 			 	});
 			 });
+
 			 //add lang
-			 $('body').on('click', '.translation_add', function(){	
+			 $('body').on('click', '.btn-new', function() {
 			 	$(".block-translation-add").toggle();
+			 	return false;
 			 });
 
 			 $('body').on('click', '.btn-add', function() {
@@ -54,12 +69,16 @@
 			 $('body').on('keypress','.search',function(event){
 			 	if(event.keyCode == '13'){
 			 		var search = $(this).val();
-			 		$.post('Translation/translation_list',{search:search,render_search:1},function(data){
-			 			$('.block-translation-list').html(data);
-			 		});
+			 		$.iajax(
+			 			'Translation/translation_list',
+			 			{ search: search, render_search: 1 },
+			 			function(response) { 
+				 			$('.block-translation-list').html(response);
+				 		}
+			 		);
 			 	}
 			 });
-			 $('body').on('click','.del_image',function(){
+			 $('body').on('click','.btn-image-delete',function(){
 			 	var image_id = $(this).attr('image-id'),
 			 		image_name = $(this).attr('image-name'),
 			 		lang_id = $("input[name='transla-id']").val();
@@ -69,7 +88,7 @@
 			 		});
 			 });
 			 $('body').on('click','.export',function(){
-				window.location.href="Translation/translation_export";		 	
+				window.location.href="Translation/translation_export";
 			 });
 		});
 	      function ajaxFileUpload(url,lang_id){
