@@ -13,3 +13,26 @@ $.fn.serializeObject = function() {
 	});
 	return o;
 };
+
+$.iajax = function(url, data, callback, failure) {
+	if (typeof callback !== 'function') {
+		callback = function() {};
+	}
+
+	if (typeof failure !== 'function') {
+		failure = function() {};
+	}
+
+	$.ajax({
+		url: url,
+		data: data,
+		type: 'POST',
+		beforeSend: function() { $.fancybox.showLoading(); }
+	}).done(function(response) {
+		$.fancybox.hideLoading();
+		callback(response);
+	}).fail(function(response) {
+		$.fancybox.hideLoading();
+		failure(response);
+	});
+};

@@ -1,2 +1,23 @@
-ul{list-style-type: none;}
-.images_list li{float: left;margin-left: 10px;border:1px solid red; }
+img { width: 100%; }
+.page-width { width: 960px; margin: 0 auto; }
+
+input[type="text"] { width: 100%; padding: 10px; }
+main { margin-top: 60px; }
+main .search-box { width: 100%; margin-bottom: 10px; }
+
+table { width: 100%; }
+table td, table th { padding: 5px; }
+
+.block { margin: 10px; }
+
+.tbl-translation-list { }
+
+.btn-set { margin-top: 10px; }
+
+.col5 { width: 49%; }
+.fl { float: left; }
+.fr { float: right; }
+
+.images_list ul li { position: relative; width: 24%; border: 1px solid #ddd; padding: 5px; }
+.images_list ul li .btn-image-delete { position: absolute; top: 5px; right: 5px; background: #000; opacity: 0.5; transition: .3s all ease-in-out; }
+.images_list ul li .btn-image-delete:hover { opacity: 1; }

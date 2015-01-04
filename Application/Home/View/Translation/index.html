@@ -1,41 +1,81 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	
-	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-<!-- 	<load href="__PUBLIC__/js/jquery.js" />
-	<load href="__PUBLIC__/js/jquery.min.js" />
-	<load href="__PUBLIC__/js/jquery.min.map" /> -->
+	<title>Mage Translation</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<load href="__PUBLIC__/css/reset.css" />
+	<load href="__PUBLIC__/css/lib/bootstrap.css" />
+	<load href="__PUBLIC__/css/lib/bootstrap-theme.css" />
+	<load href="__PUBLIC__/css/lib/jquery.fancybox.css" />
+	<load href="__PUBLIC__/css/main.css" />
+
+	<load href="__PUBLIC__/js/lib/jquery.js" />
+	<load href="__PUBLIC__/js/lib/bootstrap.js" />
+	<load href="__PUBLIC__/js/lib/jquery.fancybox.js" />
 	<load href="__PUBLIC__/js/underscore.js" />
 	<load href="__PUBLIC__/js/backbone.js" />
 	<load href="__PUBLIC__/js/backbone.localStorage.js" />
 	<load href="__PUBLIC__/js/base.js" />
 	<load href="__PUBLIC__/js/utility.js" />
-	<load href="__PUBLIC__/js/main.js" />
 	<load href="__PUBLIC__/js/ajaxfileupload.js" />
-	<load href="__PUBLIC__/css/main.css" />
+	<load href="__PUBLIC__/js/main.js" />
+	
+	
 </head>
 <body>
-	<div style="width:960px;margin:0 auto;">
-		<div class="nav">
-			<ul>
-				<li class="translation_add"><a href="javascript:void(0);">New</a></li>
-				<li><a href="#">List</a></li>
-			</ul>
-		</div>
-		<div>
-			<input type="text" name="search" class="search" />
-		</div>
-		<div class="export">
-			<a href="javascript:void(0);">Export</a>
-		</div>
-		<div class="block block-translation-list" style="border:1px solid red;">
-			<include file="Translation/translation_list" />
-		</div>
-		<div class="block block-translation-detail" style="border:1px solid red;">
-		</div>
-		<div class="block block-translation-add" style="border:1px solid red; display: none;">
-			<include file="Translation/translation_add" />
-		</div>
+	<div class="body-wrapper page-width">
+		<!-- documentation: http://getbootstrap.com/components/#navbar -->
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid page-width">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed">
+					</button>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="#" class="btn-new">New</a></li>
+						<li><a href="#">List</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<main>
+			<!-- <div class="export">
+				<a href="javascript:void(0);">Export</a>
+			</div> -->
+			<div class="container-fluid page-width">
+
+				<h1>Mage Translation</h1>
+
+				<div class="search-box">
+					<!-- <form action="" data-get=""> -->
+						<div class="form-holder">
+							<div class="entry">
+								<input type="text" name="search" class="search" placeholder="Search EN ..."/>
+							</div>
+						</div>
+					<!-- </form> -->
+				</div>
+
+				<div class="block block-translation-list">
+					<include file="Translation/translation_list" />
+				</div>
+
+				<div class="block block-translation-detail">
+				</div>
+
+				<div class="block block-translation-add" style="border:1px solid red; display: none;">
+					<include file="Translation/translation_add" />
+				</div>
+			</div>
+		</main>
+
+		
+
+
+
 	</div>
 </body>
 </html>
