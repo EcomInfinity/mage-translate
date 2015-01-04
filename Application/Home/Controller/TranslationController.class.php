@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+header('Content-Type: application/json; charset=utf-8');
 class TranslationController extends Controller {
     public function index(){
     	$translation_model = M('translation');
@@ -18,10 +19,10 @@ class TranslationController extends Controller {
  	    if($_POST['render_search']==1){
 			$search = $_POST['search'];
 			$where['en'] = array('like','%'.$search.'%');
-			$where['de'] = array('like','%'.$search.'%');
+/*			$where['de'] = array('like','%'.$search.'%');
 			$where['nl'] = array('like','%'.$search.'%');
 			$where['fr'] = array('like','%'.$search.'%');
-			$where['_logic'] = 'or';
+			$where['_logic'] = 'or';*/
 			if($_POST['search']!=null){
 				$translation_list=$translation_model->where($where)->select();
 			}else{
@@ -120,10 +121,13 @@ class TranslationController extends Controller {
     	$title=array('id','EN','DE','NL','FR','Remarks');
     	exportexcel($data,$title);
     }
-    // public function translation_test(){
-    // 	$translation_model=M('translation');
-    // 	$where['id'] = 135;
-    // 	$translation_list=$translation_model->select();
-    // 	echo json_encode($translation_list);
-    // }
+    public function translation_test(){
+    	$translation_model=M('translation');
+    	//$m=json_decode(file_get_contents("php://input"),true);
+    	//file_put_contents("data.txt", $man->id);
+    	//$where['id'] = $m['id'];
+    	$translation_list=$translation_model->select();
+    	echo json_encode($translation_list);
+    	// var_dump(json_encode($translation_list));
+    }
 }
