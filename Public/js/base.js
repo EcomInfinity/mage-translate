@@ -93,6 +93,7 @@ var man = new lang.Model.Test();
 
             lang.View.TranslationLang = Backbone.View.extend({
             	initialize: function(options){
+            		var _self = this;
             		options || (options = {});
 
             		this.editView = new lang.View.LanguageEditView({
@@ -100,10 +101,10 @@ var man = new lang.Model.Test();
             		});
 					man.save({},{success:function(model,response){  
 		                //console.log(response);
-		                this.listView  = new lang.View.LanguageListView({
+		                _self.listView  = new lang.View.LanguageListView({
 							el: '.block-list',
 							lists: response,
-							//editView: this.editView
+							editView: _self.editView
 						});
 		            }});
             	}
