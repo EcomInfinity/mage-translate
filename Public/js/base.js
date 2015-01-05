@@ -21,22 +21,8 @@ jQuery(function() {
 					'timestamp':-1
 				}
 			});
-lang.Model.Test = Backbone.Model.extend({
-	url:"Translation/translation_test",
-	// initialize: function(){
-	// 	this.bind("change:data",function(){
-	// 		var name = this.get("data");
-	// 		alert(JSON.stringify(name));
-	// 	});
-	// 	this.bind("error",function(model,error){
-	// 		alert(JSON.stringify(error));
-	// 	});
-	// },
-	defaults:{
-		id:-1
-	}
-});
-var man = new lang.Model.Test();
+
+			var translate = new lang.Model.Base();
 
 
 
@@ -51,43 +37,70 @@ var man = new lang.Model.Test();
 				localStorage: new Backbone.LocalStorage('lang.langlocator,langs'),
 			});
 
-			lang.View.LanguageEditView = Backbone.View.extend({
-				template: _.template($('#tpl-lang-edit').html()),
-				events:{
-					'click #btn-test': 'editLanguage'
-				},
-				editLanguage: function(event){
-					this.edit_id = $(event.target).closest('tr').data('id');
-				},
-				initialize: function(options){
-					options || (options = {});
-					this.render();
-				},
-				render: function(){
-					var data = {a:'1'};
-					this.$el.html(this.template(data));
-				}
-			});
-
 			lang.View.LanguageListView = Backbone.View.extend({
 				template: _.template($('#tpl-lang-list').html()),
 				events:{
-					'click .btn-edit': 'editLanguage'
+					'click .btn-edit': 'editLanguage',
+					'click .btn-delete': 'deleteLanguage'
 				},
 				editLanguage: function(event){
 					this.edit_id = $(event.target).closest('tr').data('id');
-					console.log(this.edit_id);
+					this.editView.setLanguage(this.edit_id).render();
+				},
+				deleteLanguage: function(event){
+					this.del_id = $(event.target).closest('tr').data('id');
+					translate.save({id:this.del_id},{url:'Translation/translation_del'}).done(function (response){
+						console.log(response);
+					});
 				},
 				initialize: function(options){
 					options || (options = {});
 					this.lists = options.lists;
+					this.editView = options.editView;
 					this.render();
 				},
 				render: function(){
 					var data = {};
 					data['lists'] = this.lists;
-					console.log(this.lists);
+					// console.log(this.lists);
 					this.$el.html(this.template(data));
+				}
+			});
+
+			lang.View.LanguageEditView = Backbone.View.extend({
+				template: _.template($('#tpl-lang-edit').html()),
+				events:{
+					'change .lang_edit': 'editLanguage',
+				},
+				editLanguage: function(event){
+					var _change = $(event.target);
+					this.langType = _change.attr("lang_type");
+					this.langInfo = _change.val();
+					this.langId = _change.closest('.form-holder').data("id");
+					translate.save({langType:this.langType,langInfo:this.langInfo,langId:this.langId},{url:'Translation/translation_edit'}).done(function (response){
+						console.log(response);
+					});
+				},
+				initialize: function(options){
+					options || (options = {});
+					//this.render();
+				},
+				setLanguage: function(langId){
+					// langTd || (langId = []);
+					this.langId = parseInt(langId);
+					// console.log(this.langId);
+					return this;
+				},
+				render: function(){
+					var _self = this;
+					var data = {};
+					translate.save({id:this.langId},{url:'Translation/translation_edit'}).done(function (response){
+						data['langDetail'] = response.detail;
+						data['langImages'] = response.images;
+						_self.$el.html(_self.template(data));
+						
+					});		
+					
 				}
 			});
 
@@ -99,14 +112,16 @@ var man = new lang.Model.Test();
             		this.editView = new lang.View.LanguageEditView({
             			el: '.block-edit'
             		});
-					man.save({},{success:function(model,response){  
+
+		            translate.save({},{url:'Translation/translation_test'}).done(function (response){
 		                //console.log(response);
 		                _self.listView  = new lang.View.LanguageListView({
 							el: '.block-list',
 							lists: response,
 							editView: _self.editView
 						});
-		            }});
+
+		            });
             	}
             });
 

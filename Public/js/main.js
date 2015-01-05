@@ -1,15 +1,15 @@
 (function($) {
 		$(function(){
 			//click Edit
-			 $('body').on('click', '.btn-edit', function() {
-			 	var id = $(this).closest('tr').data('id');
-			 	$.post(
-			 		"Translation/translation_edit",
-			 		{ id: id },
-			 		function(data){
-				 		$('.block-translation-detail').html(data).show()
-				 	});
-			 });
+			 // $('body').on('click', '.btn-edit', function() {
+			 // 	var id = $(this).closest('tr').data('id');
+			 // 	$.post(
+			 // 		"Translation/translation_edit",
+			 // 		{ id: id },
+			 // 		function(data){
+				//  		$('.block-translation-detail').html(data).show()
+				//  	});
+			 // });
 
 			 //click Delect
 			 $('body').on('click', '.btn-delete', function(){
@@ -17,7 +17,7 @@
 			 	$.post(
 			 		"Translation/translation_del",
 			 		{ id: id },
-			 		function(data) {
+			 		function() {
 		 				$.post('Translation/translation_list',{render:1},function(data){
 		 					$('.block-translation-list').html(data);
 		 				});

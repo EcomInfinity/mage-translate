@@ -55,11 +55,12 @@ class TranslationController extends Controller {
 	    }
     }
     public function translation_edit(){
+    	$back=json_decode(file_get_contents("php://input"),true);
 		$translation_model = M('translation');
 		$images_model = M('translation_image');
-		$lang_info=$_POST['lang_info'];
-		$lang_type=$_POST['lang_type'];
-		$lang_id=$_POST['lang_id'];
+		$lang_info=$back['langInfo'];
+		$lang_type=$back['langType'];
+		$lang_id=$back['langId'];
 		//edit lang
 		if($lang_type!=null&&$lang_info!=null&&$lang_id!=null){
 			$edit_data['id']=$lang_id;
@@ -101,19 +102,25 @@ class TranslationController extends Controller {
 			$this->display();
 		}
 		//click Edit
-		if($_POST['id']!=null){
-		$where['id']=intval($_POST['id']);
+		
+		if($back['id']!=null){
+		$where['id']=intval($back['id']);
 		$translation_detail=$translation_model->where($where)->find();
-		$images=$images_model->where(array('lang_id'=>intval($_POST['id'])))->field('image_name,id')->select();
+		$images=$images_model->where(array('lang_id'=>intval($where['id'])))->field('image_name,id')->select();
 		$this->assign('translation_detail',$translation_detail);
 		$this->assign('images_list',$images);
-		$this->display();
+		$lang_detail['images']=$images;
+		$lang_detail['detail']=$translation_detail;
+		echo json_encode($lang_detail);
+		//$this->display();
 		}
     }
     public function translation_del(){
     	$translation_model=M('translation');
-    	$where['id'] = intval($_POST['id']);
+    	$back=json_decode(file_get_contents("php://input"),true);
+    	$where['id'] = intval($back['id']);
     	$translation_list=$translation_model->where($where)->delete();
+    	echo '1';
     }
     public function translation_export(){
     	$translation_model=M('translation');
@@ -123,9 +130,10 @@ class TranslationController extends Controller {
     }
     public function translation_test(){
     	$translation_model=M('translation');
-    	//$m=json_decode(file_get_contents("php://input"),true);
-    	//file_put_contents("data.txt", $man->id);
-    	//$where['id'] = $m['id'];
+    // 	$m=json_decode(file_get_contents("php://input"),true);
+    // 	if($m['id']!=null){
+    // 	$where['id'] = $m['id'];
+    // }
     	$translation_list=$translation_model->select();
     	echo json_encode($translation_list);
     	// var_dump(json_encode($translation_list));

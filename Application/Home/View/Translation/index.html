@@ -107,7 +107,40 @@ lang-list
 </table>
 </script>
 <script type="text/template" id="tpl-lang-edit">
-<div id="btn-test">lang-deit</div>
+lang_edit
+	<!-- <form action=""> -->
+	<div class="col col5 fl">
+		<div class="form-holder" data-id="<%= langDetail['id'] %>">
+			<% _.each(_.keys(langDetail), function(detail){ if(detail!='id'){ %>
+				<div class="entry">
+				<label for="edit-<%= detail %>">
+				<%= detail %>
+				</label>
+				<input type="text" id="edit-<%= detail %>" lang_type="<%= detail %>" value="<%= langDetail[detail] %>" class="lang_edit" /> 
+				</div>
+			<%}})%>
+			<form action="__URL__/translation_edit" method="post" enctype="multipart/form-data">
+				<input type="file" name="images" id="images" en-id="<{$en_id}>" />
+			</form>
+		</div>
+		<div class="btn-set">
+			<a href="#" class="btn btn-cancel btn-default">Cancel</a>
+		</div>
+	</div>
+	<!-- </form> -->
+
+	<div class="images_list col col5 fr">
+		<ul>
+			<% _.each(langImages, function(image){ %>
+				<li>
+					<img src="__UPLOADS__/Translation/<%= image.image_name %>" alt="">
+					<div class="btn-set">
+						<a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" image-name="<%= image.image_name %>">X</a>
+					</div>
+				</li>				
+			<% })%>
+		</ul>
+	</div>
 </script>
 
 
