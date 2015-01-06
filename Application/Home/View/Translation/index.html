@@ -16,10 +16,10 @@
 	<load href="__PUBLIC__/js/underscore.js" />
 	<load href="__PUBLIC__/js/backbone.js" />
 	<load href="__PUBLIC__/js/backbone.localStorage.js" />
-	<load href="__PUBLIC__/js/base.js" />
 	<load href="__PUBLIC__/js/utility.js" />
 	<load href="__PUBLIC__/js/ajaxfileupload.js" />
 	<load href="__PUBLIC__/js/main.js" />
+	<load href="__PUBLIC__/js/base.js" />
 	
 	
 </head>
@@ -51,31 +51,72 @@
 
 				<div class="search-box">
 					<!-- <form action="" data-get=""> -->
-						<div class="form-holder">
+<!-- 						<div class="form-holder">
 							<div class="entry">
 								<input type="text" name="search" class="search" placeholder="Search EN ..."/>
 							</div>
-						</div>
+						</div> -->
 					<!-- </form> -->
 				</div>
 
 				<div class="block block-translation-list">
-					<include file="Translation/translation_list" />
+					<!-- <include file="Translation/translation_list" /> -->
 				</div>
 
-				<div class="block block-translation-detail">
+				<div class="block block-translation-detail" data-load="">
 				</div>
 
 				<div class="block block-translation-add" style="border:1px solid red; display: none;">
-					<include file="Translation/translation_add" />
+					
 				</div>
 			</div>
 		</main>
-
+<div class="block-search"></div>
 <div class="block-list"></div>
 <div class="block-edit"></div>
+<script type="text/template" id="tpl-lang-add">
+	<form action="" method="post" enctype="multipart/form-data">
+		<div class="form-holder">
+			<div class="entry">
+				<label for="en">EN:</label>
+				<input type="text" name="en" id="en" />
+			</div>
+			<div class="entry">
+				<label for="de">DE:</label>
+				<input type="text" name="de" id="de" />
+			</div>
+			<div class="entry">
+				<label for="nl">NL:</label>
+				<input type="text" name="nl" id="nl" />
+			</div>
+			<div class="entry">
+				<label for="fr">FR:</label>
+				<input type="text" name="fr" id="fr" />
+			</div>
+			<div class="entry">
+				<label for="remarks">Remarks:</label>
+				<input type="text" name="remarks" id="remarks" />
+			</div>
+	<!-- 		<div class="entry file">
+				<input type="file" name="images" id="images" onchange="ajaxFileUpload();" />
+			</div> -->
+		</div>
+	<!-- 	<div id="result"></div><br><br> -->
+		<div class="btn-set">
+			<a href="javascript:void(0);" class="btn btn-add up">Add</a>
+		</div>
+	</form>
+</script>
+<script type="text/template" id="tpl-lang-search">
+	<!-- <form action="" data-get=""> -->
+	<div class="form-holder">
+		<div class="entry">
+			<input type="text" name="search" class="search" placeholder="Search EN ..."/>
+		</div>
+	</div>
+	<!-- </form> -->
+</script>
 <script type="text/template" id="tpl-lang-list">
-lang-list
 <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
   <thead>
     <tr>
@@ -107,7 +148,6 @@ lang-list
 </table>
 </script>
 <script type="text/template" id="tpl-lang-edit">
-lang_edit
 	<!-- <form action=""> -->
 	<div class="col col5 fl">
 		<div class="form-holder" data-id="<%= langDetail['id'] %>">
