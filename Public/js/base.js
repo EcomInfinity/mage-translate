@@ -22,19 +22,45 @@ jQuery(function() {
 				}
 			});
 
-			var translate = new lang.Model.Base();
-
 			lang.Model.Language = lang.Model.Base.extend({
 				constructor: function(){
 					Backbone.Model.apply(this,arguments);
 				}
 			});
 
+			var translate = new lang.Model.Language();
+
 			 lang.Collection.LangList = Backbone.Collection.extend({
 				model: lang.Model.Language,
 				localStorage: new Backbone.LocalStorage('lang.langlocator,langs'),
 			});
-
+			//Navigation
+			lang.View.LanguageNavView = Backbone.View.extend({
+				template: _.template($('#tpl-lang-nav').html()),
+				events:{
+					'click .btn-new': 'langClear'
+				},
+				langClear: function(event){
+					var _self = this;
+					translate.save({},
+						{url:'Translation/lang_image_clear'}
+						).done(function (response){
+							_self.addView.render();
+							_self.imagesView.render();
+						});
+				},
+				initialize: function(options){
+					options || (options = {});
+					this.addView = options.addView;
+					this.imagesView = options.imagesView;
+					this.render();
+				},
+				render: function(){
+					var data = {};
+					this.$el.html(this.template(data));
+				}
+			});
+			//LanguageAdd
 			lang.View.LanguageAddView = Backbone.View.extend({
 				template: _.template($('#tpl-lang-add').html()),
 				events: {
@@ -44,25 +70,72 @@ jQuery(function() {
 					var _self = this;
 					var $form=$(event.target).closest('form');
 					this.data_form = $form.serializeObject();
-					console.log(this.data_form);
 					translate.save(this.data_form,
 						{url:'Translation/lang_add'}
 						).done(function (response){
-							console.log(response);
+							_self.render();
 							_self.listView.render();
+							_self.imagesView.render();
 						});
 				},
 				initialize: function(options){
 					options || (options = {});
 					this.listView = options.listView;
+					this.imagesView = options.imagesView;
+				},
+				render: function(){
+					//var data = {};
+					this.$el.html(this.template());
+				}
+			});
+			//Language Add Imgaes
+			lang.View.LanguageImagesView = Backbone.View.extend({
+				template:_.template($('#tpl-lang-images').html()),
+				events:{
+					'change #images-add': 'imagesAdd',
+					'click .btn-image-delete': 'imgageDel'
+				},
+				imagesAdd: function(event){
+					var _self = this;
+					ajaxFileUpload(
+						'Translation/lang_image_add',
+						'images-add',
+						function() {
+							// _self;
+							_self.render();
+						}, 
+						function() {
+							alert('Add Fail');
+						}
+					);
+				},
+				imgageDel: function(event){
+					var _self = this;
+					var _click = $(event.target);
+					this.imageId = _click.attr('image-id');
+					this.imageName = _click.attr('image-name');
+					translate.save({imageId:this.imageId,imageName:this.imageName},
+						{url:'Translation/lang_image_del'}
+						).done(function (response){
+						_self.render();
+					});
+				},
+				initialize: function(options){
+					options || (options = {});
 					this.render();
 				},
 				render: function(){
+					var _self = this;
 					var data = {};
-					this.$el.html(this.template(data));
+					translate.save({},
+						{url:'Translation/lang_image_detail'}
+						).done(function (response){
+						data['imagesDetail'] = response;
+						_self.$el.html(_self.template(data));
+					});
 				}
 			});
-
+			//LanguageSearch
 			lang.View.LanguageSearchView = Backbone.View.extend({
 				template: _.template($('#tpl-lang-search').html()),
 				events:{
@@ -71,7 +144,6 @@ jQuery(function() {
 				searchLanguage: function(event){
 					if(event.keyCode == '13'){
 						this.search = $(event.target).val();
-						// console.log(this.search);
 						this.inrender = '1';
 						this.listView.setList(this.search,this.inrender).render();
 					}
@@ -86,7 +158,7 @@ jQuery(function() {
 					this.$el.html(this.template(data));
 				}
 			});
-
+			//LanguageList
 			lang.View.LanguageListView = Backbone.View.extend({
 				template: _.template($('#tpl-lang-list').html()),
 				events:{
@@ -124,13 +196,13 @@ jQuery(function() {
 					translate.save({search:this.search,inrender:this.inrender},
 						{url:'Translation/lang_list'}
 						).done(function (response){
-						data['lists'] = response;
+						data['lists'] = response.lists;
 						_self.$el.html(_self.template(data));
 						
 					});	
 				}
 			});
-
+			//LanguageEdit
 			lang.View.LanguageEditView = Backbone.View.extend({
 				template: _.template($('#tpl-lang-edit').html()),
 				events:{
@@ -145,8 +217,7 @@ jQuery(function() {
 					this.langId = _change.closest('.form-holder').data("id");
 					translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
 						{url:'Translation/lang_edit_info'}
-						).done(function (response){	
-						console.log(response);					
+						).done(function (response){					
 					});	
 				},
 				imgageDel: function(event){
@@ -162,10 +233,10 @@ jQuery(function() {
 				},
 				imagesAdd: function(event){
 					this.langId = $(event.target).closest('.form-holder').data("id");
-					console.log(this.langId);
 					var _self = this;
 					ajaxFileUpload(
 						'Translation/lang_image_add/lang_id/'+this.langId,
+						'images',
 						function() {
 							// _self;
 							_self.render();
@@ -181,7 +252,6 @@ jQuery(function() {
 				},
 				setLanguage: function(langId){
 					this.langId = parseInt(langId);
-					// console.log(this.langId);
 					return this;
 				},
 				render: function(){
@@ -213,9 +283,20 @@ jQuery(function() {
             			editView: this.editView
             		});
 
+            		this.imagesView = new lang.View.LanguageImagesView({
+            			el: '.image-add'
+            		});
+
 					this.addView = new lang.View.LanguageAddView({
-						el: '.block-translation-add',
-						listView: this.listView
+						el: '.info-add',
+						listView: this.listView,
+						imagesView: this.imagesView
+					});
+
+					this.navView = new lang.View.LanguageNavView({
+						el: '.navbar-collapse',
+						addView: this.addView,
+						imagesView: this.imagesView
 					});
 
 		            this.searchView = new lang.View.LanguageSearchView({
