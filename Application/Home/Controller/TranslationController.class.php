@@ -31,12 +31,44 @@ class TranslationController extends Controller {
     	$title = array('id','EN','DE','NL','FR','Remarks');
     	exportexcel($data,$title);
     }
+
+    public function lang_import(){
+        $translation_model = M('translation');
+        $config = array(
+            'maxSize' => 3145728,
+            'rootPath' => './Uploads/',
+            'savePath' => '',
+            'saveName' => array('uniqid','csv_'),
+            'autoSub' => true,
+            'subName' => 'csv',
+        );
+        $upload = new \Think\Upload($config );
+        $info   =   $upload->uploadOne($_FILES['csv']);
+        $file_path = './Uploads/csv/'.$info['savename'];
+        if(file_exists($file_path)){
+            $handle = fopen($file_path,'r');
+            while ($data = fgetcsv($handle)) {
+                $lang_arr[] = $data;
+            }
+            foreach ($lang_arr as $k => $val) {
+                # code...
+                if($k == '0'){
+                    continue;
+                }
+                foreach ($lang_arr['0'] as $key => $value) {
+                    # code...
+                    $lang_add[strtolower($value)] = $val[$key];
+                }
+                $translation_model->add($lang_add);
+            }
+        }
+    }
     //lang add
     public function lang_add(){
     	$translation_model = M('translation');
     	$images_model = M('translation_image');
     	$back = json_decode(file_get_contents("php://input"),true);
-		if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fn']!=null){
+		if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
 	    	$trans_data['en'] = $back['en'];
 			$trans_data['de'] = $back['de'];
 			$trans_data['nl'] = $back['nl'];
@@ -59,7 +91,7 @@ class TranslationController extends Controller {
 			$where['en'] = '';
 			$where['de'] = '';
 			$where['nl'] = '';
-			$where['fr'] = '';
+			//$where['fr'] = '';
 			$where['_logic'] = 'or';
     	}
     	$translation_list = $translation_model->where($where)->order('id desc')->select();
@@ -103,6 +135,13 @@ class TranslationController extends Controller {
     //before new lang clear iamges
     public function lang_image_clear(){
     	$images_model = M('translation_image');
+        $images = $images_model->where(array('lang_id'=>'0'))->select();
+        foreach ($images as $val) {
+                $image_path = './Uploads/Translation/'.$val['image_name'];
+                if(file_exists($image_path)){
+                    unlink($image_path);
+                }
+        }
     	$images_model->where(array('lang_id'=>'0'))->delete();
     	echo '1';
     }

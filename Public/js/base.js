@@ -64,19 +64,34 @@ jQuery(function() {
 			lang.View.LanguageAddView = Backbone.View.extend({
 				template: _.template($('#tpl-lang-add').html()),
 				events: {
-					'click .btn-add': 'addLanguage'
+					'click .btn-add': 'addLanguage',
+					'change .batch-import': 'batchImport'
 				},
 				addLanguage: function(event){
 					var _self = this;
 					var $form=$(event.target).closest('form');
 					this.data_form = $form.serializeObject();
+					console.log(this.data_form);
 					translate.save(this.data_form,
 						{url:'Translation/lang_add'}
 						).done(function (response){
+							console.log(response);
 							_self.render();
 							_self.listView.render();
 							_self.imagesView.render();
 						});
+				},
+				batchImport: function(event){
+					ajaxFileUpload(
+						'Translation/lang_import',
+						'batch-import',
+						function() {
+							alert('Import Success');
+						}, 
+						function() {
+							alert('Import Fail');
+						}
+					);
 				},
 				initialize: function(options){
 					options || (options = {});
@@ -84,8 +99,8 @@ jQuery(function() {
 					this.imagesView = options.imagesView;
 				},
 				render: function(){
-					//var data = {};
-					this.$el.html(this.template());
+					var data = {};
+					this.$el.html(this.template(data));
 				}
 			});
 			//Language Add Imgaes
