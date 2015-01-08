@@ -1,203 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Mage Translation</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mage Translation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<load href="__PUBLIC__/css/reset.css" />
-	<load href="__PUBLIC__/css/lib/bootstrap.css" />
-	<load href="__PUBLIC__/css/lib/bootstrap-theme.css" />
-	<load href="__PUBLIC__/css/lib/jquery.fancybox.css" />
-	<load href="__PUBLIC__/css/main.css" />
+    <load href="__PUBLIC__/css/reset.css" />
+    <load href="__PUBLIC__/css/lib/bootstrap.css" />
+    <load href="__PUBLIC__/css/lib/bootstrap-theme.css" />
+    <load href="__PUBLIC__/css/lib/jquery.fancybox.css" />
+    <load href="__PUBLIC__/css/main.css" />
 
-	<load href="__PUBLIC__/js/lib/jquery.js" />
-	<load href="__PUBLIC__/js/lib/bootstrap.js" />
-	<load href="__PUBLIC__/js/lib/jquery.fancybox.js" />
-	<load href="__PUBLIC__/js/underscore.js" />
-	<load href="__PUBLIC__/js/backbone.js" />
-	<load href="__PUBLIC__/js/backbone.localStorage.js" />
-	<load href="__PUBLIC__/js/utility.js" />
-	<load href="__PUBLIC__/js/ajaxfileupload.js" />
-	<load href="__PUBLIC__/js/main.js" />
-	<load href="__PUBLIC__/js/base.js" />
-	
-	
+    <load href="__PUBLIC__/js/lib/jquery.js" />
+    <load href="__PUBLIC__/js/lib/bootstrap.js" />
+    <load href="__PUBLIC__/js/lib/jquery.fancybox.js" />
+    <load href="__PUBLIC__/js/underscore.js" />
+    <load href="__PUBLIC__/js/backbone.js" />
+    <load href="__PUBLIC__/js/backbone.localStorage.js" />
+    <load href="__PUBLIC__/js/utility.js" />
+    <load href="__PUBLIC__/js/ajaxfileupload.js" />
+    <load href="__PUBLIC__/js/main.js" />
+    <load href="__PUBLIC__/js/base.js" />
+    
+    
 </head>
 <body>
-	<div class="body-wrapper page-width">
-		<!-- documentation: http://getbootstrap.com/components/#navbar -->
-		<nav class="navbar navbar-default navbar-fixed-top">
-			<div class="container-fluid page-width">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed">
-					</button>
-				</div>
-				<div class="collapse navbar-collapse">
-				</div>
-			</div>
-		</nav>
+    <div class="body-wrapper page-width">
+        <!-- documentation: http://getbootstrap.com/components/#navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid page-width">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed">
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+                </div>
+            </div>
+        </nav>
 
-		<main>
-			<div class="container-fluid page-width">
+        <main>
+            <div class="container-fluid page-width">
 
-				<h1>Mage Translation</h1>
+                <h1>Mage Translation</h1>
 
-				<div class="search-box">
-				</div>
+                <div class="search-box">
+                </div>
 
-				<div class="block block-translation-list">
-				</div>
+                <div class="block block-translation-list">
+                </div>
 
-				<div class="block block-translation-detail">
-				</div>
+                <div class="block block-translation-detail">
+                </div>
 
-				<div class="block block-translation-add" style="display: none;">
-					<div class="info-add"></div>
-					<div class="image-add">asdd</div>
-				</div>
-			</div>
-		</main>
-		<script type="text/template" id="tpl-lang-nav">
-			<ul class="nav navbar-nav">
-				<li><a href="#" class="btn-new">New</a></li>
-				<li><a href="#">List</a></li>
-			</ul>
-		</script>
-		<script type="text/template" id="tpl-lang-add">
-			<div class="col col5 fl">
-				<form action="" method="post">
-					<div class="form-holder">
-						<div class="entry">
-							<label for="en">EN:</label>
-							<input type="text" name="en" id="en" />
-						</div>
-						<div class="entry">
-							<label for="de">DE:</label>
-							<input type="text" name="de" id="de" />
-						</div>
-						<div class="entry">
-							<label for="nl">NL:</label>
-							<input type="text" name="nl" id="nl" />
-						</div>
-						<div class="entry">
-							<label for="fr">FR:</label>
-							<input type="text" name="fr" id="fr" />
-						</div>
-						<div class="entry">
-							<label for="remarks">Remarks:</label>
-							<input type="text" name="remarks" id="remarks" />
-						</div>
-					</div>
-					<div class="btn-set">
-						<a href="javascript:void(0);" class="btn btn-add up">Add</a>
-					</div>
-				</form>
-			</div>
-			<div class="batch-import">
-				<form action="" method="post" enctype="multipart/form-data">
-					<div class="entry file">
-						<label>Batch Import:</label>
-						<input type="file" name="csv" id="batch-import" />
-					</div>
-				</form>
-			</div>
-		</script>
-		<script type="text/template" id="tpl-lang-images">
-			<form action="" method="post" enctype="multipart/form-data">
-				<div class="entry file">
-					<label>Images:</label>
-					<input type="file" name="images" id="images-add" />
-				</div>
-			</form>
-			<div class="images_list col col5 fr">
-				<ul>
-					<% _.each(imagesDetail, function(image){ %>
-						<li>
-							<img src="__UPLOADS__/Translation/<%= image.image_name %>" alt="">
-							<div class="btn-set">
-								<a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" image-name="<%= image.image_name %>">X</a>
-							</div>
-						</li>				
-					<% })%>
-				</ul>
-			</div>
-		</script>
-		<script type="text/template" id="tpl-lang-search">
-			<!-- <form action="" data-get=""> -->
-			<div class="form-holder">
-				<div class="entry">
-					<input type="text" name="search" class="search" placeholder="Search EN ..."/>
-				</div>
-			</div>
-			<!-- </form> -->
-		</script>
-		<script type="text/template" id="tpl-lang-list">
-		<table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
-		  <thead>
-		    <tr>
-		      <th>ID</th>
-		      <th>EN</th>
-		      <th>DE</th>
-		      <th>NL</th>
-		      <th>FR</th>
-		      <th>Remarks</th>
-		      <th>Operation</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		   <% _.each(lists, function(list){ %>
-		    <tr  data-id="<%= list.id %>">
-		      <td><%= list.id %></td>
-		      <td><%= list.en %></td>
-		      <td><%= list.de %></td>
-		      <td><%= list.nl %></td>
-		      <td><%= list.fr %></td>
-		      <td><%= list.remarks %></td>
-		      <td>
-		        <a href="javascript:void(0);" class="btn-edit">Edit</a>
-		        <a href="javascript:void(0);" class="btn-delete">Delect</a>
-		      </td>
-		    </tr>
-		   <% }) %>
-		  </tbody>
-		</table>
-		</script>
-		<script type="text/template" id="tpl-lang-edit">
-			<!-- <form action=""> -->
-			<div class="col col5 fl">
-				<div class="form-holder" data-id="<%= langDetail['id'] %>">
-					<% _.each(_.keys(langDetail), function(detail){ if(detail!='id'){ %>
-						<div class="entry">
-						<label for="edit-<%= detail %>">
-						<%= detail %>
-						</label>
-						<input type="text" id="edit-<%= detail %>" lang_type="<%= detail %>" value="<%= langDetail[detail] %>" class="lang_edit" /> 
-						</div>
-					<%}})%>
-					<form action="__URL__/translation_edit" method="post" enctype="multipart/form-data">
-						<div class="entry file">
-							<input type="file" name="images" id="images" en-id="<{$en_id}>" />
-						</div>
-					</form>
-				</div>
-			</div>
-			<!-- </form> -->
+                <div class="block block-translation-add" style="display: none;">
+                    <div class="info-add"></div>
+                    <div class="image-add">asdd</div>
+                </div>
+            </div>
+        </main>
+        <script type="text/template" id="tpl-lang-nav">
+            <ul class="nav navbar-nav">
+                <li><a href="#" class="btn-new">New</a></li>
+                <li><a href="#">List</a></li>
+            </ul>
+        </script>
+        <script type="text/template" id="tpl-lang-add">
+            <div class="col col5 fl">
+                <form action="" method="post">
+                    <div class="form-holder">
+                        <div class="entry">
+                            <label for="en">EN:</label>
+                            <input type="text" name="en" id="en" />
+                        </div>
+                        <div class="entry">
+                            <label for="de">DE:</label>
+                            <input type="text" name="de" id="de" />
+                        </div>
+                        <div class="entry">
+                            <label for="nl">NL:</label>
+                            <input type="text" name="nl" id="nl" />
+                        </div>
+                        <div class="entry">
+                            <label for="fr">FR:</label>
+                            <input type="text" name="fr" id="fr" />
+                        </div>
+                        <div class="entry">
+                            <label for="remarks">Remarks:</label>
+                            <input type="text" name="remarks" id="remarks" />
+                        </div>
+                    </div>
+                    <div class="btn-set">
+                        <a href="javascript:void(0);" class="btn btn-add up">Add</a>
+                    </div>
+                </form>
+            </div>
+            <div class="batch-import">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="entry file">
+                        <label>Batch Import:</label>
+                        <input type="file" name="csv" id="batch-import" />
+                    </div>
+                </form>
+            </div>
+        </script>
+        <script type="text/template" id="tpl-lang-images">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="entry file">
+                    <label>Images:</label>
+                    <input type="file" name="images" id="images-add" />
+                </div>
+            </form>
+            <div class="images_list col col5 fr">
+                <ul>
+                    <% _.each(imagesDetail, function(image){ %>
+                        <li>
+                            <img src="__UPLOADS__/Translation/<%= image.image_name %>" alt="">
+                            <div class="btn-set">
+                                <a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
+                            </div>
+                        </li>
+                    <% })%>
+                </ul>
+            </div>
+            </script>
+            <script type="text/template" id="tpl-lang-search">
+                <!-- <form action="" data-get=""> -->
+                <div class="form-holder">
+                    <div class="entry">
+                        <input type="text" name="search" class="search" placeholder="Search EN ..."/>
+                    </div>
+                </div>
+                <!-- </form> -->
+            </script>
+            <script type="text/template" id="tpl-lang-list">
+            <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>EN</th>
+                  <th>DE</th>
+                  <th>NL</th>
+                  <th>FR</th>
+                  <th>Remarks</th>
+                  <th>Operation</th>
+                </tr>
+              </thead>
+              <tbody>
+               <% _.each(lists, function(list){ %>
+                <tr  data-id="<%= list.id %>">
+                  <td><%= list.id %></td>
+                  <td><%= list.en %></td>
+                  <td><%= list.de %></td>
+                  <td><%= list.nl %></td>
+                  <td><%= list.fr %></td>
+                  <td><%= list.remarks %></td>
+                  <td>
+                    <a href="javascript:void(0);" class="btn-edit">Edit</a>
+                    <a href="javascript:void(0);" class="btn-delete">Delect</a>
+                  </td>
+                </tr>
+               <% }) %>
+              </tbody>
+            </table>
+            </script>
+            <script type="text/template" id="tpl-lang-edit">
+                <!-- <form action=""> -->
+                <div class="col col5 fl">
+                    <div class="form-holder" data-id="<%= langDetail['id'] %>">
+                        <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'){ %>
+                            <div class="entry">
+                            <label for="edit-<%= detail %>">
+                            <%= detail %>
+                            </label>
+                            <input type="text" id="edit-<%= detail %>" lang_type="<%= detail %>" value="<%= langDetail[detail] %>" class="lang_edit" /> 
+                            </div>
+                        <%}})%>
+                        <form action="__URL__/translation_edit" method="post" enctype="multipart/form-data">
+                            <div class="entry file">
+                                <input type="file" name="images" id="images" en-id="<{$en_id}>" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- </form> -->
 
-			<div class="images_list col col5 fr">
-				<ul>
-					<% _.each(langImages, function(image){ %>
-						<li>
-							<img src="__UPLOADS__/Translation/<%= image.image_name %>" alt="">
-							<div class="btn-set">
-								<a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" image-name="<%= image.image_name %>">X</a>
-							</div>
-						</li>				
-					<% })%>
-				</ul>
-			</div>
-		</script>
-
-
-	</div>
+                <div class="images_list col col5 fr">
+                    <ul>
+                        <% _.each(langImages, function(image){ %>
+                            <li>
+                                <img src="__UPLOADS__/Translation/<%= image.image_name %>" alt="">
+                                <div class="btn-set">
+                                    <a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
+                                </div>
+                            </li>
+                        <% })%>
+                    </ul>
+                </div>
+            </script>
+        
+    </div>
 </body>
 </html>
