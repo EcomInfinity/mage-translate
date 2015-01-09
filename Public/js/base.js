@@ -275,6 +275,39 @@ jQuery(function() {
                 });
             }
         });
+        //export
+        lang.View.LanguageExportView = Backbone.View.extend({
+            template: _.template($('#tpl-lang-export').html()),
+            events:{
+                'click .btn-export': 'exportLanguage'
+            },
+            exportLanguage: function(event){
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                console.log(this.data_form);
+                this.translate.save({exrender:'0',fields:this.data_form},
+                    {url:'Translation/export'}
+                    ).done(function (response){
+                        // console.log(response);
+                    });
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.translate = options.translate;
+                this.exrender = '1';
+                this.render();
+            },
+            render: function(){
+                var _self = this;
+                var data = {};
+                this.translate.save({exrender:this.exrender},
+                    {url:'Translation/export'}
+                    ).done(function (response){
+                        data['allField'] = response;
+                    _self.$el.html(_self.template(data));
+                    });
+            }
+        });
 
         lang.View.TranslationApp = Backbone.View.extend({
             initialize: function(options){
@@ -316,6 +349,11 @@ jQuery(function() {
                 this.searchView = new lang.View.LanguageSearchView({
                     el: '.search-box',
                     _events:_events,
+                    translate: this.translate
+                });
+
+                this.exportView = new lang.View.LanguageExportView({
+                    el: '.block-translation-export',
                     translate: this.translate
                 });
 

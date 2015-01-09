@@ -10,9 +10,46 @@ class TranslationController extends Controller {
 
     public function export(){
         $translation_model = M('translation');
-        $data = $translation_model->select();
-        $title = array('id','EN','DE','NL','FR','Remarks');
-        exportexcel($data,$title);
+        //$field = 'en,de';
+        $back = json_decode(file_get_contents("php://input"),true);
+        $fileds = $back['fields'];
+        if($back['exrender'] == '0'){
+            $title = $fileds;
+            foreach ($fileds as $val) {
+                # code...
+                $field = $val.','.$field;
+            }
+            $field = substr($field, 0 , -1);
+            $export = $translation_model->field($field)->select();
+            // exportexcel($export,$title);
+        }
+       $data= $translation_model->select();
+       foreach ($data as $k => $val) {
+           # code...fputcsv
+            foreach ($val as $key => $value) {
+                # code...
+                $test[$k+1]=$test[$k+1].','.$value;
+                $test[$k+1]=substr($test[$k+1], 1);
+            }
+       }
+       $test['0'] ='EN,DE,NL,FR,REMARKS,STATUS';
+       $file = fopen('./Uploads/export/test.csv','a');
+       foreach ($test as $val) {
+           # code...
+        fputcsv($file, split(',',$val));
+       }
+       fclose($file);
+       var_dump($test);
+        if($back['exrender'] == '1'){
+        $data = $translation_model->find();
+        foreach ($data as $k => $val) {
+            # code...
+            if($k!='id'&&$k!='remarks'&&$k!='status'){
+                $allField[] = $k;
+            }
+        }
+        echo json_encode($allField);
+        }
     }
 
     public function import(){
