@@ -22,27 +22,32 @@ class TranslationController extends Controller {
             'rootPath' => './Uploads/',
             'savePath' => '',
             'saveName' => array('uniqid','csv_'),
+            'exts' => array('csv'),
             'autoSub' => true,
             'subName' => 'csv',
         );
         $upload = new \Think\Upload($config );
         $info   =   $upload->uploadOne($_FILES['csv']);
+        if(!$info){
+            die();
+        }else{
         $file_path = './Uploads/csv/'.$info['savename'];
-        if(file_exists($file_path)){
-            $handle = fopen($file_path,'r');
-            while ($data = fgetcsv($handle)) {
-                $lang_arr[] = $data;
-            }
-            foreach ($lang_arr as $k => $val) {
-                # code...
-                if($k == '0'){
-                    continue;
+            if(file_exists($file_path)){
+                $handle = fopen($file_path,'r');
+                while ($data = fgetcsv($handle)) {
+                    $lang_arr[] = $data;
                 }
-                foreach ($lang_arr['0'] as $key => $value) {
+                foreach ($lang_arr as $k => $val) {
                     # code...
-                    $lang_add[strtolower($value)] = $val[$key];
+                    if($k == '0'){
+                        continue;
+                    }
+                    foreach ($lang_arr['0'] as $key => $value) {
+                        # code...
+                        $lang_add[strtolower($value)] = $val[$key];
+                    }
+                    $translation_model->add($lang_add);
                 }
-                $translation_model->add($lang_add);
             }
         }
     }
@@ -81,13 +86,16 @@ class TranslationController extends Controller {
             $where['en'] = array('like','%'.$back['search'].'%');
         }
         if($back['inrender'] == '0'){
-            $where['en'] = '';
-            $where['de'] = '';
-            $where['nl'] = '';
+            $wheref['en'] = '';
+            $wheref['de'] = '';
+            $wheref['nl'] = '';
             //$where['fr'] = '';
-            $where['_logic'] = 'or';
+            $wheref['_logic'] = 'or';
+            $where['_complex'] = $wheref;
+            $where['status'] = '1';
         }
         if($back['inrender'] == '1'){
+            $where['status'] = '1';
         }
         $translation_list = $translation_model->where($where)->order('id desc')->select();
         $list['lists'] = $translation_list;
@@ -148,10 +156,14 @@ class TranslationController extends Controller {
         );
         $upload = new \Think\Upload($config );
         $info   =   $upload->uploadOne($_FILES['images']);
-        $images['lang_id'] = intval($_GET['lang_id']);
-        $images['image_name'] = $info['savename'];
-        $images_model->add($images);
-        echo '1';
+        if(!$info){
+            die();
+        }else{
+            $images['lang_id'] = intval($_GET['lang_id']);
+            $images['image_name'] = $info['savename'];
+            $images_model->add($images);
+            echo '1';
+        }
     }
     //new lang images
     public function imageList(){

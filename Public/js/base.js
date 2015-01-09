@@ -28,8 +28,6 @@ jQuery(function() {
             }
         });
 
-        var translate = new lang.Model.Language();
-
          lang.Collection.LangList = Backbone.Collection.extend({
             model: lang.Model.Language,
             localStorage: new Backbone.LocalStorage('lang.langlocator,langs'),
@@ -42,17 +40,16 @@ jQuery(function() {
             },
             langClear: function(event){
                 var _self = this;
-                translate.save({},
+                this.translate.save({},
                     {url:'Translation/imageClear'}
                     ).done(function (response){
-                        _self.addView.render();
-                        _self.imagesView.render();
+                        _self._events.trigger('refresh','nav');
                     });
             },
             initialize: function(options){
                 options || (options = {});
-                this.addView = options.addView;
-                this.imagesView = options.imagesView;
+                this._events = options._events;
+                this.translate = options.translate;
                 this.render();
             },
             render: function(){
@@ -71,13 +68,11 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                translate.save(this.data_form,
+                this.translate.save(this.data_form,
                     {url:'Translation/add'}
                     ).done(function (response){
-                        console.log(response);
                         _self.render();
-                        _self.listView.render();
-                        _self.imagesView.render();
+                        _self._events.trigger('refresh','add');
                     });
             },
             batchImport: function(event){
@@ -94,8 +89,8 @@ jQuery(function() {
             },
             initialize: function(options){
                 options || (options = {});
-                this.listView = options.listView;
-                this.imagesView = options.imagesView;
+                this._events = options._events;
+                this.translate = options.translate;
             },
             render: function(){
                 var data = {};
@@ -115,7 +110,6 @@ jQuery(function() {
                     'Translation/imageAdd',
                     'images-add',
                     function() {
-                        // _self;
                         _self.render();
                     }, 
                     function() {
@@ -127,7 +121,7 @@ jQuery(function() {
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
-                translate.save({imageId:this.imageId},
+                this.translate.save({imageId:this.imageId},
                     {url:'Translation/imageDel'}
                     ).done(function (response){
                     _self.render();
@@ -135,12 +129,13 @@ jQuery(function() {
             },
             initialize: function(options){
                 options || (options = {});
+                this.translate = options.translate;
                 this.render();
             },
             render: function(){
                 var _self = this;
                 var data = {};
-                translate.save({},
+                this.translate.save({},
                     {url:'Translation/imageList'}
                     ).done(function (response){
                     data['imagesDetail'] = response;
@@ -158,12 +153,14 @@ jQuery(function() {
                 if(event.keyCode == '13'){
                     this.search = $(event.target).val();
                     this.inrender = '1';
-                    this.listView.setList(this.search,this.inrender).render();
+                    this.searchData = {search:this.search,inrender:this.inrender};
+                    this._events.trigger('alernately',this.searchData,'search');
                 }
             },
             initialize:function(options){
                 options || (options = {});
-                this.listView = options.listView;
+                this._events = options._events;
+                this.translate = options.translate;
                 this.render();
             },
             render: function(){
@@ -180,40 +177,38 @@ jQuery(function() {
             },
             editLanguage: function(event){
                 this.edit_id = $(event.target).closest('tr').data('id');
-                this.editView.setLanguage(this.edit_id).render();
+                this._events.trigger('alernately',this.edit_id,'list');
             },
             deleteLanguage: function(event){
                 var _self = this;
                 this.del_id = $(event.target).closest('tr').data('id');
-                translate.save({id:this.del_id},
+                this.translate.save({id:this.del_id},
                     {url:'Translation/del'}
                     ).done(function (response){
-                        console.log(response);
                         _self.render();
                 });
             },
-            setList: function(search,inrender){
-                this.search = search;
-                this.inrender = inrender;
+            setList: function(data){
+                this.search = data.search;
+                this.inrender = data.inrender;
                 return this;
             },
             initialize: function(options){
                 options || (options = {});
                 this.lists = options.lists;
-                this.editView = options.editView;
+                this._events = options._events;
+                this.translate = options.translate;
                 this.inrender = '0';
                 this.render();
             },
             render: function(){
                 var _self = this;
                 var data = {};
-                console.log(this.inrender);
-                translate.save({search:this.search,inrender:this.inrender},
+                this.translate.save({search:this.search,inrender:this.inrender},
                     {url:'Translation/getList'}
                     ).done(function (response){
                     data['lists'] = response.lists;
                     _self.$el.html(_self.template(data));
-                    
                 });
             }
         });
@@ -230,7 +225,7 @@ jQuery(function() {
                 this.langType = _change.attr("lang_type");
                 this.langInfo = _change.val();
                 this.langId = _change.closest('.form-holder').data("id");
-                translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
+                this.translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
                     {url:'Translation/editInfo'}
                     ).done(function (response){
                 });
@@ -239,7 +234,7 @@ jQuery(function() {
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
-                translate.save({imageId:this.imageId},
+                this.translate.save({imageId:this.imageId},
                     {url:'Translation/imageDel'}
                     ).done(function (response){
                     _self.render();
@@ -252,7 +247,6 @@ jQuery(function() {
                     'Translation/imageAdd/lang_id/'+this.langId,
                     'images',
                     function() {
-                        // _self;
                         _self.render();
                     }, 
                     function() {
@@ -262,6 +256,7 @@ jQuery(function() {
             },
             initialize: function(options){
                 options || (options = {});
+                this.translate = options.translate;
                 //this.render();
             },
             setLanguage: function(langId){
@@ -271,7 +266,7 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                translate.save({id:this.langId},
+                this.translate.save({id:this.langId},
                     {url:'Translation/getInfo'}
                     ).done(function (response){
                     data['langDetail'] = response.detail;
@@ -285,44 +280,72 @@ jQuery(function() {
             initialize: function(options){
                 var _self = this;
                 options || (options = {});
+                this.translate = options.translate;
 
                 var _events = {};
                 _.extend(_events, Backbone.Events);
 
-                this.editView = new lang.View.LanguageEditView({
-                    el: '.block-translation-detail'
+                var editView = new lang.View.LanguageEditView({
+                    el: '.block-translation-detail',
+                    translate: this.translate
                 });
 
-                this.listView = new lang.View.LanguageListView({
+                var listView = new lang.View.LanguageListView({
                     el: '.block-translation-list',
-                    editView: this.editView
+                    _events: _events,
+                    translate: this.translate
                 });
 
-                this.imagesView = new lang.View.LanguageImagesView({
-                    el: '.image-add'
+                var imagesView = new lang.View.LanguageImagesView({
+                    el: '.image-add',
+                    translate: this.translate
                 });
 
-                this.addView = new lang.View.LanguageAddView({
+                var addView = new lang.View.LanguageAddView({
                     el: '.info-add',
-                    listView: this.listView,
-                    imagesView: this.imagesView
+                    _events: _events,
+                    translate: this.translate
                 });
 
                 this.navView = new lang.View.LanguageNavView({
                     el: '.navbar-collapse',
-                    addView: this.addView,
-                    imagesView: this.imagesView
+                    _events: _events,
+                    translate: this.translate
                 });
 
                 this.searchView = new lang.View.LanguageSearchView({
                     el: '.search-box',
-                    listView: this.listView
+                    _events:_events,
+                    translate: this.translate
                 });
+
+                _events.on('refresh', function (view){
+                    if(view == 'add'){
+                        listView.render();
+                        imagesView.render();
+                    }
+                    if(view == 'nav'){
+                        addView.render();
+                        imagesView.render();
+                    }
+                });
+
+                _events.on('alernately', function (data,view){
+                    if(view == 'search'){
+                        listView.setList(data).render();
+                    }
+                    if(view == 'list'){
+                        editView.setLanguage(data).render();
+                    }
+                });
+
             }
         });
 
-        var translation = new lang.View.TranslationApp({});
+        var translation = new lang.View.TranslationApp({
+            translate: new lang.Model.Language()
+        });
 
     }).call(self);
 
-    }); 
+});

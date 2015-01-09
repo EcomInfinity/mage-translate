@@ -14,6 +14,7 @@
          });
          $('body').on('click','.export',function(){
             window.location.href="Translation/export";
+            return false;
          });
     });
     ajaxFileUpload = function (url, fileId, callback, failure){
@@ -22,7 +23,7 @@
                 url:url,
                 secureuri:false,
                 fileElementId:fileId,
-                dataType: 'xml',
+                dataType: 'json',
                 success: function (data, status) {
                     if (typeof callback === 'function') {
                         callback();
