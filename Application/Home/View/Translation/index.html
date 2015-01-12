@@ -48,6 +48,9 @@
                 <div class="block block-translation-list">
                 </div>
 
+                <div class="block block-translation-export">
+                </div>
+
                 <div class="block block-translation-detail">
                 </div>
 
@@ -161,6 +164,17 @@
                <% }) %>
               </tbody>
             </table>
+            </script>
+            <script type="text/template" id="tpl-lang-export">
+                <div class="entry checkbox">
+                    <label for="export">Export</label>
+                    <select id="export" class="form-control">
+                    <% _.each(allField,function(field){ %>
+                        <option value="<%= field %>"><%= field %></option>
+                    <% }) %>
+                    </select>
+                </div>
+                <a href="javascript:void(0);" class="btn btn-export btn-primary">Export</a>
             </script>
             <script type="text/template" id="tpl-lang-edit">
                 <!-- <form action=""> -->

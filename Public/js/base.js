@@ -282,13 +282,12 @@ jQuery(function() {
                 'click .btn-export': 'exportLanguage'
             },
             exportLanguage: function(event){
-                var $form=$(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                console.log(this.data_form);
-                this.translate.save({exrender:'0',fields:this.data_form},
+                this.select = $('#export').val();
+                console.log(this.select);
+                this.translate.save({exrender:'0',field:this.select},
                     {url:'Translation/export'}
                     ).done(function (response){
-                        // console.log(response);
+                        window.open('Translation/download');
                     });
             },
             initialize: function(options){
@@ -303,7 +302,7 @@ jQuery(function() {
                 this.translate.save({exrender:this.exrender},
                     {url:'Translation/export'}
                     ).done(function (response){
-                        data['allField'] = response;
+                    data['allField'] = response;
                     _self.$el.html(_self.template(data));
                     });
             }
