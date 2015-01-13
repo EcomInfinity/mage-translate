@@ -41,7 +41,7 @@ jQuery(function() {
             langClear: function(event){
                 var _self = this;
                 this.translate.save({},
-                    {url:'Translation/imageClear'}
+                    {url:UrlApi('_app')+'/Translation/imageClear'}
                     ).done(function (response){
                         _self._events.trigger('refresh','nav');
                     });
@@ -69,7 +69,7 @@ jQuery(function() {
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(this.data_form,
-                    {url:'Translation/add'}
+                    {url:UrlApi('_app')+'/Translation/add'}
                     ).done(function (response){
                         _self.render();
                         _self._events.trigger('refresh','add');
@@ -77,7 +77,7 @@ jQuery(function() {
             },
             batchImport: function(event){
                 ajaxFileUpload(
-                    'Translation/import',
+                    UrlApi('_app')+'/Translation/import',
                     'batch-import',
                     function() {
                         alert('Import Success');
@@ -107,7 +107,7 @@ jQuery(function() {
             imagesAdd: function(event){
                 var _self = this;
                 ajaxFileUpload(
-                    'Translation/imageAdd',
+                    UrlApi('_app')+'/Translation/imageAdd',
                     'images-add',
                     function() {
                         _self.render();
@@ -122,7 +122,7 @@ jQuery(function() {
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
                 this.translate.save({imageId:this.imageId},
-                    {url:'Translation/imageDel'}
+                    {url:UrlApi('_app')+'/Translation/imageDel'}
                     ).done(function (response){
                     _self.render();
                 });
@@ -136,7 +136,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({},
-                    {url:'Translation/imageList'}
+                    {url:UrlApi('_app')+'/Translation/imageList'}
                     ).done(function (response){
                     data['imagesDetail'] = response;
                     _self.$el.html(_self.template(data));
@@ -183,7 +183,7 @@ jQuery(function() {
                 var _self = this;
                 this.del_id = $(event.target).closest('tr').data('id');
                 this.translate.save({id:this.del_id},
-                    {url:'Translation/del'}
+                    {url:UrlApi('_app')+'/Translation/del'}
                     ).done(function (response){
                         _self.render();
                 });
@@ -205,7 +205,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({search:this.search,inrender:this.inrender},
-                    {url:'Translation/getList'}
+                    {url:UrlApi('_app')+'/Translation/getList'}
                     ).done(function (response){
                     data['lists'] = response.lists;
                     _self.$el.html(_self.template(data));
@@ -226,7 +226,7 @@ jQuery(function() {
                 this.langInfo = _change.val();
                 this.langId = _change.closest('.form-holder').data("id");
                 this.translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
-                    {url:'Translation/editInfo'}
+                    {url:UrlApi('_app')+'/Translation/editInfo'}
                     ).done(function (response){
                 });
             },
@@ -235,7 +235,7 @@ jQuery(function() {
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
                 this.translate.save({imageId:this.imageId},
-                    {url:'Translation/imageDel'}
+                    {url:UrlApi('_app')+'/Translation/imageDel'}
                     ).done(function (response){
                     _self.render();
                 });
@@ -244,7 +244,7 @@ jQuery(function() {
                 this.langId = $(event.target).closest('.form-holder').data("id");
                 var _self = this;
                 ajaxFileUpload(
-                    'Translation/imageAdd/lang_id/'+this.langId,
+                    UrlApi('_app')+'/Translation/imageAdd/lang_id/'+this.langId,
                     'images',
                     function() {
                         _self.render();
@@ -267,7 +267,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({id:this.langId},
-                    {url:'Translation/getInfo'}
+                    {url:UrlApi('_app')+'/Translation/getInfo'}
                     ).done(function (response){
                     data['langDetail'] = response.detail;
                     data['langImages'] = response.images;
@@ -285,9 +285,9 @@ jQuery(function() {
                 this.select = $('#export').val();
                 console.log(this.select);
                 this.translate.save({exrender:'0',field:this.select},
-                    {url:'Translation/export'}
+                    {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
-                        window.open('Translation/download');
+                        window.open(UrlApi('_app')+'/Translation/download');
                     });
             },
             initialize: function(options){
@@ -300,7 +300,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({exrender:this.exrender},
-                    {url:'Translation/export'}
+                    {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
                     data['allField'] = response;
                     _self.$el.html(_self.template(data));

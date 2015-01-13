@@ -12,9 +12,23 @@
              $('.block-translation-detail').hide();
              return false;
          });
-         $('body').on('click','.export',function(){
-            window.location.href="Translation/export";
-            return false;
+
+         $('body').on('click', '.btn-login', function(){
+            var user = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+            console.log(user);
+            $.ajax({
+                type: 'POST',
+                url: UrlApi('_app')+'/Admin/login',
+                data: user,
+                beforeSend: function(){}
+            }).done(function(data){
+                if(data == '1'){
+                    window.open(UrlApi('_app')+'/Translation/index',"_self");
+                }
+            });
          });
     });
     ajaxFileUpload = function (url, fileId, callback, failure){

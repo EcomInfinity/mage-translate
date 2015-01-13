@@ -2,6 +2,7 @@ img { width: 100%; }
 .page-width { width: 960px; margin: 0 auto; }
 
 input[type="text"] { width: 100%; padding: 10px; }
+input[type="password"] { width: 100%; padding: 10px; }
 main { margin-top: 60px; }
 main .search-box { width: 100%; margin-bottom: 10px; }
 
@@ -23,3 +24,5 @@ table td, table th { padding: 5px; }
 .images_list ul li .btn-image-delete:hover { opacity: 1; }
 
 .file{margin-top: 15px;}
+
+.login-container{width: 50%;margin: 0 auto;margin-top: 200px;}

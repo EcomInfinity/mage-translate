@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 // header('Content-Type: application/json; charset=utf-8');
-class TranslationController extends Controller {
+class TranslationController extends BaseController {
     //index
     public function index(){
         $this->display();
@@ -10,13 +10,12 @@ class TranslationController extends Controller {
 
     public function export(){
         $translation_model = M('translation');
-        //$field = 'en,de';
         $back = json_decode(file_get_contents("php://input"),true);
         $fields = $back['field'];
         if($back['exrender'] == '0'){
             $field = 'en,'.$fields;
             $title = explode(",", $field);
-            $export = $translation_model->field($field)->select();
+            $export = $translation_model->where(array('website_id'=>session('website_id')))->field($field)->select();
             S('title',$title);
             S('export',$export);
             echo '1';
@@ -25,7 +24,7 @@ class TranslationController extends Controller {
         $data = $translation_model->find();
         foreach ($data as $k => $val) {
             # code...
-            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'){
+            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'){
                 $allField[] = $k;
             }
         }
@@ -70,9 +69,11 @@ class TranslationController extends Controller {
                         # code...
                         $lang_add[strtolower($value)] = $val[$key];
                     }
+                    $lang_add['website_id'] = session('website_id');
                     $translation_model->add($lang_add);
                 }
             }
+            echo '1';
         }
     }
     //lang add
@@ -196,5 +197,9 @@ class TranslationController extends Controller {
         $where['status'] = '1';
         $images_detail = $images_model->where($where)->select();
         echo json_encode($images_detail);
+    }
+
+    public function test(){
+        echo '1';
     }
 }
