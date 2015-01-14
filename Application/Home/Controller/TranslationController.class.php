@@ -87,6 +87,7 @@ class TranslationController extends BaseController {
             $trans_data['nl'] = $back['nl'];
             $trans_data['fr'] = $back['fr'];
             $trans_data['remarks'] = $back['remarks'];
+            $trans_data['website_id'] = session('website_id');
             $id=$translation_model->add($trans_data);
             $image_data['lang_id'] = $id;
             $images_model->where(array('lang_id'=>'0'))->save($image_data);
@@ -122,6 +123,7 @@ class TranslationController extends BaseController {
         if($back['inrender'] == '1'){
             $where['status'] = '1';
         }
+        $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
         $list['lists'] = $translation_list;
         echo json_encode($list);
@@ -199,7 +201,4 @@ class TranslationController extends BaseController {
         echo json_encode($images_detail);
     }
 
-    public function test(){
-        echo '1';
-    }
 }

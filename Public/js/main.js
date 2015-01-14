@@ -14,23 +14,59 @@
          });
 
          $('body').on('click', '.btn-login', function(){
-            var user = {
+            var _self = this;
+            this.user = {
                 username: $('#username').val(),
                 password: $('#password').val()
             };
-            console.log(user);
+            console.log(this.user);
             $.ajax({
                 type: 'POST',
                 url: UrlApi('_app')+'/Admin/login',
-                data: user,
-                beforeSend: function(){}
+                data: _self.user,
+                beforeSend: function(){
+                    var reVal = verify(_self.user.username,_self.user.password);
+                    console.log(reVal);
+                    if(reVal[0] == '1'){
+                        $('.tip-username').text('This is a required field.');
+                    }else{
+                        $('.tip-username').text('');
+                    }
+                    if(reVal[1] == '1'){
+                        $('.tip-password').text('This is a required field.');
+                    }else{
+                        $('.tip-password').text('');
+                    }
+                    if(reVal[0] == '1'||reVal[1] == '1'){
+                        return false;
+                    }
+                }
             }).done(function(data){
                 if(data == '1'){
                     window.open(UrlApi('_app')+'/Translation/index',"_self");
                 }
+                if(data == '0'){
+                    $('.tip-main').text('Invalid Username or Password.');
+                }
             });
          });
     });
+
+    verify = function (username,password){
+        var reVal = {};
+        if(username == ''){
+            reVal['0'] = '1';
+        }else{
+            reVal['0'] = '0';
+        }
+        if(password == ''){
+            reVal['1'] = '1';
+        }else{
+            reVal['1'] = '0';
+        }
+        return reVal;
+    }
+
     ajaxFileUpload = function (url, fileId, callback, failure){
        $.ajaxFileUpload(
            {

@@ -8,13 +8,19 @@ jQuery(function() {
     (function(){
         var root = this;
         var lang;
+        var user;
         lang = root.lang = {};
+        user = root.user = {};
         var _ = root._,
         $ = root.jQuery;
 
         lang.Model = {};
         lang.Collection = {};
         lang.View = {};
+
+        user.Model = {};
+        user.Collection = {};
+        user.View = {};
 
         lang.Model.Base = Backbone.Model.extend({
             defaults:{
@@ -25,6 +31,12 @@ jQuery(function() {
         lang.Model.Language = lang.Model.Base.extend({
             constructor: function(){
                 Backbone.Model.apply(this,arguments);
+            }
+        });
+
+        user.Model.Base = Backbone.Model.extend({
+            defaults:{
+                'timestamp':-1
             }
         });
 
@@ -283,7 +295,7 @@ jQuery(function() {
             },
             exportLanguage: function(event){
                 this.select = $('#export').val();
-                console.log(this.select);
+                //console.log(this.select);
                 this.translate.save({exrender:'0',field:this.select},
                     {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
@@ -306,6 +318,133 @@ jQuery(function() {
                     _self.$el.html(_self.template(data));
                     });
             }
+        });
+
+        user.View.RoleAddView = Backbone.View.extend({
+            template: _.template($('#tpl-role-add').html()),
+            events:{
+                'click .btn-role-add': 'roleAdd'
+            },
+            roleAdd: function(event){
+                var _self = this;
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                console.log(this.data_form);
+                this.userModel.save(this.data_form,
+                    {url:UrlApi('_app')+'/Admin/roleAdd'}
+                    ).done(function (response){
+                        console.log(response);
+                        _self.render();
+                    });
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+                if(PurviewVal()=='-1'){
+                    this.render();
+                }
+            },
+            render: function(){
+                var data = {};
+                this.$el.html(this.template(data));
+            }
+        });
+
+        user.View.UserAddView = Backbone.View.extend({
+            template: _.template($('#tpl-user-add').html()),
+            events:{
+                'click .btn-user-add': 'userAdd'
+            },
+            userAdd: function(event){
+                var _self = this;
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                // console.log(this.data_form);
+                this.userModel.save(this.data_form,
+                    {url:UrlApi('_app')+'/Admin/userAdd'}
+                    ).done(function (response){
+                        console.log(response);
+                        _self.render();
+                    });
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+                if(PurviewVal()=='-1'){
+                    this.render();
+                }
+            },
+            render: function(){
+                var _self = this;
+                var data = {};
+                this.userModel.save({},
+                    {url:UrlApi('_app')+'/Admin/roleList'}
+                    ).done(function (response){
+                        // console.log(response);
+                        data['rolelist'] = response;
+                        _self.$el.html(_self.template(data));
+                    });
+            }
+        });
+
+        user.View.UserListView = Backbone.View.extend({
+            template: _.template($('#tpl-user-list').html()),
+            events:{
+                'click .btn-allow': 'userAllow'
+            },
+            userAllow: function(event){
+                var _self = this;
+                var allow = $(event.target).data('allow'),
+                user_id = $(event.target).closest('tr').data('id');
+                this.userModel.save({user_id:user_id,allow:allow},
+                    {url:UrlApi('_app')+'/Admin/userEdit'}
+                    ).done(function (response){
+                        _self.render();
+                    });
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+                if(PurviewVal()=='-1'){
+                    this.render();
+                }
+            },
+            render: function(){
+                var _self = this;
+                var data = {};
+                this.userModel.save({},
+                    {url:UrlApi('_app')+'/Admin/userList'}
+                    ).done(function (response){
+                        data['userList'] = response;
+                        _self.$el.html(_self.template(data));
+                    });
+            }
+        });
+
+        user.View.UserApp = Backbone.View.extend({
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+
+                var roleView = new user.View.RoleAddView({
+                    el: '.block-role-add',
+                    userModel: this.userModel
+                });
+
+                var useraddView = new user.View.UserAddView({
+                    el: '.block-user-add',
+                    userModel: this.userModel
+                });
+
+                var userlistView = new user.View.UserListView({
+                    el: '.block-user-list',
+                    userModel: this.userModel
+                });
+            }
+        });
+
+        var userApp = new user.View.UserApp({
+            userModel: new user.Model.Base()
         });
 
         lang.View.TranslationApp = Backbone.View.extend({
