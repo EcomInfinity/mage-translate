@@ -28,12 +28,15 @@
                     <div class="block block-user-list">
                     </div>
 
+                    <div class="block block-user-info">
+                    </div>
+
                     <div class="block block-translation-detail">
                     </div>
 
                     <div class="block block-translation-add" style="display: none;">
                         <div class="info-add"></div>
-                        <div class="image-add">asdd</div>
+                        <div class="image-add"></div>
                     </div>
                 </div>
             </main>
@@ -199,42 +202,17 @@
                             <label for="role">Role Name</label>
                             <input type="text" id="role" name="role" />
                         </div>
-                        <div class="entry radio">
-                            <h3>Allow Create</h3>
-                            <label for="yes-c" class="checkbox-inline">
-                            <input type="radio" name="create" value="1" id="yes-c"/>
+                        <% _.each(ruleList, function(rule){ %>
+                            <div class="entry radio">
+                            <h3>Allow <%= rule.rule_name %></h3>
+                            <label for="role-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                            <input type="radio" name="<%= rule.rule_name.toLowerCase() %>" value="1" id="role-yes-<%= rule.rule_name.toLowerCase() %>"/>
                             Yse</label>
-                            <label for="no-c" class="checkbox-inline">
-                            <input type="radio" checked name="create" value="0" id="no-c"/>
+                            <label for="roel-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                            <input type="radio" checked name="<%= rule.rule_name.toLowerCase() %>" value="0" id="roel-no-<%= rule.rule_name.toLowerCase() %>"/>
                             No</label>
                         </div>
-                        <div class="entry radio">
-                            <h3>Allow Retrieve</h3>
-                            <label for="yes-r" class="checkbox-inline">
-                            <input type="radio" name="retrieve" value="1" id="yes-r"/>
-                            Yse</label>
-                            <label for="no-r" class="checkbox-inline">
-                            <input type="radio" checked name="retrieve" value="0" id="no-r"/>
-                            No</label>
-                        </div>
-                        <div class="entry radio">
-                            <h3>Allow Update</h3>
-                            <label for="yes-u" class="checkbox-inline">
-                            <input type="radio" name="update" value="1" id="yes-u"/>
-                            Yse</label>
-                            <label for="no-u" class="checkbox-inline">
-                            <input type="radio" checked name="update" value="0" id="no-u"/>
-                            No</label>
-                        </div>
-                        <div class="entry radio">
-                            <h3>Allow Delete</h3>
-                            <label for="yes-d" class="checkbox-inline">
-                            <input type="radio" name="delete" value="1" id="yes-d"/>
-                            Yse</label>
-                            <label for="no-d" class="checkbox-inline">
-                            <input type="radio" checked name="delete" value="0" id="no-d"/>
-                            No</label>
-                        </div>
+                        <% }) %>
                     </div>
                     <div class="btn-set">
                         <a href="javascript:void(0);" class="btn btn-role-add btn-primary">Role Add</a>
@@ -274,6 +252,7 @@
                         <th>Id</th>
                         <th>UserName</th>
                         <th>Is Allow</th>
+                        <th>Operation</th>
                     </tr>
                     <% _.each(userList, function(user){%>
                         <tr data-id="<%= user.id %>">
@@ -283,9 +262,38 @@
                             <a href="javascript:void(0);" class="btn btn-allow <% if(user.allow == '1'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="1">Yes</a>
                             <a href="javascript:void(0);" class="btn btn-allow <% if(user.allow == '0'){ %> btn-danger <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
                             </td>
+                            <td>
+                            <a href="javascript:void(0);" class="btn btn-edit btn-info">Edit</a>
+                            </td>
                         </tr>
                     <% }) %>
                 </table>
+            </script>
+            <script type="text/template" id="tpl-user-info">
+                <form method="post">
+                    <div class="form-holder">
+                        <h2>USer Ifno</h2>
+                        <div class="entry">
+                            <label for="username">username</label>
+                            <input type="text" name="username" id="username" value="<%= username %>" />
+                        </div>
+                        <div class="entry">
+                            <label for="password">password</label>
+                            <input type="password" name="password" id="password" />
+                        </div>
+                        <% _.each(ruleList, function(rule){ %>
+                            <div class="entry radio">
+                            <h3>Allow <%= rule.rule_name %></h3>
+                            <label for="role-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                            <input type="radio" name="<%= rule.rule_name.toLowerCase() %>" value="1" id="role-yes-<%= rule.rule_name.toLowerCase() %>"/>
+                            Yse</label>
+                            <label for="roel-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                            <input type="radio" checked name="<%= rule.rule_name.toLowerCase() %>" value="0" id="roel-no-<%= rule.rule_name.toLowerCase() %>"/>
+                            No</label>
+                        </div>
+                        <% }) %>
+                    </div>
+                </form>
             </script>
         </block>
     </div>

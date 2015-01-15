@@ -56,7 +56,9 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/imageClear'}
                     ).done(function (response){
                         _self._events.trigger('refresh','nav');
-                    });
+                    }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
+                });
             },
             initialize: function(options){
                 options || (options = {});
@@ -85,7 +87,9 @@ jQuery(function() {
                     ).done(function (response){
                         _self.render();
                         _self._events.trigger('refresh','add');
-                    });
+                    }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
+                });
             },
             batchImport: function(event){
                 ajaxFileUpload(
@@ -198,6 +202,8 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/del'}
                     ).done(function (response){
                         _self.render();
+                }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
             setList: function(data){
@@ -221,6 +227,8 @@ jQuery(function() {
                     ).done(function (response){
                     data['lists'] = response.lists;
                     _self.$el.html(_self.template(data));
+                }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             }
         });
@@ -240,6 +248,8 @@ jQuery(function() {
                 this.translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
                     {url:UrlApi('_app')+'/Translation/editInfo'}
                     ).done(function (response){
+                }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
             imgageDel: function(event){
@@ -250,6 +260,8 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/imageDel'}
                     ).done(function (response){
                     _self.render();
+                }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
             imagesAdd: function(event){
@@ -281,9 +293,11 @@ jQuery(function() {
                 this.translate.save({id:this.langId},
                     {url:UrlApi('_app')+'/Translation/getInfo'}
                     ).done(function (response){
-                    data['langDetail'] = response.detail;
-                    data['langImages'] = response.images;
-                    _self.$el.html(_self.template(data));
+                        data['langDetail'] = response.detail;
+                        data['langImages'] = response.images;
+                        _self.$el.html(_self.template(data));
+                }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             }
         });
@@ -300,7 +314,9 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
                         window.open(UrlApi('_app')+'/Translation/download');
-                    });
+                    }).fail(function (response){
+                    window.open(UrlApi('_app')+'/Admin/logout','_self');
+                });
             },
             initialize: function(options){
                 options || (options = {});
@@ -335,18 +351,27 @@ jQuery(function() {
                     ).done(function (response){
                         console.log(response);
                         _self.render();
+                        _self._userEvents.trigger('refresh','roleAdd');
                     });
             },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
+                this._userEvents = options._userEvents;
                 if(PurviewVal()=='-1'){
                     this.render();
                 }
             },
             render: function(){
+                var _self = this;
                 var data = {};
-                this.$el.html(this.template(data));
+                this.userModel.save({},
+                    {url:UrlApi('_app')+'/Admin/ruleList'}
+                    ).done(function (response){
+                        console.log(response);
+                        data['ruleList'] = response;
+                        _self.$el.html(_self.template(data));
+                    });
             }
         });
 
@@ -365,11 +390,13 @@ jQuery(function() {
                     ).done(function (response){
                         console.log(response);
                         _self.render();
+                        _self._userEvents.trigger('refresh','userAdd');
                     });
             },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
+                this._userEvents = options._userEvents;
                 if(PurviewVal()=='-1'){
                     this.render();
                 }
@@ -390,7 +417,8 @@ jQuery(function() {
         user.View.UserListView = Backbone.View.extend({
             template: _.template($('#tpl-user-list').html()),
             events:{
-                'click .btn-allow': 'userAllow'
+                'click .btn-allow': 'userAllow',
+                'click .btn-edit': 'userInfo'
             },
             userAllow: function(event){
                 var _self = this;
@@ -402,9 +430,14 @@ jQuery(function() {
                         _self.render();
                     });
             },
+            userInfo: function(event){
+                var user_id = $(event.target).closest('tr').data('id');
+                this._userEvents.trigger('alernately',user_id,'userList');
+            },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
+                this._userEvents = options._userEvents;
                 if(PurviewVal()=='-1'){
                     this.render();
                 }
@@ -421,25 +454,82 @@ jQuery(function() {
             }
         });
 
+        user.View.UserInfoView = Backbone.View.extend({
+            template: _.template($('#tpl-user-info').html()),
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+            },
+            setUser: function(userId){
+                this.user_id = parseInt(userId);
+                console.log(this.user_id);
+                return this;
+            },
+            render: function(){
+                var _self = this;
+                var data = {};
+                this.userModel.save({user_id:this.user_id},
+                    {url:UrlApi('_app')+'/Admin/userInfo'}
+                    ).done(function (response){
+                        console.log(response);
+                        data['username'] = response.username;
+                        data['purview'] = response.purview;
+                        data['ruleList'] = response.rulelist;
+                        _self.$el.html(_self.template(data));
+                    });
+
+            }
+        });
+
         user.View.UserApp = Backbone.View.extend({
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
 
+                var _userEvents = {};
+                _.extend(_userEvents, Backbone.Events);
+
                 var roleView = new user.View.RoleAddView({
                     el: '.block-role-add',
-                    userModel: this.userModel
+                    userModel: this.userModel,
+                    _userEvents:_userEvents
                 });
 
                 var useraddView = new user.View.UserAddView({
                     el: '.block-user-add',
-                    userModel: this.userModel
+                    userModel: this.userModel,
+                    _userEvents:_userEvents
                 });
 
                 var userlistView = new user.View.UserListView({
                     el: '.block-user-list',
+                    userModel: this.userModel,
+                    _userEvents:_userEvents
+                });
+
+                var userinfoView = new user.View.UserInfoView({
+                    el: '.block-user-info',
                     userModel: this.userModel
                 });
+
+                _userEvents.on('refresh', function (view){
+                    if(view == 'roleAdd'){
+                        useraddView.render();
+                    }
+                    if(view == 'userAdd'){
+                        userlistView.render();
+                    }
+                });
+
+                _userEvents.on('alernately', function (data,view){
+                    if(view == 'search'){
+                        listView.setList(data).render();
+                    }
+                    if(view == 'userList'){
+                        userinfoView.setUser(data).render();
+                    }
+                });
+
             }
         });
 

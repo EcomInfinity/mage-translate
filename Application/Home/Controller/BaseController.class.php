@@ -8,5 +8,10 @@ class BaseController extends Controller {
         if(session('id')<0||!session('id')){
             $this->redirect('Admin/index');
         }
+        if(session('id')>0&&session('id')){
+            if(getAllow(session('id')) == '0'){
+                $this->redirect('Admin/logout');
+            }
+        }
      }
 }
