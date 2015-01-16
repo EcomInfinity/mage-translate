@@ -55,7 +55,7 @@ jQuery(function() {
                 this.translate.save({},
                     {url:UrlApi('_app')+'/Translation/imageClear'}
                     ).done(function (response){
-                        _self._events.trigger('refresh','nav');
+                            _self._events.trigger('refresh','nav');
                     }).fail(function (response){
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
@@ -85,8 +85,12 @@ jQuery(function() {
                 this.translate.save(this.data_form,
                     {url:UrlApi('_app')+'/Translation/add'}
                     ).done(function (response){
-                        _self.render();
-                        _self._events.trigger('refresh','add');
+                        if(response == '1'){
+                            _self.render();
+                            _self._events.trigger('refresh','add');
+                        }else{
+                            $('.tip-langadd').text('Can not all be empty');
+                        }
                     }).fail(function (response){
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
@@ -201,7 +205,9 @@ jQuery(function() {
                 this.translate.save({id:this.del_id},
                     {url:UrlApi('_app')+'/Translation/del'}
                     ).done(function (response){
-                        _self.render();
+                        if(response == '1'){
+                            _self.render();
+                        }
                 }).fail(function (response){
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
@@ -241,6 +247,7 @@ jQuery(function() {
                 'change #images': 'imagesAdd'
             },
             editInfo: function(event){
+                var _self = this;
                 var _change = $(event.target);
                 this.langType = _change.attr("lang_type");
                 this.langInfo = _change.val();
@@ -248,6 +255,9 @@ jQuery(function() {
                 this.translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
                     {url:UrlApi('_app')+'/Translation/editInfo'}
                     ).done(function (response){
+                        if(response == '1'){
+                            _self._events.trigger('refresh','edit');
+                        }
                 }).fail(function (response){
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
@@ -259,7 +269,9 @@ jQuery(function() {
                 this.translate.save({imageId:this.imageId},
                     {url:UrlApi('_app')+'/Translation/imageDel'}
                     ).done(function (response){
-                    _self.render();
+                    if(response == '1'){
+                        _self.render();
+                    }
                 }).fail(function (response){
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
@@ -281,7 +293,7 @@ jQuery(function() {
             initialize: function(options){
                 options || (options = {});
                 this.translate = options.translate;
-                //this.render();
+                this._events = options._events;
             },
             setLanguage: function(langId){
                 this.langId = parseInt(langId);
@@ -309,7 +321,6 @@ jQuery(function() {
             },
             exportLanguage: function(event){
                 this.select = $('#export').val();
-                //console.log(this.select);
                 this.translate.save({exrender:'0',field:this.select},
                     {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
@@ -345,11 +356,9 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                console.log(this.data_form);
                 this.userModel.save(this.data_form,
                     {url:UrlApi('_app')+'/Admin/roleAdd'}
                     ).done(function (response){
-                        console.log(response);
                         _self.render();
                         _self._userEvents.trigger('refresh','roleAdd');
                     });
@@ -368,7 +377,6 @@ jQuery(function() {
                 this.userModel.save({},
                     {url:UrlApi('_app')+'/Admin/ruleList'}
                     ).done(function (response){
-                        console.log(response);
                         data['ruleList'] = response;
                         _self.$el.html(_self.template(data));
                     });
@@ -384,13 +392,17 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                // console.log(this.data_form);
                 this.userModel.save(this.data_form,
                     {url:UrlApi('_app')+'/Admin/userAdd'}
                     ).done(function (response){
-                        console.log(response);
-                        _self.render();
-                        _self._userEvents.trigger('refresh','userAdd');
+                        if(response == '1'){
+                            _self.render();
+                            _self._userEvents.trigger('refresh','userAdd');
+                        }else{
+                            $('.tip-useradd').text('Username or duplicate username password is empty');
+                        }
+                    }).fail(function (response){
+                        $('.tip-useradd').text('Username or duplicate username password is empty');
                     });
             },
             initialize: function(options){
@@ -407,7 +419,6 @@ jQuery(function() {
                 this.userModel.save({},
                     {url:UrlApi('_app')+'/Admin/roleList'}
                     ).done(function (response){
-                        // console.log(response);
                         data['rolelist'] = response;
                         _self.$el.html(_self.template(data));
                     });
@@ -418,14 +429,14 @@ jQuery(function() {
             template: _.template($('#tpl-user-list').html()),
             events:{
                 'click .btn-allow': 'userAllow',
-                'click .btn-edit': 'userInfo'
+                'click .btn-detail': 'userInfo'
             },
             userAllow: function(event){
                 var _self = this;
                 var allow = $(event.target).data('allow'),
                 user_id = $(event.target).closest('tr').data('id');
                 this.userModel.save({user_id:user_id,allow:allow},
-                    {url:UrlApi('_app')+'/Admin/userEdit'}
+                    {url:UrlApi('_app')+'/Admin/userAllow'}
                     ).done(function (response){
                         _self.render();
                     });
@@ -456,13 +467,26 @@ jQuery(function() {
 
         user.View.UserInfoView = Backbone.View.extend({
             template: _.template($('#tpl-user-info').html()),
+            events:{
+                'click .btn-edit': 'userEdit'
+            },
+            userEdit: function(event){
+                var _self = this;
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                this.userModel.save(this.data_form,
+                    {url:UrlApi('_app')+'/Admin/userEdit'}
+                    ).done(function (response){
+                        _self._userEvents.trigger('refresh','userInfo');
+                    });
+            },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
+                this._userEvents = options._userEvents;
             },
             setUser: function(userId){
                 this.user_id = parseInt(userId);
-                console.log(this.user_id);
                 return this;
             },
             render: function(){
@@ -471,10 +495,10 @@ jQuery(function() {
                 this.userModel.save({user_id:this.user_id},
                     {url:UrlApi('_app')+'/Admin/userInfo'}
                     ).done(function (response){
-                        console.log(response);
                         data['username'] = response.username;
-                        data['purview'] = response.purview;
-                        data['ruleList'] = response.rulelist;
+                        data['user_id'] = response.user_id;
+                        data['role_id'] = response.role_id;
+                        data['rolelist'] = response.rolelist;
                         _self.$el.html(_self.template(data));
                     });
 
@@ -509,7 +533,8 @@ jQuery(function() {
 
                 var userinfoView = new user.View.UserInfoView({
                     el: '.block-user-info',
-                    userModel: this.userModel
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
                 });
 
                 _userEvents.on('refresh', function (view){
@@ -517,6 +542,9 @@ jQuery(function() {
                         useraddView.render();
                     }
                     if(view == 'userAdd'){
+                        userlistView.render();
+                    }
+                    if(view == 'userInfo'){
                         userlistView.render();
                     }
                 });
@@ -548,7 +576,8 @@ jQuery(function() {
 
                 var editView = new lang.View.LanguageEditView({
                     el: '.block-translation-detail',
-                    translate: this.translate
+                    translate: this.translate,
+                    _events: _events
                 });
 
                 var listView = new lang.View.LanguageListView({
@@ -593,6 +622,9 @@ jQuery(function() {
                     if(view == 'nav'){
                         addView.render();
                         imagesView.render();
+                    }
+                    if(view == 'edit'){
+                        listView.render();
                     }
                 });
 

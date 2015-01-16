@@ -92,6 +92,8 @@ class TranslationController extends BaseController {
             $image_data['lang_id'] = $id;
             $images_model->where(array('lang_id'=>'0'))->save($image_data);
             echo '1';
+        }else{
+            echo '0';
         }
     }
     //lang list del
@@ -100,9 +102,13 @@ class TranslationController extends BaseController {
         $images_model = M('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
         $save['status'] = '0';
-        $translation_model->where(array('id'=>intval($back['id'])))->save($save);
+        $res = $translation_model->where(array('id'=>intval($back['id'])))->save($save);
         $images_model->where(array('lang_id'=>intval($back['id'])))->save($save);
-        echo '1';
+        if($res){
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
     //lang lists
     public function getList(){
@@ -126,7 +132,11 @@ class TranslationController extends BaseController {
         $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
         $list['lists'] = $translation_list;
-        echo json_encode($list);
+        if($list){
+            echo json_encode($list);
+        }else{
+            echo '0';
+        }
     }
     //lang edit detail
     public function getInfo(){
@@ -142,7 +152,11 @@ class TranslationController extends BaseController {
         $this->assign('images_list',$images);
         $lang_detail['images'] = $images;
         $lang_detail['detail'] = $translation_detail;
-        echo json_encode($lang_detail);
+        if($lang_detail){
+            echo json_encode($lang_detail);
+        }else{
+            echo '0';
+        }
     }
     //edit lang info
     public function editInfo(){
@@ -151,7 +165,11 @@ class TranslationController extends BaseController {
         $edit_data['id'] = intval($back['langId']);
         $edit_data[$back['langType']] = $back['langInfo'];
         $res = $translation_model->save($edit_data);
-        echo '1';
+        if($res){
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
     //lang add or edit del image
     public function imageDel(){
@@ -159,15 +177,23 @@ class TranslationController extends BaseController {
         $back = json_decode(file_get_contents("php://input"),true);
         $save['id'] = $back['imageId'];
         $save['status'] = '0';
-        $images_model->save($save);
-        echo '1';
+        $res = $images_model->save($save);
+        if($res){
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
     //before new lang clear iamges
     public function imageClear(){
         $images_model = M('translation_image');
         $save['status'] = '0';
-        $images_model->where(array('lang_id'=>'0'))->save($save);
-        echo '1';
+        $res = $images_model->where(array('lang_id'=>'0'))->save($save);
+        if($res){
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
     //lang add or edit add images
     public function imageAdd(){

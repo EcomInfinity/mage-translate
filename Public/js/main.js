@@ -13,13 +13,30 @@
              return false;
          });
 
+         $('body').on('click', '.btn-user', function(){
+            $('.block-view-user').show();
+            $('.block-view-translate').hide();
+            return false;
+         });
+
+         $('body').on('click', '.btn-list', function(){
+            $('.block-view-translate').show();
+            $('.block-view-user').hide();
+            return false;
+         });
+
+         $('body').keypress(function (event){
+            if(event.keyCode == '13'){
+                $('.btn-login').click();
+            }
+         });
+
          $('body').on('click', '.btn-login', function(){
             var _self = this;
             this.user = {
                 username: $('#username').val(),
                 password: $('#password').val()
             };
-            console.log(this.user);
             $.ajax({
                 type: 'POST',
                 url: UrlApi('_app')+'/Admin/login',

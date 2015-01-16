@@ -25,7 +25,6 @@ class AdminController extends Controller {
                 session('website_id',$userInfo['website']['id']);
                 session('website_name',$userInfo['website']['website_name']);
                 session('purview',$userInfo['role']['purview']);
-                //session('role_id',);
             }else{
                 echo '0';
             }
@@ -58,6 +57,8 @@ class AdminController extends Controller {
             $relaAdd['parent_id'] = session('id');
             $relation_model->add($relaAdd);
             echo '1';
+        }else{
+            echo '0';
         }
     }
 
@@ -70,11 +71,25 @@ class AdminController extends Controller {
             # code...
             $userList[] = $user_model->where(array('id'=>$val['user_id']))->field('id,username,allow')->find();
         }
-        //var_dump($userList);
         echo json_encode($userList);
     }
 
     public function userEdit(){
+        $user_model = M('user');
+        $relation_model = M('relation');
+        $back = json_decode(file_get_contents("php://input"),true);
+        $save_rela['role_id'] = $back['role_id'];
+        $relation_model->where(array('user_id'=>$back['user_id']))->save($save_rela);
+        $save['id'] = $back['user_id'];
+        $save['username'] = $back['username'];
+        if($back['password']!=''){
+            $save['password'] = md5($back['password']);
+        }
+        $user_model->save($save);
+        echo '1';
+    }
+
+    public function userAllow(){
         $user_model = M('user');
         $back = json_decode(file_get_contents("php://input"),true);
         $save['id'] = $back['user_id'];
@@ -85,36 +100,29 @@ class AdminController extends Controller {
 
     public function userInfo(){
         $user_model = M('user');
-        $rule_model = M('rule');
-        $rule_model = M('rule');
-        $ruleList = $rule_model->order('id desc')->select();
-        $count = $rule_model->count();
+        $role_model = M('role');
+        $relation_model = M('relation');
         $back = json_decode(file_get_contents("php://input"),true);
+        $rolelist = $role_model->where(array('website_id'=>session('website_id')))->select();
         $user = $user_model->where(array('id'=>$back['user_id']))->find();
-        $purview = getPurview($user['id']);
-        $purview = str_split(str_pad(decbin($purview),$count,'0',STR_PAD_LEFT));
-        // foreach ($rulelist as $key => $value) {
-        //     # code...
-        //     foreach ($value as $val) {
-        //         # code...
-        //         $test[$key]['purval'] = $val;
-        //     }
-        // }
-        $userInfo['id'] = $user['id'];
+        $relation = $relation_model->where(array('user_id'=>$back['user_id']))->find();
+        $userInfo['user_id'] = $user['id'];
+        $userInfo['role_id'] = $relation['role_id'];
         $userInfo['username'] = $user['username'];
-        $userInfo['rulelist'] = $ruleList;
+        $userInfo['rolelist'] = $rolelist;
         echo json_encode($userInfo);
     }
 
     public function roleAdd(){
         $role_model = M('role');
+        $rule_model = M('rule');
         $back = json_decode(file_get_contents("php://input"),true);
+        $rule = $rule_model->order('id desc')->select();
+        foreach ($rule as $k => $val) {
+            # code...
+            $purview = $purview.$back[strtolower($val['rule_name'])];
+        }
         $role_name = $back['role'];
-        $create = $back['create'];
-        $retrieve = $back['retrieve'];
-        $update = $back['update'];
-        $delete = $back['delete'];
-        $purview = $create.$retrieve.$update.$delete;
         $purview = bindec($purview);
         if($role_name!=''){
             $add['role_name'] = $role_name;

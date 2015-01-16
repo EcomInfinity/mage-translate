@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 年 01 月 15 日 11:02
+-- 生成日期: 2015 年 01 月 16 日 11:08
 -- 服务器版本: 5.5.20
 -- PHP 版本: 5.3.10
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `rs_relation` (
   `role_id` int(10) NOT NULL,
   `parent_id` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `rs_relation`
@@ -42,13 +42,14 @@ CREATE TABLE IF NOT EXISTS `rs_relation` (
 INSERT INTO `rs_relation` (`id`, `website_id`, `user_id`, `role_id`, `parent_id`) VALUES
 (1, 1, 1, 1, 0),
 (2, 2, 3, 1, 0),
-(3, 1, 4, 4, 1),
+(3, 1, 4, 8, 1),
 (4, 1, 5, 6, 1),
 (5, 1, 6, 2, 1),
 (6, 2, 7, 2, 3),
 (7, 2, 8, 3, 3),
 (8, 2, 9, 2, 3),
-(9, 1, 10, 4, 1);
+(9, 1, 10, 4, 1),
+(10, 1, 11, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `rs_role` (
   `purview` int(10) NOT NULL,
   `website_id` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
 
 --
 -- 转存表中的数据 `rs_role`
@@ -92,7 +93,12 @@ INSERT INTO `rs_role` (`id`, `role_name`, `purview`, `website_id`) VALUES
 (21, '3333333', 2, 2),
 (22, 'rrrrrrrrrr', 0, 2),
 (23, 'iiiiiiiiiiiiiii', 0, 2),
-(24, 'tttttttttt', 0, 2);
+(24, 'tttttttttt', 0, 2),
+(25, 'yyyyy', 0, 1),
+(26, 'pppppp', 0, 1),
+(27, 'uuuuuuuuuuu', 15, 1),
+(28, 'lllllllllll', 1111, 1),
+(29, 'oooooo', 15, 1);
 
 -- --------------------------------------------------------
 
@@ -132,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `rs_translation` (
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `website_id` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6070 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6071 ;
 
 --
 -- 转存表中的数据 `rs_translation`
@@ -151,7 +157,7 @@ INSERT INTO `rs_translation` (`id`, `en`, `de`, `nl`, `fr`, `remarks`, `status`,
 (6051, '%s Items', '%s Artikel', '%s Artikel(en)', '', '', 1, 1),
 (6052, '(Shift-)Click or drag to change value', '(Umschalt-)Klick oder ziehen, um Wert zu ?ndern', '(Shift-)Klik of sleep om de waarde te veranderen', '', '', 1, 1),
 (6053, '* Required Fields', '* Pflichtfelder', '* Verplichte velden', '', '', 1, 1),
-(6054, '*Pflichtfelder', '*Pflichtfelder', '*Verplichte velden', '', '', 1, 1),
+(6054, '*Pflichtfelder', '*Pflichtfelder', '*Verplichte velden', '', '', 0, 1),
 (6055, '#NAME?', ' =- Klicken Sie auf einen der Zeitwerte, um den Wert zu erh?hen', ' =- Klik op een van de tijdgedeeltes om deze te verhogen', '', '', 1, 1),
 (6056, '#NAME?', ' =- Halten Sie einen der Buttons gedr', ' =- Houd de muisknop op een van de bovenstaande knoppen om sneller te selecteren', '', '', 1, 1),
 (6057, '- No Cities -', ' - keine St?dte -', '- Geen Steden -', '', '', 1, 1),
@@ -162,11 +168,12 @@ INSERT INTO `rs_translation` (`id`, `en`, `de`, `nl`, `fr`, `remarks`, `status`,
 (6062, '* Required Fields', '* Pflichtfelder', '* Verplichte velden', '', '', 1, 1),
 (6063, '*Pflichtfelder', '*Pflichtfelder', '*Verplichte velden', '', '', 1, 1),
 (6064, '#NAME?', ' =- Klicken Sie auf einen der Zeitwerte, um den Wert zu erh?hen', ' =- Klik op een van de tijdgedeeltes om deze te verhogen', '', '', 1, 1),
-(6065, '#NAME?', ' =- Halten Sie einen der Buttons gedr', ' =- Houd de muisknop op een van de bovenstaande knoppen om sneller te selecteren', '', '', 1, 1),
-(6066, '- No Cities -', ' - keine St?dte -', '- Geen Steden -', '', '', 1, 1),
-(6067, '- No Store Details -', ' - keine Filial-Details -', '- Geen Winkel Details -', '', '', 1, 1),
+(6065, '#NAME?', ' =- Halten Sie einen der Buttons gedr', ' =- Houd de muisknop op een van de bovenstaande knoppen om sneller te selecteren', '', '', 0, 1),
+(6066, '- No Cities -', ' - keine St?dte -', '- Geen Steden -', '', '', 0, 1),
+(6067, '- No Store Details -', ' - keine Filial-Details -', '- Geen Winkel Details -', '', '', 0, 1),
 (6068, '- Use the %s buttons to select month', ' - Nutzen Sie die %s Buttons, um einen Monat auszuw?hlen', '- Gebruik de %s knoppen om de maand te selecteren', '', '', 0, 1),
-(6069, 'd', '', '', '', '', 1, 0);
+(6069, 'd', '', '', '', '', 1, 0),
+(6070, 'hhhwde', 'wwwwc', '', 'ww', 'ww', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -199,23 +206,23 @@ INSERT INTO `rs_translation_image` (`id`, `lang_id`, `image_name`, `status`) VAL
 (287, 4466, 'mm_54af37eb4d00f.png', 1),
 (288, 4710, 'mm_54af583a07b62.png', 0),
 (289, 4712, 'mm_54af6971c3f2c.gif', 0),
-(290, 0, 'mm_54af6f639ff36.jpg', 0),
-(291, 0, '', 0),
-(292, 0, 'mm_54af72d74d730.gif', 0),
-(293, 0, '', 0),
-(294, 0, '', 0),
-(295, 0, 'mm_54af7561dd7d5.gif', 0),
+(290, 6070, 'mm_54af6f639ff36.jpg', 0),
+(291, 6070, '', 0),
+(292, 6070, 'mm_54af72d74d730.gif', 0),
+(293, 6070, '', 0),
+(294, 6070, '', 0),
+(295, 6070, 'mm_54af7561dd7d5.gif', 0),
 (296, 4715, 'mm_54b36fb96358b.gif', 0),
-(297, 0, 'mm_54b4e1bfef247.jpg', 0),
-(298, 0, 'mm_54b74f26a0c07.gif', 1),
+(297, 6070, 'mm_54b4e1bfef247.jpg', 0),
+(298, 6070, 'mm_54b74f26a0c07.gif', 0),
 (299, 6046, 'mm_54b750d1c5e5a.gif', 1),
 (300, 6046, 'mm_54b750d56df18.gif', 1),
 (301, 6046, 'mm_54b750d91803f.png', 1),
 (302, 6042, 'mm_54b750f33dc53.gif', 1),
 (303, 6042, 'mm_54b750f63c275.gif', 1),
 (304, 6042, 'mm_54b750f96ce4e.gif', 1),
-(305, 6042, 'mm_54b7512807948.gif', 1),
-(306, 6042, 'mm_54b7517e9ac14.gif', 1);
+(305, 6042, 'mm_54b7512807948.gif', 0),
+(306, 6042, 'mm_54b7517e9ac14.gif', 0);
 
 -- --------------------------------------------------------
 
@@ -229,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `rs_user` (
   `password` varchar(255) NOT NULL,
   `allow` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- 转存表中的数据 `rs_user`
@@ -239,12 +246,13 @@ INSERT INTO `rs_user` (`id`, `username`, `password`, `allow`) VALUES
 (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1),
 (3, '123456', 'e10adc3949ba59abbe56e057f20f883e', 1),
 (4, 'qwert', 'a384b6463fc216a5f8ecb6670f86456a', 1),
-(5, '', 'd41d8cd98f00b204e9800998ecf8427e', 1),
-(6, '', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(5, '1226', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(6, '1224', 'd41d8cd98f00b204e9800998ecf8427e', 1),
 (7, '123', '202cb962ac59075b964b07152d234b70', 1),
 (8, 'ert', 'e3e84538a1b02b1cc11bf71fe3169958', 1),
 (9, '1234', '81dc9bdb52d04dc20036dbd8313ed055', 1),
-(10, '122', 'a0a080f42e6f13b3a2df133f073095dd', 1);
+(10, '122', 'a0a080f42e6f13b3a2df133f073095dd', 1),
+(11, 'y', '415290769594460e2e485922904f345d', 1);
 
 -- --------------------------------------------------------
 
