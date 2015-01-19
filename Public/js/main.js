@@ -31,6 +31,27 @@
             }
          });
 
+         $('body').on('click', '.btn-export', function(){
+            $('.block-translation-export').toggle();
+            return false;
+         });
+
+         // $('body').on('click', 'ul img', function(){
+         //    console.log(this.src);
+         //    $('#enlarge_images').html('');
+         //    $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
+         //    $('#enlarge_images').show();
+         //    $('#enlarge_images').attr('top','10px');
+         //    $('#enlarge_images').attr('left','10px');
+         //    return false;
+         // });
+
+         // $('body').on('click', '#enlarge_images', function(){
+         //    $('#enlarge_images').html('');
+         //    $('#enlarge_images').hide();
+         //    return false;
+         // });
+
          $('body').on('click', '.btn-login', function(){
             var _self = this;
             this.user = {

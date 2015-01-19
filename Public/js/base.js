@@ -55,7 +55,7 @@ jQuery(function() {
                 this.translate.save({},
                     {url:UrlApi('_app')+'/Translation/imageClear'}
                     ).done(function (response){
-                            _self._events.trigger('refresh','nav');
+                    _self._events.trigger('refresh','nav');
                     }).fail(function (response){
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
@@ -75,8 +75,7 @@ jQuery(function() {
         lang.View.LanguageAddView = Backbone.View.extend({
             template: _.template($('#tpl-lang-add').html()),
             events: {
-                'click .btn-add': 'addLanguage',
-                'change .batch-import': 'batchImport'
+                'click .btn-add': 'addLanguage'
             },
             addLanguage: function(event){
                 var _self = this;
@@ -95,6 +94,22 @@ jQuery(function() {
                     window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
+            initialize: function(options){
+                options || (options = {});
+                this._events = options._events;
+                this.translate = options.translate;
+            },
+            render: function(){
+                var data = {};
+                this.$el.html(this.template(data));
+            }
+        });
+
+        lang.View.LanguageImportView = Backbone.View.extend({
+            template: _.template($('#tpl-lang-import').html()),
+            events: {
+                'change #batch-import': 'batchImport'
+            },
             batchImport: function(event){
                 ajaxFileUpload(
                     UrlApi('_app')+'/Translation/import',
@@ -109,14 +124,14 @@ jQuery(function() {
             },
             initialize: function(options){
                 options || (options = {});
-                this._events = options._events;
-                this.translate = options.translate;
+                this.render();
             },
             render: function(){
                 var data = {};
                 this.$el.html(this.template(data));
             }
         });
+
         //Language Add Imgaes
         lang.View.LanguageImagesView = Backbone.View.extend({
             template:_.template($('#tpl-lang-images').html()),
@@ -277,7 +292,7 @@ jQuery(function() {
                 });
             },
             imagesAdd: function(event){
-                this.langId = $(event.target).closest('.form-holder').data("id");
+                this.langId = $(event.target).closest('.images_list').data("id");
                 var _self = this;
                 ajaxFileUpload(
                     UrlApi('_app')+'/Translation/imageAdd/lang_id/'+this.langId,
@@ -596,6 +611,10 @@ jQuery(function() {
                     _events: _events,
                     translate: this.translate
                 });
+
+                var importView = new lang.View.LanguageImportView({
+                    el: '.batch-import'
+                })
 
                 this.navView = new lang.View.LanguageNavView({
                     el: '.navbar-collapse',

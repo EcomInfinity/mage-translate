@@ -70,7 +70,16 @@ class TranslationController extends BaseController {
                         $lang_add[strtolower($value)] = $val[$key];
                     }
                     $lang_add['website_id'] = session('website_id');
-                    $translation_model->add($lang_add);
+                    $import['en'] = $lang_add['en'];
+                    $import['website_id'] = session('website_id');
+                    $res = $translation_model->where($import)->find();
+                    if($res){
+                        $lang_save = $lang_add;
+                        $lang_save['id'] = $res['id'];
+                        $translation_model->save($lang_save);
+                    }else{
+                        $translation_model->add($lang_add);
+                    }
                 }
             }
             echo '1';
