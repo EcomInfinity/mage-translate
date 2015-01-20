@@ -18,6 +18,7 @@ class TranslationController extends BaseController {
             $export = $translation_model->where(array('website_id'=>session('website_id')))->field($field)->select();
             S('title',$title);
             S('export',$export);
+            S('filename',$fields);
             echo '1';
         }
         if($back['exrender'] == '1'){
@@ -33,9 +34,10 @@ class TranslationController extends BaseController {
     }
 
     public function download(){
-       exportexcel(S('export'),S('title'));
+       exportexcel(S('export'),S('title'),'translation-'.S('filename'));
        S('export',null);
        S('title',null);
+       S('filename',null);
     }
 
     public function import(){
@@ -141,7 +143,7 @@ class TranslationController extends BaseController {
         $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
         $list['lists'] = $translation_list;
-        if($list){
+        if($translation_list){
             echo json_encode($list);
         }else{
             echo '0';
@@ -161,7 +163,7 @@ class TranslationController extends BaseController {
         $this->assign('images_list',$images);
         $lang_detail['images'] = $images;
         $lang_detail['detail'] = $translation_detail;
-        if($lang_detail){
+        if($images||$translation_detail){
             echo json_encode($lang_detail);
         }else{
             echo '0';

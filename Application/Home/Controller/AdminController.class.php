@@ -3,7 +3,11 @@ namespace Home\Controller;
 use Think\Controller;
 class AdminController extends Controller {
     public function index(){
-       $this->display();
+        if(session('id')>0&&session('id')){
+            $this->redirect('Translation/index');
+        }else{
+            $this->display();
+        }
     }
     public function login(){
         $user_model = M('user');
@@ -23,7 +27,7 @@ class AdminController extends Controller {
                 session('id',$res['id']);
                 session('username',$res['username']);
                 session('website_id',$userInfo['website']['id']);
-                session('website_name',$userInfo['website']['website_name']);
+                session('website_name',$userInfo['website']['name']);
                 session('purview',$userInfo['role']['purview']);
             }else{
                 echo '0';
@@ -37,6 +41,38 @@ class AdminController extends Controller {
             session('[destroy]');
         }
         $this->redirect('index');
+    }
+
+    public function register(){
+        $user_model = M('user');
+        $relation_model = M('relation');
+        $website_model = M('website');
+        $username = $_POST['username'];
+        $password1 = $_POST['password1'];
+        $password2 = $_POST['password2'];
+        $website_name = $_POST['website_name'];
+        if(session('id')>0&&session('id')){
+            $this->redirect('Translation/index');
+        }else{
+            if($password1 == $password2){
+                $password = $password1;
+            }
+            $varity = $user_model->where(array('username'=>$username))->find();
+            if($username!=null&&$password1!=null&&$password2!=null&&$website_name!=null&&!$varity&&$password){
+                $userAdd['username'] = $username;
+                $userAdd['password'] = md5($password);
+                $webAdd['name'] = $website_name;
+                $user_id = $user_model->add($userAdd);
+                $website_id = $website_model->add($webAdd);
+                $relaAdd['user_id'] = $user_id;
+                $relaAdd['website_id'] = $website_id;
+                $relaAdd['role_id'] = '1';
+                $relation_model->add($relaAdd);
+                echo '1';
+            }else{
+                $this->display();
+            }
+        }
     }
 
     public function userAdd(){

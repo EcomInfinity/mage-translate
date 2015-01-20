@@ -56,9 +56,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/imageClear'}
                     ).done(function (response){
                     _self._events.trigger('refresh','nav');
-                    }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
-                });
+                    });
             },
             initialize: function(options){
                 options || (options = {});
@@ -90,9 +88,7 @@ jQuery(function() {
                         }else{
                             $('.tip-langadd').text('Can not all be empty');
                         }
-                    }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
-                });
+                    });
             },
             initialize: function(options){
                 options || (options = {});
@@ -223,8 +219,6 @@ jQuery(function() {
                         if(response == '1'){
                             _self.render();
                         }
-                }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
             setList: function(data){
@@ -248,8 +242,6 @@ jQuery(function() {
                     ).done(function (response){
                     data['lists'] = response.lists;
                     _self.$el.html(_self.template(data));
-                }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             }
         });
@@ -273,8 +265,6 @@ jQuery(function() {
                         if(response == '1'){
                             _self._events.trigger('refresh','edit');
                         }
-                }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
             imgageDel: function(event){
@@ -287,8 +277,6 @@ jQuery(function() {
                     if(response == '1'){
                         _self.render();
                     }
-                }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             },
             imagesAdd: function(event){
@@ -323,8 +311,6 @@ jQuery(function() {
                         data['langDetail'] = response.detail;
                         data['langImages'] = response.images;
                         _self.$el.html(_self.template(data));
-                }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
                 });
             }
         });
@@ -336,13 +322,12 @@ jQuery(function() {
             },
             exportLanguage: function(event){
                 this.select = $('#export').val();
+                console.log(this.select);
                 this.translate.save({exrender:'0',field:this.select},
                     {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
                         window.open(UrlApi('_app')+'/Translation/download');
-                    }).fail(function (response){
-                    window.open(UrlApi('_app')+'/Admin/logout','_self');
-                });
+                    });
             },
             initialize: function(options){
                 options || (options = {});

@@ -19,16 +19,23 @@ table td, table th { padding: 5px; }
 .fl { float: left; }
 .fr { float: right; }
 
-.images_list ul li { position: relative; width: 24%; border: 1px solid #ddd; padding: 5px; float: left; margin-right: 40px;margin-bottom: 9px;}
+.images_list ul li { position: relative; width: 22%; border: 1px solid #ddd; padding: 5px; float: left; margin-right: 4%; margin-bottom: 10px;margin-top: 10px;}
+.images_list ul li:nth-child(4) { margin-right: 0; }
 .images_list ul li .btn-image-delete { position: absolute; top: 5px; right: 5px; background: #000; opacity: 0.5; transition: .3s all ease-in-out; }
 .images_list ul li .btn-image-delete:hover { opacity: 1; }
 
-.file{margin-top: 15px;}
+.file{margin-top: 15px;background-color: #E7E7E7;}
 
 .login-container{width: 50%;margin: 0 auto;margin-top: 200px;}
+.register-container{width: 50%;margin: 0 auto;margin-top: 200px;}
 
 .tip{color:red;}
 
 .batch-import{background-color: #E7E7E7;}
 
-#enlarge_images{position:absolute;display:none;z-index:2;}
+#enlarge_images{display:none;}
+
+select{text-transform: uppercase;}
+#export{background-color: #E7E7E7;}
+
+.block-translation-export{background-color: #E7E7E7;}

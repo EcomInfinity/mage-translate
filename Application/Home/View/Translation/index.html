@@ -12,7 +12,7 @@
                 <div class="search-box">
                 </div>
 
-                <div class="block block-translation-export" style="display:none;">
+                <div class="block block-translation-export">
                 </div>
 
                 <div class="block block-translation-list">
@@ -85,31 +85,36 @@
         </script>
         <script type="text/template" id="tpl-lang-import">
             <form action="" method="post" enctype="multipart/form-data">
-                <div class="entry file">
-                    <label>Batch Import:</label>
-                    <input type="file" name="csv" id="batch-import" />
+                <div class="form-holder">
+                    <div class="entry file">
+                        <label>Batch Import:</label>
+                        <input type="file" name="csv" id="batch-import" />
+                    </div>
                 </div>
             </form>
             <p>Please select the *.csv file format batch import</p>
         </script>
         <script type="text/template" id="tpl-lang-images">
             <form action="" method="post" enctype="multipart/form-data">
-                <div class="entry file">
-                    <label>Images:</label>
-                    <input type="file" name="images" id="images-add" />
+                <div class="form-holder">
+                    <div class="entry file">
+                        <label>Images:</label>
+                        <input type="file" name="images" id="images-add" />
+                    </div>
                 </div>
             </form>
             <div class="">
                 <ul>
                     <% _.each(imagesDetail, function(image){ %>
                         <li>
-                            <img src="__UPLOADS__/Translation/<%= image.image_name %>" alt="">
+                            <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
                             <div class="btn-set">
                                 <a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
                             </div>
                         </li>
                     <% })%>
                 </ul>
+                <div id="enlarge_images"></div>
             </div>
         </script>
         <script type="text/template" id="tpl-lang-search">
@@ -144,7 +149,7 @@
               <td><%= list.fr %></td>
               <td><%= list.remarks %></td>
               <td>
-                <a href="javascript:void(0);" class="btn btn-edit btn-info">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
                 <a href="javascript:void(0);" class="btn btn-delete btn-danger">Delect</a>
               </td>
             </tr>
@@ -153,7 +158,7 @@
         </table>
         </script>
         <script type="text/template" id="tpl-lang-export">
-            <div class="entry checkbox">
+            <div class="entry select">
                 <!--<label for="export">Export</label>-->
                 <select id="export" class="form-control">
                 <% _.each(allField,function(field){ %>
@@ -163,6 +168,7 @@
             </div>
             <div class="btn-set">
                 <a href="javascript:void(0);" class="btn btn-export btn-primary">Export</a>
+                <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
             </div>
         </script>
         <script type="text/template" id="tpl-lang-edit">
@@ -184,9 +190,11 @@
 
             <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
                 <form action="" method="post" enctype="multipart/form-data">
-                    <div class="entry file">
-                        <label>Images:</label>
-                        <input type="file" name="images" id="images" en-id="<{$en_id}>" />
+                    <div class="form-holder">
+                        <div class="entry file">
+                            <label>Images:</label>
+                            <input type="file" name="images" id="images" en-id="<{$en_id}>" />
+                        </div>
                     </div>
                 </form>
                 <ul>
@@ -199,7 +207,7 @@
                         </li>
                     <% })%>
                 </ul>
-                <!--<div id="enlarge_images"></div>-->
+                <div id="enlarge_images"></div>
             </div>
         </script>
     </block>
