@@ -33,7 +33,6 @@ jQuery(function() {
                 Backbone.Model.apply(this,arguments);
             }
         });
-
         user.Model.Base = Backbone.Model.extend({
             defaults:{
                 'timestamp':-1
@@ -120,7 +119,7 @@ jQuery(function() {
             },
             initialize: function(options){
                 options || (options = {});
-                this.render();
+                //this.render();
             },
             render: function(){
                 var data = {};
@@ -161,7 +160,7 @@ jQuery(function() {
             initialize: function(options){
                 options || (options = {});
                 this.translate = options.translate;
-                this.render();
+                //this.render();
             },
             render: function(){
                 var _self = this;
@@ -204,7 +203,9 @@ jQuery(function() {
             template: _.template($('#tpl-lang-list').html()),
             events:{
                 'click .btn-edit': 'editLanguage',
-                'click .btn-delete': 'deleteLanguage'
+                'click .btn-delete': 'deleteLanguage',
+                'click .btn-list-export': 'exportRender',
+                'click .btn-list-add': 'addRender'
             },
             editLanguage: function(event){
                 this.edit_id = $(event.target).closest('tr').data('id');
@@ -220,6 +221,17 @@ jQuery(function() {
                             _self.render();
                         }
                 });
+            },
+            exportRender: function(event){
+                this._events.trigger('refresh','list-export');
+            },
+            addRender: function(){
+                var _self = this;
+                this.translate.save({},
+                    {url:UrlApi('_app')+'/Translation/imageClear'}
+                    ).done(function (response){
+                    _self._events.trigger('refresh','list-add');
+                    });
             },
             setList: function(data){
                 this.search = data.search;
@@ -333,7 +345,6 @@ jQuery(function() {
                 options || (options = {});
                 this.translate = options.translate;
                 this.exrender = '1';
-                this.render();
             },
             render: function(){
                 var _self = this;
@@ -368,7 +379,7 @@ jQuery(function() {
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
                 if(PurviewVal()=='-1'){
-                    this.render();
+                    //this.render();
                 }
             },
             render: function(){
@@ -378,6 +389,85 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Admin/ruleList'}
                     ).done(function (response){
                         data['ruleList'] = response;
+                        _self.$el.html(_self.template(data));
+                    });
+            }
+        });
+
+        user.View.RoleListView = Backbone.View.extend({
+            template: _.template($('#tpl-role-list').html()),
+            events: {
+                'click .btn-detail': 'roleInfo',
+                'click .btn-list-role-add': 'roleAdd',
+                'click .btn-user-list': 'userList'
+            },
+            roleInfo: function(event){
+                var role_id = $(event.target).closest('tr').data('id');
+                this._userEvents.trigger('alernately',role_id,'roleList');
+            },
+            roleAdd: function(){
+                this._userEvents.trigger('refresh','list-role-add');
+            },
+            userList: function(){
+                this._userEvents.trigger('refresh','user-list');
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+                this._userEvents = options._userEvents;
+                //this.render();
+            },
+            render: function(){
+                var _self = this;
+                var data = {};
+                this.userModel.save({},
+                    {url:UrlApi('_app')+'/Admin/roleList'}
+                    ).done(function (response){
+                        data['roleList'] = response;
+                        _self.$el.html(_self.template(data));
+                    });
+            }
+        });
+
+        user.View.RoleInfoView = Backbone.View.extend({
+            template: _.template($('#tpl-role-info').html()),
+            events: {
+                'click .btn-edit': 'roleEdit'
+            },
+            roleEdit: function(event){
+                var _self = this;
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                console.log(this.data_form);
+                this.userModel.save(this.data_form,
+                    {url:UrlApi('_app')+'/Admin/roleEdit'}
+                    ).done(function (response){
+                        if(response == '1'){
+                            _self._userEvents.trigger('refresh','roleInfo');
+                        }
+                    });
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+                this._userEvents = options._userEvents;
+            },
+            setRole: function(roleId){
+                this.role_id = parseInt(roleId);
+                console.log(this.role_id);
+                return this;
+            },
+            render: function(){
+                var _self = this;
+                var data = {};
+                this.userModel.save({role_id:this.role_id},
+                    {url:UrlApi('_app')+'/Admin/roleInfo'}
+                    ).done(function (response){
+                        data['roleInfo'] = response;
+                        console.log(response);
+                        data['ruleList'] = response.rule;
+                        data['role_name'] = response.role_name;
+                        data['role_id'] = response.role_id;
                         _self.$el.html(_self.template(data));
                     });
             }
@@ -410,7 +500,7 @@ jQuery(function() {
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
                 if(PurviewVal()=='-1'){
-                    this.render();
+                    //this.render();
                 }
             },
             render: function(){
@@ -429,7 +519,9 @@ jQuery(function() {
             template: _.template($('#tpl-user-list').html()),
             events:{
                 'click .btn-allow': 'userAllow',
-                'click .btn-detail': 'userInfo'
+                'click .btn-detail': 'userInfo',
+                'click .btn-list-user-add': 'userAdd',
+                'click .btn-role-list': 'roleList'
             },
             userAllow: function(event){
                 var _self = this;
@@ -444,6 +536,12 @@ jQuery(function() {
             userInfo: function(event){
                 var user_id = $(event.target).closest('tr').data('id');
                 this._userEvents.trigger('alernately',user_id,'userList');
+            },
+            userAdd: function(){
+                this._userEvents.trigger('refresh','list-user-add');
+            },
+            roleList: function(){
+                this._userEvents.trigger('refresh','role-list');
             },
             initialize: function(options){
                 options || (options = {});
@@ -513,22 +611,34 @@ jQuery(function() {
                 var _userEvents = {};
                 _.extend(_userEvents, Backbone.Events);
 
-                var roleView = new user.View.RoleAddView({
+                var roleinfoView = new user.View.RoleInfoView({
+                    el: '.block-role-info',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var rolelistView = new user.View.RoleListView({
+                    el: '.block-role-list',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var roleaddView = new user.View.RoleAddView({
                     el: '.block-role-add',
                     userModel: this.userModel,
-                    _userEvents:_userEvents
+                    _userEvents: _userEvents
                 });
 
                 var useraddView = new user.View.UserAddView({
                     el: '.block-user-add',
                     userModel: this.userModel,
-                    _userEvents:_userEvents
+                    _userEvents: _userEvents
                 });
 
                 var userlistView = new user.View.UserListView({
                     el: '.block-user-list',
                     userModel: this.userModel,
-                    _userEvents:_userEvents
+                    _userEvents: _userEvents
                 });
 
                 var userinfoView = new user.View.UserInfoView({
@@ -538,13 +648,28 @@ jQuery(function() {
                 });
 
                 _userEvents.on('refresh', function (view){
-                    if(view == 'roleAdd'){
-                        useraddView.render();
-                    }
                     if(view == 'userAdd'){
                         userlistView.render();
                     }
                     if(view == 'userInfo'){
+                        userlistView.render();
+                    }
+                    if(view == 'roleInfo'){
+                        rolelistView.render();
+                    }
+                    if(view == 'list-user-add'){
+                        useraddView.render();
+                    }
+                    if(view == 'role-list'){
+                        rolelistView.render();
+                    }
+                    if(view == 'roleAdd'){
+                        rolelistView.render();
+                    }
+                    if(view == 'list-role-add'){
+                        roleaddView.render();
+                    }
+                    if(view == 'user-list'){
                         userlistView.render();
                     }
                 });
@@ -556,8 +681,10 @@ jQuery(function() {
                     if(view == 'userList'){
                         userinfoView.setUser(data).render();
                     }
+                    if(view == 'roleList'){
+                        roleinfoView.setRole(data).render();
+                    }
                 });
-
             }
         });
 
@@ -613,7 +740,7 @@ jQuery(function() {
                     translate: this.translate
                 });
 
-                this.exportView = new lang.View.LanguageExportView({
+                var exportView = new lang.View.LanguageExportView({
                     el: '.block-translation-export',
                     translate: this.translate
                 });
@@ -623,12 +750,20 @@ jQuery(function() {
                         listView.render();
                         imagesView.render();
                     }
-                    if(view == 'nav'){
-                        addView.render();
-                        imagesView.render();
-                    }
+                    // if(view == 'nav'){
+                    //     addView.render();
+                    //     imagesView.render();
+                    // }
                     if(view == 'edit'){
                         listView.render();
+                    }
+                    if(view == 'list-export'){
+                        exportView.render();
+                    }
+                    if(view == 'list-add'){
+                        addView.render();
+                        imagesView.render();
+                        importView.render();
                     }
                 });
 

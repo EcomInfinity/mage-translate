@@ -9,6 +9,7 @@ class AdminController extends Controller {
             $this->display();
         }
     }
+
     public function login(){
         $user_model = M('user');
         $relation_model = M('relation');
@@ -175,6 +176,46 @@ class AdminController extends Controller {
         $where['website_id'] = session('website_id');
         $role_list = $role_model->where($where)->select();
         echo json_encode($role_list);
+    }
+
+    public function roleInfo(){
+        $role_model = M('role');
+        $rule_model = M('rule');
+        $back = json_decode(file_get_contents("php://input"),true);
+        $count = $rule_model->count();
+        $rule = $rule_model->order('id desc')->field('rule_name')->select();
+        $role = $role_model->where(array('id'=>intval($back['role_id'])))->find();
+        $purview = str_split(str_pad(decbin($role['purview']),$count,'0',STR_PAD_LEFT));
+        foreach ($rule as $key => $value) {
+            $rule[$key]['purview'] = $purview[$key];
+        }
+        $roleInfo['role_name'] = $role['role_name'];
+        $roleInfo['role_id'] = $role['id'];
+        $roleInfo['rule'] = $rule;
+        echo json_encode($roleInfo);
+    }
+
+    public function roleEdit(){
+        $role_model = M('role');
+        $rule_model = M('rule');
+        $back = json_decode(file_get_contents("php://input"),true);
+        $rule = $rule_model->order('id desc')->select();
+        foreach ($rule as $k => $val) {
+            # code...
+            $purview = $purview.$back[strtolower($val['rule_name'])];
+        }
+        $role_name = $back['role_name'];
+        $role_id = intval($back['role_id']);
+        $purview = bindec($purview);
+        $save['id'] = $role_id;
+        $save['role_name'] = $role_name;
+        $save['purview'] = $purview;
+        $res = $role_model->save($save);
+        if($res){
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
 
     public function ruleList(){

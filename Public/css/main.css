@@ -39,3 +39,6 @@ select{text-transform: uppercase;}
 #export{background-color: #E7E7E7;}
 
 .block-translation-export{background-color: #E7E7E7;}
+
+.jump{background-color: #E7E7E7;}
+.btn-right{float: right;}

@@ -1,8 +1,5 @@
 <extend name="Public/base" />
 <block name="css"></block>
-<block name="script">
-    <load href="__PUBLIC__/js/base.js" />
-</block>
     <block name="main-translate">
         <main>
             <div class="container-fluid page-width">
@@ -21,7 +18,7 @@
                 <div class="block block-translation-detail">
                 </div>
 
-                <div class="block block-translation-add" style="display: none;">
+                <div class="block block-translation-add">
                     <div class="batch-import"></div>
                     <div class="info-add col col5 fl"></div>
                     <div class="image-add images_list col col5 fr"></div>
@@ -35,17 +32,33 @@
             <div class="container-fluid page-width">
 
                 <h1>Mage User</h1>
+<!--             <div class="search-box-1">
+                    <div class="form-holder">
+                <div class="entry">
+                    <input type="text" name="search" class="search" placeholder="Search ...">
+                </div>
+            </div> -->
+                </div>
+                <div class="block-user">
+                    <div class="block block-user-list">
+                    </div>
 
-                <div class="block block-role-add">
+                    <div class="block block-user-add">
+                    </div>
+
+                    <div class="block block-user-info">
+                    </div>
                 </div>
 
-                <div class="block block-user-add">
-                </div>
+                <div class="block-role">
+                    <div class="block block-role-list">
+                    </div>
 
-                <div class="block block-user-list">
-                </div>
+                    <div class="block block-role-info">
+                    </div>
 
-                <div class="block block-user-info">
+                    <div class="block block-role-add">
+                    </div>
                 </div>
 
             </div>
@@ -127,6 +140,10 @@
             <!-- </form> -->
         </script>
         <script type="text/template" id="tpl-lang-list">
+        <div class="jump">
+        <a href="javascript:void(0);" class="btn btn-list-export btn-primary">Lang Export</a>
+        <a href="javascript:void(0);" class="btn btn-list-add btn-primary btn-right">Lang Add</a>
+        </div>
         <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
           <thead>
             <tr>
@@ -238,6 +255,50 @@
                 </div>
             </form>
         </script>
+        <script type="text/template" id="tpl-role-list">
+            <div class="jump">
+                <a href="javascript:void(0);" class="btn btn-primary btn-list-role-add">Role Add</a>
+                <a href="javascript:void(0);" class="btn btn-primary btn-right btn-user-list">User List</a>
+            </div>
+            <table class="table table-hover" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th>RoleName</th>
+                    <th>Operation</th>
+                </tr>
+                <% _.each(roleList, function(role){ %>
+                    <tr data-id="<%= role.id %>">
+                        <td><%= role.role_name %></td>
+                        <td><a href="javascript:void(0);" class="btn btn-info btn-detail">Edit</a></td>
+                    </tr>
+                <% }) %>
+            </table>
+        </script>
+        <script type="text/template" id="tpl-role-info">
+            <form action="" method="post">
+                <div class="form-holder">
+                    <input type="hidden" value="<%= role_id %>" name="role_id" />
+                    <div class="entry">
+                        <label for="role_name">Role Name</label>
+                        <input type="text" value="<%= role_name %>" name="role_name" id="role_name" />
+                    </div>
+                </div>
+                <% _.each(ruleList, function(rule){ %>
+                    <div class="entry radio">
+                    <h3>Allow <%= rule.rule_name %></h3>
+                    <label for="edit-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                    <input type="radio" <% if(rule.purview == '1'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="1" id="edit-yes-<%= rule.rule_name.toLowerCase() %>"/>
+                    Yse</label>
+                    <label for="edit-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                    <input type="radio" <% if(rule.purview == '0'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="0" id="edit-no-<%= rule.rule_name.toLowerCase() %>"/>
+                    No</label>
+                </div>
+                <% }) %>
+                <a href="javascript:void(0);" class="btn btn-primary btn-edit">Role Edit</a>
+            </form>
+            <!--<% _.each(roleInfo, function(info){ %>
+                <%= info %>
+            <% }) %>-->
+        </script>
         <script type="text/template" id="tpl-user-add">
             <form method="post">
                 <div class="form-holder">
@@ -266,17 +327,20 @@
             </form>
         </script>
         <script type="text/template" id="tpl-user-list">
-            <h3>User List</h3>
+            <div class="jump">
+                <a href="javascript:void(0);" class="btn btn-primary btn-list-user-add">User Add</a>
+                <a href="javascript:void(0);" class="btn btn-primary btn-right btn-role-list">Role List</a>
+            </div>
             <table class="table table-hover">
                 <tr>
-                    <th>Id</th>
+                    <!--<th>Id</th>-->
                     <th>UserName</th>
                     <th>Is Allow</th>
                     <th>Operation</th>
                 </tr>
                 <% _.each(userList, function(user){%>
                     <tr data-id="<%= user.id %>">
-                        <td><%= user.id %></td>
+                        <!--<td><%= user.id %></td>-->
                         <td><%= user.username %></td>
                         <td>
                         <a href="javascript:void(0);" class="btn btn-allow <% if(user.allow == '1'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="1">Yes</a>

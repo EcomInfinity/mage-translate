@@ -7,7 +7,7 @@
          });
 
          //add lang
-         $('body').on('click', '.btn-new', function() {
+         $('body').on('click', '.btn-list-add', function() {
              $(".block-translation-add").toggle();
              $('.block-translation-detail').hide();
              return false;
@@ -25,6 +25,18 @@
             return false;
          });
 
+         $('body').on('click', '.btn-role-list', function(){
+            $('.block-user').slideUp("slow");
+            $('.block-role').slideDown("slow");
+            return false;
+         });
+
+         $('body').on('click', '.btn-user-list', function(){
+            $('.block-role').slideUp("slow");
+            $('.block-user').slideDown("slow");
+            return false;
+         });
+
          $('body').keypress(function (event){
             if(event.keyCode == '13'){
                 $('.btn-login').click();
@@ -36,8 +48,6 @@
             $('#enlarge_images').html('');
             $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
             $('#enlarge_images').show();
-            // $('#enlarge_images').attr('top','10px');
-            // $('#enlarge_images').attr('left','10px');
             return false;
          });
 
