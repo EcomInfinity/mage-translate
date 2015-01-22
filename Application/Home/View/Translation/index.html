@@ -32,13 +32,10 @@
             <div class="container-fluid page-width">
 
                 <h1>Mage User</h1>
-<!--             <div class="search-box-1">
-                    <div class="form-holder">
-                <div class="entry">
-                    <input type="text" name="search" class="search" placeholder="Search ...">
+
+                <div class="search-box-user">
                 </div>
-            </div> -->
-                </div>
+
                 <div class="block-user">
                     <div class="block block-user-list">
                     </div>
@@ -54,11 +51,12 @@
                     <div class="block block-role-list">
                     </div>
 
+                    <div class="block block-role-add">
+                    </div>
+
                     <div class="block block-role-info">
                     </div>
 
-                    <div class="block block-role-add">
-                    </div>
                 </div>
 
             </div>
@@ -230,6 +228,20 @@
     </block>
 
     <block name="template-user">
+        <script type="text/template" id="tpl-user-search">
+            <div class="form-holder">
+                <div class="entry">
+                    <input type="text" name="search" class="user-search" placeholder="Search User ...">
+                </div>
+            </div>
+        </script>
+        <script type="text/template" id="tpl-role-search">
+            <div class="form-holder">
+                <div class="entry">
+                    <input type="text" name="search" class="role-search" placeholder="Search Role ...">
+                </div>
+            </div>
+        </script>
         <script type="text/template" id="tpl-role-add">
             <form action="" method="post">
                 <div class="form-holder">
@@ -268,7 +280,7 @@
                 <% _.each(roleList, function(role){ %>
                     <tr data-id="<%= role.id %>">
                         <td><%= role.role_name %></td>
-                        <td><a href="javascript:void(0);" class="btn btn-info btn-detail">Edit</a></td>
+                        <td><a href="javascript:void(0);" class="btn btn-info btn-role-detail">Edit</a></td>
                     </tr>
                 <% }) %>
             </table>
@@ -347,7 +359,7 @@
                         <a href="javascript:void(0);" class="btn btn-allow <% if(user.allow == '0'){ %> btn-danger <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
                         </td>
                         <td>
-                        <a href="javascript:void(0);" class="btn btn-detail btn-info">Edit</a>
+                        <a href="javascript:void(0);" class="btn btn-user-detail btn-info">Edit</a>
                         </td>
                     </tr>
                 <% }) %>

@@ -358,6 +358,52 @@ jQuery(function() {
             }
         });
 
+        user.View.UserSearchView = Backbone.View.extend({
+            template: _.template($('#tpl-user-search').html()),
+            events:{
+                'keypress .user-search': 'searchUser'
+            },
+            searchUser: function(event){
+                if(event.keyCode == '13'){
+                    this.search = $(event.target).val();
+                    this._userEvents.trigger('alernately',this.search,'user-search');
+                }
+            },
+            initialize:function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
+                this.render();
+            },
+            render: function(){
+                var data = {};
+                this.$el.html(this.template(data));
+            }
+        });
+
+        user.View.RoleSearchView = Backbone.View.extend({
+            template: _.template($('#tpl-role-search').html()),
+            events:{
+                'keypress .role-search': 'searchRole'
+            },
+            searchRole: function(event){
+                if(event.keyCode == '13'){
+                    this.search = $(event.target).val();
+                    this._userEvents.trigger('alernately',this.search,'role-search');
+                }
+            },
+            initialize:function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.translate = options.translate;
+                // this.render();
+            },
+            render: function(){
+                var data = {};
+                this.$el.html(this.template(data));
+            }
+        });
+
         user.View.RoleAddView = Backbone.View.extend({
             template: _.template($('#tpl-role-add').html()),
             events:{
@@ -397,7 +443,7 @@ jQuery(function() {
         user.View.RoleListView = Backbone.View.extend({
             template: _.template($('#tpl-role-list').html()),
             events: {
-                'click .btn-detail': 'roleInfo',
+                'click .btn-role-detail': 'roleInfo',
                 'click .btn-list-role-add': 'roleAdd',
                 'click .btn-user-list': 'userList'
             },
@@ -411,6 +457,10 @@ jQuery(function() {
             userList: function(){
                 this._userEvents.trigger('refresh','user-list');
             },
+            setList: function(search){
+                this.search = search;
+                return this;
+            },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
@@ -420,7 +470,7 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.userModel.save({},
+                this.userModel.save({search:this.search},
                     {url:UrlApi('_app')+'/Admin/roleList'}
                     ).done(function (response){
                         data['roleList'] = response;
@@ -519,7 +569,7 @@ jQuery(function() {
             template: _.template($('#tpl-user-list').html()),
             events:{
                 'click .btn-allow': 'userAllow',
-                'click .btn-detail': 'userInfo',
+                'click .btn-user-detail': 'userInfo',
                 'click .btn-list-user-add': 'userAdd',
                 'click .btn-role-list': 'roleList'
             },
@@ -543,6 +593,11 @@ jQuery(function() {
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
             },
+            setList: function(search){
+                this.search = search;
+                console.log(this.search);
+                return this;
+            },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
@@ -554,7 +609,7 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.userModel.save({},
+                this.userModel.save({search:this.search},
                     {url:UrlApi('_app')+'/Admin/userList'}
                     ).done(function (response){
                         data['userList'] = response;
@@ -611,6 +666,18 @@ jQuery(function() {
                 var _userEvents = {};
                 _.extend(_userEvents, Backbone.Events);
 
+                var usersearchView = new user.View.UserSearchView({
+                    el: '.search-box-user',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var rolesearchView = new user.View.RoleSearchView({
+                    el: '.search-box-user',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
                 var roleinfoView = new user.View.RoleInfoView({
                     el: '.block-role-info',
                     userModel: this.userModel,
@@ -662,6 +729,7 @@ jQuery(function() {
                     }
                     if(view == 'role-list'){
                         rolelistView.render();
+                        rolesearchView.render();
                     }
                     if(view == 'roleAdd'){
                         rolelistView.render();
@@ -671,6 +739,7 @@ jQuery(function() {
                     }
                     if(view == 'user-list'){
                         userlistView.render();
+                        usersearchView.render();
                     }
                 });
 
@@ -683,6 +752,12 @@ jQuery(function() {
                     }
                     if(view == 'roleList'){
                         roleinfoView.setRole(data).render();
+                    }
+                    if(view == 'user-search'){
+                        userlistView.setList(data).render();
+                    }
+                    if(view == 'role-search'){
+                        rolelistView.setList(data).render();
                     }
                 });
             }

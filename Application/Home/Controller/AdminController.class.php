@@ -102,12 +102,23 @@ class AdminController extends Controller {
     public function userList(){
         $user_model = M('user');
         $relation_model = M('relation');
-        $user_id = $relation_model->where(array('parent_id'=>session('id')))->field('user_id')->select();
-        $where['id'] = array('neq',session('id'));
-        foreach ($user_id as $k=>$val) {
-            # code...
-            $userList[] = $user_model->where(array('id'=>$val['user_id']))->field('id,username,allow')->find();
+        $back = json_decode(file_get_contents("php://input"),true);
+        if($back['search']&&$back['search']!=null){
+            $where['username'] = array('like','%'.$back['search'].'%');
         }
+        $user_id = $relation_model->where(array('parent_id'=>session('id')))->field('user_id')->select();
+        foreach ($user_id as $key => $val) {
+            # code...
+            $ids = $ids.','.$val['user_id'];
+        }
+        $ids = substr($ids,1);
+        $where['id'] = array('in',$ids);
+        $userList = $user_model->where($where)->select();
+        // foreach ($user_id as $k=>$val) {
+        //     # code...
+        //     $where['id'] = $val['user_id'];
+        //     $userList[] = $user_model->where($where)->field('id,username,allow')->find();
+        // }
         echo json_encode($userList);
     }
 
@@ -172,6 +183,10 @@ class AdminController extends Controller {
 
     public function roleList(){
         $role_model = M('role');
+        $back = json_decode(file_get_contents("php://input"),true);
+        if($back['search']&&$back['search']!=null){
+            $where['role_name'] = array('like','%'.$back['search'].'%');
+        }
         $where['purview'] = array('neq','-1');
         $where['website_id'] = session('website_id');
         $role_list = $role_model->where($where)->select();
@@ -216,6 +231,11 @@ class AdminController extends Controller {
         }else{
             echo '0';
         }
+    }
+
+    public function ruleAdd(){
+        $rule_model = M('rule');
+        $rule_model->add();
     }
 
     public function ruleList(){
