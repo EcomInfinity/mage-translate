@@ -209,7 +209,9 @@ jQuery(function() {
             },
             editLanguage: function(event){
                 this.edit_id = $(event.target).closest('tr').data('id');
-                this._events.trigger('alernately',this.edit_id,'list');
+                if(Purview() == '1'){
+                    this._events.trigger('alernately',this.edit_id,'list');
+                }
             },
             deleteLanguage: function(event){
                 var _self = this;

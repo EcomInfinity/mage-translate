@@ -1,6 +1,6 @@
 (function($) {
     $(function(){
-         $('.block').on('click', '.btn-edit', function() {
+         $('body').on('click', '.btn-edit', function() {
              $('.block-translation-detail').show();
              $('.block-translation-add').hide();
              return false;
@@ -8,8 +8,9 @@
 
          //add lang
          $('body').on('click', '.btn-list-add', function() {
-             $(".block-translation-add").toggle();
+             $(".block-translation-add").show();
              $('.block-translation-detail').hide();
+             $('.delete').hide();
              return false;
          });
         //list and user

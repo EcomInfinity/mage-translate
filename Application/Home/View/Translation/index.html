@@ -164,7 +164,7 @@
               <td><%= list.fr %></td>
               <td><%= list.remarks %></td>
               <td>
-                <a href="javascript:void(0);" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
+                <a href="javascript:void(0);" class="btn btn-edit btn-info update">&nbsp&nbspEdit&nbsp&nbsp</a>
                 <a href="javascript:void(0);" class="btn btn-delete btn-danger">Delect</a>
               </td>
             </tr>
@@ -280,7 +280,7 @@
                 <% _.each(roleList, function(role){ %>
                     <tr data-id="<%= role.id %>">
                         <td><%= role.role_name %></td>
-                        <td><a href="javascript:void(0);" class="btn btn-info btn-role-detail">Edit</a></td>
+                        <td><a href="javascript:void(0);" class="btn btn-info btn-detail">Edit</a></td>
                     </tr>
                 <% }) %>
             </table>

@@ -29,7 +29,7 @@ class AdminController extends Controller {
                 session('username',$res['username']);
                 session('website_id',$userInfo['website']['id']);
                 session('website_name',$userInfo['website']['name']);
-                session('purview',$userInfo['role']['purview']);
+                session('purview',$userInfo['purview']);
             }else{
                 echo '0';
             }
@@ -114,12 +114,11 @@ class AdminController extends Controller {
         $ids = substr($ids,1);
         $where['id'] = array('in',$ids);
         $userList = $user_model->where($where)->select();
-        // foreach ($user_id as $k=>$val) {
-        //     # code...
-        //     $where['id'] = $val['user_id'];
-        //     $userList[] = $user_model->where($where)->field('id,username,allow')->find();
-        // }
-        echo json_encode($userList);
+        if($userList){
+            echo json_encode($userList);
+        }else{
+            echo '0';
+        }
     }
 
     public function userEdit(){
@@ -190,7 +189,11 @@ class AdminController extends Controller {
         $where['purview'] = array('neq','-1');
         $where['website_id'] = session('website_id');
         $role_list = $role_model->where($where)->select();
-        echo json_encode($role_list);
+        if($role_list){
+            echo json_encode($role_list);
+        }else{
+            echo '0';
+        }
     }
 
     public function roleInfo(){

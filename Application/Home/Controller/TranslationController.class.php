@@ -69,7 +69,7 @@ class TranslationController extends BaseController {
                     }
                     foreach ($lang_arr['0'] as $key => $value) {
                         # code...
-                        $lang_add[strtolower($value)] = $val[$key];
+                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key]), "UTF-8" , $val[$key]);
                     }
                     $lang_add['website_id'] = session('website_id');
                     $import['en'] = $lang_add['en'];
