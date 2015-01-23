@@ -1,7 +1,6 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-// header('Content-Type: application/json; charset=utf-8');
 class TranslationController extends BaseController {
     //index
     public function index(){

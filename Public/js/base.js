@@ -46,17 +46,6 @@ jQuery(function() {
         //Navigation
         lang.View.LanguageNavView = Backbone.View.extend({
             template: _.template($('#tpl-lang-nav').html()),
-            events:{
-                'click .btn-new': 'langClear'
-            },
-            langClear: function(event){
-                var _self = this;
-                this.translate.save({},
-                    {url:UrlApi('_app')+'/Translation/imageClear'}
-                    ).done(function (response){
-                    _self._events.trigger('refresh','nav');
-                    });
-            },
             initialize: function(options){
                 options || (options = {});
                 this._events = options._events;
@@ -119,7 +108,6 @@ jQuery(function() {
             },
             initialize: function(options){
                 options || (options = {});
-                //this.render();
             },
             render: function(){
                 var data = {};
@@ -160,7 +148,6 @@ jQuery(function() {
             initialize: function(options){
                 options || (options = {});
                 this.translate = options.translate;
-                //this.render();
             },
             render: function(){
                 var _self = this;
@@ -181,10 +168,10 @@ jQuery(function() {
             },
             searchLanguage: function(event){
                 if(event.keyCode == '13'){
-                    this.search = $(event.target).val();
-                    this.inrender = '1';
-                    this.searchData = {search:this.search,inrender:this.inrender};
-                    this._events.trigger('alernately',this.searchData,'search');
+                        this.search = $(event.target).val();
+                        this.inrender = '1';
+                        this.searchData = {search:this.search,inrender:this.inrender};
+                        this._events.trigger('alernately',this.searchData,'search');
                 }
             },
             initialize:function(options){
@@ -208,32 +195,38 @@ jQuery(function() {
                 'click .btn-list-add': 'addRender'
             },
             editLanguage: function(event){
-                this.edit_id = $(event.target).closest('tr').data('id');
-                if(Purview() == '1'){
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    this.edit_id = $(event.target).closest('tr').data('id');
                     this._events.trigger('alernately',this.edit_id,'list');
                 }
             },
             deleteLanguage: function(event){
-                var _self = this;
-                this.del_id = $(event.target).closest('tr').data('id');
-                this.translate.save({id:this.del_id},
-                    {url:UrlApi('_app')+'/Translation/del'}
-                    ).done(function (response){
-                        if(response == '1'){
-                            _self.render();
-                        }
-                });
+                if(Purview('delete') == '1'||PurviewVal() == '-1'){
+                    var _self = this;
+                    this.del_id = $(event.target).closest('tr').data('id');
+                    this.translate.save({id:this.del_id},
+                        {url:UrlApi('_app')+'/Translation/del'}
+                        ).done(function (response){
+                            if(response == '1'){
+                                _self.render();
+                            }
+                    });
+                }
             },
             exportRender: function(event){
-                this._events.trigger('refresh','list-export');
+                if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
+                    this._events.trigger('refresh','list-export');
+                }
             },
             addRender: function(){
-                var _self = this;
-                this.translate.save({},
-                    {url:UrlApi('_app')+'/Translation/imageClear'}
-                    ).done(function (response){
-                    _self._events.trigger('refresh','list-add');
-                    });
+                if(Purview('create') == '1'||PurviewVal() == '-1'){
+                    var _self = this;
+                    this.translate.save({},
+                        {url:UrlApi('_app')+'/Translation/imageClear'}
+                        ).done(function (response){
+                        _self._events.trigger('refresh','list-add');
+                        });
+                }
             },
             setList: function(data){
                 this.search = data.search;
@@ -336,7 +329,6 @@ jQuery(function() {
             },
             exportLanguage: function(event){
                 this.select = $('#export').val();
-                console.log(this.select);
                 this.translate.save({exrender:'0',field:this.select},
                     {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
@@ -375,7 +367,9 @@ jQuery(function() {
                 options || (options = {});
                 this._userEvents = options._userEvents;
                 this.userModel = options.userModel;
-                this.render();
+                if(PurviewVal()=='-1'){
+                    this.render();
+                }
             },
             render: function(){
                 var data = {};
@@ -398,7 +392,6 @@ jQuery(function() {
                 options || (options = {});
                 this._userEvents = options._userEvents;
                 this.translate = options.translate;
-                // this.render();
             },
             render: function(){
                 var data = {};
@@ -426,9 +419,6 @@ jQuery(function() {
                 options || (options = {});
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
-                if(PurviewVal()=='-1'){
-                    //this.render();
-                }
             },
             render: function(){
                 var _self = this;
@@ -467,7 +457,6 @@ jQuery(function() {
                 options || (options = {});
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
-                //this.render();
             },
             render: function(){
                 var _self = this;
@@ -490,7 +479,6 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                console.log(this.data_form);
                 this.userModel.save(this.data_form,
                     {url:UrlApi('_app')+'/Admin/roleEdit'}
                     ).done(function (response){
@@ -506,7 +494,6 @@ jQuery(function() {
             },
             setRole: function(roleId){
                 this.role_id = parseInt(roleId);
-                console.log(this.role_id);
                 return this;
             },
             render: function(){
@@ -516,7 +503,6 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Admin/roleInfo'}
                     ).done(function (response){
                         data['roleInfo'] = response;
-                        console.log(response);
                         data['ruleList'] = response.rule;
                         data['role_name'] = response.role_name;
                         data['role_id'] = response.role_id;
@@ -551,9 +537,6 @@ jQuery(function() {
                 options || (options = {});
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
-                if(PurviewVal()=='-1'){
-                    //this.render();
-                }
             },
             render: function(){
                 var _self = this;
@@ -597,7 +580,6 @@ jQuery(function() {
             },
             setList: function(search){
                 this.search = search;
-                console.log(this.search);
                 return this;
             },
             initialize: function(options){
@@ -827,10 +809,6 @@ jQuery(function() {
                         listView.render();
                         imagesView.render();
                     }
-                    // if(view == 'nav'){
-                    //     addView.render();
-                    //     imagesView.render();
-                    // }
                     if(view == 'edit'){
                         listView.render();
                     }

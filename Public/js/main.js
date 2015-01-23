@@ -10,7 +10,6 @@
          $('body').on('click', '.btn-list-add', function() {
              $(".block-translation-add").show();
              $('.block-translation-detail').hide();
-             $('.delete').hide();
              return false;
          });
         //list and user
@@ -63,7 +62,6 @@
          });
         //Enlarge Image
          $('body').on('click', 'ul img', function(){
-            console.log(this.src);
             $('#enlarge_images').html('');
             $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
             $('#enlarge_images').show();
@@ -94,7 +92,6 @@
                 data: _self.user,
                 beforeSend: function(){
                     var reVal = verifyLogin(_self.user.username,_self.user.password);
-                    console.log(reVal);
                     if(reVal[0] == '1'){
                         $('.tip-username').text('This is a required field.');
                     }else{
@@ -127,7 +124,6 @@
                 password2: $('#password2').val(),
                 website_name: $('#website_name').val()
             };
-            console.log(this.user);
             $.ajax({
                 type: 'POST',
                 url: UrlApi('_app')+'/Admin/register',

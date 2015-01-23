@@ -107,15 +107,19 @@ class AdminController extends Controller {
             $where['username'] = array('like','%'.$back['search'].'%');
         }
         $user_id = $relation_model->where(array('parent_id'=>session('id')))->field('user_id')->select();
-        foreach ($user_id as $key => $val) {
-            # code...
-            $ids = $ids.','.$val['user_id'];
-        }
-        $ids = substr($ids,1);
-        $where['id'] = array('in',$ids);
-        $userList = $user_model->where($where)->select();
-        if($userList){
-            echo json_encode($userList);
+        if($user_id){
+            foreach ($user_id as $key => $val) {
+                # code...
+                $ids = $ids.','.$val['user_id'];
+            }
+            $ids = substr($ids,1);
+            $where['id'] = array('in',$ids);
+            $userList = $user_model->where($where)->select();
+            if($userList){
+                echo json_encode($userList);
+            }else{
+                echo '0';
+            }
         }else{
             echo '0';
         }
