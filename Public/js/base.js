@@ -249,6 +249,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/getList'}
                     ).done(function (response){
                     data['lists'] = response.lists;
+                    data['count'] = response.count;
                     _self.$el.html(_self.template(data));
                 });
             }

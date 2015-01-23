@@ -128,21 +128,24 @@ class TranslationController extends BaseController {
             $where['en'] = array('like','%'.$back['search'].'%');
         }
         if($back['inrender'] == '0'){
-            $wheref['en'] = '';
-            $wheref['de'] = '';
-            $wheref['nl'] = '';
+            // $wheref['en'] = '';
+            // $wheref['de'] = '';
+            // $wheref['nl'] = '';
             //$where['fr'] = '';
-            $wheref['_logic'] = 'or';
-            $where['_complex'] = $wheref;
-            $where['status'] = '1';
+            // $wheref['_logic'] = 'or';
+            // $where['_complex'] = $wheref;
+            // $where['status'] = '1';
+            $where['modify'] = '0';
         }
         if($back['inrender'] == '1'){
             $where['status'] = '1';
         }
         $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
+        $count = $translation_model->count();
         $list['lists'] = $translation_list;
-        if($translation_list){
+        $list['count'] = $count;
+        if($translation_list||$count){
             echo json_encode($list);
         }else{
             echo '0';

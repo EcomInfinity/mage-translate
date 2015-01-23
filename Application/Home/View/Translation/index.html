@@ -68,19 +68,19 @@
             <div class="tip tip-langadd"></div>
                 <form action="" method="post">
                     <div class="form-holder">
-                        <div class="entry">
+                        <div class="entry textarea">
                             <label for="en">EN:</label>
-                            <input type="text" name="en" id="en" />
+                            <textarea name="en" id="en"></textarea>
                         </div>
-                        <div class="entry">
+                        <div class="entry textarea">
                             <label for="de">DE:</label>
-                            <input type="text" name="de" id="de" />
+                            <textarea name="de" id="de"></textarea>
                         </div>
-                        <div class="entry">
+                        <div class="entry textarea">
                             <label for="nl">NL:</label>
-                            <input type="text" name="nl" id="nl" />
+                            <textarea name="nl" id="nl"></textarea>
                         </div>
-                        <div class="entry">
+<!--                        <div class="entry">
                             <label for="fr">FR:</label>
                             <input type="text" name="fr" id="fr" />
                         </div>
@@ -88,6 +88,7 @@
                             <label for="remarks">Remarks:</label>
                             <input type="text" name="remarks" id="remarks" />
                         </div>
+                        -->
                     </div>
                     <div class="btn-set">
                         <a href="javascript:void(0);" class="btn btn-add btn-primary up">Add</a>
@@ -145,30 +146,25 @@
         <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
           <thead>
             <tr>
-              <!--<th>ID</th>-->
               <th>EN</th>
               <th>DE</th>
               <th>NL</th>
-              <th>FR</th>
-              <th>Remarks</th>
               <th>Operation</th>
             </tr>
           </thead>
           <tbody>
            <% _.each(lists, function(list){ %>
             <tr  data-id="<%= list.id %>">
-              <!--<td><%= list.id %></td>-->
               <td><%= list.en %></td>
               <td><%= list.de %></td>
               <td><%= list.nl %></td>
-              <td><%= list.fr %></td>
-              <td><%= list.remarks %></td>
               <td>
                 <a href="javascript:void(0);" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
                 <a href="javascript:void(0);" class="btn btn-delete btn-danger">Delect</a>
               </td>
             </tr>
            <% }) %>
+           <tr><td>In total</td><td colspan="3"><%= count %></td></tr>
           </tbody>
         </table>
         </script>
@@ -190,12 +186,12 @@
             <!-- <form action=""> -->
             <div class="col col5 fl">
                 <div class="form-holder" data-id="<%= langDetail['id'] %>">
-                    <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'){ %>
-                        <div class="entry">
+                    <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='remarks'){ %>
+                        <div class="entry textarea">
                         <label for="edit-<%= detail %>">
                         <%= detail %>
                         </label>
-                        <input type="text" id="edit-<%= detail %>" lang_type="<%= detail %>" value="<%= langDetail[detail] %>" class="lang_edit" /> 
+                        <textarea id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit"><%= langDetail[detail] %></textarea>
                         </div>
                     <%}})%>
 
