@@ -86,6 +86,7 @@ jQuery(function() {
             render: function(){
                 var data = {};
                 this.$el.html(this.template(data));
+                $.fancybox(this.$el);
             }
         });
 

@@ -9,7 +9,7 @@ main .search-box { width: 100%; margin-bottom: 10px; }
 table { width: 100%; }
 table td, table th { padding: 5px; }
 
-.block { margin: 10px; }
+.block { }
 
 .tbl-translation-list { }
 
@@ -41,3 +41,4 @@ select{text-transform: uppercase;}
 .block-translation-export{background-color: #E7E7E7;}
 
 .btn-right{float: right;}
+
