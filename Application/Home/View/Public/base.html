@@ -18,6 +18,9 @@
                     if(urlname == '_app'){
                         return "__APP__";
                     }
+                    if(urlname == '_uploads'){
+                        return "__UPLOADS__";
+                    }
                 }
 
                 PurviewVal = function (){
@@ -89,7 +92,7 @@
             <block name="template-user"></block>
         </div>
         <div class="page-width block-footer">
-            <block name="footer">Powered by </block>
+            <block name="footer"></block>
         </div>
     </div>
     <button type="button" id="message" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm" style="display:none;">Message</button>

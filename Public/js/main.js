@@ -1,66 +1,6 @@
 (function($) {
     $(function(){
-         $('body').on('click', '.btn-edit', function() {
-             $('.block-translation-detail').show();
-             $('.block-translation-add').hide();
-             return false;
-         });
-
-         //add lang
-         $('body').on('click', '.btn-list-add', function() {
-             $(".block-translation-add").show();
-             $('.block-translation-detail').hide();
-             return false;
-         });
-        //list and user
-         $('body').on('click', '.btn-user', function(){
-            $('.block-view-user').slideDown("slow");
-            $('.block-view-translate').slideUp("slow");
-            return false;
-         });
-
-         $('body').on('click', '.btn-list', function(){
-            $('.block-view-translate').slideDown("slow");
-            $('.block-view-user').slideUp("slow");
-            return false;
-         });
-        //user add and edit
-         $('body').on('click', '.btn-list-user-add', function(){
-            $('.block-user-info').slideUp("slow");
-            $('.block-user-add').slideDown("slow");
-            return false;
-         });
-
-         $('body').on('click', '.btn-user-detail', function(){
-            $('.block-user-add').slideUp("slow");
-            $('.block-user-info').slideDown("slow");
-            return false;
-         });
-        //role add and edit
-         $('body').on('click', '.btn-list-role-add', function(){
-            $('.block-role-info').slideUp("slow");
-            $('.block-role-add').slideDown("slow");
-            return false;
-         });
-
-         $('body').on('click', '.btn-role-detail', function(){
-            $('.block-role-add').slideUp("slow");
-            $('.block-role-info').slideDown("slow");
-            return false;
-         });
-        //user and role
-         $('body').on('click', '.btn-role-list', function(){
-            $('.block-user').slideUp("slow");
-            $('.block-role').slideDown("slow");
-            return false;
-         });
-
-         $('body').on('click', '.btn-user-list', function(){
-            $('.block-role').slideUp("slow");
-            $('.block-user').slideDown("slow");
-            return false;
-         });
-        //Enlarge Image
+         //Enlarge Image
          $('body').on('click', 'ul img', function(){
             $('#enlarge_images').html('');
             $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
@@ -73,6 +13,7 @@
             $('#enlarge_images').hide();
             return false;
          });
+
          //login
          $('body').keypress(function (event){
             if(event.keyCode == '13'){
@@ -224,7 +165,7 @@
                 dataType: 'json',
                 success: function (data, status) {
                     if (typeof callback === 'function') {
-                        callback();
+                        callback(data);
                     }
                 },
                 error: function (data, status) {

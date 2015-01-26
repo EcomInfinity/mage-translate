@@ -143,10 +143,14 @@ class AdminController extends Controller {
     public function userAllow(){
         $user_model = M('user');
         $back = json_decode(file_get_contents("php://input"),true);
-        $save['id'] = $back['user_id'];
-        $save['allow'] = $back['allow'];
-        $user_model->save($save);
-        echo '1';
+        if($back['user_id']!=null&&$back['allow']!==null){
+            $save['id'] = intval($back['user_id']);
+            $save['allow'] = intval($back['allow']);
+            $user_model->save($save);
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
 
     public function userInfo(){

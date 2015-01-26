@@ -15,14 +15,10 @@
                 <div class="block block-translation-list">
                 </div>
 
-                <div class="block block-translation-detail">
+                <div class="block block-translation-detail" style="width:960px;">
                 </div>
 
-                <div class="block block-translation-add">
-                    <div class="batch-import"></div>
-                    <div class="info-add col col5 fl"></div>
-                    <div class="image-add images_list col col5 fr"></div>
-                </div>
+                <div class="block block-translation-add" style="width:960px;">
             </div>
         </main>
     </block>
@@ -65,69 +61,72 @@
 
     <block name="template-translate">
         <script type="text/template" id="tpl-lang-add">
-            <div class="tip tip-langadd"></div>
-                <form action="" method="post">
+
+            <div class="batch-import">
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-holder">
-                        <div class="entry textarea">
-                            <label for="en">EN:</label>
-                            <textarea name="en" id="en"></textarea>
+                        <div class="entry file">
+                            <label>Batch Import:</label>
+                            <input type="file" name="csv" id="batch-import" />
                         </div>
-                        <div class="entry textarea">
-                            <label for="de">DE:</label>
-                            <textarea name="de" id="de"></textarea>
-                        </div>
-                        <div class="entry textarea">
-                            <label for="nl">NL:</label>
-                            <textarea name="nl" id="nl"></textarea>
-                        </div>
-<!--                        <div class="entry">
-                            <label for="fr">FR:</label>
-                            <input type="text" name="fr" id="fr" />
-                        </div>
-                        <div class="entry">
-                            <label for="remarks">Remarks:</label>
-                            <input type="text" name="remarks" id="remarks" />
-                        </div>
-                        -->
-                    </div>
-                    <div class="btn-set">
-                        <a href="javascript:void(0);" class="btn btn-add btn-primary up">Add</a>
                     </div>
                 </form>
-        </script>
-        <script type="text/template" id="tpl-lang-import">
-            <form action="" method="post" enctype="multipart/form-data">
-                <div class="form-holder">
-                    <div class="entry file">
-                        <label>Batch Import:</label>
-                        <input type="file" name="csv" id="batch-import" />
-                    </div>
-                </div>
-            </form>
-            <p>Please select the *.csv file format batch import</p>
-        </script>
-        <script type="text/template" id="tpl-lang-images">
-            <form action="" method="post" enctype="multipart/form-data">
-                <div class="form-holder">
-                    <div class="entry file">
-                        <label>Images:</label>
-                        <input type="file" name="images" id="images-add" />
-                    </div>
-                </div>
-            </form>
-            <div class="">
-                <ul>
-                    <% _.each(imagesDetail, function(image){ %>
-                        <li>
-                            <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
-                            <div class="btn-set">
-                                <a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
-                            </div>
-                        </li>
-                    <% })%>
-                </ul>
-                <div id="enlarge_images"></div>
+                <p>Please select the *.csv file format batch import</p>
             </div>
+
+            <div class="col col5 fl">
+                <div class="tip tip-langadd"></div>
+                    <form action="" method="post">
+                        <div class="form-holder">
+                            <div class="entry textarea">
+                                <label for="en">EN:</label>
+                                <textarea name="en" id="en"></textarea>
+                            </div>
+                            <div class="entry textarea">
+                                <label for="de">DE:</label>
+                                <textarea name="de" id="de"></textarea>
+                            </div>
+                            <div class="entry textarea">
+                                <label for="nl">NL:</label>
+                                <textarea name="nl" id="nl"></textarea>
+                            </div>
+    <!--                        <div class="entry">
+                                <label for="fr">FR:</label>
+                                <input type="text" name="fr" id="fr" />
+                            </div>
+                            <div class="entry">
+                                <label for="remarks">Remarks:</label>
+                                <input type="text" name="remarks" id="remarks" />
+                            </div>
+                            -->
+                        </div>
+                        <div class="btn-set">
+                            <a href="#" class="btn btn-add btn-primary up">Add</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="images_list col col5 fr">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="form-holder">
+                            <div class="entry file">
+                                <label>Images:</label>
+                                <input type="file" name="images" id="images-add" />
+                            </div>
+                        </div>
+                    </form>
+                    <ul>
+                        <% _.each(imagesDetail, function(image){ %>
+                            <li>
+                                <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
+                                <div class="btn-set">
+                                    <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
+                                </div>
+                            </li>
+                        <% })%>
+                    </ul>
+                    <div id="enlarge_images"></div>
+                </div>
         </script>
         <script type="text/template" id="tpl-lang-search">
             <!-- <form action="" data-get=""> -->
@@ -140,15 +139,18 @@
         </script>
         <script type="text/template" id="tpl-lang-list">
         <div class="jump">
-        <a href="javascript:void(0);" class="btn btn-list-export btn-primary">Lang Export</a>
-        <a href="javascript:void(0);" class="btn btn-list-add btn-primary btn-right">Lang Add</a>
+        <a href="#" class="btn btn-list-export btn-primary">Lang Export</a>
+        <a href="#" class="btn btn-list-add btn-primary">Lang Add</a>
+        <span class="record"><%= count %> Records</span>
         </div>
+        <div class="line"></div>
         <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
           <thead>
             <tr>
               <th>EN</th>
               <th>DE</th>
               <th>NL</th>
+              <th>MODIFY</th>
               <th>Operation</th>
             </tr>
           </thead>
@@ -159,18 +161,20 @@
               <td><%= list.de %></td>
               <td><%= list.nl %></td>
               <td>
-                <a href="javascript:void(0);" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
-                <a href="javascript:void(0);" class="btn btn-delete btn-danger">Delect</a>
+                  <a href="#" class="btn <% if(list.modify == '1'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="1">Yes</a>
+                  <a href="#" class="btn <% if(list.modify == '0'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="0">&nbspNo&nbsp</a>
+              </td>
+              <td>
+                <a href="#" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
+                <a href="#" class="btn btn-delete btn-danger">Delect</a>
               </td>
             </tr>
            <% }) %>
-           <tr><td>In total</td><td colspan="3"><%= count %></td></tr>
           </tbody>
         </table>
         </script>
         <script type="text/template" id="tpl-lang-export">
             <div class="entry select">
-                <!--<label for="export">Export</label>-->
                 <select id="export" class="form-control">
                 <% _.each(allField,function(field){ %>
                     <option value="<%= field %>"><%= field %></option>
@@ -178,7 +182,7 @@
                 </select>
             </div>
             <div class="btn-set">
-                <a href="javascript:void(0);" class="btn btn-export btn-primary">Export</a>
+                <a href="#" class="btn btn-export btn-primary">Export</a>
                 <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
             </div>
         </script>
@@ -186,7 +190,7 @@
             <!-- <form action=""> -->
             <div class="col col5 fl">
                 <div class="form-holder" data-id="<%= langDetail['id'] %>">
-                    <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='remarks'){ %>
+                    <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='remarks'&&detail!='modify'){ %>
                         <div class="entry textarea">
                         <label for="edit-<%= detail %>">
                         <%= detail %>
@@ -213,7 +217,7 @@
                         <li>
                             <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
                             <div class="btn-set">
-                                <a href="javascript:void(0);" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
+                                <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
                             </div>
                         </li>
                     <% })%>
@@ -259,14 +263,14 @@
                     <% }) %>
                 </div>
                 <div class="btn-set">
-                    <a href="javascript:void(0);" class="btn btn-role-add btn-primary">Role Add</a>
+                    <a href="#" class="btn btn-role-add btn-primary">Role Add</a>
                 </div>
             </form>
         </script>
         <script type="text/template" id="tpl-role-list">
             <div class="jump">
-                <a href="javascript:void(0);" class="btn btn-primary btn-list-role-add">Role Add</a>
-                <a href="javascript:void(0);" class="btn btn-primary btn-right btn-user-list">User List</a>
+                <a href="#" class="btn btn-primary btn-list-role-add">Role Add</a>
+                <a href="#" class="btn btn-primary btn-right btn-user-list">User List</a>
             </div>
             <table class="table table-hover" cellspacing="0" cellpadding="0">
                 <tr>
@@ -276,7 +280,7 @@
                 <% _.each(roleList, function(role){ %>
                     <tr data-id="<%= role.id %>">
                         <td><%= role.role_name %></td>
-                        <td><a href="javascript:void(0);" class="btn btn-info btn-detail">Edit</a></td>
+                        <td><a href="#" class="btn btn-info btn-role-detail">Edit</a></td>
                     </tr>
                 <% }) %>
             </table>
@@ -301,7 +305,7 @@
                     No</label>
                 </div>
                 <% }) %>
-                <a href="javascript:void(0);" class="btn btn-primary btn-edit">Role Edit</a>
+                <a href="#" class="btn btn-primary btn-edit">Role Edit</a>
             </form>
             <!--<% _.each(roleInfo, function(info){ %>
                 <%= info %>
@@ -330,14 +334,14 @@
                     </div>
                 </div>
                 <div class="btn-set">
-                    <a href="javascript:void(0);" class="btn btn-user-add btn-primary">User Add</a>
+                    <a href="#" class="btn btn-user-add btn-primary">User Add</a>
                 </div>
             </form>
         </script>
         <script type="text/template" id="tpl-user-list">
             <div class="jump">
-                <a href="javascript:void(0);" class="btn btn-primary btn-list-user-add">User Add</a>
-                <a href="javascript:void(0);" class="btn btn-primary btn-right btn-role-list">Role List</a>
+                <a href="#" class="btn btn-primary btn-list-user-add">User Add</a>
+                <a href="#" class="btn btn-primary btn-right btn-role-list">Role List</a>
             </div>
             <table class="table table-hover">
                 <tr>
@@ -351,11 +355,11 @@
                         <!--<td><%= user.id %></td>-->
                         <td><%= user.username %></td>
                         <td>
-                        <a href="javascript:void(0);" class="btn btn-allow <% if(user.allow == '1'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="1">Yes</a>
-                        <a href="javascript:void(0);" class="btn btn-allow <% if(user.allow == '0'){ %> btn-danger <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
+                        <a href="#" class="btn btn-allow <% if(user.allow == '1'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="1">Yes</a>
+                        <a href="#" class="btn btn-allow <% if(user.allow == '0'){ %> btn-danger <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
                         </td>
                         <td>
-                        <a href="javascript:void(0);" class="btn btn-user-detail btn-info">Edit</a>
+                        <a href="#" class="btn btn-user-detail btn-info">Edit</a>
                         </td>
                     </tr>
                 <% }) %>
@@ -381,7 +385,7 @@
                     </div>
                 </div>
                 <div class="btn-set">
-                    <a href="javascript:void(0);" class="btn btn-edit btn-primary">User Save</a>
+                    <a href="#" class="btn btn-edit btn-primary">User Save</a>
                 </div>
             </form>
         </script>

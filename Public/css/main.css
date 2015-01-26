@@ -41,5 +41,10 @@ select{text-transform: uppercase;}
 
 .block-translation-export{background-color: #E7E7E7;}
 
+.record{font-size: 18px;font-style: italic;font-weight: bold;float: right;padding: 6px 12px;}
+
+.line{background-color: black;padding: 1px;margin: 10px 0px;}
+
 .btn-right{float: right;}
 
+/*.jump{z-index: 100;position: fixed;right: 0;left: 0;}*/
