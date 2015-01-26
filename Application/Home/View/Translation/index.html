@@ -141,7 +141,8 @@
         <div class="jump">
         <a href="#" class="btn btn-list-export btn-primary">Lang Export</a>
         <a href="#" class="btn btn-list-add btn-primary">Lang Add</a>
-        <span class="record"><%= count %> Records</span>
+        <span class="record"><% if(count){ %> <%= count %> <% }else{ %> 0 
+            <%}%>Records</span>
         </div>
         <div class="line"></div>
         <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
