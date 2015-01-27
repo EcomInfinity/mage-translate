@@ -1,0 +1,60 @@
+<html>
+<head>
+    <title>Mage Register</title>
+    <meta name="loginport" content="width=device-width, initial-scale=1">
+
+    <load href="__PUBLIC__/css/reset.css" />
+    <load href="__PUBLIC__/css/lib/bootstrap.css" />
+    <load href="__PUBLIC__/css/lib/bootstrap-theme.css" />
+    <load href="__PUBLIC__/css/lib/jquery.fancybox.css" />
+    <load href="__PUBLIC__/css/main.css" />
+
+    <load href="__PUBLIC__/js/lib/jquery.js" />
+    <script type="text/javascript">
+        (function($) {
+            $(function(){
+                UrlApi = function (urlname) {
+                    // body...
+                    if(urlname == '_app'){
+                        return "__APP__";
+                    }
+                }
+            });
+        })(jQuery);
+    </script>
+    <load href="__PUBLIC__/js/main.js" />
+</head>
+<body>
+    <div class="body-wrapper page-width">
+        <div class="register-container">
+            <form action="" method="post">
+                <div class="form-hoder">
+                    <h2>Increase The Administrative User</h2>
+                    <div class="tip tip-main"></div>
+                    <div class="entry form-group">
+                        <label for="username">User Name:</label>
+                        <input type="text" name="username" id="username" />
+                    </div>
+                    <div class="tip tip-username"></div>
+                    <div class="entry form-group">
+                        <label for="password1">Password:</label>
+                        <input type="password" name="password1" id="password1" />
+                    </div>
+                    <div class="tip tip-password1"></div>
+                    <div class="entry form-group">
+                        <label for="password2">Confirm Password:</label>
+                        <input type="password" name="password2" id="password2" />
+                    </div>
+                    <div class="tip tip-password2"></div>
+                    <div class="entry form-group">
+                        <label for="website_name">Website Name:</label>
+                        <input type="text" name="website_name" id="website_name" />
+                    </div>
+                    <div class="tip tip-website_name"></div>
+                </div>
+                <a href="#" class="btn btn-register btn-default">Submit</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
