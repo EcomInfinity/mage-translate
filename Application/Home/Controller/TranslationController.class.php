@@ -4,6 +4,18 @@ use Think\Controller;
 class TranslationController extends BaseController {
     //index
     public function index(){
+        $translation_model = M('translation');
+        $where['de'] = array('neq','');
+        $where['en'] = array('neq','');
+        $where['nl'] = array('neq','');
+        $where['website_id'] = session('website_id');
+        $ids = $translation_model->where($where)->field('id')->select();
+        $save['modify'] = '0';
+        foreach ($ids as $val) {
+            # code...
+            $save['id'] = $val['id'];
+            $translation_model->save($save);
+        }
         $this->display();
     }
 
@@ -70,6 +82,9 @@ class TranslationController extends BaseController {
                         # code...
                         $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key]), "UTF-8" , $val[$key]);
                     }
+                    if($lang_add['en']!=''&&$lang_add['de']!=''&&$lang_add['nl']!=''){
+                        $lang_add['modify'] = '0';
+                    }
                     $lang_add['website_id'] = session('website_id');
                     $import['en'] = $lang_add['en'];
                     $import['website_id'] = session('website_id');
@@ -96,6 +111,9 @@ class TranslationController extends BaseController {
             $trans_data['de'] = $back['de'];
             $trans_data['nl'] = $back['nl'];
             $trans_data['fr'] = $back['fr'];
+            if($back['en']!=null&&$back['de']!=null&&$back['nl']!=null){
+                $trans_data['modify'] = '0';
+            }
             $trans_data['remarks'] = $back['remarks'];
             $trans_data['website_id'] = session('website_id');
             $id=$translation_model->add($trans_data);
@@ -129,10 +147,11 @@ class TranslationController extends BaseController {
         }
         if($back['inrender'] == '0'){
             $where['status'] = '1';
-            $where['modify'] = '0';
+            $where['modify'] = '1';
         }
         if($back['inrender'] == '1'){
             $where['status'] = '1';
+            $where['modify'] = '0';
         }
         $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
