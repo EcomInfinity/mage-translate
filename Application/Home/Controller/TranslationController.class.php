@@ -4,6 +4,7 @@ use Think\Controller;
 class TranslationController extends BaseController {
     //index
     public function index(){
+        //Initialization then del
         $translation_model = M('translation');
         $where['de'] = array('neq','');
         $where['en'] = array('neq','');
@@ -16,6 +17,7 @@ class TranslationController extends BaseController {
             $save['id'] = $val['id'];
             $translation_model->save($save);
         }
+        //Initialization then del
         $this->display();
     }
 
