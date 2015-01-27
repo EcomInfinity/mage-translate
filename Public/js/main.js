@@ -1,6 +1,12 @@
 (function($) {
     $(function(){
          //Enlarge Image
+        //  var str = '123333';
+        // if(str.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
+        //     alert(1);
+        // }else{
+        //     alert(0);
+        // }
          $('body').on('click', 'ul img', function(){
             $('#enlarge_images').html('');
             $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
@@ -71,18 +77,18 @@
                 data: _self.user,
                 beforeSend: function(){
                     var reVal = verifyRegister(_self.user.username,_self.user.password1,_self.user.password2,_self.user.website_name);
-                    if(reVal[0] == '1'){
-                        $('.tip-username').text('This is a required field.');
+                    if(reVal[0] == '0'){
+                        $('.tip-username').text('Username from 5-15 digits or letters.');
                     }else{
                         $('.tip-username').text('');
                     }
-                    if(reVal[1] == '1'){
-                        $('.tip-password1').text('This is a required field.');
+                    if(reVal[1] == '0'){
+                        $('.tip-password1').text('Password from 5-15 digits or letters.');
                     }else{
                         $('.tip-password1').text('');
                     }
-                    if(reVal[2] == '1'){
-                        $('.tip-password2').text('This is a required field.');
+                    if(reVal[2] == '0'){
+                        $('.tip-password2').text('Password from 5-15 digits or letters.');
                     }else{
                         $('.tip-password2').text('');
                     }
@@ -91,12 +97,12 @@
                     }else{
                         $('.tip-password2').text('Please make sure your passwords match.');
                     }
-                    if(reVal[4] == '1'){
-                        $('.tip-website_name').text('This is a required field.');
+                    if(reVal[4] == '0'){
+                        $('.tip-website_name').text('Website Name from 5-15 digits or letters.');
                     }else{
                         $('.tip-website_name').text('');
                     }
-                    if(reVal[0] == '1'||reVal[1] == '1'||reVal[3] == '0'||reVal[4] == '1'){
+                    if(reVal[0] == '0'||reVal[1] == '0'||reVal[3] == '0'||reVal[4] == '0'){
                         return false;
                     }
                 }
@@ -128,17 +134,19 @@
 
     verifyRegister = function (username,password1,password2,website_name){
         var reVal = {};
-        if(username == ''){
+        // str.match(/^[a-zA-Z0-9]{5,15}$/)
+        console.log(username);
+        if(username.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
             reVal['0'] = '1';
         }else{
             reVal['0'] = '0';
         }
-        if(password1 == ''){
+        if(password1.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
             reVal['1'] = '1';
         }else{
             reVal['1'] = '0';
         }
-        if(password2 == ''){
+        if(password2.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
             reVal['2'] = '1';
         }else{
             reVal['2'] = '0';
@@ -148,7 +156,7 @@
         }else{
             reVal['3'] = '0';
         }
-        if(website_name == ''){
+        if(website_name.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
             reVal['4'] = '1';
         }else{
             reVal['4'] = '0';

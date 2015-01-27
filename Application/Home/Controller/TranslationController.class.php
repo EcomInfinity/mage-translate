@@ -28,7 +28,9 @@ class TranslationController extends BaseController {
         if($back['exrender'] == '0'){
             $field = 'en,'.$fields;
             $title = explode(",", $field);
-            $export = $translation_model->where(array('website_id'=>session('website_id')))->field($field)->select();
+            $where['website_id'] = session('website_id');
+            $where['status'] = '1';
+            $export = $translation_model->where($where)->field($field)->select();
             S('title',$title);
             S('export',$export);
             S('filename',$fields);
