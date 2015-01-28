@@ -131,13 +131,22 @@ class AdminController extends Controller {
         $back = json_decode(file_get_contents("php://input"),true);
         $save_rela['role_id'] = $back['role_id'];
         $relation_model->where(array('user_id'=>$back['user_id']))->save($save_rela);
-        $save['id'] = $back['user_id'];
-        $save['username'] = $back['username'];
-        if($back['password']!=''){
-            $save['password'] = md5($back['password']);
+        $repeat_name = $user_model->where(array('username'=>$back['username']))->find();
+        if($repeat_name){
+            echo '0';
+        }else{
+            $save['id'] = $back['user_id'];
+            $save['username'] = $back['username'];
+            if($back['password']!=''){
+                $save['password'] = md5($back['password']);
+            }
+            $res = $user_model->save($save);
+            if($res){
+                echo '1';
+            }else{
+                echo '0';
+            }
         }
-        $user_model->save($save);
-        echo '1';
     }
 
     public function userAllow(){
@@ -185,6 +194,8 @@ class AdminController extends Controller {
             $add['website_id'] = session('website_id');
             $role_model->add($add);
             echo '1';
+        }else{
+            echo '0';
         }
     }
 

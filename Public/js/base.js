@@ -82,13 +82,15 @@ jQuery(function() {
             },
             addLanguage: function(event){
                 var _self = this;
-                var $form=$(event.target).closest('form');
+                var $form = $(event.target).closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(this.data_form,
                     {url:UrlApi('_app')+'/Translation/add'}
                     ).done(function (response){
                         if(response == '1'){
-                            _self.render();
+                            $('.tip-langadd').html('<span style="color:green;">Add Success.</span>');
+                            lang_add.reset();
+                            setTimeout("$('.tip-langadd').empty()",1000);
                             _self._events.trigger('refresh','add');
                         }else{
                             $('.tip-langadd').text('Can not all be empty');
@@ -101,7 +103,7 @@ jQuery(function() {
                     'batch-import',
                     function() {
                         alert('Import Success');
-                    }, 
+                    },
                     function() {
                         alert('Import Fail');
                     }
@@ -292,6 +294,11 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/editInfo'}
                     ).done(function (response){
                         if(response == '1'){
+                            $('.tip-langedit').html('<span style="color:green">Edit Success</span>');
+                            setTimeout("$('.tip-langedit').empty()",1000);
+                            _self._events.trigger('refresh','edit');
+                        }else{
+                            $('.tip-langedit').text('Edit Fail');
                             _self._events.trigger('refresh','edit');
                         }
                 });
@@ -304,7 +311,8 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/imageDel'}
                     ).done(function (response){
                     if(response == '1'){
-                        _self.render();
+                        // _self.render();
+                        _click.closest('li').hide();
                     }
                 });
             },
@@ -314,8 +322,13 @@ jQuery(function() {
                 ajaxFileUpload(
                     UrlApi('_app')+'/Translation/imageAdd/lang_id/'+this.langId,
                     'images',
-                    function() {
-                        _self.render();
+                    function(data) {
+                        // _self.render();
+                        _self.translate.save({imageId:data},
+                            {url:UrlApi('_app')+'/Translation/getImage'}
+                            ).done(function (response){
+                                $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
+                        });
                     }, 
                     function() {
                         alert('Add Fail');
@@ -431,12 +444,23 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                this.userModel.save(this.data_form,
-                    {url:UrlApi('_app')+'/Admin/roleAdd'}
-                    ).done(function (response){
-                        _self.render();
-                        _self._userEvents.trigger('refresh','roleAdd');
-                    });
+                if(this.data_form['role'].match(/^.{1,20}$/)!=null){
+                    this.userModel.save(this.data_form,
+                        {url:UrlApi('_app')+'/Admin/roleAdd'}
+                        ).done(function (response){
+                            // _self.render();
+                            if(response == '1'){
+                                $('.tip-roleadd').html('<span style="color:green;">Add Success.</span>');
+                                role_add.reset();
+                                setTimeout("$('.tip-roleadd').empty()",1000);
+                                _self._userEvents.trigger('refresh','roleAdd');
+                            }else{
+                                $('.tip-roleadd').text('Add Fail');
+                            }
+                        });
+                }else{
+                    $('.tip-roleadd').text('Role name From 1 to 20 characters');
+                }
             },
             initialize: function(options){
                 options || (options = {});
@@ -506,13 +530,21 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                this.userModel.save(this.data_form,
-                    {url:UrlApi('_app')+'/Admin/roleEdit'}
-                    ).done(function (response){
-                        if(response == '1'){
-                            _self._userEvents.trigger('refresh','roleInfo');
-                        }
-                    });
+                if(this.data_form['role_name'].match(/^.{1,20}$/)!=null){
+                    this.userModel.save(this.data_form,
+                        {url:UrlApi('_app')+'/Admin/roleEdit'}
+                        ).done(function (response){
+                            if(response == '1'){
+                                $('.tip-roleedit').html('<span style="color: green;">Edit Success</span>');
+                                setTimeout("$('.tip-roleedit').empty()",1000);
+                                _self._userEvents.trigger('refresh','roleInfo');
+                            }else{
+                                $('.tip-roleedit').text('Edit Fail');
+                            }
+                        });
+                }else{
+                    $('.tip-roleedit').text('Role name From 1 to 20 characters');
+                }
             },
             initialize: function(options){
                 options || (options = {});
@@ -548,18 +580,26 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                this.userModel.save(this.data_form,
-                    {url:UrlApi('_app')+'/Admin/userAdd'}
-                    ).done(function (response){
-                        if(response == '1'){
-                            _self.render();
-                            _self._userEvents.trigger('refresh','userAdd');
-                        }else{
+                var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
+                    pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
+                if(user_match!=null&&pwd_match!=null){
+                    this.userModel.save(this.data_form,
+                        {url:UrlApi('_app')+'/Admin/userAdd'}
+                        ).done(function (response){
+                            if(response == '1'){
+                                $('.tip-useradd').html('<span style="color:green;">Add Success.</span>');
+                                user_add.reset();
+                                setTimeout("$('.tip-useradd').empty()",1000);
+                                _self._userEvents.trigger('refresh','userAdd');
+                            }else{
+                                $('.tip-useradd').text('Username or duplicate username password is empty');
+                            }
+                        }).fail(function (response){
                             $('.tip-useradd').text('Username or duplicate username password is empty');
-                        }
-                    }).fail(function (response){
-                        $('.tip-useradd').text('Username or duplicate username password is empty');
-                    });
+                        });
+                    }else{
+                        $('.tip-useradd').text('Username and password must be from 5-15 array or letters');
+                    }
             },
             initialize: function(options){
                 options || (options = {});
@@ -647,11 +687,23 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                this.userModel.save(this.data_form,
-                    {url:UrlApi('_app')+'/Admin/userEdit'}
-                    ).done(function (response){
-                        _self._userEvents.trigger('refresh','userInfo');
-                    });
+                var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
+                    pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
+                if(user_match!=null&&pwd_match!=null||this.data_form['password'] == ''){
+                    this.userModel.save(this.data_form,
+                        {url:UrlApi('_app')+'/Admin/userEdit'}
+                        ).done(function (response){
+                            _self._userEvents.trigger('refresh','userInfo');
+                            if(response == '1'){
+                                $('.tip-useredit').html('<span style="color: green;">Edit Success</span>');
+                                setTimeout("$('.tip-useredit').empty()",1000);
+                            }else{
+                                $('.tip-useredit').text('Edit Fail');
+                            }
+                        });
+                    }else{
+                        $('.tip-useredit').text('Username and password must be from 5-15 array or letters');
+                    }
             },
             initialize: function(options){
                 options || (options = {});
@@ -739,9 +791,6 @@ jQuery(function() {
                     if(view == 'userAdd'){
                         userlistView.render();
                     }
-                    if(view == 'userInfo'){
-                        userlistView.render();
-                    }
                     if(view == 'roleInfo'){
                         rolelistView.render();
                     }
@@ -761,6 +810,9 @@ jQuery(function() {
                     if(view == 'user-list'){
                         userlistView.render();
                         usersearchView.render();
+                    }
+                    if(view == 'userInfo'){
+                        userlistView.render();
                     }
                 });
 

@@ -5,18 +5,18 @@ class TranslationController extends BaseController {
     //index
     public function index(){
         //Initialization then del
-        $translation_model = M('translation');
-        $where['de'] = array('neq','');
-        $where['en'] = array('neq','');
-        $where['nl'] = array('neq','');
-        $where['website_id'] = session('website_id');
-        $ids = $translation_model->where($where)->field('id')->select();
-        $save['modify'] = '0';
-        foreach ($ids as $val) {
-            # code...
-            $save['id'] = $val['id'];
-            $translation_model->save($save);
-        }
+        // $translation_model = M('translation');
+        // $where['de'] = array('neq','');
+        // $where['en'] = array('neq','');
+        // $where['nl'] = array('neq','');
+        // $where['website_id'] = session('website_id');
+        // $ids = $translation_model->where($where)->field('id')->select();
+        // $save['modify'] = '0';
+        // foreach ($ids as $val) {
+        //     # code...
+        //     $save['id'] = $val['id'];
+        //     $translation_model->save($save);
+        // }
         //Initialization then del
         $this->display();
     }
@@ -40,7 +40,7 @@ class TranslationController extends BaseController {
         $data = $translation_model->find();
         foreach ($data as $k => $val) {
             # code...
-            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'){
+            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'){
                 $allField[] = $k;
             }
         }
@@ -254,7 +254,7 @@ class TranslationController extends BaseController {
             'subName' => 'Translation',
         );
         $upload = new \Think\Upload($config );
-        $info   =   $upload->uploadOne($_FILES['images']);
+        $info = $upload->uploadOne($_FILES['images']);
         if(!$info){
             die();
         }else{

@@ -76,7 +76,7 @@
 
             <div class="col col5 fl">
                 <div class="tip tip-langadd"></div>
-                    <form action="" method="post">
+                    <form action="" method="post" name="lang_add">
                         <div class="form-holder">
                             <div class="entry textarea">
                                 <label for="en">EN:</label>
@@ -189,6 +189,7 @@
         <script type="text/template" id="tpl-lang-edit">
             <!-- <form action=""> -->
             <div class="col col5 fl">
+                <div class="tip tip-langedit"></div>
                 <div class="form-holder" data-id="<%= langDetail['id'] %>">
                     <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='modify'){ %>
                         <div class="entry textarea">
@@ -243,7 +244,8 @@
             </div>
         </script>
         <script type="text/template" id="tpl-role-add">
-            <form action="" method="post">
+            <div class="tip tip-roleadd"></div>
+            <form action="" method="post" name="role_add">
                 <div class="form-holder">
                     <h3>Role Add</h3>
                     <div class="entry">
@@ -255,7 +257,7 @@
                         <h3>Allow <%= rule.rule_name %></h3>
                         <label for="role-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
                         <input type="radio" name="<%= rule.rule_name.toLowerCase() %>" value="1" id="role-yes-<%= rule.rule_name.toLowerCase() %>"/>
-                        Yse</label>
+                        Yes</label>
                         <label for="roel-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
                         <input type="radio" checked name="<%= rule.rule_name.toLowerCase() %>" value="0" id="roel-no-<%= rule.rule_name.toLowerCase() %>"/>
                         No</label>
@@ -286,6 +288,7 @@
             </table>
         </script>
         <script type="text/template" id="tpl-role-info">
+            <div class="tip tip-roleedit"></div>
             <form action="" method="post">
                 <div class="form-holder">
                     <input type="hidden" value="<%= role_id %>" name="role_id" />
@@ -299,7 +302,7 @@
                     <h3>Allow <%= rule.rule_name %></h3>
                     <label for="edit-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
                     <input type="radio" <% if(rule.purview == '1'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="1" id="edit-yes-<%= rule.rule_name.toLowerCase() %>"/>
-                    Yse</label>
+                    Yes</label>
                     <label for="edit-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
                     <input type="radio" <% if(rule.purview == '0'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="0" id="edit-no-<%= rule.rule_name.toLowerCase() %>"/>
                     No</label>
@@ -312,7 +315,7 @@
             <% }) %>-->
         </script>
         <script type="text/template" id="tpl-user-add">
-            <form method="post">
+            <form method="post" name="user_add">
                 <div class="form-holder">
                     <h3>User Add</h3>
                     <div class="tip tip-useradd"></div>
@@ -356,7 +359,7 @@
                         <td><%= user.username %></td>
                         <td>
                         <a href="#" class="btn btn-allow <% if(user.allow == '1'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="1">Yes</a>
-                        <a href="#" class="btn btn-allow <% if(user.allow == '0'){ %> btn-danger <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
+                        <a href="#" class="btn btn-allow <% if(user.allow == '0'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
                         </td>
                         <td>
                         <a href="#" class="btn btn-user-detail btn-info">Edit</a>
@@ -366,14 +369,16 @@
             </table>
         </script>
         <script type="text/template" id="tpl-user-info">
+            <div class="tip tip-useredit"></div>
             <form method="post">
                 <div class="form-holder">
-                    <h3>USer Ifno</h3>
+                    <h3>User Info</h3>
                     <input type="hidden" value="<%= user_id %>" name="user_id" />
-                        <label for="username">username:</label>　　<%= username %>
+                        <label for="username">username:</label>
+                        <input type="text" name="username" id="username" value="<%= username %>" />
                     <div class="entry">
                         <label for="password">password</label>
-                        <input type="password" name="password" id="password" />
+                        <input type="password" name="password" id="password" placeholder="******" />
                     </div>
                     <div class="entry select">
                         <label for="user-groups">User Groups</label>
