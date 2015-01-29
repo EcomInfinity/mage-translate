@@ -97,6 +97,12 @@ class TranslationController extends BaseController {
                         $lang_save = $lang_add;
                         $lang_save['id'] = $res['id'];
                         $translation_model->save($lang_save);
+                        $modify = $translation_model->where(array('id'=>$res['id']))->find();
+                        if($modify['en']!=''&&$modify['ne']!=''&&$modify['nl']!=''){
+                            $lang_modify['id'] = $res['id'];
+                            $lang_modify['modify'] = '0';
+                            $translation_model->save($lang_modify);
+                        }
                     }else{
                         $translation_model->add($lang_add);
                     }
@@ -180,25 +186,10 @@ class TranslationController extends BaseController {
         $whereImg['lang_id'] = intval($back['id']);
         $whereImg['status'] = '1';
         $images = $images_model->where($whereImg)->field('image_name,id')->select();
-        $this->assign('translation_detail',$translation_detail);
-        $this->assign('images_list',$images);
         $lang_detail['images'] = $images;
         $lang_detail['detail'] = $translation_detail;
         if($images||$translation_detail){
             echo json_encode($lang_detail);
-        }else{
-            echo '0';
-        }
-    }
-    //modify
-    public function modify(){
-        $translation_model = M('translation');
-        $back = json_decode(file_get_contents("php://input"),true);
-        if($back['modify']!==null&&$back['langId']!=null){
-            $save['id'] = intval($back['langId']);
-            $save['modify'] = intval($back['modify']);
-            $translation_model->save($save);
-            echo '1';
         }else{
             echo '0';
         }
@@ -208,8 +199,12 @@ class TranslationController extends BaseController {
     public function editInfo(){
         $translation_model = M('translation');
         $back = json_decode(file_get_contents("php://input"),true);
-        $edit_data['id'] = intval($back['langId']);
-        $edit_data[$back['langType']] = $back['langInfo'];
+        $edit_data['id'] = intval($back['id']);
+        $edit_data['en'] = $back['en'];
+        $edit_data['de'] = $back['de'];
+        $edit_data['nl'] = $back['nl'];
+        $edit_data['remarks'] = $back['remarks'];
+        $edit_data['modify'] = $back['modify'];
         $res = $translation_model->save($edit_data);
         if($res){
             echo '1';

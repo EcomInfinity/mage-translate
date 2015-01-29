@@ -186,19 +186,8 @@ jQuery(function() {
                 'click .btn-edit': 'editLanguage',
                 'click .btn-delete': 'deleteLanguage',
                 'click .btn-list-export': 'exportRender',
-                'click .btn-list-add': 'addRender',
-                'click .btn-modify': 'langModify'
-                // 'click tr': 'showBtn'
+                'click .btn-list-add': 'addRender'
             },
-            // showBtn: function(event){
-            //     this.show = $(event.target).closest('tr').data('id');
-            //     this.showClass = 'show-btn-'+this.show
-            //     if(this.showClass!=this.old_showClass){
-            //         $('.'+this.old_showClass).remove();
-            //         this.old_showClass = this.showClass;
-            //         $(event.target).closest('tr').after('<tr class="'+this.showClass+'" data-id="'+this.show+'"><td colspan="5">Modify:<a href="#" class="btn  btn-default  btn-modify" data-modify="1">Yes</a><a href="#" class="btn  btn-success  btn-modify" data-modify="0">&nbsp;No&nbsp;</a>Operation:<a href="#" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a><a href="#" class="btn btn-delete btn-danger">Delect</a></td></tr>');
-            //     }
-            // },
             editLanguage: function(event){
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
                     this.edit_id = $(event.target).closest('tr').data('id');
@@ -235,21 +224,6 @@ jQuery(function() {
                 }
                 return false;
             },
-            langModify: function(event){
-                var _self = this;
-                this.modify = $(event.target).data('modify');
-                this.langId = $(event.target).closest('tr').data('id');
-                this.translate.save({modify:this.modify,langId:this.langId},
-                    {url:UrlApi('_app')+'/Translation/modify'}
-                    ).done(function (response){
-                    if(response == '1'){
-                        $(event.target).addClass('btn-success');
-                        $(event.target).siblings().removeClass('btn-success');
-                        $(event.target).siblings().addClass('btn-default');
-                    }
-                });
-                    return false;
-            },
             setList: function(data){
                 this.search = data.search;
                 this.inrender = data.inrender;
@@ -280,17 +254,16 @@ jQuery(function() {
         lang.View.LanguageEditView = Backbone.View.extend({
             template: _.template($('#tpl-lang-edit').html()),
             events:{
-                'change .lang_edit': 'editInfo',
+                'click .btn-lang-save': 'editInfo',
                 'click .btn-image-delete': 'imgageDel',
                 'change #images': 'imagesAdd'
             },
             editInfo: function(event){
                 var _self = this;
                 var _change = $(event.target);
-                this.langType = _change.attr("lang_type");
-                this.langInfo = _change.val();
-                this.langId = _change.closest('.form-holder').data("id");
-                this.translate.save({langId:this.langId,langInfo:this.langInfo,langType:this.langType},
+                var $form = _change.closest('form');
+                this.data_form = $form.serializeObject();
+                this.translate.save(this.data_form,
                     {url:UrlApi('_app')+'/Translation/editInfo'}
                     ).done(function (response){
                         if(response == '1'){

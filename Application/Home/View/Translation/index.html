@@ -150,7 +150,7 @@
               <th>EN</th>
               <th>DE</th>
               <th>NL</th>
-              <th>MODIFY</th>
+              <!--<th>MODIFY</th>-->
               <th>Operation</th>
             </tr>
           </thead>
@@ -160,10 +160,10 @@
               <td><%= list.en %></td>
               <td><%= list.de %></td>
               <td><%= list.nl %></td>
-              <td>
+              <!--<td>
                   <a href="#" class="btn <% if(list.modify == '1'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="1">Yes</a>
                   <a href="#" class="btn <% if(list.modify == '0'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="0">&nbspNo&nbsp</a>
-              </td>
+              </td>-->
               <td>
                 <a href="#" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
                 <a href="#" class="btn btn-delete btn-danger">Delect</a>
@@ -190,17 +190,34 @@
             <!-- <form action=""> -->
             <div class="col col5 fl">
                 <div class="tip tip-langedit"></div>
-                <div class="form-holder" data-id="<%= langDetail['id'] %>">
-                    <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='modify'){ %>
-                        <div class="entry textarea">
-                        <label for="edit-<%= detail %>">
-                        <%= detail %>
-                        </label>
-                        <textarea id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit"><%= langDetail[detail] %></textarea>
-                        </div>
-                    <%}})%>
-
-                </div>
+                <form action="" method="post">
+                    <div class="form-holder">
+                        <input type="hidden" value="<%= langDetail['id'] %>" name="id" />
+                        <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='modify'){ %>
+                            <div class="entry textarea">
+                            <label for="edit-<%= detail %>">
+                            <%= detail %>
+                            </label>
+                            <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit"><%= langDetail[detail] %></textarea>
+                            </div>
+                            <% } %>
+                            <% if(detail == 'modify'){ %>
+                                <label><%= detail %></label>
+                                <div class="entry radio">
+                                    <label for="modify-yes" class="radio-inline">
+                                    <input type="radio" value="1" name="modify" id="modify-yes" <%if(langDetail[detail] == '1'){%>checked<%}%> />Yes
+                                    </label>
+                                    <label for="modify-no" class="radio-inline">
+                                    <input type="radio" value="0" name="modify" id="modify-no" <%if(langDetail[detail] == '0'){%>checked<%}%> />No
+                                    </label>
+                                </div>
+                            <% } %>
+                        <%})%>
+                    </div>
+                    <div class="btn-set">
+                        <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
+                    </div>
+                </form>
             </div>
             <!-- </form> -->
 
