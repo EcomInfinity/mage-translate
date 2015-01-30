@@ -11,88 +11,66 @@ class AdminController extends Controller {
     }
 
     public function login(){
-        $user_model = M('user');
-        $relation_model = M('relation');
-        $website_model = M('website');
-        $role_model = M('role');
+        $user_model = D('user');
+        $relation_model = D('relation');
+        $website_model = D('website');
+        $role_model = D('role');
         $username = $_POST['username'];
         $password = $_POST['password'];
-        if($username!=null&&$password!=null){
-            $where['username'] = $username;
-            $where['password'] = md5($password);
-            $where['allow'] = '1';
-            $res = $user_model->where($where)->find();
-            $userInfo = getUser($res['id']);
-            if($res){
-                echo '1';
-                session('id',$res['id']);
-                session('username',$res['username']);
-                session('website_id',$userInfo['website']['id']);
-                session('website_name',$userInfo['website']['name']);
-                session('purview',$userInfo['purview']);
-            }else{
-                echo '0';
-            }
+        $uid = $user_model->login($username,$password);
+        if($uid>'0'){
+            $relation = $relation_model->getUserRelation($uid);
+            session('id',$uid);
+            session('username',$username);
+            session('website_id',$relation['website_id']);
+            session('website_name',$website_model->getWebsiteName($relation['website_id']));
+            session('purview',getPurviewJson($role_model->getPurview($relation['role_id'])));
+            echo '1';
         }else{
             echo '0';
         }
     }
     public function logout(){
         if(session('id')>0&&session('id')){
+            D('user')->logout();
             session('[destroy]');
         }
         $this->redirect('index');
     }
 
     public function register(){
-        $user_model = M('user');
-        $relation_model = M('relation');
-        $website_model = M('website');
-        $username = $_POST['username'];
-        $password1 = $_POST['password1'];
-        $password2 = $_POST['password2'];
-        $website_name = $_POST['website_name'];
-        if(session('id')>0&&session('id')){
-            $this->redirect('Translation/index');
+        $user_model = D('user');
+        $relation_model = D('relation');
+        $website_model = D('website');
+        $_params['username'] = $_POST['username'];
+        $_params['password'] = $_POST['password1'];
+        $_params['repeat-password'] = $_POST['password2'];
+        $uid = $user_model->register($_params);
+        $wid = $website_model->addWebsite($_POST['website_name']);
+        $_params_relation['user_id'] = $uid;
+        $_params_relation['website_id'] = $wid;
+        $_params_relation['role_id'] = '1';
+        $res = $relation_model->addRelation($_params_relation);
+        if($uid&&$wid&&$res){
+            echo '1';
         }else{
-            if($password1 == $password2){
-                $password = $password1;
-            }
-            $varity = $user_model->where(array('username'=>$username))->find();
-            if($username!=null&&$password1!=null&&$password2!=null&&$website_name!=null&&!$varity&&$password){
-                $userAdd['username'] = $username;
-                $userAdd['password'] = md5($password);
-                $webAdd['name'] = $website_name;
-                $user_id = $user_model->add($userAdd);
-                $website_id = $website_model->add($webAdd);
-                $relaAdd['user_id'] = $user_id;
-                $relaAdd['website_id'] = $website_id;
-                $relaAdd['role_id'] = '1';
-                $relation_model->add($relaAdd);
-                echo '1';
-            }else{
-                $this->display();
-            }
+            $this->display();
         }
     }
 
     public function userAdd(){
-        $user_model = M('user');
-        $relation_model = M('relation');
+        $user_model = D('user');
+        $relation_model = D('relation');
         $back = json_decode(file_get_contents("php://input"),true);
-        $username = $back['username'];
-        $password = $back['password'];
-        $role_id = $back['role_id'];
-        $varity = $user_model->where(array('username'=>$username))->find();
-        if($username!=''&&$password!=''&&!$varity){
-            $userAdd['username'] = $username;
-            $userAdd['password'] = md5($password);
-            $user_id = $user_model->add($userAdd);
-            $relaAdd['website_id'] = session('website_id');
-            $relaAdd['user_id'] = $user_id;
-            $relaAdd['role_id'] = $role_id;
-            $relaAdd['parent_id'] = session('id');
-            $relation_model->add($relaAdd);
+        $_params['username'] = $back['username'];
+        $_params['password'] = $back['password'];
+        $uid = $user_model->addUser($_params);
+        $_params_relation['user_id'] = $uid;
+        $_params_relation['website_id'] = session('website_id');
+        $_params_relation['role_id'] = $back['role_id'];
+        $_params_relation['parent_id'] = session('id');
+        $res = $relation_model->addRelation($_params_relation);
+        if($uid){
             echo '1';
         }else{
             echo '0';
@@ -100,23 +78,18 @@ class AdminController extends Controller {
     }
 
     public function userList(){
-        $user_model = M('user');
-        $relation_model = M('relation');
+        $user_model = D('user');
+        $relation_model = D('relation');
         $back = json_decode(file_get_contents("php://input"),true);
         if($back['search']&&$back['search']!=null){
             $where['username'] = array('like','%'.$back['search'].'%');
         }
-        $user_id = $relation_model->where(array('parent_id'=>session('id')))->field('user_id')->select();
-        if($user_id){
-            foreach ($user_id as $key => $val) {
-                # code...
-                $ids = $ids.','.$val['user_id'];
-            }
-            $ids = substr($ids,1);
+        $ids = $relation_model->getSubUser(session('id'));
+        if($ids){
             $where['id'] = array('in',$ids);
-            $userList = $user_model->where($where)->select();
-            if($userList){
-                echo json_encode($userList);
+            $res = $user_model->getUser($where);
+            if($res){
+                echo json_encode($res);
             }else{
                 echo '0';
             }

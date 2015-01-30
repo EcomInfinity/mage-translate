@@ -347,6 +347,7 @@
                     <div class="entry select">
                         <label for="user-groups">User Groups</label>
                         <select class="form-control" id="user-groups" name="role_id">
+                            <option value="0">default</option>
                             <% _.each(rolelist, function(role){ %>
                                 <option value="<%= role.id %>"><%= role.role_name %></option>
                             <% }) %>
@@ -400,6 +401,7 @@
                     <div class="entry select">
                         <label for="user-groups">User Groups</label>
                         <select class="form-control" id="user-groups" name="role_id">
+                            <option value="0">default</option>
                             <% _.each(rolelist, function(role){ %>
                                 <option <% if(role.id == role_id){ %> selected <% } %>value="<%= role.id %>"><%= role.role_name %></option>
                             <% }) %>
