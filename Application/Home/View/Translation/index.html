@@ -111,6 +111,7 @@
                             <div class="entry file">
                                 <label>Images:</label>
                                 <input type="file" name="images" id="images-add" />
+                                <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
                             </div>
                         </div>
                     </form>
@@ -151,7 +152,7 @@
               <th>DE</th>
               <th>NL</th>
               <!--<th>MODIFY</th>-->
-              <th>Operation</th>
+              <th>OPERATION</th>
             </tr>
           </thead>
           <tbody>
@@ -227,6 +228,7 @@
                         <div class="entry file">
                             <label>Images:</label>
                             <input type="file" name="images" id="images" en-id="<{$en_id}>" />
+                            <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
                         </div>
                     </div>
                 </form>
@@ -294,7 +296,7 @@
             <table class="table table-hover" cellspacing="0" cellpadding="0">
                 <tr>
                     <th>RoleName</th>
-                    <th>Operation</th>
+                    <th>OPERATION</th>
                 </tr>
                 <% _.each(roleList, function(role){ %>
                     <tr data-id="<%= role.id %>">
@@ -369,7 +371,7 @@
                     <!--<th>Id</th>-->
                     <th>UserName</th>
                     <th>Is Allow</th>
-                    <th>Operation</th>
+                    <th>OPERATION</th>
                 </tr>
                 <% _.each(userList, function(user){%>
                     <tr data-id="<%= user.id %>">
