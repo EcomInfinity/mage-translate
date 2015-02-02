@@ -55,7 +55,7 @@
                 }
             }).done(function(data){
                 if(data == '1'){
-                    window.open(UrlApi('_app')+'/Translation/index',"_self");
+                    window.open(UrlApi('_app')+'/Translation/',"_self");
                 }
                 if(data == '0'){
                     $('.tip-main').text('Invalid Username or Password.');
@@ -78,17 +78,17 @@
                 beforeSend: function(){
                     var reVal = verifyRegister(_self.user.username,_self.user.password1,_self.user.password2,_self.user.website_name);
                     if(reVal[0] == '0'){
-                        $('.tip-username').text('Username from 5-15 digits or letters.');
+                        $('.tip-username').text('The username must have 5-15 digits or letters.');
                     }else{
                         $('.tip-username').text('');
                     }
                     if(reVal[1] == '0'){
-                        $('.tip-password1').text('Password from 5-15 digits or letters.');
+                        $('.tip-password1').text('The password must have 5-15 digits or letters.');
                     }else{
                         $('.tip-password1').text('');
                     }
                     if(reVal[2] == '0'){
-                        $('.tip-password2').text('Password from 5-15 digits or letters.');
+                        $('.tip-password2').text('The password must have 5-15 digits or letters.');
                     }else{
                         $('.tip-password2').text('');
                     }
@@ -98,7 +98,7 @@
                         $('.tip-password2').text('Please make sure your passwords match.');
                     }
                     if(reVal[4] == '0'){
-                        $('.tip-website_name').text('Website Name from 5-15 digits or letters.');
+                        $('.tip-website_name').text('The websiteName must have 1-15 digits or letters.');
                     }else{
                         $('.tip-website_name').text('');
                     }
@@ -108,7 +108,7 @@
                 }
             }).done(function(data){
                 if(data == '1'){
-                    window.open(UrlApi('_app')+'/Admin/index',"_self");
+                    window.open(UrlApi('_app')+'/Admin/login',"_self");
                 }else{
                     $('.tip-main').text('Username or repeated failure to create.');
                 }
@@ -156,7 +156,7 @@
         }else{
             reVal['3'] = '0';
         }
-        if(website_name.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
+        if(website_name.match(/^[a-zA-Z0-9]{1,15}$/)!=null){
             reVal['4'] = '1';
         }else{
             reVal['4'] = '0';

@@ -39,7 +39,7 @@ jQuery(function() {
             }
         });
 
-         lang.Collection.LangList = Backbone.Collection.extend({
+        lang.Collection.LangList = Backbone.Collection.extend({
             model: lang.Model.Language,
             localStorage: new Backbone.LocalStorage('lang.langlocator,langs'),
         });
@@ -134,6 +134,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/Translation/imageDel'}
                     ).done(function (response){
                         _click.closest('li').hide();
+                        $('#enlarge_images').html('');
                 });
             },
             initialize: function(options){
@@ -144,13 +145,15 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.translate.save({},
-                    {url:UrlApi('_app')+'/Translation/imageList'}
-                    ).done(function (response){
-                        data['imagesDetail'] = response;
-                        _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
-                    });
+                // this.translate.save({},
+                //     {url:UrlApi('_app')+'/Translation/imageList'}
+                //     ).done(function (response){
+                //         data['imagesDetail'] = response;
+                //         _self.$el.html(_self.template(data));
+                //         $.fancybox(_self.$el);
+                //     });
+                this.$el.html(this.template(data));
+                $.fancybox(this.$el);
             }
         });
 
@@ -286,6 +289,7 @@ jQuery(function() {
                     if(response == '1'){
                         // _self.render();
                         _click.closest('li').hide();
+                        $('#enlarge_images').html('');
                     }
                 });
             },
@@ -432,7 +436,7 @@ jQuery(function() {
                             }
                         });
                 }else{
-                    $('.tip-roleadd').text('Role name From 1 to 20 characters');
+                    $('.tip-roleadd').text('Rolename must have 1-20 characters');
                 }
             },
             initialize: function(options){
@@ -463,6 +467,7 @@ jQuery(function() {
             roleInfo: function(event){
                 var role_id = $(event.target).closest('tr').data('id');
                 this._userEvents.trigger('alernately',role_id,'roleList');
+                return false;
             },
             roleAdd: function(){
                 this._userEvents.trigger('refresh','list-role-add');
@@ -516,7 +521,7 @@ jQuery(function() {
                             }
                         });
                 }else{
-                    $('.tip-roleedit').text('Role name From 1 to 20 characters');
+                    $('.tip-roleedit').text('Rolename must have 1-20 characters');
                 }
             },
             initialize: function(options){
@@ -617,6 +622,7 @@ jQuery(function() {
             userInfo: function(event){
                 var user_id = $(event.target).closest('tr').data('id');
                 this._userEvents.trigger('alernately',user_id,'userList');
+                return false;
             },
             userAdd: function(){
                 this._userEvents.trigger('refresh','list-user-add');
@@ -657,15 +663,18 @@ jQuery(function() {
                 'click .btn-edit': 'userEdit'
             },
             userEdit: function(event){
-                var _self = this;
-                var $form=$(event.target).closest('form');
+                var is_change = '0',
+                _self = this,
+                $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
                 var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
                     pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
+                console.log(this.data_form);
                 if(user_match!=null&&pwd_match!=null||this.data_form['password'] == ''){
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/Admin/userEdit'}
                         ).done(function (response){
+                            console.log(response);
                             _self._userEvents.trigger('refresh','userInfo');
                             if(response == '1'){
                                 $('.tip-useredit').html('<span style="color: green;">Edit Success</span>');

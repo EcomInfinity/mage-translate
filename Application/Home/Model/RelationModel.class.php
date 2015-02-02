@@ -22,10 +22,9 @@ class RelationModel extends Model{
         return $ids;
     }
 
-    // public function setUserRole($uid,$_role_id){
-    //     $save['role_id'] = $role_id;
-    //     $num = $this->where(array('user_id'=>intval($uid)))->save();
-    //     return $num;
-    // }
+    public function setUserRole($_role_id,$uid){
+        $save['role_id'] = $_role_id;
+        return $this->where(array('user_id'=>intval($uid)))->save($save);
+    }
 }
 ?>

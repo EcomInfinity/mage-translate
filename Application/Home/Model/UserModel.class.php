@@ -2,18 +2,6 @@
 namespace Home\Model;
 use Think\Model;
 class UserModel extends Model{
-            // protected $_link = array(
-            //     'translation_image' => self::HAS_ONE,
-            //     'translation_image'=> array(  
-            //     'mapping_type'=> self::HAS_ONE,
-            //     'class_name'=>'translation_image',
-            //     'foreign_key'=>'lang_id',
-            //     'mapping_name'=>'translation_image',
-            //     'mapping_fields'=>'image_name',
-            //     ),
-
-            // );
-
     private function _login($uid) {
         return $uid;
     }
@@ -38,11 +26,6 @@ class UserModel extends Model{
         session('purview', null);
     }
 
-     public function getUserName($uid){
-        $name = $this->where(array('id'=>intval($uid)))->field('username')->find();
-        return $name['username'];
-     }
-
     public function isExisted($_username) {
         // 
         $res = $this->where(array('username'=>$_username))->find();
@@ -53,68 +36,111 @@ class UserModel extends Model{
         }
     }
 
+    public function userMatch($_param){
+        return preg_match('/^[a-zA-Z0-9]{5,15}$/',$_param);
+    }
+
     public function register($_params) {
         $_username = $_params['username'];
         $_password = $_params['password'];
         $_repeat_password = $_params['repeat-password'];
         if($_username!=null&&$_password!=null){
-            if ($_password == $_repeat_password) {
-                $register['password'] = md5($_password);
-            }else {
-                throw new Expection('Password doesn\'t match');
-            }
-
-            if ($this->isExisted($_username) == false) {
-                throw new Expection('User already registered');
+            if($this->userMatch($_password) == '1'){
+                if ($_password == $_repeat_password) {
+                    $register['password'] = md5($_password);
+                }else {
+                    E('Password doesn\'t match');
+                }
             }else{
-                $register['username'] = $_username;
+                E('The password must have 5-15 digits or letters.');
             }
-
+            if($this->userMatch($_username) == '1'){
+                if ($this->isExisted($_username) == false) {
+                    E('User already registered');
+                }else{
+                    $register['username'] = $_username;
+                }
+            }else{
+                E('The username must have 5-15 digits or letters.');
+            }
             // ...
             $uid = $this->add($register);
             // ...
-            $this->_login($uid);
+            return $this->_login($uid);
         }
-        return $uid;
     }
 
-    public function addUser($_params){
-        $_username = $_params['username'];
-        $_password = $_params['password'];
+    public function addUser($_username, $_password){
         if($_username!=null&&$_password!=null){
-            if ($this->isExisted($_username) == false) {
-                throw new Expection('User already registered');
+            if($this->userMatch($_username) == '1'){
+                if ($this->isExisted($_username) == false) {
+                    E('User already registered');
+                }else{
+                    $add['username'] = $_username;
+                }
             }else{
-                $add['username'] = $_username;
+                E('The username must have 5-15 digits or letters.');
             }
-            $add['password'] = md5($_password);
+            if($this->userMatch($_password) == '1'){
+                $add['password'] = md5($_password);
+            }else{
+                E('The password must have 5-15 digits or letters.');
+            }
             $uid = $this->add($add);
         }
         return $uid;
     }
 
-    public function getUser($_params){
-        return $this->where($_params)->select();
+    public function getUserList($_ids){
+        $where['id'] = array('in',$_ids);
+        return $this->where($where)->select();
     }
 
-    // public function setUser($_params){
-    //     $save['id'] = intval($_params['id']);
-    //     if ($this->isExisted($_params['username']) == false) {
-    //         throw new Expection('User already registered');
-    //     }else{
-    //         $save['username'] = $_params['username'];
-    //     }
-    //    // if($_params['password']!=''){
-    //         $save['password'] = md5($_params['password']);
-    //     //}
-    //     $num = $this->save($save);
-    //     return $num;
-    // }
-    // public function setPassword($uid,$_password){
-    //     $save['id'] = $uid;
-    //     $save['password'] = $_password;
-    //     $this->save($save);
-    // }
+    public function searchUser($_search,$_ids){
+        $where['id'] = array('in',$_ids);
+        $where['username'] = array('like','%'.$_search.'%');
+        return $this->where($where)->select();
+    }
+
+    public function getOneUser($uid){
+        return $this->where(array('id'=>intval($uid)))->find();
+    }
+
+    public function getUserName($uid){
+    $user = $this->where(array('id'=>intval($uid)))->field('username')->find();
+    return $user['username'];
+    }
+
+    public function setUsername($_username,$uid){
+        if($this->userMatch($_username) == '1'){
+            if ($this->isExisted($_username) == false) {
+                return '0';
+                // E('User already exist');
+            }else{
+                $save['id'] = intval($uid);
+                $save['username'] = $_username;
+                return $this->save($save);
+            }
+        }else{
+            E('The username must have 5-15 digits or letters.');
+        }
+    }
+
+    public function setPassword($_password,$uid){
+        if($this->userMatch($_password) == '1'){
+            $save['id'] = intval($uid);
+            $save['password'] = md5($_password);
+            return $this->save($save);
+        }else{
+            E('The password must have 5-15 digits or letters.');
+        }
+    }
+
+    public function setAllow($uid,$_allow){
+        $save['id'] = $uid;
+        $save['allow'] = $_allow;
+        return $this->save($save);
+    }
 
 }
 ?>

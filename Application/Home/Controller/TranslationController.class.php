@@ -22,15 +22,13 @@ class TranslationController extends BaseController {
     }
 
     public function export(){
-        $translation_model = M('translation');
+        $translation_model = D('translation');
         $back = json_decode(file_get_contents("php://input"),true);
         $fields = $back['field'];
         if($back['exrender'] == '0'){
             $field = 'en,'.$fields;
             $title = explode(",", $field);
-            $where['website_id'] = session('website_id');
-            $where['status'] = '1';
-            $export = $translation_model->where($where)->field($field)->select();
+            $export = $translation_model->getTranslateList($field,'1',session('website_id'));
             S('title',$title);
             S('export',$export);
             S('filename',$fields);
@@ -56,7 +54,7 @@ class TranslationController extends BaseController {
     }
 
     public function import(){
-        $translation_model = M('translation');
+        $translation_model = D('translation');
         $config = array(
             'maxSize' => 3145728,
             'rootPath' => './Uploads/',
@@ -101,10 +99,10 @@ class TranslationController extends BaseController {
                         if($modify['en']!=''&&$modify['ne']!=''&&$modify['nl']!=''){
                             $lang_modify['id'] = $res['id'];
                             $lang_modify['modify'] = '0';
-                            $translation_model->save($lang_modify);
+                            $translation_model->setTranslate($lang_modify);
                         }
                     }else{
-                        $translation_model->add($lang_add);
+                        $translation_model->addTranslate($lang_add);
                     }
                 }
             }
@@ -113,8 +111,8 @@ class TranslationController extends BaseController {
     }
     //lang add
     public function add(){
-        $translation_model = M('translation');
-        $images_model = M('translation_image');
+        $translation_model = D('translation');
+        $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
         if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
             $trans_data['en'] = $back['en'];
@@ -126,9 +124,8 @@ class TranslationController extends BaseController {
             }
             $trans_data['remarks'] = $back['remarks'];
             $trans_data['website_id'] = session('website_id');
-            $id=$translation_model->add($trans_data);
-            $image_data['lang_id'] = $id;
-            $images_model->where(array('lang_id'=>'0'))->save($image_data);
+            $id=$translation_model->addTranslate($trans_data);
+            $images_model->saveImage($id);
             echo '1';
         }else{
             echo '0';
@@ -136,12 +133,11 @@ class TranslationController extends BaseController {
     }
     //lang list del
     public function del(){
-        $translation_model = M('translation');
-        $images_model = M('translation_image');
+        $translation_model = D('translation');
+        $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        $save['status'] = '0';
-        $res = $translation_model->where(array('id'=>intval($back['id'])))->save($save);
-        $images_model->where(array('lang_id'=>intval($back['id'])))->save($save);
+        $res = $translation_model->delTranslate($back['id']);
+        $images_model->delImages($back['id']);
         if($res){
             echo '1';
         }else{
@@ -150,24 +146,20 @@ class TranslationController extends BaseController {
     }
     //lang lists
     public function getList(){
-        $translation_model = M('translation');
-        $back = json_decode(file_get_contents("php://input"),true);
-        if($back['search']!=null){
-            $where['en'] = array('like','%'.$back['search'].'%');
+        $translation_model = D('translation');
+        $_tid = $_GET['id'];
+        if($_tid){
+            $translation_list = $translation_model->getOneTranslate($_tid);
+        }else{
+            $back = json_decode(file_get_contents("php://input"),true);
+            if($back['inrender'] == '0'){
+                $translation_list = $translation_model->getTranslateList('','1',session('website_id'),'1');
+            }
+            if($back['inrender'] == '1'){
+                $translation_list = $translation_model->searchTranslate($back['search'],session('website_id'),'0','1');
+            }
         }
-        if($back['inrender'] == '0'){
-            $where['status'] = '1';
-            $where['modify'] = '1';
-        }
-        if($back['inrender'] == '1'){
-            $where['status'] = '1';
-            $where['modify'] = '0';
-        }
-        $where['website_id'] = session('website_id');
-        $translation_list = $translation_model->where($where)->order('id desc')->select();
-        $where_count['website_id'] = session('website_id');
-        $where_count['status'] = '1';
-        $count = $translation_model->where($where_count)->count();
+        $count = $translation_model->getTranslateCount(session('website_id'));
         $list['lists'] = $translation_list;
         $list['count'] = $count;
         if($translation_list||$count){
@@ -178,14 +170,11 @@ class TranslationController extends BaseController {
     }
     //lang edit detail
     public function getInfo(){
-        $translation_model = M('translation');
-        $images_model = M('translation_image');
+        $translation_model = D('translation');
+        $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        $where['id'] = intval($back['id']);
-        $translation_detail = $translation_model->where($where)->find();
-        $whereImg['lang_id'] = intval($back['id']);
-        $whereImg['status'] = '1';
-        $images = $images_model->where($whereImg)->field('image_name,id')->select();
+        $translation_detail = $translation_model->getOneTranslate($back['id']);
+        $images = $images_model->getImages($back['id']);
         $lang_detail['images'] = $images;
         $lang_detail['detail'] = $translation_detail;
         if($images||$translation_detail){
@@ -197,7 +186,7 @@ class TranslationController extends BaseController {
 
     //edit lang info
     public function editInfo(){
-        $translation_model = M('translation');
+        $translation_model = D('translation');
         $back = json_decode(file_get_contents("php://input"),true);
         $edit_data['id'] = intval($back['id']);
         $edit_data['en'] = $back['en'];
@@ -205,7 +194,7 @@ class TranslationController extends BaseController {
         $edit_data['nl'] = $back['nl'];
         $edit_data['remarks'] = $back['remarks'];
         $edit_data['modify'] = $back['modify'];
-        $res = $translation_model->save($edit_data);
+        $res = $translation_model->setTranslate($edit_data);
         if($res){
             echo '1';
         }else{
@@ -214,11 +203,9 @@ class TranslationController extends BaseController {
     }
     //lang add or edit del image
     public function imageDel(){
-        $images_model = M('translation_image');
+        $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        $save['id'] = $back['imageId'];
-        $save['status'] = '0';
-        $res = $images_model->save($save);
+        $res = $images_model->delImage($back['imageId']);
         if($res){
             echo '1';
         }else{
@@ -227,9 +214,8 @@ class TranslationController extends BaseController {
     }
     //before new lang clear iamges
     public function imageClear(){
-        $images_model = M('translation_image');
-        $save['status'] = '0';
-        $res = $images_model->where(array('lang_id'=>'0'))->save($save);
+        $images_model = D('translation_image');
+        $res = $images_model->clearImgaes('0');
         if($res){
             echo '1';
         }else{
@@ -238,7 +224,7 @@ class TranslationController extends BaseController {
     }
     //lang add or edit add images
     public function imageAdd(){
-        $images_model = M('translation_image');
+        $images_model = D('translation_image');
         $config = array(
             'maxSize' => 3145728,
             'rootPath' => './Uploads/',
@@ -253,25 +239,23 @@ class TranslationController extends BaseController {
         if(!$info){
             die();
         }else{
-            $images['lang_id'] = intval($_GET['lang_id']);
-            $images['image_name'] = $info['savename'];
-            $id = $images_model->add($images);
+            $id = $images_model->addImage($_GET['lang_id'],$info['savename']);
             echo $id;
         }
     }
     //new lang images
-    public function imageList(){
-        $images_model = M('translation_image');
-        $where['lang_id'] = '0';
-        $where['status'] = '1';
-        $images_detail = $images_model->where($where)->select();
-        echo json_encode($images_detail);
-    }
+    // public function imageList(){
+    //     $images_model = M('translation_image');
+    //     $where['lang_id'] = '0';
+    //     $where['status'] = '1';
+    //     $images_detail = $images_model->where($where)->select();
+    //     echo json_encode($images_detail);
+    // }
     //
     public function getImage(){
-        $images_model = M('translation_image');
+        $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        $image = $images_model->where(array('id'=>$back['imageId']))->find();
+        $image = $images_model->getOneImage($back['imageId']);
         echo json_encode($image);
     }
 

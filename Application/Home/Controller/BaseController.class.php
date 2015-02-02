@@ -1,9 +1,10 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+use Think\Controller\RestController;
 use Home\Model\AuthRuleModel;
 use Home\Model\AuthGroupModel;
-class BaseController extends Controller {
+class BaseController extends RestController {
     protected function _empty(){
         $this->error('Please enter the correct URL');
     }
