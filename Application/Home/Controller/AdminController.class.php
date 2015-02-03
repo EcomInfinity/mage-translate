@@ -15,8 +15,9 @@ class AdminController extends Controller {
         $relation_model = D('relation');
         $website_model = D('website');
         $role_model = D('role');
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+        $back = json_decode(file_get_contents("php://input"),true);
+        $username = $back['username'];
+        $password = $back['password'];
         if(session('uid')>'0'){
             $uid = session('uid');
         }else{
@@ -30,7 +31,7 @@ class AdminController extends Controller {
             session('website_name',$website_model->getWebsiteName($relation['website_id']));
             session('purview',getPurviewJson($role_model->getPurview($relation['role_id'])));
             if(session('uid')>'0'){
-                $this->redirect('Translation/');
+                $this->redirect('Translation/index');
             }else{
                 echo '1';
             }
@@ -50,22 +51,21 @@ class AdminController extends Controller {
         $user_model = D('user');
         $relation_model = D('relation');
         $website_model = D('website');
-        if(IS_POST){
-            $_params['username'] = $_POST['username'];
-            $_params['password'] = $_POST['password1'];
-            $_params['repeat-password'] = $_POST['password2'];
-            $uid = $user_model->register($_params);
-            $wid = $website_model->addWebsite($_POST['website_name']);
-            $_params_relation['user_id'] = $uid;
-            $_params_relation['website_id'] = $wid;
-            $_params_relation['role_id'] = '1';
-            $res = $relation_model->addRelation($_params_relation);
-        }
+        $back = json_decode(file_get_contents("php://input"),true);
+        $_params['username'] = $back['username'];
+        $_params['password'] = $back['password1'];
+        $_params['repeat-password'] = $back['password2'];
+        $uid = $user_model->register($_params);
+        $wid = $website_model->addWebsite($back['website_name']);
+        $_params_relation['user_id'] = $uid;
+        $_params_relation['website_id'] = $wid;
+        $_params_relation['role_id'] = '1';
+        $res = $relation_model->addRelation($_params_relation);
         if($uid&&$wid&&$res){
             session('uid',$uid);
             echo '1';
         }else{
-            $this->display();
+            echo '0';
         }
     }
 

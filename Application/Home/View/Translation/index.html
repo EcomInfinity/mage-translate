@@ -132,7 +132,7 @@
         <script type="text/template" id="tpl-lang-list">
         <div class="jump">
         <a href="#" class="btn btn-list-export btn-primary">Lang Export</a>
-        <a href="#" class="btn btn-list-add btn-primary">Lang Add</a>
+        <a href="#add" class="btn btn-list-add btn-primary">Lang Add</a>
         <span class="record"><% if(count){ %> <%= count %> <% }else{ %> 0 
             <%}%>Records</span>
         </div>
@@ -158,7 +158,7 @@
                   <a href="#" class="btn <% if(list.modify == '0'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="0">&nbspNo&nbsp</a>
               </td>-->
               <td>
-                <a href="#" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
+                <a href="#lang/edit/<%= list.id %>" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
                 <a href="#" class="btn btn-delete btn-danger">Delect</a>
               </td>
             </tr>

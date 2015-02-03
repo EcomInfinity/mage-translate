@@ -33,6 +33,7 @@ jQuery(function() {
                 Backbone.Model.apply(this,arguments);
             }
         });
+
         user.Model.Base = Backbone.Model.extend({
             defaults:{
                 'timestamp':-1
@@ -43,6 +44,42 @@ jQuery(function() {
             model: lang.Model.Language,
             localStorage: new Backbone.LocalStorage('lang.langlocator,langs'),
         });
+
+        // var LangRouter = Backbone.Router.extend({
+        //     initialize: function(options){
+        //         options || (options = {});
+        //         this._events = options._events;
+        //     },
+        //     routes: {
+        //         "lang/add": "add",
+        //         "lang/export": "export",
+        //         "lang/edit/:id": "edit",
+        //         "lang/delete/:id": "delete",
+        //         "lang/search/:query": "search",
+        //         // "search/:query/p:page": "search"   // #search/kiwis/p7
+        //     },
+
+        //     export: function(){
+        //         this._events.trigger('refresh','export');
+        //     },
+
+        //     add: function(){
+        //         this._events.trigger('refresh','list-add');
+        //     },
+
+        //     edit: function(id){
+        //         this._events.trigger('alernately',id,'list');
+        //     },
+
+        //     delete: function(id){
+        //         this._events.trigger('alernately',id,'delete');
+        //     },
+
+        //     search: function(query) {
+        //         this._events.trigger('alernately',query,'search');
+        //     }
+        // });
+
         //Navigation
         lang.View.LanguageNavView = Backbone.View.extend({
             template: _.template($('#tpl-lang-nav').html()),
@@ -770,49 +807,55 @@ jQuery(function() {
                 });
 
                 _userEvents.on('refresh', function (view){
-                    if(view == 'userAdd'){
-                        userlistView.render();
-                    }
-                    if(view == 'roleInfo'){
-                        rolelistView.render();
-                    }
-                    if(view == 'list-user-add'){
-                        useraddView.render();
-                    }
-                    if(view == 'role-list'){
-                        rolelistView.render();
-                        rolesearchView.render();
-                    }
-                    if(view == 'roleAdd'){
-                        rolelistView.render();
-                    }
-                    if(view == 'list-role-add'){
-                        roleaddView.render();
-                    }
-                    if(view == 'user-list'){
-                        userlistView.render();
-                        usersearchView.render();
-                    }
-                    if(view == 'userInfo'){
-                        userlistView.render();
+                    switch (view)
+                    {
+                        case 'userAdd':
+                            userlistView.render();
+                            break;
+                        case 'roleInfo':
+                            rolelistView.render();
+                            break;
+                        case 'list-user-add':
+                            useraddView.render();
+                            break;
+                        case 'role-list':
+                            rolelistView.render();
+                            rolesearchView.render();
+                            break;
+                        case 'roleAdd':
+                            rolelistView.render();
+                            break;
+                        case 'list-role-add':
+                            roleaddView.render();
+                            break;
+                        case 'user-list':
+                            userlistView.render();
+                            usersearchView.render();
+                            break;
+                        case 'userInfo':
+                            userlistView.render();
+                            break;
                     }
                 });
 
                 _userEvents.on('alernately', function (data,view){
-                    if(view == 'search'){
-                        listView.setList(data).render();
-                    }
-                    if(view == 'userList'){
-                        userinfoView.setUser(data).render();
-                    }
-                    if(view == 'roleList'){
-                        roleinfoView.setRole(data).render();
-                    }
-                    if(view == 'user-search'){
-                        userlistView.setList(data).render();
-                    }
-                    if(view == 'role-search'){
-                        rolelistView.setList(data).render();
+                    switch (view)
+                    {
+                        case 'search':
+                            listView.setList(data).render();
+                            break;
+                        case 'userList':
+                            userinfoView.setUser(data).render();
+                            break;
+                        case 'roleList':
+                            roleinfoView.setRole(data).render();
+                            break;
+                        case 'user-search':
+                            userlistView.setList(data).render();
+                            break;
+                        case 'role-search':
+                            rolelistView.setList(data).render();
+                            break;
                     }
                 });
             }
@@ -868,27 +911,37 @@ jQuery(function() {
                     translate: this.translate
                 });
 
+                // var router = new LangRouter({
+                //     _events:_events
+                // });
+
                 _events.on('refresh', function (view){
-                    if(view == 'add'){
-                        listView.render();
-                    }
-                    if(view == 'edit'){
-                        listView.render();
-                    }
-                    if(view == 'list-export'){
-                        exportView.render();
-                    }
-                    if(view == 'list-add'){
-                        addView.render();
+                    switch (view)
+                    {
+                        case 'add':
+                            listView.render();
+                            break;
+                        case 'edit':
+                            listView.render();
+                            break;
+                        case 'list-export':
+                            exportView.render();
+                            break;
+                        case 'list-add':
+                            addView.render();
+                            break;
                     }
                 });
 
                 _events.on('alernately', function (data,view){
-                    if(view == 'search'){
-                        listView.setList(data).render();
-                    }
-                    if(view == 'list'){
-                        editView.setLanguage(data).render();
+                    switch (view)
+                    {
+                        case 'search':
+                            listView.setList(data).render();
+                            break;
+                        case 'list':
+                            editView.setLanguage(data).render();
+                            break;
                     }
                 });
 
@@ -898,6 +951,8 @@ jQuery(function() {
         var translation = new lang.View.TranslationApp({
             translate: new lang.Model.Language()
         });
+
+    Backbone.history.start();
 
     }).call(self);
 

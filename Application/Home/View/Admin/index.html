@@ -22,10 +22,18 @@
             });
         })(jQuery);
     </script>
-    <load href="__PUBLIC__/js/main.js" />
+    <load href="__PUBLIC__/js/underscore.js" />
+    <load href="__PUBLIC__/js/backbone.js" />
+    <load href="__PUBLIC__/js/backbone.localStorage.js" />
+    <load href="__PUBLIC__/js/utility.js" />
+    <!-- <load href="__PUBLIC__/js/main.js" /> -->
+    <load href="__PUBLIC__/js/user.js" />
 </head>
 <body>
     <div class="body-wrapper page-width">
+    <div class="block block-user-login"></div>
+    <div class="block block-user-register"></div>
+    <script type="text/template" id="tpl-user-login">
         <div class="login-container">
             <form action="" method="post">
                 <div class="form-holder">
@@ -43,9 +51,42 @@
                     <div class="tip tip-password"></div>
                 </div>
                 <a href="#" class="btn btn-login btn-default">Login</a>
-                <a href="__URL__/register" style="float:right;" class="btn btn-default">Register</a>
+                <a href="#" style="float:right;" class="btn btn-register btn-default">Register</a>
             </form>
         </div>
+    </script>
+    <script type="text/template" id="tpl-user-register">
+        <div class="register-container">
+            <form action="" method="post">
+                <div class="form-hoder">
+                    <h2>Increase The Administrative User</h2>
+                    <div class="tip tip-main"></div>
+                    <div class="entry form-group">
+                        <label for="username">User Name:</label>
+                        <input type="text" name="username" id="username" />
+                    </div>
+                    <div class="tip tip-username"></div>
+                    <div class="entry form-group">
+                        <label for="password1">Password:</label>
+                        <input type="password" name="password1" id="password1" />
+                    </div>
+                    <div class="tip tip-password1"></div>
+                    <div class="entry form-group">
+                        <label for="password2">Confirm Password:</label>
+                        <input type="password" name="password2" id="password2" />
+                    </div>
+                    <div class="tip tip-password2"></div>
+                    <div class="entry form-group">
+                        <label for="website_name">Website Name:</label>
+                        <input type="text" name="website_name" id="website_name" />
+                    </div>
+                    <div class="tip tip-website_name"></div>
+                </div>
+                <a href="#" class="btn btn-register btn-default">Submit</a>
+                <a href="#" style="float:right;" class="btn btn-login btn-default">Login</a>
+            </form>
+        </div>
+    </script>
     </div>
 </body>
 </html>
