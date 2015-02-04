@@ -66,7 +66,7 @@ jQuery(function() {
             template: _.template($('#tpl-user-register').html()),
             events:{
                 'click .btn-register': 'userRegister',
-                'click .btn-login': 'userLogin'
+                'click .btn-back': 'userLogin'
             },
             userRegister: function(event){
                 var $form = $(event.target).closest('form');

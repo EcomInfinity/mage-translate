@@ -129,6 +129,8 @@ jQuery(function() {
                             lang_add.reset();
                             setTimeout("$('.tip-langadd').empty()",1000);
                             _self._events.trigger('refresh','add');
+                        }else if(response == '2'){
+                            $('.tip-langadd').text('The data already exists');
                         }else{
                             $('.tip-langadd').text('Can not all be empty');
                         }
@@ -228,7 +230,8 @@ jQuery(function() {
                 // 'click .btn-edit': 'editLanguage',
                 'click .btn-delete': 'deleteLanguage',
                 'click .btn-list-export': 'exportRender',
-                'click .btn-list-add': 'addRender'
+                'click .btn-list-add': 'addRender',
+                'click .btn-list-modify': 'backModify'
             },
             editLanguage: function(event){
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
@@ -265,6 +268,9 @@ jQuery(function() {
                         });
                 }
                 return false;
+            },
+            backModify: function(){
+                location.reload();
             },
             setList: function(data){
                 this.search = data.search;
@@ -370,20 +376,12 @@ jQuery(function() {
                         data['langDetail'] = response.detail;
                         data['langImages'] = response.images;
                         _self.$el.html(_self.template(data));
+                        //fancybox close remove #url
                         $.fancybox(_self.$el,{
-                           'onClosed': function () {
-                               alert('1');
+                           afterClose: function () {
+                               console.log('123');
                             }
                         });
-                        // $.fancybox({
-                        //     href: _self.$el
-                        // });
-                        // $.fancybox({
-                        //   onClosed: function() {
-                        //     console.log('1');
-                        //   }
-                        // });
-                        // console.log(_self.$el);
                 });
             }
         });

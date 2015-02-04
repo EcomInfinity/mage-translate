@@ -115,21 +115,26 @@ class TranslationController extends BaseController {
         $translation_model = D('translation');
         $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
-            $trans_data['en'] = $back['en'];
-            $trans_data['de'] = $back['de'];
-            $trans_data['nl'] = $back['nl'];
-            $trans_data['fr'] = $back['fr'];
-            if($back['en']!=null&&$back['de']!=null&&$back['nl']!=null){
-                $trans_data['modify'] = '0';
-            }
-            $trans_data['remarks'] = $back['remarks'];
-            $trans_data['website_id'] = session('website_id');
-            $id=$translation_model->addTranslate($trans_data);
-            $images_model->saveImage($id);
-            echo '1';
+        $repear_lang = $translation_model->where(array('en'=>$back['en']))->find();
+        if($repear_lang){
+            echo '2';
         }else{
-            echo '0';
+            if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
+                $trans_data['en'] = $back['en'];
+                $trans_data['de'] = $back['de'];
+                $trans_data['nl'] = $back['nl'];
+                $trans_data['fr'] = $back['fr'];
+                if($back['en']!=null&&$back['de']!=null&&$back['nl']!=null){
+                    $trans_data['modify'] = '0';
+                }
+                $trans_data['remarks'] = $back['remarks'];
+                $trans_data['website_id'] = session('website_id');
+                $id=$translation_model->addTranslate($trans_data);
+                $images_model->saveImage($id);
+                echo '1';
+            }else{
+                echo '0';
+            }
         }
     }
     //lang list del
