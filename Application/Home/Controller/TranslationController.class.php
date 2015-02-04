@@ -28,7 +28,8 @@ class TranslationController extends BaseController {
         if($back['exrender'] == '0'){
             $field = 'en,'.$fields;
             $title = explode(",", $field);
-            $export = $translation_model->getTranslateList($field,'1',session('website_id'));
+            $export_get = $translation_model->getTranslateList($field,'1',session('website_id'));
+            $export = $export_get['list'];
             S('title',$title);
             S('export',$export);
             S('filename',$fields);
@@ -147,20 +148,25 @@ class TranslationController extends BaseController {
     //lang lists
     public function getList(){
         $translation_model = D('translation');
-        $_tid = $_GET['id'];
-        if($_tid){
-            $translation_list = $translation_model->getOneTranslate($_tid);
-        }else{
+        // $_tid = $_GET['id'];
+        // if($_tid){
+        //     $translation_list = $translation_model->getOneTranslate($_tid);
+        // }else{
             $back = json_decode(file_get_contents("php://input"),true);
             if($back['inrender'] == '0'){
-                $translation_list = $translation_model->getTranslateList('','1',session('website_id'),'1');
+                $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1');
+                $current_count = $translation_list_get['count'];
+                $translation_list = $translation_list_get['list'];
             }
             if($back['inrender'] == '1'){
-                $translation_list = $translation_model->searchTranslate($back['search'],session('website_id'),'0','1');
+                $translation_list_get = $translation_model->searchTranslate($back['search'],session('website_id'),'0','1');
+                $current_count = $translation_list_get['count'];
+                $translation_list = $translation_list_get['list'];
             }
-        }
+        // }
         $count = $translation_model->getTranslateCount(session('website_id'));
         $list['lists'] = $translation_list;
+        $list['current_count'] = $current_count;
         $list['count'] = $count;
         if($translation_list||$count){
             echo json_encode($list);

@@ -53,9 +53,9 @@ jQuery(function() {
         //     routes: {
         //         "lang/add": "add",
         //         "lang/export": "export",
-        //         "lang/edit/:id": "edit",
-        //         "lang/delete/:id": "delete",
-        //         "lang/search/:query": "search",
+        //         "lang/edit/:id": "edit",//translation lang list edit
+        //         // "lang/delete/:id": "delete",
+        //         // "lang/search/:query": "search",
         //         // "search/:query/p:page": "search"   // #search/kiwis/p7
         //     },
 
@@ -135,10 +135,12 @@ jQuery(function() {
                     });
             },
             batchImport: function(event){
+                var _self = this;
                 ajaxFileUpload(
                     UrlApi('_app')+'/Translation/import',
                     'batch-import',
                     function() {
+                        _self._events.trigger('refresh','edit');
                         alert('Import Success');
                     },
                     function() {
@@ -286,6 +288,7 @@ jQuery(function() {
                     ).done(function (response){
                     data['lists'] = response.lists;
                     data['count'] = response.count;
+                    data['current_count'] = response.current_count;
                     _self.$el.html(_self.template(data));
                 });
             }

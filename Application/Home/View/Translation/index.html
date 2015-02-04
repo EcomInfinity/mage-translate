@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="block block-translation-add" style="width:960px;">
-            </div>
+                </div>
         </main>
     </block>
 
@@ -133,7 +133,8 @@
         <div class="jump">
         <a href="#" class="btn btn-list-export btn-primary">Lang Export</a>
         <a href="#add" class="btn btn-list-add btn-primary">Lang Add</a>
-        <span class="record"><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
+            <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
             <%}%>Records</span>
         </div>
         <div class="line"></div>
