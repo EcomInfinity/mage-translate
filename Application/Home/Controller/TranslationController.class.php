@@ -116,22 +116,27 @@ class TranslationController extends BaseController {
         $translation_model = M('translation');
         $images_model = M('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
-            $trans_data['en'] = $back['en'];
-            $trans_data['de'] = $back['de'];
-            $trans_data['nl'] = $back['nl'];
-            $trans_data['fr'] = $back['fr'];
-            if($back['en']!=null&&$back['de']!=null&&$back['nl']!=null){
-                $trans_data['modify'] = '0';
-            }
-            $trans_data['remarks'] = $back['remarks'];
-            $trans_data['website_id'] = session('website_id');
-            $id=$translation_model->add($trans_data);
-            $image_data['lang_id'] = $id;
-            $images_model->where(array('lang_id'=>'0'))->save($image_data);
-            echo '1';
+        $repear_lang = $translation_model->where(array('en'=>$back['en']))->find();
+        if($repear_lang){
+            echo '2';
         }else{
-            echo '0';
+            if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
+                $trans_data['en'] = $back['en'];
+                $trans_data['de'] = $back['de'];
+                $trans_data['nl'] = $back['nl'];
+                $trans_data['fr'] = $back['fr'];
+                if($back['en']!=null&&$back['de']!=null&&$back['nl']!=null){
+                    $trans_data['modify'] = '0';
+                }
+                $trans_data['remarks'] = $back['remarks'];
+                $trans_data['website_id'] = session('website_id');
+                $id=$translation_model->add($trans_data);
+                $image_data['lang_id'] = $id;
+                $images_model->where(array('lang_id'=>'0'))->save($image_data);
+                echo '1';
+            }else{
+                echo '0';
+            }
         }
     }
     //lang list del
@@ -165,9 +170,11 @@ class TranslationController extends BaseController {
         }
         $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
+        $current_count = $translation_model->where($where)->count();
         $where_count['website_id'] = session('website_id');
         $where_count['status'] = '1';
         $count = $translation_model->where($where_count)->count();
+        $list['current_count'] = $current_count;
         $list['lists'] = $translation_list;
         $list['count'] = $count;
         if($translation_list||$count){

@@ -92,6 +92,8 @@ jQuery(function() {
                             lang_add.reset();
                             setTimeout("$('.tip-langadd').empty()",1000);
                             _self._events.trigger('refresh','add');
+                        }else if(response == '2'){
+                            $('.tip-langadd').text('The data already exists');
                         }else{
                             $('.tip-langadd').text('Can not all be empty');
                         }
@@ -186,7 +188,8 @@ jQuery(function() {
                 'click .btn-edit': 'editLanguage',
                 'click .btn-delete': 'deleteLanguage',
                 'click .btn-list-export': 'exportRender',
-                'click .btn-list-add': 'addRender'
+                'click .btn-list-add': 'addRender',
+                'click .btn-list-modify': 'backModify'
             },
             editLanguage: function(event){
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
@@ -224,6 +227,9 @@ jQuery(function() {
                 }
                 return false;
             },
+            backModify: function(){
+                location.reload();
+            },
             setList: function(data){
                 this.search = data.search;
                 this.inrender = data.inrender;
@@ -246,6 +252,7 @@ jQuery(function() {
                     ).done(function (response){
                     data['lists'] = response.lists;
                     data['count'] = response.count;
+                    data['current_count'] = response.current_count;
                     _self.$el.html(_self.template(data));
                 });
             }
