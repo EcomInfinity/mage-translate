@@ -45,40 +45,40 @@ jQuery(function() {
             localStorage: new Backbone.LocalStorage('lang.langlocator,langs'),
         });
 
-        // var LangRouter = Backbone.Router.extend({
-        //     initialize: function(options){
-        //         options || (options = {});
-        //         this._events = options._events;
-        //     },
-        //     routes: {
-        //         "lang/add": "add",
-        //         "lang/export": "export",
-        //         "lang/edit/:id": "edit",//translation lang list edit
-        //         // "lang/delete/:id": "delete",
-        //         // "lang/search/:query": "search",
-        //         // "search/:query/p:page": "search"   // #search/kiwis/p7
-        //     },
+        var LangRouter = Backbone.Router.extend({
+            initialize: function(options){
+                options || (options = {});
+                this._events = options._events;
+            },
+            routes: {
+                "lang/add": "add",
+                "lang/export": "export",
+                "lang/edit/:id": "edit",//translation lang list edit
+                // "lang/delete/:id": "delete",
+                // "lang/search/:query": "search",
+                // "search/:query/p:page": "search"   // #search/kiwis/p7
+            },
 
-        //     export: function(){
-        //         this._events.trigger('refresh','export');
-        //     },
+            export: function(){
+                this._events.trigger('refresh','export');
+            },
 
-        //     add: function(){
-        //         this._events.trigger('refresh','list-add');
-        //     },
+            add: function(){
+                this._events.trigger('refresh','list-add');
+            },
 
-        //     edit: function(id){
-        //         this._events.trigger('alernately',id,'list');
-        //     },
+            edit: function(id){
+                this._events.trigger('alernately',id,'list');
+            },
 
-        //     delete: function(id){
-        //         this._events.trigger('alernately',id,'delete');
-        //     },
+            delete: function(id){
+                this._events.trigger('alernately',id,'delete');
+            },
 
-        //     search: function(query) {
-        //         this._events.trigger('alernately',query,'search');
-        //     }
-        // });
+            search: function(query) {
+                this._events.trigger('alernately',query,'search');
+            }
+        });
 
         //Navigation
         lang.View.LanguageNavView = Backbone.View.extend({
@@ -225,7 +225,7 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
-                'click .btn-edit': 'editLanguage',
+                // 'click .btn-edit': 'editLanguage',
                 'click .btn-delete': 'deleteLanguage',
                 'click .btn-list-export': 'exportRender',
                 'click .btn-list-add': 'addRender'
@@ -370,7 +370,20 @@ jQuery(function() {
                         data['langDetail'] = response.detail;
                         data['langImages'] = response.images;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
+                        $.fancybox(_self.$el,{
+                           'onClosed': function () {
+                               alert('1');
+                            }
+                        });
+                        // $.fancybox({
+                        //     href: _self.$el
+                        // });
+                        // $.fancybox({
+                        //   onClosed: function() {
+                        //     console.log('1');
+                        //   }
+                        // });
+                        // console.log(_self.$el);
                 });
             }
         });
@@ -914,9 +927,9 @@ jQuery(function() {
                     translate: this.translate
                 });
 
-                // var router = new LangRouter({
-                //     _events:_events
-                // });
+                var router = new LangRouter({
+                    _events:_events
+                });
 
                 _events.on('refresh', function (view){
                     switch (view)

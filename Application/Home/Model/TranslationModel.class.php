@@ -8,7 +8,9 @@ class TranslationModel extends Model{
         if($modify&&$modify!=''){
             $where['modify'] = $modify;
         }
-        return $this->where($where)->order('id desc')->field($field)->select();
+        $list['count'] = $this->where($where)->count();
+        $list['list'] = $this->where($where)->order('id desc')->field($field)->select();
+        return $list;
     }
 
     public function searchTranslate($_search,$_website_id,$modify,$_status){
@@ -16,7 +18,9 @@ class TranslationModel extends Model{
         $where['website_id'] = $_website_id;
         $where['status'] = $_status;
         $where['modify'] = $modify;
-        return $this->where($where)->order('id desc')->select();
+        $list['count'] = $this->where($where)->count();
+        $list['list'] = $this->where($where)->order('id desc')->select();
+        return $list;
     }
 
     public function addTranslate($_params){
@@ -37,8 +41,8 @@ class TranslationModel extends Model{
         return $this->where(array('id'=>intval($_tid)))->find();
     }
 
-    public function getTranslateCount($_wid){
-        $where['website_id'] = intval($_wid);
+    public function getTranslateCount($_params){
+        $where['website_id'] = intval($_params['website_id']);
         $where['status'] = '1';
         return $this->where($where)->count();
     }

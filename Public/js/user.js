@@ -32,11 +32,9 @@ jQuery(function() {
             userLogin: function(event){
                 var $form = $(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                console.log(this.data_form);
                 this.userModel.save(this.data_form,
                     {url:UrlApi('_app')+'/Admin/login'}
                     ).done(function (response){
-                    console.log(response);
                     if(response == '1'){
                         window.open(UrlApi('_app')+'/Translation','_self');
                     }

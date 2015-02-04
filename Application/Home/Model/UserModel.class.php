@@ -107,8 +107,8 @@ class UserModel extends Model{
     }
 
     public function getUserName($uid){
-    $user = $this->where(array('id'=>intval($uid)))->field('username')->find();
-    return $user['username'];
+        $user = $this->where(array('id'=>intval($uid)))->field('username')->find();
+        return $user['username'];
     }
 
     public function setUsername($_username,$uid){

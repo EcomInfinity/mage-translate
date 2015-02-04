@@ -148,10 +148,10 @@ class TranslationController extends BaseController {
     //lang lists
     public function getList(){
         $translation_model = D('translation');
-        // $_tid = $_GET['id'];
-        // if($_tid){
-        //     $translation_list = $translation_model->getOneTranslate($_tid);
-        // }else{
+        $_tid = $_GET['id'];
+        if($_tid){
+            $translation_list = $translation_model->getOneTranslate($_tid);
+        }else{
             $back = json_decode(file_get_contents("php://input"),true);
             if($back['inrender'] == '0'){
                 $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1');
@@ -163,7 +163,7 @@ class TranslationController extends BaseController {
                 $current_count = $translation_list_get['count'];
                 $translation_list = $translation_list_get['list'];
             }
-        // }
+        }
         $count = $translation_model->getTranslateCount(session('website_id'));
         $list['lists'] = $translation_list;
         $list['current_count'] = $current_count;

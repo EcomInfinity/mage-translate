@@ -47,4 +47,6 @@ select{text-transform: uppercase;}
 
 .btn-right{float: right;}
 
+td{width: 25%;}
+
 /*.jump{z-index: 100;position: fixed;right: 0;left: 0;}*/
