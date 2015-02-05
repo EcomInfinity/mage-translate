@@ -1,5 +1,5 @@
 <?php
-function exportexcel($data=array(),$title=array(),$filename='report'){
+function exportexcel($data=array(),$filename='report'){
     header("Content-type:application/octet-stream");
     header("Accept-Ranges:bytes");
     header("Content-type:application/csv");
@@ -8,10 +8,10 @@ function exportexcel($data=array(),$title=array(),$filename='report'){
     header("Pragma: no-cache");
     header("Expires: 0");
     //导出xls 开始
-    if (!empty($title)){
-        $title= implode(",", $title);
-        echo "$title\n";
-    }
+    // if (!empty($title)){
+    //     $title= implode(",", $title);
+    //     echo "$title\n";
+    // }
     if (!empty($data)){
         foreach($data as $key=>$val){
             // foreach ($val as $ck => $cv) {

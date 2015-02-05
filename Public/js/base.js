@@ -572,10 +572,10 @@ jQuery(function() {
                                 setTimeout("$('.tip-useradd').empty()",1000);
                                 _self._userEvents.trigger('refresh','userAdd');
                             }else{
-                                $('.tip-useradd').text('Username or duplicate username password is empty');
+                                $('.tip-useradd').text('Username duplicate or username password is empty');
                             }
                         }).fail(function (response){
-                            $('.tip-useradd').text('Username or duplicate username password is empty');
+                            $('.tip-useradd').text('Username duplicate or username password is empty');
                         });
                     }else{
                         $('.tip-useradd').text('Username and password must be from 5-15 array or letters');

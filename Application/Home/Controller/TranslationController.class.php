@@ -30,12 +30,45 @@ class TranslationController extends BaseController {
             $title = explode(",", $field);
             $where['website_id'] = session('website_id');
             $where['status'] = '1';
-            $export = $translation_model->where($where)->field($field)->select();
-            S('title',$title);
+            $export_get = $translation_model->where($where)->field($field)->select();
+            foreach ($export_get as $key => $value) {
+                # code...
+                foreach ($value as $k => $val) {
+                    # code...
+                    if(strpos($val,'"') == '0'){
+                        $export[$key][$k] = '""'.$val.'""';
+                    }else{
+                        $export[$key][$k] = '"'.$val.'"';
+                    }
+                }
+            }
+            // S('title',$title);
             S('export',$export);
             S('filename',$fields);
             echo '1';
         }
+
+            // $field = 'en,'.$fields;
+            // $title = explode(",", $field);
+            // $where['website_id'] = '1';
+            // $where['status'] = '1';
+            // $export = $translation_model->where($where)->field('en,de')->select();
+            // foreach ($export as $key => $value) {
+            //     # code...
+            //     foreach ($value as $k => $val) {
+            //         # code...
+            //         if(strpos($val,'"') == '0'){
+            //             $test[$key][$k] = '""'.$val.'""';
+            //         }else{
+            //             $test[$key][$k] = '"'.$val.'"';
+            //         }
+            //         // $test[$key][$k] = '"'.str_replace('"','""',$val).'"';
+            //     }
+            // }
+            // echo strpos('qee"q"eqe','"');
+            // var_dump($test);
+
+
         if($back['exrender'] == '1'){
         $data = $translation_model->find();
         foreach ($data as $k => $val) {
@@ -49,9 +82,9 @@ class TranslationController extends BaseController {
     }
 
     public function download(){
-       exportexcel(S('export'),S('title'),'translation-'.S('filename'));
+       exportexcel(S('export'),'translation-'.S('filename'));
        S('export',null);
-       S('title',null);
+       // S('title',null);
        S('filename',null);
     }
 
@@ -170,6 +203,13 @@ class TranslationController extends BaseController {
         }
         $where['website_id'] = session('website_id');
         $translation_list = $translation_model->where($where)->order('id desc')->select();
+        // foreach ($translation_list as $key => $value) {
+        //     # code...
+        //     foreach ($value as $k => $val) {
+        //         # code...
+        //         $translation_list[$key][$k] = htmlentities($val);
+        //     }
+        // }
         $current_count = $translation_model->where($where)->count();
         $where_count['website_id'] = session('website_id');
         $where_count['status'] = '1';
