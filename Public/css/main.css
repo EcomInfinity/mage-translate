@@ -37,6 +37,7 @@ table td, table th { padding: 5px; }
 #enlarge_images{display:none;}
 
 select{text-transform: uppercase;}
+
 #export{background-color: #E7E7E7;}
 
 .block-translation-export{background-color: #E7E7E7;}
@@ -46,5 +47,7 @@ select{text-transform: uppercase;}
 .line{background-color: black;padding: 1px;margin: 10px 0px;}
 
 .btn-right{float: right;}
+
+td{word-break: break-all;}
 
 /*.jump{z-index: 100;position: fixed;right: 0;left: 0;}*/

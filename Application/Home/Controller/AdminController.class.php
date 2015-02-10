@@ -130,13 +130,13 @@ class AdminController extends Controller {
         $relation_model = M('relation');
         $back = json_decode(file_get_contents("php://input"),true);
         $save_rela['role_id'] = $back['role_id'];
-        $relation_model->where(array('user_id'=>$back['user_id']))->save($save_rela);
+        $rela = $relation_model->where(array('user_id'=>$back['user_id']))->save($save_rela);
         $user = $user_model->where(array('id'=>$back['user_id']))->find();
         if($back['username'] != $user['username']){
             $repeat_name = $user_model->where(array('username'=>$back['username']))->find();
         }
-        if($repeat_name> '0'){
-            echo '0';
+        if($repeat_name > '0'){
+            echo '2';
         }else{
             $save['id'] = $back['user_id'];
             $save['username'] = $back['username'];
@@ -144,7 +144,7 @@ class AdminController extends Controller {
                 $save['password'] = md5($back['password']);
             }
             $res = $user_model->save($save);
-            if($res){
+            if($res||$rela){
                 echo '1';
             }else{
                 echo '0';

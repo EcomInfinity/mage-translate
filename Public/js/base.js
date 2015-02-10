@@ -200,16 +200,19 @@ jQuery(function() {
             },
             deleteLanguage: function(event){
                 if(Purview('delete') == '1'||PurviewVal() == '-1'){
-                    var _self = this;
-                    this.del_id = $(event.target).closest('tr').data('id');
-                    this.translate.save({id:this.del_id},
-                        {url:UrlApi('_app')+'/Translation/del'}
-                        ).done(function (response){
-                            if(response == '1'){
-                                _self.render();
-                            }
-                    });
+                    if(confirm('Are you sure to delete?') == true){
+                        var _self = this;
+                        this.del_id = $(event.target).closest('tr').data('id');
+                        this.translate.save({id:this.del_id},
+                            {url:UrlApi('_app')+'/Translation/del'}
+                            ).done(function (response){
+                                if(response == '1'){
+                                    _self.render();
+                                }
+                        });
+                    }
                 }
+                return false;
             },
             exportRender: function(event){
                 if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
@@ -470,6 +473,7 @@ jQuery(function() {
             roleInfo: function(event){
                 var role_id = $(event.target).closest('tr').data('id');
                 this._userEvents.trigger('alernately',role_id,'roleList');
+                return false;
             },
             roleAdd: function(){
                 this._userEvents.trigger('refresh','list-role-add');
@@ -577,9 +581,9 @@ jQuery(function() {
                         }).fail(function (response){
                             $('.tip-useradd').text('Username duplicate or username password is empty');
                         });
-                    }else{
-                        $('.tip-useradd').text('Username and password must be from 5-15 array or letters');
-                    }
+                }else{
+                    $('.tip-useradd').text('Username and password must be from 5-15 digits or letters');
+                }
             },
             initialize: function(options){
                 options || (options = {});
@@ -620,10 +624,12 @@ jQuery(function() {
                             $(event.target).siblings().addClass('btn-default');
                         }
                     });
+                return false;
             },
             userInfo: function(event){
                 var user_id = $(event.target).closest('tr').data('id');
                 this._userEvents.trigger('alernately',user_id,'userList');
+                return false;
             },
             userAdd: function(){
                 this._userEvents.trigger('refresh','list-user-add');
@@ -669,7 +675,10 @@ jQuery(function() {
                 this.data_form = $form.serializeObject();
                 var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
                     pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                if(user_match!=null&&pwd_match!=null||this.data_form['password'] == ''){
+                if(this.data_form['password'] == ''){
+                    pwd_match = '1';
+                }
+                if(user_match!=null&&pwd_match!=null){
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/Admin/userEdit'}
                         ).done(function (response){
@@ -677,13 +686,15 @@ jQuery(function() {
                             if(response == '1'){
                                 $('.tip-useredit').html('<span style="color: green;">Edit Success</span>');
                                 setTimeout("$('.tip-useredit').empty()",1000);
+                            }else if(response == '2'){
+                                $('.tip-useredit').text('Username repeat');
                             }else{
                                 $('.tip-useredit').text('Edit Fail');
                             }
                         });
-                    }else{
-                        $('.tip-useredit').text('Username and password must be from 5-15 array or letters');
-                    }
+                }else{
+                    $('.tip-useredit').text('Username and password must be from 5-15 array or letters');
+                }
             },
             initialize: function(options){
                 options || (options = {});

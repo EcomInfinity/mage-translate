@@ -30,16 +30,12 @@ class TranslationController extends BaseController {
             $title = explode(",", $field);
             $where['website_id'] = session('website_id');
             $where['status'] = '1';
-            $export_get = $translation_model->where($where)->field($field)->select();
+            $export_get = $translation_model->where($where)->order('id')->field($field)->select();
             foreach ($export_get as $key => $value) {
                 # code...
                 foreach ($value as $k => $val) {
                     # code...
-                    if(strpos($val,'"') == '0'){
-                        $export[$key][$k] = '""'.$val.'""';
-                    }else{
-                        $export[$key][$k] = '"'.$val.'"';
-                    }
+                    $export[$key][$k] = '"'.str_replace('"','""',$val).'"';
                 }
             }
             // S('title',$title);
@@ -48,32 +44,11 @@ class TranslationController extends BaseController {
             echo '1';
         }
 
-            // $field = 'en,'.$fields;
-            // $title = explode(",", $field);
-            // $where['website_id'] = '1';
-            // $where['status'] = '1';
-            // $export = $translation_model->where($where)->field('en,de')->select();
-            // foreach ($export as $key => $value) {
-            //     # code...
-            //     foreach ($value as $k => $val) {
-            //         # code...
-            //         if(strpos($val,'"') == '0'){
-            //             $test[$key][$k] = '""'.$val.'""';
-            //         }else{
-            //             $test[$key][$k] = '"'.$val.'"';
-            //         }
-            //         // $test[$key][$k] = '"'.str_replace('"','""',$val).'"';
-            //     }
-            // }
-            // echo strpos('qee"q"eqe','"');
-            // var_dump($test);
-
-
         if($back['exrender'] == '1'){
         $data = $translation_model->find();
         foreach ($data as $k => $val) {
             # code...
-            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'){
+            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'&&$k!='fr'){
                 $allField[] = $k;
             }
         }
@@ -82,7 +57,7 @@ class TranslationController extends BaseController {
     }
 
     public function download(){
-       exportexcel(S('export'),'translation-'.S('filename'));
+       exportexcel(S('export'),S('filename').time());
        S('export',null);
        // S('title',null);
        S('filename',null);
@@ -117,7 +92,7 @@ class TranslationController extends BaseController {
                     }
                     foreach ($lang_arr['0'] as $key => $value) {
                         # code...
-                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key]), "UTF-8" , $val[$key]);
+                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
                     }
                     if($lang_add['en']!=''&&$lang_add['de']!=''&&$lang_add['nl']!=''){
                         $lang_add['modify'] = '0';
@@ -129,6 +104,7 @@ class TranslationController extends BaseController {
                     if($res){
                         $lang_save = $lang_add;
                         $lang_save['id'] = $res['id'];
+                        $lang_save['status'] = '1';
                         $translation_model->save($lang_save);
                         $modify = $translation_model->where(array('id'=>$res['id']))->find();
                         if($modify['en']!=''&&$modify['ne']!=''&&$modify['nl']!=''){
@@ -149,8 +125,10 @@ class TranslationController extends BaseController {
         $translation_model = M('translation');
         $images_model = M('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        $repear_lang = $translation_model->where(array('en'=>$back['en']))->find();
-        if($repear_lang){
+        $repeat_where['en'] = $back['en'];
+        $repeat_where['website_id'] = session('website_id');
+        $repeat_lang = $translation_model->where($repeat_where)->find();
+        if($repeat_lang['status'] == '1'){
             echo '2';
         }else{
             if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
@@ -160,10 +138,19 @@ class TranslationController extends BaseController {
                 $trans_data['fr'] = $back['fr'];
                 if($back['en']!=null&&$back['de']!=null&&$back['nl']!=null){
                     $trans_data['modify'] = '0';
+                }else{
+                    $trans_data['modify'] = '1';
                 }
                 $trans_data['remarks'] = $back['remarks'];
-                $trans_data['website_id'] = session('website_id');
-                $id=$translation_model->add($trans_data);
+                if($repeat_lang['status'] == '0'){
+                    $trans_data['status'] = '1';
+                    $trans_data['id'] = $repeat_lang['id'];
+                    $res = $translation_model->save($trans_data);
+                    $id = $repeat_lang['id'];
+                }else{
+                    $trans_data['website_id'] = session('website_id');
+                    $id=$translation_model->add($trans_data);
+                }
                 $image_data['lang_id'] = $id;
                 $images_model->where(array('lang_id'=>'0'))->save($image_data);
                 echo '1';
@@ -202,14 +189,14 @@ class TranslationController extends BaseController {
             $where['modify'] = '0';
         }
         $where['website_id'] = session('website_id');
-        $translation_list = $translation_model->where($where)->order('id desc')->select();
-        // foreach ($translation_list as $key => $value) {
-        //     # code...
-        //     foreach ($value as $k => $val) {
-        //         # code...
-        //         $translation_list[$key][$k] = htmlentities($val);
-        //     }
-        // }
+        $translation_list_get = $translation_model->where($where)->order('id desc')->select();
+        foreach ($translation_list_get as $key => $value) {
+            # code...
+            foreach ($value as $k => $val) {
+                # code...
+                $translation_list[$key][$k] = htmlentities($val);
+            }
+        }
         $current_count = $translation_model->where($where)->count();
         $where_count['website_id'] = session('website_id');
         $where_count['status'] = '1';

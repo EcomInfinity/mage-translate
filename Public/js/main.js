@@ -110,7 +110,7 @@
                 if(data == '1'){
                     window.open(UrlApi('_app')+'/Admin/index',"_self");
                 }else{
-                    $('.tip-main').text('Username or repeated failure to create.');
+                    $('.tip-main').text('Username repeated or failure to create.');
                 }
             });
          });
