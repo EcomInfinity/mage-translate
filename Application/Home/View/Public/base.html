@@ -71,7 +71,7 @@
                     <div class="user" style="float:right;">
                         <ul class="nav navbar-nav">
                             <li><a href="javascript:void(0);"><php>echo session('username');</php></a></li>
-                            <li><a href="__APP__/Admin/logout" class="logout">Logout</a></li>
+                            <li><a href="__APP__/logout" class="logout">Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
             <block name="template-user"></block>
         </div>
         <div class="page-width block-footer">
-            <block name="footer"></block>
+            <block name="footer"><!-- <php>echo rand(100000,999999);</php> --></block>
         </div>
     </div>
     <button type="button" id="message" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm" style="display:none;">Message</button>

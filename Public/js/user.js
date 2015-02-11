@@ -33,10 +33,10 @@ jQuery(function() {
                 var $form = $(event.target).closest('form');
                 this.data_form = $form.serializeObject();
                 this.userModel.save(this.data_form,
-                    {url:UrlApi('_app')+'/Admin/login'}
+                    {url:UrlApi('_app')+'/login'}
                     ).done(function (response){
                     if(response == '1'){
-                        window.open(UrlApi('_app')+'/Translation','_self');
+                        window.open(UrlApi('_app')+'/lang','_self');
                     }
                 });
             },
@@ -99,15 +99,15 @@ jQuery(function() {
                 }else{
                     $('.tip-website_name').text('');
                 }
-                console.log(this.data_form);
                 if(user_match!=null&&pwd_match!=null&&web_match!=null&&pwd_confirm == '1'){
                     this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/Admin/register'}
+                        {url:UrlApi('_app')+'/register'}
                         ).done(function (response){
-                        console.log(response);
                         if(response == '1'){
-                            window.open(UrlApi('_app')+'/Admin/login','_self');
+                            window.open(UrlApi('_app')+'/login','_self');
                         }
+                    }).fail(function (){
+                        $('.tip-main').text('Username repeated or failure to create.');
                     });
                 }
                 return false;

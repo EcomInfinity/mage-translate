@@ -4,7 +4,7 @@ use Think\Controller;
 class AdminController extends Controller {
     public function index(){
         if(session('id')>0&&session('id')){
-            $this->redirect('Translation/');
+            $this->redirect('/lang');
         }else{
             $this->display();
         }
@@ -31,7 +31,7 @@ class AdminController extends Controller {
             session('website_name',$website_model->getWebsiteName($relation['website_id']));
             session('purview',getPurviewJson($role_model->getPurview($relation['role_id'])));
             if(session('uid')>'0'){
-                $this->redirect('Translation/index');
+                $this->redirect('/lang');
             }else{
                 echo '1';
             }
@@ -44,7 +44,7 @@ class AdminController extends Controller {
             D('user')->logout();
             session('[destroy]');
         }
-        $this->redirect('index');
+        $this->redirect('/admin');
     }
 
     public function register(){
@@ -127,12 +127,12 @@ class AdminController extends Controller {
     public function userAllow(){
         $user_model = D('user');
         $back = json_decode(file_get_contents("php://input"),true);
-            $res = $user_model->setAllow($back['user_id'],$back['allow']);
-            if($res){
-                echo '1';
-            }else{
-                echo '0';
-            }
+        $res = $user_model->setAllow($back['user_id'],$back['allow']);
+        if($res){
+            echo '1';
+        }else{
+            echo '0';
+        }
     }
 
     public function userInfo(){

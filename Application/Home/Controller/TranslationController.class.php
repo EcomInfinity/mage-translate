@@ -28,9 +28,15 @@ class TranslationController extends BaseController {
         if($back['exrender'] == '0'){
             $field = 'en,'.$fields;
             $title = explode(",", $field);
-            $export_get = $translation_model->getTranslateList($field,'1',session('website_id'));
-            $export = $export_get['list'];
-            S('title',$title);
+            $export_get = $translation_model->getTranslateList($field,'1',session('website_id'),'','id');
+            foreach ($export_get['list'] as $key => $value) {
+                # code...
+                foreach ($value as $k => $val) {
+                    # code...
+                    $export[$key][$k] = '"'.str_replace('"','""',$val).'"';
+                }
+            }
+            // S('title',$title);
             S('export',$export);
             S('filename',$fields);
             echo '1';
@@ -39,7 +45,7 @@ class TranslationController extends BaseController {
         $data = $translation_model->find();
         foreach ($data as $k => $val) {
             # code...
-            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'){
+            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'&&$k!='fr'){
                 $allField[] = $k;
             }
         }
@@ -48,9 +54,9 @@ class TranslationController extends BaseController {
     }
 
     public function download(){
-       exportexcel(S('export'),S('title'),'translation-'.S('filename'));
+       exportexcel(S('export'),S('filename').time());
        S('export',null);
-       S('title',null);
+       // S('title',null);
        S('filename',null);
     }
 
@@ -83,7 +89,7 @@ class TranslationController extends BaseController {
                     }
                     foreach ($lang_arr['0'] as $key => $value) {
                         # code...
-                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key]), "UTF-8" , $val[$key]);
+                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
                     }
                     if($lang_add['en']!=''&&$lang_add['de']!=''&&$lang_add['nl']!=''){
                         $lang_add['modify'] = '0';
@@ -95,6 +101,7 @@ class TranslationController extends BaseController {
                     if($res){
                         $lang_save = $lang_add;
                         $lang_save['id'] = $res['id'];
+                        $lang_save['status'] = '1';
                         $translation_model->save($lang_save);
                         $modify = $translation_model->where(array('id'=>$res['id']))->find();
                         if($modify['en']!=''&&$modify['ne']!=''&&$modify['nl']!=''){
@@ -115,8 +122,10 @@ class TranslationController extends BaseController {
         $translation_model = D('translation');
         $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);
-        $repear_lang = $translation_model->where(array('en'=>$back['en']))->find();
-        if($repear_lang){
+        $repeat_where['en'] = $back['en'];
+        $repeat_where['website_id'] = session('website_id');
+        $repeat_lang = $translation_model->where($repeat_where)->find();
+        if($repeat_lang['status'] == '1'){
             echo '2';
         }else{
             if($back['en']!=null||$back['de']!=null||$back['nl']!=null||$back['fr']!=null||$back['remarks']!=null){
@@ -128,8 +137,15 @@ class TranslationController extends BaseController {
                     $trans_data['modify'] = '0';
                 }
                 $trans_data['remarks'] = $back['remarks'];
-                $trans_data['website_id'] = session('website_id');
-                $id=$translation_model->addTranslate($trans_data);
+                if($repeat_lang['status'] == '0'){
+                    $trans_data['status'] = '1';
+                    $trans_data['id'] = $repeat_lang['id'];
+                    $res = $translation_model->setTranslate($trans_data);
+                    $id = $repeat_lang['id'];
+                }else{
+                    $trans_data['website_id'] = session('website_id');
+                    $id=$translation_model->addTranslate($trans_data);
+                }
                 $images_model->saveImage($id);
                 echo '1';
             }else{
@@ -153,25 +169,28 @@ class TranslationController extends BaseController {
     //lang lists
     public function getList(){
         $translation_model = D('translation');
-        $_tid = $_GET['id'];
-        if($_tid){
-            $translation_list = $translation_model->getOneTranslate($_tid);
-        }else{
+        // $_tid = $_GET['id'];
+        // if($_tid){
+        //     $translation_list = $translation_model->getOneTranslate($_tid);
+        // }else{
             $back = json_decode(file_get_contents("php://input"),true);
             if($back['inrender'] == '0'){
-                $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1');
-                $current_count = $translation_list_get['count'];
-                $translation_list = $translation_list_get['list'];
+                $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1','id desc');
             }
             if($back['inrender'] == '1'){
                 $translation_list_get = $translation_model->searchTranslate($back['search'],session('website_id'),'0','1');
-                $current_count = $translation_list_get['count'];
-                $translation_list = $translation_list_get['list'];
+            }
+        // }
+        foreach ($translation_list_get['list'] as $key => $value) {
+            # code...
+            foreach ($value as $k => $val) {
+                # code...
+                $translation_list[$key][$k] = htmlentities($val);
             }
         }
         $count = $translation_model->getTranslateCount(session('website_id'));
         $list['lists'] = $translation_list;
-        $list['current_count'] = $current_count;
+        $list['current_count'] = $translation_list_get['count'];
         $list['count'] = $count;
         if($translation_list||$count){
             echo json_encode($list);

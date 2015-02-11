@@ -131,7 +131,7 @@
         </script>
         <script type="text/template" id="tpl-lang-list">
         <div class="jump">
-        <a href="#" class="btn btn-list-export btn-primary">Lang Export</a>
+        <a href="#export" class="btn btn-list-export btn-primary">Lang Export</a>
         <a href="#add" class="btn btn-list-add btn-primary">Lang Add</a>
         <a href="#" class="btn btn-list-modify btn-primary">Back Modify</a>
         <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
@@ -160,8 +160,8 @@
                   <a href="#" class="btn <% if(list.modify == '0'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="0">&nbspNo&nbsp</a>
               </td>-->
               <td>
-                <a href="#lang/edit/<%= list.id %>" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
-                <a href="#" class="btn btn-delete btn-danger">Delect</a>
+                <a href="#edit/<%= list.id %>" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
+                <a href="#delete/<%= list.id %>" class="btn btn-delete btn-danger">Delect</a>
               </td>
             </tr>
            <% }) %>
@@ -171,9 +171,9 @@
         <script type="text/template" id="tpl-lang-export">
             <div class="entry select">
                 <select id="export" class="form-control">
-                <% _.each(allField,function(field){ %>
-                    <option value="<%= field %>"><%= field %></option>
-                <% }) %>
+                    <% _.each(allField,function(field){ %>
+                        <option value="<%= field %>"><%= field %></option>
+                    <% }) %>
                 </select>
             </div>
             <div class="btn-set">
@@ -182,7 +182,6 @@
             </div>
         </script>
         <script type="text/template" id="tpl-lang-edit">
-            <!-- <form action=""> -->
             <div class="col col5 fl">
                 <div class="tip tip-langedit"></div>
                 <form action="" method="post">
@@ -214,7 +213,6 @@
                     </div>
                 </form>
             </div>
-            <!-- </form> -->
 
             <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
                 <form action="" method="post" enctype="multipart/form-data">
@@ -284,18 +282,18 @@
         </script>
         <script type="text/template" id="tpl-role-list">
             <div class="jump">
-                <a href="#" class="btn btn-primary btn-list-role-add">Role Add</a>
+                <a href="#roleadd" class="btn btn-primary btn-list-role-add">Role Add</a>
                 <a href="#" class="btn btn-primary btn-right btn-user-list">User List</a>
             </div>
             <table class="table table-hover" cellspacing="0" cellpadding="0">
                 <tr>
                     <th>RoleName</th>
-                    <th>OPERATION</th>
+                    <th>Operation</th>
                 </tr>
                 <% _.each(roleList, function(role){ %>
                     <tr data-id="<%= role.id %>">
                         <td><%= role.role_name %></td>
-                        <td><a href="#" class="btn btn-info btn-role-detail">Edit</a></td>
+                        <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail">Edit</a></td>
                     </tr>
                 <% }) %>
             </table>
@@ -357,7 +355,7 @@
         </script>
         <script type="text/template" id="tpl-user-list">
             <div class="jump">
-                <a href="#" class="btn btn-primary btn-list-user-add">User Add</a>
+                <a href="#useradd" class="btn btn-primary btn-list-user-add">User Add</a>
                 <a href="#" class="btn btn-primary btn-right btn-role-list">Role List</a>
             </div>
             <table class="table table-hover">
@@ -365,7 +363,7 @@
                     <!--<th>Id</th>-->
                     <th>UserName</th>
                     <th>Is Allow</th>
-                    <th>OPERATION</th>
+                    <th>Operation</th>
                 </tr>
                 <% _.each(userList, function(user){%>
                     <tr data-id="<%= user.id %>">
@@ -376,7 +374,7 @@
                         <a href="#" class="btn btn-allow <% if(user.allow == '0'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
                         </td>
                         <td>
-                        <a href="#" class="btn btn-user-detail btn-info">Edit</a>
+                        <a href="#useredit/<%= user.id %>" class="btn btn-user-detail btn-info">Edit</a>
                         </td>
                     </tr>
                 <% }) %>

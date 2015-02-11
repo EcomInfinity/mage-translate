@@ -20,6 +20,7 @@ class UserModel extends Model{
 
     public function logout(){
         session('id', null);
+        session('uid',null);
         session('username', null);
         session('website_id', null);
         session('website_name', null);

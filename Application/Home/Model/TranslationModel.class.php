@@ -2,14 +2,14 @@
 namespace Home\Model;
 use Think\Model;
 class TranslationModel extends Model{
-    public function getTranslateList($field,$_status,$_website_id,$modify){
+    public function getTranslateList($field,$_status,$_website_id,$modify,$order='id'){
         $where['website_id'] = $_website_id;
         $where['status'] = $_status;
         if($modify&&$modify!=''){
             $where['modify'] = $modify;
         }
         $list['count'] = $this->where($where)->count();
-        $list['list'] = $this->where($where)->order('id desc')->field($field)->select();
+        $list['list'] = $this->where($where)->order($order)->field($field)->select();
         return $list;
     }
 

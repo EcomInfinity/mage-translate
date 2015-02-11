@@ -51,34 +51,64 @@ jQuery(function() {
                 this._events = options._events;
             },
             routes: {
-                "lang/add": "add",
-                "lang/export": "export",
-                "lang/edit/:id": "edit",//translation lang list edit
-                // "lang/delete/:id": "delete",
+                "add": "add",
+                // "export": "export",
+                "edit/:id\d": "edit",//translation lang list edit
+                "delete/:id\d": "delete",
                 // "lang/search/:query": "search",
                 // "search/:query/p:page": "search"   // #search/kiwis/p7
             },
 
-            export: function(){
-                this._events.trigger('refresh','export');
-            },
+            // export: function(){
+            //     this._events.trigger('refresh','export');
+            // },
 
             add: function(){
-                this._events.trigger('refresh','list-add');
+                this._events.trigger('refresh','addRender');
             },
 
             edit: function(id){
-                this._events.trigger('alernately',id,'list');
+                this._events.trigger('alernately',id,'edit');
             },
 
             delete: function(id){
                 this._events.trigger('alernately',id,'delete');
             },
 
-            search: function(query) {
-                this._events.trigger('alernately',query,'search');
+            // search: function(query) {
+            //     this._events.trigger('alernately',query,'search');
+            // }
+        });
+
+        var UserRouter = Backbone.Router.extend({
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+            },
+            routes: {
+                "useradd": "userAdd",
+                "useredit/:id\d": "userEdit",
+                "roleadd": "roleAdd",
+                "roleedit/:id\d": "roleEdit",
+            },
+
+            userAdd: function(){
+                this._userEvents.trigger('refresh','list-user-add');
+            },
+
+            userEdit: function(id){
+                this._userEvents.trigger('alernately',id,'userList');
+            },
+
+            roleAdd: function(){
+                this._userEvents.trigger('refresh','list-role-add');
+            },
+
+            roleEdit: function(id){
+                this._userEvents.trigger('alernately',id,'roleList');
             }
         });
+
 
         //Navigation
         lang.View.LanguageNavView = Backbone.View.extend({
@@ -122,7 +152,7 @@ jQuery(function() {
                 var $form = $(event.target).closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(this.data_form,
-                    {url:UrlApi('_app')+'/Translation/add'}
+                    {url:UrlApi('_app')+'/langadd'}
                     ).done(function (response){
                         if(response == '1'){
                             $('.tip-langadd').html('<span style="color:green;">Add Success.</span>');
@@ -135,11 +165,12 @@ jQuery(function() {
                             $('.tip-langadd').text('Can not all be empty');
                         }
                     });
+                return false;
             },
             batchImport: function(event){
                 var _self = this;
                 ajaxFileUpload(
-                    UrlApi('_app')+'/Translation/import',
+                    UrlApi('_app')+'/langimport',
                     'batch-import',
                     function() {
                         _self._events.trigger('refresh','edit');
@@ -153,11 +184,11 @@ jQuery(function() {
             imagesAdd: function(event){
                 var _self = this;
                 ajaxFileUpload(
-                    UrlApi('_app')+'/Translation/imageAdd',
+                    UrlApi('_app')+'/langimgadd',
                     'images-add',
                     function(data) {
                         _self.translate.save({imageId:data},
-                            {url:UrlApi('_app')+'/Translation/getImage'}
+                            {url:UrlApi('_app')+'/langimg'}
                             ).done(function (response){
                                 $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
                         });
@@ -172,11 +203,12 @@ jQuery(function() {
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
                 this.translate.save({imageId:this.imageId},
-                    {url:UrlApi('_app')+'/Translation/imageDel'}
+                    {url:UrlApi('_app')+'/langimgdel'}
                     ).done(function (response){
                         _click.closest('li').hide();
                         $('#enlarge_images').html('');
                 });
+                return false;
             },
             initialize: function(options){
                 options || (options = {});
@@ -194,7 +226,13 @@ jQuery(function() {
                 //         $.fancybox(_self.$el);
                 //     });
                 this.$el.html(this.template(data));
-                $.fancybox(this.$el);
+                // $.fancybox(this.$el);
+                $.fancybox(this.$el,{
+                   afterClose: function () {
+                        window.history.back();
+                    // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
+                    }
+                });
             }
         });
 
@@ -228,30 +266,34 @@ jQuery(function() {
             template: _.template($('#tpl-lang-list').html()),
             events:{
                 // 'click .btn-edit': 'editLanguage',
-                'click .btn-delete': 'deleteLanguage',
+                // 'click .btn-delete': 'deleteLanguage',
                 'click .btn-list-export': 'exportRender',
-                'click .btn-list-add': 'addRender',
+                // 'click .btn-list-add': 'addRender',
                 'click .btn-list-modify': 'backModify'
             },
-            editLanguage: function(event){
-                if(Purview('update') == '1'||PurviewVal() == '-1'){
-                    this.edit_id = $(event.target).closest('tr').data('id');
-                    this._events.trigger('alernately',this.edit_id,'list');
+            // editLanguage: function(event){
+            //     if(Purview('update') == '1'||PurviewVal() == '-1'){
+            //         this.edit_id = $(event.target).closest('tr').data('id');
+            //         this._events.trigger('alernately',this.edit_id,'list');
+            //     }
+            //     return false;
+            // },
+            deleteLanguage: function(id){
+                if(Purview('delete') == '1'||PurviewVal() == '-1'){
+                    if(confirm('Are you sure to delete?') == true){
+                        var _self = this;
+                        // this.del_id = $(event.target).closest('tr').data('id');
+                        this.translate.save({id:id},
+                            {url:UrlApi('_app')+'/langdel'}
+                            ).done(function (response){
+                                if(response == '1'){
+                                    _self.render();
+                                }
+                        });
+                    }
+                    window.history.back();
                 }
                 return false;
-            },
-            deleteLanguage: function(event){
-                if(Purview('delete') == '1'||PurviewVal() == '-1'){
-                    var _self = this;
-                    this.del_id = $(event.target).closest('tr').data('id');
-                    this.translate.save({id:this.del_id},
-                        {url:UrlApi('_app')+'/Translation/del'}
-                        ).done(function (response){
-                            if(response == '1'){
-                                _self.render();
-                            }
-                    });
-                }
             },
             exportRender: function(event){
                 if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
@@ -262,9 +304,9 @@ jQuery(function() {
                 if(Purview('create') == '1'||PurviewVal() == '-1'){
                     var _self = this;
                     this.translate.save({},
-                        {url:UrlApi('_app')+'/Translation/imageClear'}
+                        {url:UrlApi('_app')+'/langimgclear'}
                         ).done(function (response){
-                        _self._events.trigger('refresh','list-add');
+                            _self._events.trigger('refresh','list-add');
                         });
                 }
                 return false;
@@ -290,7 +332,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({search:this.search,inrender:this.inrender},
-                    {url:UrlApi('_app')+'/Translation/getList'}
+                    {url:UrlApi('_app')+'/langlist'}
                     ).done(function (response){
                     data['lists'] = response.lists;
                     data['count'] = response.count;
@@ -313,7 +355,7 @@ jQuery(function() {
                 var $form = _change.closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(this.data_form,
-                    {url:UrlApi('_app')+'/Translation/editInfo'}
+                    {url:UrlApi('_app')+'/langedit'}
                     ).done(function (response){
                         if(response == '1'){
                             $('.tip-langedit').html('<span style="color:green">Edit Success</span>');
@@ -324,13 +366,14 @@ jQuery(function() {
                             _self._events.trigger('refresh','edit');
                         }
                 });
+                return false;
             },
             imgageDel: function(event){
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
                 this.translate.save({imageId:this.imageId},
-                    {url:UrlApi('_app')+'/Translation/imageDel'}
+                    {url:UrlApi('_app')+'/langimgdel'}
                     ).done(function (response){
                     if(response == '1'){
                         // _self.render();
@@ -338,17 +381,18 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
+                return false;
             },
             imagesAdd: function(event){
                 this.langId = $(event.target).closest('.images_list').data("id");
                 var _self = this;
                 ajaxFileUpload(
-                    UrlApi('_app')+'/Translation/imageAdd/lang_id/'+this.langId,
+                    UrlApi('_app')+'/langimgadd/lang_id/'+this.langId,
                     'images',
                     function(data) {
                         // _self.render();
                         _self.translate.save({imageId:data},
-                            {url:UrlApi('_app')+'/Translation/getImage'}
+                            {url:UrlApi('_app')+'/langimg'}
                             ).done(function (response){
                                 $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
                         });
@@ -371,15 +415,15 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({id:this.langId},
-                    {url:UrlApi('_app')+'/Translation/getInfo'}
+                    {url:UrlApi('_app')+'/langinfo'}
                     ).done(function (response){
                         data['langDetail'] = response.detail;
                         data['langImages'] = response.images;
                         _self.$el.html(_self.template(data));
-                        //fancybox close remove #url
                         $.fancybox(_self.$el,{
                            afterClose: function () {
-                               console.log('123');
+                                window.history.back();
+                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                             }
                         });
                 });
@@ -394,7 +438,7 @@ jQuery(function() {
             exportLanguage: function(event){
                 this.select = $('#export').val();
                 this.translate.save({exrender:'0',field:this.select},
-                    {url:UrlApi('_app')+'/Translation/export'}
+                    {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
                         window.open(UrlApi('_app')+'/Translation/download');
                     });
@@ -408,7 +452,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.translate.save({exrender:this.exrender},
-                    {url:UrlApi('_app')+'/Translation/export'}
+                    {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
                     data['allField'] = response;
                     _self.$el.html(_self.template(data));
@@ -474,7 +518,7 @@ jQuery(function() {
                 this.data_form = $form.serializeObject();
                 if(this.data_form['role'].match(/^.{1,20}$/)!=null){
                     this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/Admin/roleAdd'}
+                        {url:UrlApi('_app')+'/roleadd'}
                         ).done(function (response){
                             // _self.render();
                             if(response == '1'){
@@ -489,6 +533,7 @@ jQuery(function() {
                 }else{
                     $('.tip-roleadd').text('Rolename must have 1-20 characters');
                 }
+                return false;
             },
             initialize: function(options){
                 options || (options = {});
@@ -499,11 +544,17 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.userModel.save({},
-                    {url:UrlApi('_app')+'/Admin/ruleList'}
+                    {url:UrlApi('_app')+'/rulelist'}
                     ).done(function (response){
                         data['ruleList'] = response;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
+                        // $.fancybox(_self.$el);
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                window.history.back();
+                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
+                            }
+                        });
                     });
             }
         });
@@ -511,18 +562,18 @@ jQuery(function() {
         user.View.RoleListView = Backbone.View.extend({
             template: _.template($('#tpl-role-list').html()),
             events: {
-                'click .btn-role-detail': 'roleInfo',
-                'click .btn-list-role-add': 'roleAdd',
+                // 'click .btn-role-detail': 'roleInfo',
+                // 'click .btn-list-role-add': 'roleAdd',
                 'click .btn-user-list': 'userList'
             },
-            roleInfo: function(event){
-                var role_id = $(event.target).closest('tr').data('id');
-                this._userEvents.trigger('alernately',role_id,'roleList');
-                return false;
-            },
-            roleAdd: function(){
-                this._userEvents.trigger('refresh','list-role-add');
-            },
+            // roleInfo: function(event){
+            //     var role_id = $(event.target).closest('tr').data('id');
+            //     this._userEvents.trigger('alernately',role_id,'roleList');
+            //     return false;
+            // },
+            // roleAdd: function(){
+            //     this._userEvents.trigger('refresh','list-role-add');
+            // },
             userList: function(){
                 this._userEvents.trigger('refresh','user-list');
                 $('.block-role').slideUp("slow");
@@ -542,7 +593,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.userModel.save({search:this.search},
-                    {url:UrlApi('_app')+'/Admin/roleList'}
+                    {url:UrlApi('_app')+'/rolelist'}
                     ).done(function (response){
                         data['roleList'] = response;
                         _self.$el.html(_self.template(data));
@@ -561,7 +612,7 @@ jQuery(function() {
                 this.data_form = $form.serializeObject();
                 if(this.data_form['role_name'].match(/^.{1,20}$/)!=null){
                     this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/Admin/roleEdit'}
+                        {url:UrlApi('_app')+'/roleedit'}
                         ).done(function (response){
                             if(response == '1'){
                                 $('.tip-roleedit').html('<span style="color: green;">Edit Success</span>');
@@ -574,6 +625,7 @@ jQuery(function() {
                 }else{
                     $('.tip-roleedit').text('Rolename must have 1-20 characters');
                 }
+                return false;
             },
             initialize: function(options){
                 options || (options = {});
@@ -588,14 +640,20 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.userModel.save({role_id:this.role_id},
-                    {url:UrlApi('_app')+'/Admin/roleInfo'}
+                    {url:UrlApi('_app')+'/roleinfo'}
                     ).done(function (response){
                         data['roleInfo'] = response;
                         data['ruleList'] = response.rule;
                         data['role_name'] = response.role_name;
                         data['role_id'] = response.role_id;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
+                        // $.fancybox(_self.$el);
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                window.history.back();
+                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
+                            }
+                        });
                     });
             }
         });
@@ -613,7 +671,7 @@ jQuery(function() {
                     pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
                 if(user_match!=null&&pwd_match!=null){
                     this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/Admin/userAdd'}
+                        {url:UrlApi('_app')+'/useradd'}
                         ).done(function (response){
                             if(response == '1'){
                                 $('.tip-useradd').html('<span style="color:green;">Add Success.</span>');
@@ -621,14 +679,15 @@ jQuery(function() {
                                 setTimeout("$('.tip-useradd').empty()",1000);
                                 _self._userEvents.trigger('refresh','userAdd');
                             }else{
-                                $('.tip-useradd').text('Username or duplicate username password is empty');
+                                $('.tip-useradd').text('Username duplicate or username password is empty');
                             }
                         }).fail(function (response){
-                            $('.tip-useradd').text('Username or duplicate username password is empty');
+                            $('.tip-useradd').text('Username duplicate or username password is empty');
                         });
                     }else{
-                        $('.tip-useradd').text('Username and password must be from 5-15 array or letters');
+                        $('.tip-useradd').text('Username and password must be from 5-15 digits or letters');
                     }
+                return false;
             },
             initialize: function(options){
                 options || (options = {});
@@ -639,11 +698,17 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.userModel.save({},
-                    {url:UrlApi('_app')+'/Admin/roleList'}
+                    {url:UrlApi('_app')+'/rolelist'}
                     ).done(function (response){
                         data['rolelist'] = response;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
+                        // $.fancybox(_self.$el);
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                window.history.back();
+                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
+                            }
+                        });
                     });
             }
         });
@@ -652,8 +717,8 @@ jQuery(function() {
             template: _.template($('#tpl-user-list').html()),
             events:{
                 'click .btn-allow': 'userAllow',
-                'click .btn-user-detail': 'userInfo',
-                'click .btn-list-user-add': 'userAdd',
+                // 'click .btn-user-detail': 'userInfo',
+                // 'click .btn-list-user-add': 'userAdd',
                 'click .btn-role-list': 'roleList'
             },
             userAllow: function(event){
@@ -661,7 +726,7 @@ jQuery(function() {
                 var allow = $(event.target).data('allow'),
                 user_id = $(event.target).closest('tr').data('id');
                 this.userModel.save({user_id:user_id,allow:allow},
-                    {url:UrlApi('_app')+'/Admin/userAllow'}
+                    {url:UrlApi('_app')+'/userallow'}
                     ).done(function (response){
                         if(response == '1'){
                             $(event.target).addClass('btn-success');
@@ -669,15 +734,16 @@ jQuery(function() {
                             $(event.target).siblings().addClass('btn-default');
                         }
                     });
-            },
-            userInfo: function(event){
-                var user_id = $(event.target).closest('tr').data('id');
-                this._userEvents.trigger('alernately',user_id,'userList');
                 return false;
             },
-            userAdd: function(){
-                this._userEvents.trigger('refresh','list-user-add');
-            },
+            // userInfo: function(event){
+            //     var user_id = $(event.target).closest('tr').data('id');
+            //     this._userEvents.trigger('alernately',user_id,'userList');
+            //     return false;
+            // },
+            // userAdd: function(){
+            //     this._userEvents.trigger('refresh','list-user-add');
+            // },
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
                 $('.block-user').slideUp("slow");
@@ -700,7 +766,7 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.userModel.save({search:this.search},
-                    {url:UrlApi('_app')+'/Admin/userList'}
+                    {url:UrlApi('_app')+'/userlist'}
                     ).done(function (response){
                         data['userList'] = response;
                         _self.$el.html(_self.template(data));
@@ -720,12 +786,15 @@ jQuery(function() {
                 this.data_form = $form.serializeObject();
                 var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
                     pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                console.log(this.data_form);
-                if(user_match!=null&&pwd_match!=null||this.data_form['password'] == ''){
+                // console.log(this.data_form);
+                if(this.data_form['password'] == ''){
+                    pwd_match = '1';
+                }
+                if(user_match!=null&&pwd_match!=null){
                     this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/Admin/userEdit'}
+                        {url:UrlApi('_app')+'/useredit'}
                         ).done(function (response){
-                            console.log(response);
+                            // console.log(response);
                             _self._userEvents.trigger('refresh','userInfo');
                             if(response == '1'){
                                 $('.tip-useredit').html('<span style="color: green;">Edit Success</span>');
@@ -735,8 +804,9 @@ jQuery(function() {
                             }
                         });
                     }else{
-                        $('.tip-useredit').text('Username and password must be from 5-15 array or letters');
+                        $('.tip-useredit').text('Username and password must be from 5-15 digits or letters');
                     }
+                return false;
             },
             initialize: function(options){
                 options || (options = {});
@@ -751,16 +821,21 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.userModel.save({user_id:this.user_id},
-                    {url:UrlApi('_app')+'/Admin/userInfo'}
+                    {url:UrlApi('_app')+'/userinfo'}
                     ).done(function (response){
+                        console.log(response);
                         data['username'] = response.username;
                         data['user_id'] = response.user_id;
                         data['role_id'] = response.role_id;
                         data['rolelist'] = response.rolelist;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                window.history.back();
+                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
+                            }
+                        });
                     });
-
             }
         });
 
@@ -817,6 +892,10 @@ jQuery(function() {
                 var userinfoView = new user.View.UserInfoView({
                     el: '.block-user-info',
                     userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var router = new UserRouter({
                     _userEvents: _userEvents
                 });
 
@@ -908,13 +987,13 @@ jQuery(function() {
                 });
 
 
-                this.navView = new lang.View.LanguageNavView({
+                var navView = new lang.View.LanguageNavView({
                     el: '.navbar-collapse',
                     _events: _events,
                     translate: this.translate
                 });
 
-                this.searchView = new lang.View.LanguageSearchView({
+                var searchView = new lang.View.LanguageSearchView({
                     el: '.search-box',
                     _events:_events,
                     translate: this.translate
@@ -944,6 +1023,9 @@ jQuery(function() {
                         case 'list-add':
                             addView.render();
                             break;
+                        case 'addRender':
+                            listView.addRender();
+                            break;
                     }
                 });
 
@@ -953,8 +1035,11 @@ jQuery(function() {
                         case 'search':
                             listView.setList(data).render();
                             break;
-                        case 'list':
+                        case 'edit':
                             editView.setLanguage(data).render();
+                            break;
+                        case 'delete':
+                            listView.deleteLanguage(data);
                             break;
                     }
                 });
