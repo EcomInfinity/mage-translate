@@ -48,7 +48,8 @@ jQuery(function() {
             template: _.template($('#tpl-lang-nav').html()),
             events:{
                 'click .btn-user': 'showUser',
-                'click .btn-list': 'showList'
+                'click .btn-list': 'showList',
+                'click .btn-user-center': 'userCenter'
             },
             showUser: function(){
                 $('.block-view-user').slideDown("slow");
@@ -60,10 +61,14 @@ jQuery(function() {
                 $('.block-view-user').slideUp("slow");
                 return false;
             },
+            userCenter: function(event){
+                this._userEvents.trigger('refresh','userCenter');
+                return false;
+            },
             initialize: function(options){
                 options || (options = {});
-                this._events = options._events;
-                this.translate = options.translate;
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
                 this.render();
             },
             render: function(){
@@ -306,7 +311,7 @@ jQuery(function() {
                     UrlApi('_app')+'/Translation/imageAdd/lang_id/'+this.langId,
                     'images',
                     function(data) {
-                        // _self.render();
+                        // _self.render();  
                         _self.translate.save({imageId:data},
                             {url:UrlApi('_app')+'/Translation/getImage'}
                             ).done(function (response){
@@ -365,8 +370,9 @@ jQuery(function() {
                 this.translate.save({exrender:this.exrender},
                     {url:UrlApi('_app')+'/Translation/export'}
                     ).done(function (response){
-                    data['allField'] = response;
-                    _self.$el.html(_self.template(data));
+                        data['allField'] = response;
+                        _self.$el.html(_self.template(data));
+                        $.fancybox(_self.$el);
                     });
             }
         });
@@ -393,6 +399,54 @@ jQuery(function() {
             render: function(){
                 var data = {};
                 this.$el.html(this.template(data));
+            }
+        });
+
+        user.View.UserCenterView = Backbone.View.extend({
+            template: _.template($('#tpl-user-center').html()),
+            events:{
+                'click .btn-edit-center': 'editUserCenter'
+            },
+            editUserCenter: function(event){
+                var _self = this;
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                var pwd_match = this.data_form['original-password'].match(/^[a-zA-Z0-9]{5,15}$/),
+                    npwd_match = this.data_form['new-password'].match(/^[a-zA-Z0-9]{5,15}$/),
+                    cpwd_match = this.data_form['confirm-new-password'].match(/^[a-zA-Z0-9]{5,15}$/);
+                    if(pwd_match!=null&&npwd_match!=null&&cpwd_match!=null){
+                        if(this.data_form['new-password'] == this.data_form['confirm-new-password']){
+                            this.userModel.save(this.data_form,
+                                {url:UrlApi('_app')+'/Admin/centerEdit'}
+                                ).done(function (response){
+                                    if(response == '1'){
+                                        $('.tip-center-main').html('<span style="color: green;">Modify Success and Quit after 3 seconds</span>');
+                                        setTimeout("window.open(UrlApi('_app')+'/Admin/logout','_self')",3000);
+                                    }else if(response == '2'){
+                                        $('.tip-confirm-new-password').text('Please make sure your passwords match.');
+                                    }else if(response == '3'){
+                                        $('.tip-center-main').text('The password is incorrect.');
+                                    }else{
+                                        $('.tip-center-main').text('Modify fail.');
+                                    }
+                                });
+                        }else{
+                            $('.tip-confirm-new-password').text('Please make sure your passwords match.');
+                        }
+                    }else{
+                        $('.tip-center-main').text('Password must be from 5-15 digits or letters.');
+                    }
+                return false;
+            },
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                var data = {};
+                this.$el.html(this.template(data));
+                $.fancybox(this.$el);
             }
         });
 
@@ -693,7 +747,7 @@ jQuery(function() {
                             }
                         });
                 }else{
-                    $('.tip-useredit').text('Username and password must be from 5-15 array or letters');
+                    $('.tip-useredit').text('Username and password must be from 5-15 digits or letters');
                 }
             },
             initialize: function(options){
@@ -729,6 +783,18 @@ jQuery(function() {
 
                 var _userEvents = {};
                 _.extend(_userEvents, Backbone.Events);
+
+                this.navView = new lang.View.LanguageNavView({
+                    el: '.navbar-collapse',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var usercenterView = new user.View.UserCenterView({
+                    el: '.user-center',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
 
                 var usersearchView = new user.View.UserSearchView({
                     el: '.search-box-user',
@@ -805,6 +871,9 @@ jQuery(function() {
                     if(view == 'userInfo'){
                         userlistView.render();
                     }
+                    if(view == 'userCenter'){
+                        usercenterView.render();
+                    }
                 });
 
                 _userEvents.on('alernately', function (data,view){
@@ -852,16 +921,8 @@ jQuery(function() {
                     translate: this.translate
                 });
 
-
                 var addView = new lang.View.LanguageAddView({
                     el: '.block-translation-add',
-                    _events: _events,
-                    translate: this.translate
-                });
-
-
-                this.navView = new lang.View.LanguageNavView({
-                    el: '.navbar-collapse',
                     _events: _events,
                     translate: this.translate
                 });

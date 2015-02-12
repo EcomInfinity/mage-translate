@@ -125,6 +125,30 @@ class AdminController extends Controller {
         }
     }
 
+    public function centerEdit(){
+        $user_model = M('user');
+        $back = json_decode(file_get_contents("php://input"),true);
+        // $where['id'] = $back['id'];
+        // $where['password'] = $back['original-password'];
+        $user = $user_model->where(array('id'=>intval($back['id'])))->find();
+        if(md5($back['original-password']) == $user['password']){
+            if($back['new-password'] == $back['confirm-new-password']){
+                $save['password'] = md5($back['new-password']);
+                $save['id'] = $back['id'];
+                $res = $user_model->save($save);
+                if($res){
+                    echo '1';
+                }else{
+                    echo '0';
+                }
+            }else{
+                echo '2';
+            }
+        }else{
+            echo '3';
+        }
+    }
+
     public function userEdit(){
         $user_model = M('user');
         $relation_model = M('relation');

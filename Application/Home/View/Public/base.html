@@ -64,24 +64,28 @@
                         <button type="button" class="navbar-toggle collapsed">
                         </button>
                     </div>
-                    <div class="collapse navbar-collapse" style="float:left;">
-                    </div>
-                    <div class="user" style="float:right;">
-                        <ul class="nav navbar-nav">
-                            <li><a href="javascript:void(0);"><php>echo session('username');</php></a></li>
-                            <li><a href="__APP__/Admin/logout" class="logout">Logout</a></li>
-                        </ul>
-                    </div>
+                    <div class="collapse navbar-collapse"></div>
                 </div>
             </nav>
         </block>
         <script type="text/template" id="tpl-lang-nav">
-            <ul class="nav navbar-nav">
-                <li><a href="#" class="btn-list">List</a></li>
-                <php>if(session('purview') == '-1'){</php>
-                <li><a href="#" class="btn-user">User</a></li>
-                <php>}</php>
-            </ul>
+            <div style="float:left;">
+                <ul class="nav navbar-nav">
+                    <li><a href="#" class="btn-list">List</a></li>
+                    <php>if(session('purview') == '-1'){</php>
+                    <li><a href="#" class="btn-user">User</a></li>
+                    <php>}</php>
+                </ul>
+            </div>
+            <div class="user" style="float:right;">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#" class="btn-user-center">
+                        <php>echo session('username');</php></a>
+                    </li>
+                    <li><a href="__APP__/Admin/logout" class="logout">Logout</a></li>
+                </ul>
+            </div>
         </script>
         <div class="block block-view-translate">
             <block name="main-translate"></block>

@@ -9,7 +9,7 @@
                 <div class="search-box">
                 </div>
 
-                <div class="block block-translation-export">
+                <div class="block block-translation-export" style="width:960px;">
                 </div>
 
                 <div class="block block-translation-list">
@@ -32,6 +32,9 @@
                 <div class="search-box-user">
                 </div>
 
+                <div class="user-center">
+                </div>
+
                 <div class="block-user">
                     <div class="block block-user-list">
                     </div>
@@ -52,7 +55,6 @@
 
                     <div class="block block-role-info">
                     </div>
-
                 </div>
 
             </div>
@@ -137,6 +139,7 @@
             </div>
             <!-- </form> -->
         </script>
+
         <script type="text/template" id="tpl-lang-list">
         <div class="jump">
         <a href="#" class="btn btn-list-export btn-primary">Lang Export</a>
@@ -176,6 +179,7 @@
           </tbody>
         </table>
         </script>
+
         <script type="text/template" id="tpl-lang-export">
             <div class="entry select">
                 <select id="export" class="form-control">
@@ -189,6 +193,7 @@
                 <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
             </div>
         </script>
+
         <script type="text/template" id="tpl-lang-edit">
             <!-- <form action=""> -->
             <div class="col col5 fl">
@@ -257,6 +262,7 @@
                 </div>
             </div>
         </script>
+
         <script type="text/template" id="tpl-role-search">
             <div class="form-holder">
                 <div class="entry">
@@ -264,6 +270,37 @@
                 </div>
             </div>
         </script>
+
+        <script type="text/template" id="tpl-user-center">
+            <form action="" method="post">
+                <div class="form-hoder">
+                    <h2>Modify User Password</h2>
+                    <div class="tip tip-center-main"></div>
+                    <input type="hidden" name="id" value="<php>echo session('id');</php>" />
+                    <!--<div class="entry form-group">
+                        <label for="username">User Name:</label>
+                        <input type="text" name="username" id="username" />
+                    </div>
+                    <div class="tip tip-username"></div>-->
+                    <div class="entry form-group">
+                        <label for="original-password">Original Password:</label>
+                        <input type="password" name="original-password" id="original-password" placeholder="Please enter 5-15 alphanumeric" />
+                    </div>
+                    <div class="tip tip-original-password"></div>
+                    <div class="entry form-group">
+                        <label for="new-password">New Password:</label>
+                        <input type="password" name="new-password" id="new-password" placeholder="Please enter 5-15 alphanumeric" />
+                    </div>
+                    <div class="entry form-group">
+                        <label for="confirm-new-password">Confirm New Password:</label>
+                        <input type="password" name="confirm-new-password" id="confirm-new-password" placeholder="Please enter 5-15 alphanumeric" />
+                    </div>
+                    <div class="tip tip-confirm-new-password"></div>
+                </div>
+                <a href="#" class="btn btn-edit-center btn-default">Submit</a>
+            </form>
+        </script>
+
         <script type="text/template" id="tpl-role-add">
             <div class="tip tip-roleadd"></div>
             <form action="" method="post" name="role_add">
@@ -271,7 +308,7 @@
                     <h3>Role Add</h3>
                     <div class="entry">
                         <label for="role">Role Name</label>
-                        <input type="text" id="role" name="role" />
+                        <input type="text" id="role" name="role" placeholder="Please enter 1-20 characters" />
                     </div>
                     <% _.each(ruleList, function(rule){ %>
                         <div class="entry radio">
@@ -290,6 +327,7 @@
                 </div>
             </form>
         </script>
+
         <script type="text/template" id="tpl-role-list">
             <div class="jump">
                 <a href="#" class="btn btn-primary btn-list-role-add">Role Add</a>
@@ -308,6 +346,7 @@
                 <% }) %>
             </table>
         </script>
+
         <script type="text/template" id="tpl-role-info">
             <div class="tip tip-roleedit"></div>
             <form action="" method="post">
@@ -335,6 +374,7 @@
                 <%= info %>
             <% }) %>-->
         </script>
+
         <script type="text/template" id="tpl-user-add">
             <form method="post" name="user_add">
                 <div class="form-holder">
@@ -342,11 +382,11 @@
                     <div class="tip tip-useradd"></div>
                     <div class="entry">
                         <label for="username">username</label>
-                        <input type="text" name="username" id="username" />
+                        <input type="text" name="username" id="username" placeholder="Please enter 5-15 alphanumeric" />
                     </div>
                     <div class="entry">
                         <label for="password">password</label>
-                        <input type="password" name="password" id="password" />
+                        <input type="password" name="password" id="password" placeholder="Please enter 5-15 alphanumeric" />
                     </div>
                     <div class="entry select">
                         <label for="user-groups">User Groups</label>
@@ -362,6 +402,7 @@
                 </div>
             </form>
         </script>
+
         <script type="text/template" id="tpl-user-list">
             <div class="jump">
                 <a href="#" class="btn btn-primary btn-list-user-add">User Add</a>
@@ -389,6 +430,7 @@
                 <% }) %>
             </table>
         </script>
+
         <script type="text/template" id="tpl-user-info">
             <div class="tip tip-useredit"></div>
             <form method="post">

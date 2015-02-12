@@ -135,7 +135,6 @@
     verifyRegister = function (username,password1,password2,website_name){
         var reVal = {};
         // str.match(/^[a-zA-Z0-9]{5,15}$/)
-        console.log(username);
         if(username.match(/^[a-zA-Z0-9]{5,15}$/)!=null){
             reVal['0'] = '1';
         }else{
