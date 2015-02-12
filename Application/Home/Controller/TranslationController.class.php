@@ -273,15 +273,7 @@ class TranslationController extends BaseController {
             echo $id;
         }
     }
-    //new lang images
-    // public function imageList(){
-    //     $images_model = M('translation_image');
-    //     $where['lang_id'] = '0';
-    //     $where['status'] = '1';
-    //     $images_detail = $images_model->where($where)->select();
-    //     echo json_encode($images_detail);
-    // }
-    //
+
     public function getImage(){
         $images_model = D('translation_image');
         $back = json_decode(file_get_contents("php://input"),true);

@@ -46,6 +46,7 @@ return array(
         array('useredit','Admin/userEdit'),
         array('userallow','Admin/userAllow'),
         array('userinfo','Admin/userInfo'),
+        array('centeredit','Admin/centerEdit'),
 
         array('roleadd','Admin/roleAdd'),
         array('rolelist','Admin/roleList'),

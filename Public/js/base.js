@@ -52,16 +52,14 @@ jQuery(function() {
             },
             routes: {
                 "add": "add",
-                // "export": "export",
-                "edit/:id\d": "edit",//translation lang list edit
+                "export": "export",
+                "edit/:id\d": "edit",
                 "delete/:id\d": "delete",
-                // "lang/search/:query": "search",
-                // "search/:query/p:page": "search"   // #search/kiwis/p7
             },
 
-            // export: function(){
-            //     this._events.trigger('refresh','export');
-            // },
+            export: function(){
+                this._events.trigger('refresh','export');
+            },
 
             add: function(){
                 this._events.trigger('refresh','addRender');
@@ -75,9 +73,6 @@ jQuery(function() {
                 this._events.trigger('alernately',id,'delete');
             },
 
-            // search: function(query) {
-            //     this._events.trigger('alernately',query,'search');
-            // }
         });
 
         var UserRouter = Backbone.Router.extend({
@@ -115,7 +110,8 @@ jQuery(function() {
             template: _.template($('#tpl-lang-nav').html()),
             events:{
                 'click .btn-user': 'showUser',
-                'click .btn-list': 'showList'
+                'click .btn-list': 'showList',
+                'click .btn-user-center': 'userCenter'
             },
             showUser: function(){
                 $('.block-view-user').slideDown("slow");
@@ -127,10 +123,14 @@ jQuery(function() {
                 $('.block-view-user').slideUp("slow");
                 return false;
             },
+            userCenter: function(event){
+                this._userEvents.trigger('refresh','userCenter');
+                return false;
+            },
             initialize: function(options){
                 options || (options = {});
-                this._events = options._events;
-                this.translate = options.translate;
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
                 this.render();
             },
             render: function(){
@@ -218,19 +218,10 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                // this.translate.save({},
-                //     {url:UrlApi('_app')+'/Translation/imageList'}
-                //     ).done(function (response){
-                //         data['imagesDetail'] = response;
-                //         _self.$el.html(_self.template(data));
-                //         $.fancybox(_self.$el);
-                //     });
                 this.$el.html(this.template(data));
-                // $.fancybox(this.$el);
                 $.fancybox(this.$el,{
                    afterClose: function () {
                         window.history.back();
-                    // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                     }
                 });
             }
@@ -265,24 +256,12 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
-                // 'click .btn-edit': 'editLanguage',
-                // 'click .btn-delete': 'deleteLanguage',
-                'click .btn-list-export': 'exportRender',
-                // 'click .btn-list-add': 'addRender',
                 'click .btn-list-modify': 'backModify'
             },
-            // editLanguage: function(event){
-            //     if(Purview('update') == '1'||PurviewVal() == '-1'){
-            //         this.edit_id = $(event.target).closest('tr').data('id');
-            //         this._events.trigger('alernately',this.edit_id,'list');
-            //     }
-            //     return false;
-            // },
             deleteLanguage: function(id){
                 if(Purview('delete') == '1'||PurviewVal() == '-1'){
                     if(confirm('Are you sure to delete?') == true){
                         var _self = this;
-                        // this.del_id = $(event.target).closest('tr').data('id');
                         this.translate.save({id:id},
                             {url:UrlApi('_app')+'/langdel'}
                             ).done(function (response){
@@ -376,7 +355,6 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/langimgdel'}
                     ).done(function (response){
                     if(response == '1'){
-                        // _self.render();
                         _click.closest('li').hide();
                         $('#enlarge_images').html('');
                     }
@@ -390,7 +368,6 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd/lang_id/'+this.langId,
                     'images',
                     function(data) {
-                        // _self.render();
                         _self.translate.save({imageId:data},
                             {url:UrlApi('_app')+'/langimg'}
                             ).done(function (response){
@@ -423,7 +400,6 @@ jQuery(function() {
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
-                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                             }
                         });
                 });
@@ -454,8 +430,13 @@ jQuery(function() {
                 this.translate.save({exrender:this.exrender},
                     {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
-                    data['allField'] = response;
-                    _self.$el.html(_self.template(data));
+                        data['allField'] = response;
+                        _self.$el.html(_self.template(data));
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                window.history.back();
+                            }
+                        });
                     });
             }
         });
@@ -482,6 +463,54 @@ jQuery(function() {
             render: function(){
                 var data = {};
                 this.$el.html(this.template(data));
+            }
+        });
+
+        user.View.UserCenterView = Backbone.View.extend({
+            template: _.template($('#tpl-user-center').html()),
+            events:{
+                'click .btn-edit-center': 'editUserCenter'
+            },
+            editUserCenter: function(event){
+                var _self = this;
+                var $form=$(event.target).closest('form');
+                this.data_form = $form.serializeObject();
+                var pwd_match = this.data_form['original-password'].match(/^[a-zA-Z0-9]{5,15}$/),
+                    npwd_match = this.data_form['new-password'].match(/^[a-zA-Z0-9]{5,15}$/),
+                    cpwd_match = this.data_form['confirm-new-password'].match(/^[a-zA-Z0-9]{5,15}$/);
+                    if(pwd_match!=null&&npwd_match!=null&&cpwd_match!=null){
+                        if(this.data_form['new-password'] == this.data_form['confirm-new-password']){
+                            this.userModel.save(this.data_form,
+                                {url:UrlApi('_app')+'/centeredit'}
+                                ).done(function (response){
+                                    if(response == '1'){
+                                        $('.tip-center-main').html('<span style="color: green;">Modify Success and Quit after 3 seconds</span>');
+                                        setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
+                                    }else if(response == '2'){
+                                        $('.tip-confirm-new-password').text('Please make sure your passwords match.');
+                                    }else if(response == '3'){
+                                        $('.tip-center-main').text('The password is incorrect.');
+                                    }else{
+                                        $('.tip-center-main').text('Modify fail.');
+                                    }
+                                });
+                        }else{
+                            $('.tip-confirm-new-password').text('Please make sure your passwords match.');
+                        }
+                    }else{
+                        $('.tip-center-main').text('Password must be from 5-15 digits or letters.');
+                    }
+                return false;
+            },
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                var data = {};
+                this.$el.html(this.template(data));
+                $.fancybox(this.$el);
             }
         });
 
@@ -520,7 +549,6 @@ jQuery(function() {
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/roleadd'}
                         ).done(function (response){
-                            // _self.render();
                             if(response == '1'){
                                 $('.tip-roleadd').html('<span style="color:green;">Add Success.</span>');
                                 role_add.reset();
@@ -548,11 +576,9 @@ jQuery(function() {
                     ).done(function (response){
                         data['ruleList'] = response;
                         _self.$el.html(_self.template(data));
-                        // $.fancybox(_self.$el);
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
-                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                             }
                         });
                     });
@@ -562,18 +588,8 @@ jQuery(function() {
         user.View.RoleListView = Backbone.View.extend({
             template: _.template($('#tpl-role-list').html()),
             events: {
-                // 'click .btn-role-detail': 'roleInfo',
-                // 'click .btn-list-role-add': 'roleAdd',
                 'click .btn-user-list': 'userList'
             },
-            // roleInfo: function(event){
-            //     var role_id = $(event.target).closest('tr').data('id');
-            //     this._userEvents.trigger('alernately',role_id,'roleList');
-            //     return false;
-            // },
-            // roleAdd: function(){
-            //     this._userEvents.trigger('refresh','list-role-add');
-            // },
             userList: function(){
                 this._userEvents.trigger('refresh','user-list');
                 $('.block-role').slideUp("slow");
@@ -647,11 +663,9 @@ jQuery(function() {
                         data['role_name'] = response.role_name;
                         data['role_id'] = response.role_id;
                         _self.$el.html(_self.template(data));
-                        // $.fancybox(_self.$el);
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
-                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                             }
                         });
                     });
@@ -702,11 +716,9 @@ jQuery(function() {
                     ).done(function (response){
                         data['rolelist'] = response;
                         _self.$el.html(_self.template(data));
-                        // $.fancybox(_self.$el);
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
-                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                             }
                         });
                     });
@@ -717,8 +729,6 @@ jQuery(function() {
             template: _.template($('#tpl-user-list').html()),
             events:{
                 'click .btn-allow': 'userAllow',
-                // 'click .btn-user-detail': 'userInfo',
-                // 'click .btn-list-user-add': 'userAdd',
                 'click .btn-role-list': 'roleList'
             },
             userAllow: function(event){
@@ -736,14 +746,6 @@ jQuery(function() {
                     });
                 return false;
             },
-            // userInfo: function(event){
-            //     var user_id = $(event.target).closest('tr').data('id');
-            //     this._userEvents.trigger('alernately',user_id,'userList');
-            //     return false;
-            // },
-            // userAdd: function(){
-            //     this._userEvents.trigger('refresh','list-user-add');
-            // },
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
                 $('.block-user').slideUp("slow");
@@ -786,7 +788,6 @@ jQuery(function() {
                 this.data_form = $form.serializeObject();
                 var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
                     pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                // console.log(this.data_form);
                 if(this.data_form['password'] == ''){
                     pwd_match = '1';
                 }
@@ -794,7 +795,6 @@ jQuery(function() {
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/useredit'}
                         ).done(function (response){
-                            // console.log(response);
                             _self._userEvents.trigger('refresh','userInfo');
                             if(response == '1'){
                                 $('.tip-useredit').html('<span style="color: green;">Edit Success</span>');
@@ -823,7 +823,6 @@ jQuery(function() {
                 this.userModel.save({user_id:this.user_id},
                     {url:UrlApi('_app')+'/userinfo'}
                     ).done(function (response){
-                        console.log(response);
                         data['username'] = response.username;
                         data['user_id'] = response.user_id;
                         data['role_id'] = response.role_id;
@@ -832,7 +831,6 @@ jQuery(function() {
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
-                            // history.pushState('', '', window.location.href.replace('#edit/'+_self.langId,''));
                             }
                         });
                     });
@@ -846,6 +844,18 @@ jQuery(function() {
 
                 var _userEvents = {};
                 _.extend(_userEvents, Backbone.Events);
+
+                this.navView = new lang.View.LanguageNavView({
+                    el: '.navbar-collapse',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var usercenterView = new user.View.UserCenterView({
+                    el: '.user-center',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
 
                 var usersearchView = new user.View.UserSearchView({
                     el: '.search-box-user',
@@ -928,6 +938,9 @@ jQuery(function() {
                         case 'userInfo':
                             userlistView.render();
                             break;
+                        case 'userCenter':
+                            usercenterView.render();
+                            break;
                     }
                 });
 
@@ -987,11 +1000,11 @@ jQuery(function() {
                 });
 
 
-                var navView = new lang.View.LanguageNavView({
-                    el: '.navbar-collapse',
-                    _events: _events,
-                    translate: this.translate
-                });
+                // var navView = new lang.View.LanguageNavView({
+                //     el: '.navbar-collapse',
+                //     _events: _events,
+                //     translate: this.translate
+                // });
 
                 var searchView = new lang.View.LanguageSearchView({
                     el: '.search-box',
@@ -1025,6 +1038,9 @@ jQuery(function() {
                             break;
                         case 'addRender':
                             listView.addRender();
+                            break;
+                        case 'export':
+                            listView.exportRender();
                             break;
                     }
                 });

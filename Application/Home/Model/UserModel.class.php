@@ -116,7 +116,6 @@ class UserModel extends Model{
         if($this->userMatch($_username) == '1'){
             if ($this->isExisted($_username) == false) {
                 return '0';
-                // E('User already exist');
             }else{
                 $save['id'] = intval($uid);
                 $save['username'] = $_username;

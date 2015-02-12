@@ -93,7 +93,6 @@ class AdminController extends Controller {
         $ids = $relation_model->getSubUser(session('id'));
         if($ids){
             if($back['search']&&$back['search']!=null){
-                // $where['username'] = array('like','%'.$back['search'].'%');
                 $res = $user_model->searchUser($back['search'],$ids);
             }else{
                 $res = $user_model->getUserList($ids);
@@ -105,6 +104,26 @@ class AdminController extends Controller {
             }
         }else{
             echo '0';
+        }
+    }
+
+    public function centerEdit(){
+        $user_model = D('user');
+        $back = json_decode(file_get_contents("php://input"),true);
+        $user = $user_model->getOneUser($back['id']);
+        if(md5($back['original-password']) == $user['password']){
+            if($back['new-password'] == $back['confirm-new-password']){
+                $res = $user_model->setPassword($back['new-password'],$back['id']);
+                if($res){
+                    echo '1';
+                }else{
+                    echo '0';
+                }
+            }else{
+                echo '2';
+            }
+        }else{
+            echo '3';
         }
     }
 
