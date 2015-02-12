@@ -187,11 +187,7 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd',
                     'images-add',
                     function(data) {
-                        _self.translate.save({imageId:data},
-                            {url:UrlApi('_app')+'/langimg'}
-                            ).done(function (response){
-                                $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
-                        });
+                        $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
                     },
                     function() {
                         alert('Add Fail');
@@ -368,11 +364,7 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd/lang_id/'+this.langId,
                     'images',
                     function(data) {
-                        _self.translate.save({imageId:data},
-                            {url:UrlApi('_app')+'/langimg'}
-                            ).done(function (response){
-                                $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
-                        });
+                        $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
                     }, 
                     function() {
                         alert('Add Fail');

@@ -266,6 +266,8 @@
                         <input type="text" name="username" id="username" />
                     </div>
                     <div class="tip tip-username"></div>-->
+                    <label for="username">User Name:</label>
+                    <php>echo session('username');</php>
                     <div class="entry form-group">
                         <label for="original-password">Original Password:</label>
                         <input type="password" name="original-password" id="original-password" placeholder="Please enter 5-15 alphanumeric" />

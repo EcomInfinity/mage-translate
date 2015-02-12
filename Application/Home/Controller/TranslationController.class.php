@@ -173,13 +173,13 @@ class TranslationController extends BaseController {
         // if($_tid){
         //     $translation_list = $translation_model->getOneTranslate($_tid);
         // }else{
-            $back = json_decode(file_get_contents("php://input"),true);
-            if($back['inrender'] == '0'){
-                $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1','id desc');
-            }
-            if($back['inrender'] == '1'){
-                $translation_list_get = $translation_model->searchTranslate($back['search'],session('website_id'),'0','1');
-            }
+        $back = json_decode(file_get_contents("php://input"),true);
+        if($back['inrender'] == '0'){
+            $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1','id desc');
+        }
+        if($back['inrender'] == '1'){
+            $translation_list_get = $translation_model->searchTranslate($back['search'],session('website_id'),'0','1');
+        }
         // }
         foreach ($translation_list_get['list'] as $key => $value) {
             # code...
@@ -269,16 +269,11 @@ class TranslationController extends BaseController {
         if(!$info){
             die();
         }else{
-            $id = $images_model->addImage($_GET['lang_id'],$info['savename']);
-            echo $id;
+            $images_model->addImage($_GET['lang_id'],$info['savename']);
+            $image['image_name'] = $info['savename'];
+            $image['id'] = $id;
+            echo json_encode($image);
         }
-    }
-
-    public function getImage(){
-        $images_model = D('translation_image');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $image = $images_model->getOneImage($back['imageId']);
-        echo json_encode($image);
     }
 
 }
