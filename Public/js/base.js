@@ -94,6 +94,7 @@ jQuery(function() {
                     ).done(function (response){
                         if(response == '1'){
                             $('.tip-langadd').html('<span style="color:green;">Add Success.</span>');
+                            //表单重置
                             lang_add.reset();
                             setTimeout("$('.tip-langadd').empty()",1000);
                             _self._events.trigger('refresh','add');
@@ -122,11 +123,7 @@ jQuery(function() {
                     UrlApi('_app')+'/Translation/imageAdd',
                     'images-add',
                     function(data) {
-                        _self.translate.save({imageId:data},
-                            {url:UrlApi('_app')+'/Translation/getImage'}
-                            ).done(function (response){
-                                $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
-                        });
+                        $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
                     },
                     function() {
                         alert('Add Fail');
@@ -311,12 +308,7 @@ jQuery(function() {
                     UrlApi('_app')+'/Translation/imageAdd/lang_id/'+this.langId,
                     'images',
                     function(data) {
-                        // _self.render();  
-                        _self.translate.save({imageId:data},
-                            {url:UrlApi('_app')+'/Translation/getImage'}
-                            ).done(function (response){
-                                $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response.image_name+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response.id+'">X</a></div></li>');
-                        });
+                        $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
                     }, 
                     function() {
                         alert('Add Fail');
@@ -488,6 +480,7 @@ jQuery(function() {
                             // _self.render();
                             if(response == '1'){
                                 $('.tip-roleadd').html('<span style="color:green;">Add Success.</span>');
+                                //表单重置
                                 role_add.reset();
                                 setTimeout("$('.tip-roleadd').empty()",1000);
                                 _self._userEvents.trigger('refresh','roleAdd');
@@ -626,6 +619,7 @@ jQuery(function() {
                         ).done(function (response){
                             if(response == '1'){
                                 $('.tip-useradd').html('<span style="color:green;">Add Success.</span>');
+                                //表单重置
                                 user_add.reset();
                                 setTimeout("$('.tip-useradd').empty()",1000);
                                 _self._userEvents.trigger('refresh','userAdd');

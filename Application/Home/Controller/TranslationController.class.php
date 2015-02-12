@@ -289,8 +289,10 @@ class TranslationController extends BaseController {
         }else{
             $images['lang_id'] = intval($_GET['lang_id']);
             $images['image_name'] = $info['savename'];
-            $id = $images_model->add($images);
-            echo $id;
+            $images_model->add($images);
+            $image['image_name'] = $info['savename'];
+            $image['id'] = $id;
+            echo json_encode($image);
         }
     }
     //new lang images
@@ -300,13 +302,6 @@ class TranslationController extends BaseController {
         $where['status'] = '1';
         $images_detail = $images_model->where($where)->select();
         echo json_encode($images_detail);
-    }
-    //
-    public function getImage(){
-        $images_model = M('translation_image');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $image = $images_model->where(array('id'=>$back['imageId']))->find();
-        echo json_encode($image);
     }
 
 }
