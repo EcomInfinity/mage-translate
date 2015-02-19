@@ -1,42 +1,52 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+
 class AdminController extends Controller {
     public function index(){
-        if(session('id')>0&&session('id')){
+        $_session_id = session('id');
+        if (isset($_session_id) && $_session_id > 0) {
             $this->redirect('/lang');
-        }else{
+        } else {
             $this->display();
         }
     }
 
     public function login(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $website_model = D('website');
-        $role_model = D('role');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $username = $back['username'];
-        $password = $back['password'];
-        if(session('uid')>'0'){
-            $uid = session('uid');
-        }else{
-            $uid = $user_model->login($username,$password);
+        $_user = D('user');
+        
+        $_uid = session('uid');
+        if (isset($_uid) === false) {
+            $_params = json_decode(file_get_contents("php://input"), true);
+            $_username = $_params['username'];
+            $_password = $_params['password'];
+
+            $_uid = $_user->login($_username, $_password);
         }
-        if($uid>'0'){
-            $relation = $relation_model->getUserRelation($uid);
-            session('id',$uid);
-            session('username',$user_model->getUserName($uid));
-            session('website_id',$relation['website_id']);
-            session('website_name',$website_model->getWebsiteName($relation['website_id']));
-            session('purview',getPurviewJson($role_model->getPurview($relation['role_id'])));
-            if(session('uid')>'0'){
-                $this->redirect('/lang');
-            }else{
-                echo '1';
-            }
-        }else{
-            echo '0';
+
+        if ($_uid === false) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Incorrect Username or Password',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        } else {
+            $_relation = D('relation')->getUserRelation($_uid);
+            session('website_id', $_relation['website_id']);
+            session('website_name', D('website')->getWebsiteName($_relation['website_id']));
+            session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
+
+            $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
         }
     }
     public function logout(){
@@ -48,25 +58,51 @@ class AdminController extends Controller {
     }
 
     public function register(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $website_model = D('website');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $_params['username'] = $back['username'];
-        $_params['password'] = $back['password1'];
-        $_params['repeat-password'] = $back['password2'];
-        $uid = $user_model->register($_params);
-        $wid = $website_model->addWebsite($back['website_name']);
-        $_params_relation['user_id'] = $uid;
-        $_params_relation['website_id'] = $wid;
-        $_params_relation['role_id'] = '1';
-        $res = $relation_model->addRelation($_params_relation);
-        if($uid&&$wid&&$res){
-            session('uid',$uid);
-            echo '1';
-        }else{
-            echo '0';
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_params['username'] = $_params['username'];
+        $_params['password'] = $_params['password'];
+        $_params['repeat-password'] = $_params['password-rpt'];
+
+        $_user_id = D('user')->register($_params);
+        if (is_string($_user_id)) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => $_user_id,
+                    'data' => array(),
+                ),
+                'json'
+            );
         }
+
+        $_website_id = D('website')->addWebsite($_params['website_name']);
+        // if (is_string($_website_id)) {
+        //     $this->ajaxReturn(
+        //         array(
+        //             'success' => false,
+        //             'message' => $_website_id,
+        //             'data' => array(),
+        //         ),
+        //         'json'
+        //     );
+        // }
+
+        $_relation_id = D('relation')->addRelation(
+            array(
+                'user_id' => $_user_id,
+                'website_id' => $_website_id,
+                'role_id' => 1
+            )
+        );
+
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
     }
 
     public function userAdd(){
