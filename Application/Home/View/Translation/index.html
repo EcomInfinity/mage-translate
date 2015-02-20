@@ -4,22 +4,17 @@
         <main>
             <div class="container-fluid page-width">
 
-                <h1>Mage Translation</h1>
+                <h1>Happy Translating! - <php>echo session('website_name');</php></h1>
 
-                <div class="search-box">
-                </div>
+                <div class="search-box"></div>
 
-                <div class="block block-translation-export" style="width:960px;">
-                </div>
+                <div class="block block-translation-export" style="width:960px;"></div>
 
-                <div class="block block-translation-list">
-                </div>
+                <div class="block block-translation-list"></div>
 
-                <div class="block block-translation-detail" style="width:960px;">
-                </div>
+                <div class="block block-translation-detail" style="width:960px;"></div>
 
-                <div class="block block-translation-add" style="width:960px;">
-                </div>
+                <div class="block block-translation-add" style="width:960px;"></div>
         </main>
     </block>
 
@@ -63,66 +58,70 @@
     </block>
 
     <block name="template-translate">
-        <script type="text/template" id="tpl-lang-add">
+<script type="text/template" id="tpl-lang-add">
+<div class="modal-container">
+    <h2>Add Entries</h2>
+    <div class="content">
+        <div class="batch-import section">
+            <h3>Method #1: Import</h3>
+            <form class="form-inline" action="" method="post" enctype="multipart/form-data">
+                <div class="form-holder">
+                    <div class="entry file form-group">
+                        <label>Batch Import:</label>
+                        <input type="file" name="csv" id="batch-import" class="form-control">
+                    </div>
+                </div>
+            </form>
+            <p>Please select the *.csv file format batch import</p>
+        </div>
 
-            <div class="batch-import">
+        <div class="section">
+            <h3>Method #2: Input Manually</h3>
+            <div class="col col5 fl">
+                <div class="tip tip-langadd"></div>
+                <form action="" method="post" name="lang_add">
+                    <div class="form-holder">
+                        <div class="entry textarea">
+                            <label for="en">EN:</label>
+                            <textarea name="en" id="en"></textarea>
+                        </div>
+                        <div class="entry textarea">
+                            <label for="de">DE:</label>
+                            <textarea name="de" id="de"></textarea>
+                        </div>
+                        <div class="entry textarea">
+                            <label for="nl">NL:</label>
+                            <textarea name="nl" id="nl"></textarea>
+                        </div>
+                        <div class="entry">
+                            <label for="remarks">Remarks:</label>
+                            <input type="text" name="remarks" id="remarks" />
+                        </div>
+                    </div>
+                    <div class="btn-set">
+                        <a href="#" class="btn btn-add btn-primary up">Add</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="images_list col col5 fr">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-holder">
                         <div class="entry file">
-                            <label>Batch Import:</label>
-                            <input type="file" name="csv" id="batch-import" />
+                            <label>Images:</label>
+                            <input type="file" name="images" id="images-add" />
+                            <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
                         </div>
                     </div>
                 </form>
-                <p>Please select the *.csv file format batch import</p>
+                <ul></ul>
+                <div id="enlarge_images"></div>
             </div>
-
-            <div class="col col5 fl">
-                <div class="tip tip-langadd"></div>
-                    <form action="" method="post" name="lang_add">
-                        <div class="form-holder">
-                            <div class="entry textarea">
-                                <label for="en">EN:</label>
-                                <textarea name="en" id="en"></textarea>
-                            </div>
-                            <div class="entry textarea">
-                                <label for="de">DE:</label>
-                                <textarea name="de" id="de"></textarea>
-                            </div>
-                            <div class="entry textarea">
-                                <label for="nl">NL:</label>
-                                <textarea name="nl" id="nl"></textarea>
-                            </div>
-    <!--                        <div class="entry">
-                                <label for="fr">FR:</label>
-                                <input type="text" name="fr" id="fr" />
-                            </div>-->
-                            <div class="entry">
-                                <label for="remarks">Remarks:</label>
-                                <input type="text" name="remarks" id="remarks" />
-                            </div>
-                        </div>
-                        <div class="btn-set">
-                            <a href="#" class="btn btn-add btn-primary up">Add</a>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="images_list col col5 fr">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        <div class="form-holder">
-                            <div class="entry file">
-                                <label>Images:</label>
-                                <input type="file" name="images" id="images-add" />
-                                <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
-                            </div>
-                        </div>
-                    </form>
-                    <ul>
-                    </ul>
-                    <div id="enlarge_images"></div>
-                </div>
-        </script>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</script>
 
         <script type="text/template" id="tpl-lang-search">
             <!-- <form action="" data-get=""> -->
@@ -136,10 +135,14 @@
 
         <script type="text/template" id="tpl-lang-list">
         <div class="jump">
-        <a href="#export" class="btn btn-list-export btn-primary">Lang Export</a>
-        <a href="#add" class="btn btn-list-add btn-primary">Lang Add</a>
-        <a href="#" class="btn btn-list-modify btn-primary">Back Modify</a>
-        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
+            <a href="#export" class="btn btn-list-export btn-primary" title="Export">
+                <i class="glyphicon glyphicon-share"></i>
+            </a>
+            <a href="#add" class="btn btn-list-add btn-primary" title="Add New Entry">
+                <i class="glyphicon glyphicon-plus"></i>
+            </a>
+            <a href="#" class="btn btn-list-modify btn-primary">Back Modify</a>
+            <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
             <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
             <%}%>Records</span>
         </div>
@@ -147,11 +150,10 @@
         <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
           <thead>
             <tr>
-              <th>EN</th>
-              <th>DE</th>
-              <th>NL</th>
-              <!--<th>MODIFY</th>-->
-              <th>OPERATION</th>
+              <th class="col-language">EN</th>
+              <th class="col-language">DE</th>
+              <th class="col-language">NL</th>
+              <th class="col-operation">OPERATION</th>
             </tr>
           </thead>
           <tbody>
@@ -160,13 +162,13 @@
               <td><%= list.en %></td>
               <td><%= list.de %></td>
               <td><%= list.nl %></td>
-              <!--<td>
-                  <a href="#" class="btn <% if(list.modify == '1'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="1">Yes</a>
-                  <a href="#" class="btn <% if(list.modify == '0'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="0">&nbspNo&nbsp</a>
-              </td>-->
               <td>
-                <a href="#edit/<%= list.id %>" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
-                <a href="#delete/<%= list.id %>" class="btn btn-delete btn-danger">Delect</a>
+                <a href="#edit/<%= list.id %>" class="btn btn-edit btn-info" title="Edit">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                <a href="#delete/<%= list.id %>" class="btn btn-delete btn-danger" title="Delete">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
               </td>
             </tr>
            <% }) %>
@@ -174,76 +176,88 @@
         </table>
         </script>
 
-        <script type="text/template" id="tpl-lang-export">
-            <div class="entry select">
-                <select id="export" class="form-control">
-                    <% _.each(allField,function(field){ %>
-                        <option value="<%= field %>"><%= field %></option>
-                    <% }) %>
-                </select>
-            </div>
-            <div class="btn-set">
-                <a href="#" class="btn btn-export btn-primary">Export</a>
-                <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
-            </div>
-        </script>
+<script type="text/template" id="tpl-lang-export">
+<div class="modal-container">
+    <h2>Export as CSV</h2>
+    <div class="content">
+        <div class="entry select">
+            <select id="export" class="form-control">
+                <% _.each(allField,function(field){ %>
+                    <option value="<%= field %>"><%= field %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="btn-set">
+            <a href="#" class="btn btn-export btn-primary">Export</a>
+            <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
+        </div>
+    </div>
+</div>
+</script>
 
-        <script type="text/template" id="tpl-lang-edit">
-            <div class="col col5 fl">
-                <div class="tip tip-langedit"></div>
-                <form action="" method="post">
-                    <div class="form-holder">
-                        <input type="hidden" value="<%= langDetail['id'] %>" name="id" />
-                        <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='modify'){ %>
-                            <div class="entry textarea">
-                            <label for="edit-<%= detail %>">
-                            <%= detail %>
-                            </label>
-                            <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit"><%= langDetail[detail] %></textarea>
-                            </div>
-                            <% } %>
-                            <% if(detail == 'modify'){ %>
-                                <label><%= detail %></label>
-                                <div class="entry radio">
-                                    <label for="modify-yes" class="radio-inline">
-                                    <input type="radio" value="1" name="modify" id="modify-yes" <%if(langDetail[detail] == '1'){%>checked<%}%> />Yes
-                                    </label>
-                                    <label for="modify-no" class="radio-inline">
-                                    <input type="radio" value="0" name="modify" id="modify-no" <%if(langDetail[detail] == '0'){%>checked<%}%> />No
-                                    </label>
-                                </div>
-                            <% } %>
-                        <%})%>
-                    </div>
-                    <div class="btn-set">
-                        <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
-                    </div>
-                </form>
+<script type="text/template" id="tpl-lang-edit">
+<div class="modal-container">
+    <h2>Edit</h2>
+    <div class="content">
+        <div class="col col5 fl">
+            <div class="tip tip-langedit"></div>
+            <form action="" method="post">
+                <div class="form-holder">
+                    <input type="hidden" value="<%= langDetail['id'] %>" name="id" />
+    <% _.each(_.keys(langDetail), function(detail) { 
+        if (detail != 'id' && detail != 'status' && detail != 'website_id' && detail !='fr' && detail!='modify') { %>
+        <div class="entry textarea">
+            <label for="edit-<%= detail %>"><%= detail %></label>
+            <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit"><%= langDetail[detail] %></textarea>
+        </div>
+        <% } %>
+        <% if(detail == 'modify'){ %>
+        <div class="entry">
+            <label>Need Update</label>
+            <div>
+                <label class="radio-inline">
+                    <input type="radio" value="1" name="modify" id="modify-yes" <%if(langDetail[detail] == '1'){%>checked<%}%> />Yes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="0" name="modify" id="modify-no" <%if(langDetail[detail] == '0'){%>checked<%}%> />No
+                </label>
             </div>
+        </div>
+        <% } %>
+    <%})%>
+                </div>
+                <div class="btn-set">
+                    <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
+                </div>
+            </form>
+        </div>
 
-            <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
-                <form action="" method="post" enctype="multipart/form-data">
-                    <div class="form-holder">
-                        <div class="entry file">
-                            <label>Images:</label>
-                            <input type="file" name="images" id="images" en-id="<{$en_id}>" />
-                            <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
+        <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-holder">
+                    <div class="entry file">
+                        <label>Images:</label>
+                        <input type="file" name="images" id="images" en-id="<{$en_id}>" />
+                        <p style="margin-top: 10px;">Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
+                    </div>
+                </div>
+            </form>
+            <ul>
+                <% _.each(langImages, function(image){ %>
+                    <li>
+                        <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
+                        <div class="btn-set">
+                            <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
                         </div>
-                    </div>
-                </form>
-                <ul>
-                    <% _.each(langImages, function(image){ %>
-                        <li>
-                            <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
-                            <div class="btn-set">
-                                <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
-                            </div>
-                        </li>
-                    <% })%>
-                </ul>
-                <div id="enlarge_images"></div>
-            </div>
-        </script>
+                    </li>
+                <% })%>
+            </ul>
+            <div id="enlarge_images"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+</script>
     </block>
 
     <block name="template-user">

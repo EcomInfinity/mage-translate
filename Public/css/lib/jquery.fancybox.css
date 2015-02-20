@@ -39,6 +39,7 @@
 }
 
 .fancybox-opened .fancybox-skin {
+	background: none;
 	-webkit-box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 	   -moz-box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 	        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
