@@ -23,6 +23,8 @@ table td, table th { padding: 5px; }
 
 .col5 { width: 49%; }
 
+.form-holder .entry { margin-bottom: 5px; }
+
 .images_list ul li { position: relative; width: 22%; border: 1px solid #ddd; padding: 5px; float: left; margin-right: 4%; margin-bottom: 10px;margin-top: 10px;}
 .images_list ul li:nth-child(4) { margin-right: 0; }
 .images_list ul li .btn-image-delete { position: absolute; top: 5px; right: 5px; background: #000; opacity: 0.5; transition: .3s all ease-in-out; }

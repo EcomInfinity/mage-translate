@@ -85,24 +85,30 @@ class UserModel extends Model{
     }
 
     public function addUser($_username, $_password){
-        if($_username!=null&&$_password!=null){
-            if($this->userMatch($_username) == '1'){
-                if ($this->isExisted($_username) == false) {
-                    E('User already registered');
-                }else{
-                    $add['username'] = $_username;
-                }
-            }else{
-                E('The username must have 5-15 digits or letters.');
+        if (isset($_username) && isset($_password)) {
+            if ($this->isExisted($_username) === true) {
+                return 'User already registered.';
             }
-            if($this->userMatch($_password) == '1'){
-                $add['password'] = md5($_password);
-            }else{
-                E('The password must have 5-15 digits or letters.');
+
+            if (preg_match('/^[a-zA-Z0-9]{5,15}$/', $_password) == 0) {
+                return 'The password must have 5-15 digits or letters.';
             }
-            $uid = $this->add($add);
+
+            if (! filter_var($_username, FILTER_VALIDATE_EMAIL)) {
+                return 'Email address is not correct.';
+            }
+
+            $_user_id = $this->add(
+                array(
+                    'username' => $_username,
+                    'password' => md5($_password)
+                )
+            );
+
+            return intval($_user_id);
+        } else {
+            return 'Username or Password cannot be empty.';
         }
-        return $uid;
     }
 
     public function getUserList($_ids){

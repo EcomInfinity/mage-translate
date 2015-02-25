@@ -73,6 +73,7 @@ class AdminController extends Controller {
                 ),
                 'json'
             );
+            return;
         }
 
         $_website_id = D('website')->addWebsite($_params['website_name']);
@@ -100,20 +101,36 @@ class AdminController extends Controller {
     }
 
     public function userAdd(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $uid = $user_model->addUser($back['username'],$back['password']);
-        $_params_relation['user_id'] = $uid;
-        $_params_relation['website_id'] = session('website_id');
-        $_params_relation['role_id'] = $back['role_id'];
-        $_params_relation['parent_id'] = session('id');
-        $res = $relation_model->addRelation($_params_relation);
-        if($uid){
-            echo '1';
-        }else{
-            echo '0';
-        }
+        $_params = json_decode(file_get_contents("php://input"), true);
+        $_user_id = D('user')->addUser($_params['username'], $_params['password']);
+        
+        if (is_string($_user_id)) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => $_user_id,
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
+        } 
+
+        D('relation')->addRelation(array(
+            'user_id' => $_user_id,
+            'website_id' => session('website_id'),
+            'role_id' => $_params['role_id'],
+            'parent_id' => session('id'),
+        ));
+
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => array(),
+            ),
+            'json'
+        );
     }
 
     public function userList(){

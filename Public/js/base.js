@@ -666,33 +666,42 @@ jQuery(function() {
 
         user.View.UserAddView = Backbone.View.extend({
             template: _.template($('#tpl-user-add').html()),
-            events:{
-                'click .btn-user-add': 'userAdd'
+            events: {
+                'click .btn-user-add': 'clickBtnUserAdd'
             },
-            userAdd: function(event){
-                var _self = this;
-                var $form=$(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
-                    pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                if(user_match!=null&&pwd_match!=null){
-                    this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/useradd'}
-                        ).done(function (response){
-                            if(response == '1'){
-                                $('.tip-useradd').html('<span style="color:green;">Add Success.</span>');
-                                user_add.reset();
-                                setTimeout("$('.tip-useradd').empty()",1000);
-                                _self._userEvents.trigger('refresh','userAdd');
-                            }else{
-                                $('.tip-useradd').text('Username duplicate or username password is empty');
+            _add: function() {
+                var _self = this,
+                    $form = $(event.target).closest('form'),
+                    data = $form.serializeObject();
+
+                this.userModel.save(
+                    data, 
+                    { url: UrlApi('_app') + '/useradd' }
+                ).done(function(response) {
+                    if (response.success === true) {
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
                             }
-                        }).fail(function (response){
-                            $('.tip-useradd').text('Username duplicate or username password is empty');
-                        });
-                    }else{
-                        $('.tip-useradd').text('Username and password must be from 5-15 digits or letters');
+                        );
+                        setTimeout(function() {
+                            _self._userEvents.trigger('refresh', 'userAdd');
+                        }, 1000);
+                    } else {
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
                     }
+                });
+            },
+            clickBtnUserAdd: function(event) {
+                this.$el.find('form').submit();
                 return false;
             },
             initialize: function(options){
@@ -702,18 +711,26 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
-                this.userModel.save({},
-                    {url:UrlApi('_app')+'/rolelist'}
-                    ).done(function (response){
-                        data['rolelist'] = response;
-                        _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                this.userModel.save(
+                    {},
+                    {
+                        url: UrlApi('_app')+'/rolelist'
+                    }
+                ).done(function (response){
+                    _self.$el.html(_self.template({'rolelist': response}));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._add.call(_self);
+                            return false;
+                        }
                     });
+                    $.fancybox(_self.$el, {
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
+                });
             }
         });
 

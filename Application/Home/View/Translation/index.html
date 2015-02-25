@@ -383,17 +383,18 @@
         </script>
 
         <script type="text/template" id="tpl-user-add">
-            <form method="post" name="user_add">
+        <div class="modal-container" style="width: 400px;">
+            <h2>Invite User</h2>
+            <div class="content">
+            <form method="post" name="user_add" data-toggle="validator" role="form">
                 <div class="form-holder">
-                    <h3>User Add</h3>
-                    <div class="tip tip-useradd"></div>
-                    <div class="entry">
-                        <label for="username">username</label>
-                        <input type="text" name="username" id="username" placeholder="Please enter 5-15 alphanumeric" />
+                    <div class="entry form-group">
+                        <input type="email" name="username" id="username" placeholder="Email: joe@example.com" required data-error="Email address is invalid.">
+                        <div class="help-block with-errors"></div>
                     </div>
-                    <div class="entry">
-                        <label for="password">password</label>
-                        <input type="password" name="password" id="password" placeholder="Please enter 5-15 alphanumeric" />
+                    <div class="entry form-group">
+                        <input type="password" name="password" id="password" placeholder="Password" pattern="^[a-zA-Z0-9]{6,15}$" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry select">
                         <label for="user-groups">User Groups</label>
@@ -406,9 +407,11 @@
                     </div>
                 </div>
                 <div class="btn-set">
-                    <a href="#" class="btn btn-user-add btn-primary">User Add</a>
+                    <a href="#" class="btn btn-user-add btn-primary">Invite</a>
                 </div>
             </form>
+            </div>
+        </div>
         </script>
 
         <script type="text/template" id="tpl-user-list">
