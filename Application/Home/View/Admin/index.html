@@ -66,7 +66,7 @@
             <form action="" method="post" data-toggle="validator" role="form">
                 <div class="form-hoder">
                     <div class="entry form-group">
-                        <input type="email" name="username" required placeholder="Email: joe@example.com" data-error="Email address is invalid">
+                        <input type="email" name="username" required placeholder="Email: joe@example.com" data-error="Email address is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
@@ -78,10 +78,9 @@
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
-                        <input type="text" name="website_name" placeholder="Website Name" required>
+                        <input type="text" name="website_name" placeholder="Website Name" pattern="[a-zA-Z0-9]+[a-zA-Z0-9 ]*[a-zA-Z0-9]+" required data-error="Website name is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
-                    <div class="tip tip-website_name"></div>
                 </div>
                 <a href="#" class="btn btn-back btn-default">Already have an account</a>
                 <a href="#" class="fr btn btn-register btn-primary">Sign Up</a>

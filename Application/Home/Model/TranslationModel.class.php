@@ -1,6 +1,7 @@
 <?php
 namespace Home\Model;
 use Think\Model;
+
 class TranslationModel extends Model{
     public function getTranslateList($field,$_status,$_website_id,$modify,$order='id'){
         $where['website_id'] = $_website_id;
@@ -41,10 +42,13 @@ class TranslationModel extends Model{
         return $this->where(array('id'=>intval($_tid)))->find();
     }
 
-    public function getTranslateCount($_params){
-        $where['website_id'] = intval($_params['website_id']);
-        $where['status'] = '1';
-        return $this->where($where)->count();
+    public function getTranslateCount($_website_id){
+        return $this->where(
+            array(
+                'website_id' => intval($_website_id),
+                'status' => 1,
+            )
+        )->count();
     }
 }
 ?>

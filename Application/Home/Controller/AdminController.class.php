@@ -76,17 +76,7 @@ class AdminController extends Controller {
         }
 
         $_website_id = D('website')->addWebsite($_params['website_name']);
-        // if (is_string($_website_id)) {
-        //     $this->ajaxReturn(
-        //         array(
-        //             'success' => false,
-        //             'message' => $_website_id,
-        //             'data' => array(),
-        //         ),
-        //         'json'
-        //     );
-        // }
-
+        
         $_relation_id = D('relation')->addRelation(
             array(
                 'user_id' => $_user_id,
@@ -94,6 +84,10 @@ class AdminController extends Controller {
                 'role_id' => 1
             )
         );
+
+        session('website_id', $_website_id);
+        session('website_name', $_params['website_name']);
+        session('purview', getPurviewJson(D('role')->getPurview($_relation_id)));
 
         $this->ajaxReturn(
                 array(
