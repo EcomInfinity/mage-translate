@@ -35,7 +35,8 @@ jQuery(function() {
                 'click .btn-register': 'clickBtnRegister'
             },
             _login: function() {
-                var $form = this.$el.find('form'),
+                var _self = this,
+                    $form = this.$el.find('form'),
                     data = $form.serializeObject();
                 this.userModel.save(
                     data,
@@ -45,9 +46,24 @@ jQuery(function() {
                 ).done(function (response){
                     $.fancybox.hideLoading();
                     if (response.success === true) {
-                        window.open(UrlApi('_app')+'/lang', '_self');
+                        _self.$el.find('.modal-container').notify(
+                            'Success', 
+                            { 
+                                position: 'top', 
+                                className: 'success'
+                            }
+                        );
+                        setTimeout(function() {
+                             window.open(UrlApi('_app')+'/lang', '_self');
+                        }, 1000);
                     } else {
-
+                        _self.$el.find('.modal-container').notify(
+                            response.message, 
+                            { 
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
                     }
                 });
             },
@@ -95,7 +111,8 @@ jQuery(function() {
                 'click .btn-back': 'clickBtnBack'
             },
             _register: function() {
-                var $form = this.$el.find('form'),
+                var _self = this,
+                    $form = this.$el.find('form'),
                     data = $form.serializeObject();
                 
                 this.userModel.save(
@@ -104,10 +121,26 @@ jQuery(function() {
                         url: UrlApi('_app') + '/register'
                     }
                 ).done(function (response) {
+                    $.fancybox.hideLoading();
                     if (response.success == true){
-                        window.open(UrlApi('_app')+'/admin', '_self');
+                        _self.$el.find('.modal-container').notify(
+                            'Success', 
+                            { 
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        setTimeout(function() {
+                            window.open(UrlApi('_app')+'/admin', '_self');
+                        }, 1000);
                     } else {
-
+                        _self.$el.find('.modal-container').notify(
+                            response.message, 
+                            { 
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
                     }
                 });
             },
