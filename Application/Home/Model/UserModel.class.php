@@ -2,25 +2,33 @@
 namespace Home\Model;
 use Think\Model;
 class UserModel extends Model{
-    private function _login($uid) {
-        return $uid;
+    private function _login($_username, $_uid) {
+        session('username' , $_username);
+        if (isset($_uid) === true) {
+            session('id', $_uid);
+        }
     }
 
     public function login($_username, $_password) {
         // username and password correct
-        $where['username'] = $_username;
-        $where['password'] = md5($_password);
-        $res = $this->validate($rules)->where($where)->find();
-        if($res&&$res['allow'] == '1'){
-            return $this->_login($res['id']);
-        }else{
-            E('Login fail.');
+        $_where = array(
+            'username' => $_username,
+            'password' => md5($_password),
+        );
+        $_result = $this -> validate($rules)
+                         -> where($_where)
+                         -> find();
+
+        if (isset($_result) === true && $_result['allow'] == '1') {
+            $this->_login($_username, $_result['id']);
+            return $_result['id'];
+        } else {
+            return false;
         }
      }
 
     public function logout(){
         session('id', null);
-        session('uid',null);
         session('username', null);
         session('website_id', null);
         session('website_name', null);
@@ -28,12 +36,11 @@ class UserModel extends Model{
     }
 
     public function isExisted($_username) {
-        // 
         $res = $this->where(array('username'=>$_username))->find();
-        if($res){
+        if ($res) {
+            return true;
+        } else {
             return false;
-        }else{
-            return ture;
         }
     }
 
@@ -45,51 +52,62 @@ class UserModel extends Model{
         $_username = $_params['username'];
         $_password = $_params['password'];
         $_repeat_password = $_params['repeat-password'];
-        if($_username!=null&&$_password!=null){
-            if($this->userMatch($_password) == '1'){
-                if ($_password == $_repeat_password) {
-                    $register['password'] = md5($_password);
-                }else {
-                    E('Password doesn\'t match');
-                }
-            }else{
-                E('The password must have 5-15 digits or letters.');
+
+        if (isset($_username) && isset($_password)) {
+            if ($_password != $_repeat_password) {
+                return 'Password doesn\'t match.';
             }
-            if($this->userMatch($_username) == '1'){
-                if ($this->isExisted($_username) == false) {
-                    E('User already registered');
-                }else{
-                    $register['username'] = $_username;
-                }
-            }else{
-                E('The username must have 5-15 digits or letters.');
+
+            if ($this->isExisted($_username) === true) {
+                return 'User already registered.';
             }
-            // ...
-            $uid = $this->add($register);
-            // ...
-            return $this->_login($uid);
+
+            if (preg_match('/^.{6,15}$/', $_password) == 0) {
+                return 'The password must have 5-15 digits or letters.';
+            }
+
+            if (! filter_var($_username, FILTER_VALIDATE_EMAIL)) {
+                return 'Email address is not correct.';
+            }
+
+            $_user_id = $this->add(
+                array(
+                    'username' => $_username,
+                    'password' => md5($_password)
+                )
+            );
+
+            $this->_login($_username, $_user_id);
+
+            return intval($_user_id);
         }
     }
 
     public function addUser($_username, $_password){
-        if($_username!=null&&$_password!=null){
-            if($this->userMatch($_username) == '1'){
-                if ($this->isExisted($_username) == false) {
-                    E('User already registered');
-                }else{
-                    $add['username'] = $_username;
-                }
-            }else{
-                E('The username must have 5-15 digits or letters.');
+        if (isset($_username) && isset($_password)) {
+            if ($this->isExisted($_username) === true) {
+                return 'User already registered.';
             }
-            if($this->userMatch($_password) == '1'){
-                $add['password'] = md5($_password);
-            }else{
-                E('The password must have 5-15 digits or letters.');
+
+            if (preg_match('/^.{6,15}$/', $_password) == 0) {
+                return 'The password must have 6-15 digits or letters.';
             }
-            $uid = $this->add($add);
+
+            if (! filter_var($_username, FILTER_VALIDATE_EMAIL)) {
+                return 'Email address is not correct.';
+            }
+
+            $_user_id = $this->add(
+                array(
+                    'username' => $_username,
+                    'password' => md5($_password)
+                )
+            );
+
+            return intval($_user_id);
+        } else {
+            return 'Username or Password cannot be empty.';
         }
-        return $uid;
     }
 
     public function getUserList($_ids){
@@ -122,7 +140,7 @@ class UserModel extends Model{
                 return $this->save($save);
             }
         }else{
-            E('The username must have 5-15 digits or letters.');
+            return 'The username must have 5-15 digits or letters.';
         }
     }
 
@@ -132,7 +150,7 @@ class UserModel extends Model{
             $save['password'] = md5($_password);
             return $this->save($save);
         }else{
-            E('The password must have 5-15 digits or letters.');
+            return 'The password must have 6-15 characters.';
         }
     }
 

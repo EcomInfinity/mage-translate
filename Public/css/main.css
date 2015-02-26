@@ -1,38 +1,50 @@
 img { width: 100%; }
+input[type="text"], 
+input[type="email"],
+input[type="password"]
+{ width: 100%; padding: 10px; }
+input[type="file"] { line-height: 10px; }
+textarea{ width: 100%; padding: 10px; resize: none; }
+
+.fl { float: left; }
+.fr { float: right; }
+.clear { clear: both; }
 .page-width { width: 960px; margin: 0 auto; }
 
-input[type="text"] { width: 100%; padding: 10px; }
-input[type="password"] { width: 100%; padding: 10px; }
-textarea{ width: 100%; padding: 10px; }
+body { background-color: #f6f9fc; }
+
 main { margin-top: 60px; }
 main .search-box { width: 100%; margin-bottom: 10px; }
 
 table { width: 100%; }
 table td, table th { padding: 5px; }
 
-.block { }
-
-.tbl-translation-list { }
-
 .btn-set { margin-top: 10px; }
 
 .col5 { width: 49%; }
-.fl { float: left; }
-.fr { float: right; }
+
+.form-holder .entry { margin-bottom: 5px; }
 
 .images_list ul li { position: relative; width: 22%; border: 1px solid #ddd; padding: 5px; float: left; margin-right: 4%; margin-bottom: 10px;margin-top: 10px;}
 .images_list ul li:nth-child(4) { margin-right: 0; }
 .images_list ul li .btn-image-delete { position: absolute; top: 5px; right: 5px; background: #000; opacity: 0.5; transition: .3s all ease-in-out; }
 .images_list ul li .btn-image-delete:hover { opacity: 1; }
 
-.file{margin-top: 15px;background-color: #E7E7E7;}
+.modal-container { background-color: #fff; border: 1px solid #7a858d; border-radius: 5px; }
+.modal-container > h2 { margin: 0; padding: 20px; border-radius: 5px; }
+.modal-container > .content { background-color: #f6f9fc; border-top: 1px solid #e5e5e5; padding: 20px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+.modal-container .content .section { border-bottom: 1px solid #e5e5e5; }
+.modal-container .content .section:last-child { border-bottom: none; }
 
-.login-container{width: 50%;margin: 0 auto;margin-top: 200px;}
-.register-container{width: 50%;margin: 0 auto;margin-top: 200px;}
+/* login */
+.login-container { width: 60%; margin: 200px auto 0; }
+.register-container{ width: 60%; margin: 200px auto 0; }
 
 .tip{color:red;}
 
-.batch-import{background-color: #E7E7E7;}
+table.tbl-translation-list th.col-language { width: 275px; }
+table.tbl-translation-list th.col-operation { width: 100px; }
+table.tbl-translation-list tbody td { word-break: break-all; vertical-align: middle; }
 
 #enlarge_images{display:none;}
 
@@ -47,6 +59,6 @@ select{text-transform: uppercase;}
 
 .btn-right{float: right;}
 
-td{width: 250px;word-break: break-all;}
+
 
 /*.jump{z-index: 100;position: fixed;right: 0;left: 0;}*/

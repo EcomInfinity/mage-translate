@@ -1,0 +1,67 @@
+<script type="text/template" id="tpl-lang-add">
+    <div class="modal-container">
+        <h2>Add Entries</h2>
+        <div class="content">
+            <div class="batch-import section">
+                <h3>Method #1: Import</h3>
+                <form class="form-inline" action="" method="post" enctype="multipart/form-data">
+                    <div class="form-holder">
+                        <div class="entry file form-group">
+                            <label>Batch Import:</label>
+                            <input type="file" name="csv" id="batch-import" class="form-control">
+                        </div>
+                    </div>
+                </form>
+                <p>Please select the *.csv file format batch import</p>
+            </div>
+
+            <div class="section">
+                <h3>Method #2: Input Manually</h3>
+                <div class="col col5 fl">
+                    <form action="" method="post" name="lang_add" data-toggle="validator" role="form">
+                        <div class="form-holder">
+                            <div class="entry textarea form-group">
+                                <label for="en">EN:</label>
+                                <textarea name="en" id="en" required data-error="English is invalid."></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="entry textarea form-group">
+                                <label for="de">DE:</label>
+                                <textarea name="de" id="de"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="entry textarea form-group">
+                                <label for="nl">NL:</label>
+                                <textarea name="nl" id="nl"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="entry form-group">
+                                <label for="remarks">Remarks:</label>
+                                <input type="text" name="remarks" id="remarks" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="btn-set">
+                            <a href="#" class="btn btn-add btn-primary up">Add</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="images_list col col5 fr">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="form-holder">
+                            <div class="entry file">
+                                <label>Images:</label>
+                                <input type="file" name="images" id="images-add" />
+                                <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
+                            </div>
+                        </div>
+                    </form>
+                    <ul></ul>
+                    <div id="enlarge_images"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</script>

@@ -142,29 +142,42 @@ jQuery(function() {
         lang.View.LanguageAddView = Backbone.View.extend({
             template: _.template($('#tpl-lang-add').html()),
             events: {
-                'click .btn-add': 'addLanguage',
+                'click .btn-add': 'clickBtnLangAdd',
                 'change #batch-import': 'batchImport',
                 'change #images-add': 'imagesAdd',
                 'click .btn-image-delete': 'imgageDel'
             },
-            addLanguage: function(event){
+            _add: function(){
                 var _self = this;
                 var $form = $(event.target).closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(this.data_form,
                     {url:UrlApi('_app')+'/langadd'}
                     ).done(function (response){
-                        if(response == '1'){
-                            $('.tip-langadd').html('<span style="color:green;">Add Success.</span>');
+                        if (response.success === true) {
+                            $form.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
                             lang_add.reset();
-                            setTimeout("$('.tip-langadd').empty()",1000);
                             _self._events.trigger('refresh','add');
-                        }else if(response == '2'){
-                            $('.tip-langadd').text('The data already exists');
-                        }else{
-                            $('.tip-langadd').text('Can not all be empty');
+                        } else {
+                            $form.notify(
+                                response.message,
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
                         }
                     });
+                return false;
+            },
+            clickBtnLangAdd: function(event){
+                $(event.target).closest('form').submit();
                 return false;
             },
             batchImport: function(event){
@@ -215,6 +228,13 @@ jQuery(function() {
                 var _self = this;
                 var data = {};
                 this.$el.html(this.template(data));
+                this.$el.find('[name="lang_add"]').validator().on('submit', function(e) {
+                    if (e.isDefaultPrevented()) {
+                    } else {
+                        _self._add.call(_self);
+                        return false;
+                    }
+                });
                 $.fancybox(this.$el,{
                    afterClose: function () {
                         window.history.back();
@@ -320,11 +340,11 @@ jQuery(function() {
         lang.View.LanguageEditView = Backbone.View.extend({
             template: _.template($('#tpl-lang-edit').html()),
             events:{
-                'click .btn-lang-save': 'editInfo',
+                'click .btn-lang-save': 'clickBtnEditInfo',
                 'click .btn-image-delete': 'imgageDel',
                 'change #images': 'imagesAdd'
             },
-            editInfo: function(event){
+            _edit: function(){
                 var _self = this;
                 var _change = $(event.target);
                 var $form = _change.closest('form');
@@ -332,15 +352,29 @@ jQuery(function() {
                 this.translate.save(this.data_form,
                     {url:UrlApi('_app')+'/langedit'}
                     ).done(function (response){
-                        if(response == '1'){
-                            $('.tip-langedit').html('<span style="color:green">Edit Success</span>');
-                            setTimeout("$('.tip-langedit').empty()",1000);
+                        if (response.success === true) {
+                            $form.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
                             _self._events.trigger('refresh','edit');
-                        }else{
-                            $('.tip-langedit').text('Edit Fail');
-                            _self._events.trigger('refresh','edit');
+                        } else {
+                            $form.notify(
+                                response.message,
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
                         }
                 });
+                return false;
+            },
+            clickBtnEditInfo: function(event){
+                $(event.target).closest('form').submit();
                 return false;
             },
             imgageDel: function(event){
@@ -389,6 +423,13 @@ jQuery(function() {
                         data['langDetail'] = response.detail;
                         data['langImages'] = response.images;
                         _self.$el.html(_self.template(data));
+                        _self.$el.find('form').validator().on('submit', function(e) {
+                            if (e.isDefaultPrevented()) {
+                            } else {
+                                _self._edit.call(_self);
+                                return false;
+                            }
+                        });
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
@@ -424,11 +465,7 @@ jQuery(function() {
                     ).done(function (response){
                         data['allField'] = response;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                        $.fancybox(_self.$el);
                     });
             }
         });
@@ -461,37 +498,38 @@ jQuery(function() {
         user.View.UserCenterView = Backbone.View.extend({
             template: _.template($('#tpl-user-center').html()),
             events:{
-                'click .btn-edit-center': 'editUserCenter'
+                'click .btn-edit-center': 'clickBtnUserCenter'
             },
-            editUserCenter: function(event){
+            _edit: function(){
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                var pwd_match = this.data_form['original-password'].match(/^[a-zA-Z0-9]{5,15}$/),
-                    npwd_match = this.data_form['new-password'].match(/^[a-zA-Z0-9]{5,15}$/),
-                    cpwd_match = this.data_form['confirm-new-password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                    if(pwd_match!=null&&npwd_match!=null&&cpwd_match!=null){
-                        if(this.data_form['new-password'] == this.data_form['confirm-new-password']){
                             this.userModel.save(this.data_form,
                                 {url:UrlApi('_app')+'/centeredit'}
                                 ).done(function (response){
-                                    if(response == '1'){
-                                        $('.tip-center-main').html('<span style="color: green;">Modify Success and Quit after 3 seconds</span>');
+                                    if(response.success === true){
+                                        $form.notify(
+                                            'Success',
+                                            {
+                                                position: 'top',
+                                                className: 'success'
+                                            }
+                                        );
                                         setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
-                                    }else if(response == '2'){
-                                        $('.tip-confirm-new-password').text('Please make sure your passwords match.');
-                                    }else if(response == '3'){
-                                        $('.tip-center-main').text('The password is incorrect.');
                                     }else{
-                                        $('.tip-center-main').text('Modify fail.');
+                                        $form.notify(
+                                            response.message,
+                                            {
+                                                position: 'top',
+                                                className: 'error'
+                                            }
+                                        );
                                     }
                                 });
-                        }else{
-                            $('.tip-confirm-new-password').text('Please make sure your passwords match.');
-                        }
-                    }else{
-                        $('.tip-center-main').text('Password must be from 5-15 digits or letters.');
-                    }
+                return false;
+            },
+            clickBtnUserCenter: function(event){
+                $(event.target).closest('form').submit();
                 return false;
             },
             initialize: function(options){
@@ -500,8 +538,15 @@ jQuery(function() {
                 this.userModel = options.userModel;
             },
             render: function(){
-                var data = {};
-                this.$el.html(this.template(data));
+                var _self = this;
+                this.$el.html(this.template({}));
+                this.$el.find('form').validator().on('submit', function(e) {
+                    if (e.isDefaultPrevented()) {
+                    } else {
+                        _self._edit.call(_self);
+                        return false;
+                    }
+                });
                 $.fancybox(this.$el);
             }
         });
@@ -531,28 +576,40 @@ jQuery(function() {
         user.View.RoleAddView = Backbone.View.extend({
             template: _.template($('#tpl-role-add').html()),
             events:{
-                'click .btn-role-add': 'roleAdd'
+                'click .btn-role-add': 'clickBtnRoleAdd'
             },
-            roleAdd: function(event){
+            _add: function(){
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                if(this.data_form['role'].match(/^.{1,20}$/)!=null){
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/roleadd'}
                         ).done(function (response){
-                            if(response == '1'){
-                                $('.tip-roleadd').html('<span style="color:green;">Add Success.</span>');
+                            if (response.success === true) {
+                                $form.notify(
+                                    'Success',
+                                    {
+                                        position: 'top',
+                                        className: 'success'
+                                    }
+                                );
                                 role_add.reset();
                                 setTimeout("$('.tip-roleadd').empty()",1000);
                                 _self._userEvents.trigger('refresh','roleAdd');
-                            }else{
-                                $('.tip-roleadd').text('Add Fail');
+                            } else {
+                                $form.notify(
+                                    response.message,
+                                    {
+                                        position: 'top',
+                                        className: 'error'
+                                    }
+                                );
                             }
                         });
-                }else{
-                    $('.tip-roleadd').text('Rolename must have 1-20 characters');
-                }
+                return false;
+            },
+            clickBtnRoleAdd: function(event){
+                $(event.target).closest('form').submit();
                 return false;
             },
             initialize: function(options){
@@ -568,7 +625,14 @@ jQuery(function() {
                     ).done(function (response){
                         data['ruleList'] = response;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el,{
+                        _self.$el.find('form').validator().on('submit', function(e) {
+                            if (e.isDefaultPrevented()) {
+                            } else {
+                                _self._add.call(_self);
+                                return false;
+                            }
+                        });
+                        $.fancybox(_self.$el, {
                            afterClose: function () {
                                 window.history.back();
                             }
@@ -614,25 +678,32 @@ jQuery(function() {
             events: {
                 'click .btn-edit': 'roleEdit'
             },
-            roleEdit: function(event){
+            _edit: function(){
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                if(this.data_form['role_name'].match(/^.{1,20}$/)!=null){
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/roleedit'}
                         ).done(function (response){
-                            if(response == '1'){
-                                $('.tip-roleedit').html('<span style="color: green;">Edit Success</span>');
-                                setTimeout("$('.tip-roleedit').empty()",1000);
+                           if (response.success === true) {
+                                $form.notify(
+                                    'Success',
+                                    {
+                                        position: 'top',
+                                        className: 'success'
+                                    }
+                                );
                                 _self._userEvents.trigger('refresh','roleInfo');
-                            }else{
-                                $('.tip-roleedit').text('Edit Fail');
+                            } else {
+                                $form.notify(
+                                    response.message,
+                                    {
+                                        position: 'top',
+                                        className: 'error'
+                                    }
+                                );
                             }
                         });
-                }else{
-                    $('.tip-roleedit').text('Rolename must have 1-20 characters');
-                }
                 return false;
             },
             initialize: function(options){
@@ -655,6 +726,13 @@ jQuery(function() {
                         data['role_name'] = response.role_name;
                         data['role_id'] = response.role_id;
                         _self.$el.html(_self.template(data));
+                        _self.$el.find('form').validator().on('submit', function(e) {
+                            if (e.isDefaultPrevented()) {
+                            } else {
+                                _self._edit.call(_self);
+                                return false;
+                            }
+                        });
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
@@ -666,33 +744,41 @@ jQuery(function() {
 
         user.View.UserAddView = Backbone.View.extend({
             template: _.template($('#tpl-user-add').html()),
-            events:{
-                'click .btn-user-add': 'userAdd'
+            events: {
+                'click .btn-user-add': 'clickBtnUserAdd'
             },
-            userAdd: function(event){
-                var _self = this;
-                var $form=$(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
-                    pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                if(user_match!=null&&pwd_match!=null){
-                    this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/useradd'}
-                        ).done(function (response){
-                            if(response == '1'){
-                                $('.tip-useradd').html('<span style="color:green;">Add Success.</span>');
-                                user_add.reset();
-                                setTimeout("$('.tip-useradd').empty()",1000);
-                                _self._userEvents.trigger('refresh','userAdd');
-                            }else{
-                                $('.tip-useradd').text('Username duplicate or username password is empty');
+            _add: function() {
+                var _self = this,
+                    $form = $(event.target).closest('form'),
+                    data = $form.serializeObject();
+
+                this.userModel.save(
+                    data, 
+                    { url: UrlApi('_app') + '/useradd' }
+                ).done(function(response) {
+                    if (response.success === true) {
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
                             }
-                        }).fail(function (response){
-                            $('.tip-useradd').text('Username duplicate or username password is empty');
-                        });
-                    }else{
-                        $('.tip-useradd').text('Username and password must be from 5-15 digits or letters');
+                        );
+                        user_add.reset();
+                            _self._userEvents.trigger('refresh', 'userAdd');
+                    } else {
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
                     }
+                });
+            },
+            clickBtnUserAdd: function(event) {
+                this.$el.find('form').submit();
                 return false;
             },
             initialize: function(options){
@@ -702,18 +788,26 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
-                this.userModel.save({},
-                    {url:UrlApi('_app')+'/rolelist'}
-                    ).done(function (response){
-                        data['rolelist'] = response;
-                        _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                this.userModel.save(
+                    {},
+                    {
+                        url: UrlApi('_app')+'/rolelist'
+                    }
+                ).done(function (response){
+                    _self.$el.html(_self.template({'rolelist': response}));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._add.call(_self);
+                            return false;
+                        }
                     });
+                    $.fancybox(_self.$el, {
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
+                });
             }
         });
 
@@ -771,33 +865,39 @@ jQuery(function() {
         user.View.UserInfoView = Backbone.View.extend({
             template: _.template($('#tpl-user-info').html()),
             events:{
-                'click .btn-edit': 'userEdit'
+                'click .btn-edit': 'clickBtnUserEdit'
             },
-            userEdit: function(event){
+            _edit: function(){
                 var is_change = '0',
                 _self = this,
                 $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
-                    pwd_match = this.data_form['password'].match(/^[a-zA-Z0-9]{5,15}$/);
-                if(this.data_form['password'] == ''){
-                    pwd_match = '1';
-                }
-                if(user_match!=null&&pwd_match!=null){
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/useredit'}
                         ).done(function (response){
-                            _self._userEvents.trigger('refresh','userInfo');
-                            if(response == '1'){
-                                $('.tip-useredit').html('<span style="color: green;">Edit Success</span>');
-                                setTimeout("$('.tip-useredit').empty()",1000);
+                            if(response.success === true){
+                                $form.notify(
+                                    'Success',
+                                    {
+                                        position: 'top',
+                                        className: 'success'
+                                    }
+                                );
+                                _self._userEvents.trigger('refresh','userInfo');
                             }else{
-                                $('.tip-useredit').text('Edit Fail');
+                                $form.notify(
+                                    response.message,
+                                    {
+                                        position: 'top',
+                                        className: 'error'
+                                    }
+                                );
                             }
                         });
-                    }else{
-                        $('.tip-useredit').text('Username and password must be from 5-15 digits or letters');
-                    }
+                return false;
+            },
+            clickBtnUserEdit: function(event){
+                $(event.target).closest('form').submit();
                 return false;
             },
             initialize: function(options){
@@ -820,6 +920,13 @@ jQuery(function() {
                         data['role_id'] = response.role_id;
                         data['rolelist'] = response.rolelist;
                         _self.$el.html(_self.template(data));
+                        _self.$el.find('form').validator().on('submit', function(e) {
+                            if (e.isDefaultPrevented()) {
+                            } else {
+                                _self._edit.call(_self);
+                                return false;
+                            }
+                        });
                         $.fancybox(_self.$el,{
                            afterClose: function () {
                                 window.history.back();
@@ -991,12 +1098,6 @@ jQuery(function() {
                     translate: this.translate
                 });
 
-
-                // var navView = new lang.View.LanguageNavView({
-                //     el: '.navbar-collapse',
-                //     _events: _events,
-                //     translate: this.translate
-                // });
 
                 var searchView = new lang.View.LanguageSearchView({
                     el: '.search-box',

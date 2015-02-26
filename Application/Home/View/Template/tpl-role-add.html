@@ -1,0 +1,30 @@
+<script type="text/template" id="tpl-role-add">
+    <div class="modal-container">
+        <h2>Role Add</h2>
+        <div class="content">
+            <form method="post" name="role_add" data-toggle="validator" role="form">
+                <div class="form-holder">
+                    <div class="entry form-group">
+                        <label for="role">Role Name</label>
+                        <input type="text" id="role" name="role" placeholder="Please enter 1-20 characters" required pattern="^.{1,20}$" data-error="Role name is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <% _.each(ruleList, function(rule){ %>
+                        <div class="entry radio">
+                        <h3>Allow <%= rule.rule_name %></h3>
+                        <label for="role-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                        <input type="radio" name="<%= rule.rule_name.toLowerCase() %>" value="1" id="role-yes-<%= rule.rule_name.toLowerCase() %>"/>
+                        Yes</label>
+                        <label for="roel-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                        <input type="radio" checked name="<%= rule.rule_name.toLowerCase() %>" value="0" id="roel-no-<%= rule.rule_name.toLowerCase() %>"/>
+                        No</label>
+                    </div>
+                    <% }) %>
+                </div>
+                <div class="btn-set">
+                    <a href="#" class="btn btn-role-add btn-primary">Role Add</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>

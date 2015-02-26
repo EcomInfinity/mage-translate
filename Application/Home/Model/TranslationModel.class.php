@@ -1,6 +1,7 @@
 <?php
 namespace Home\Model;
 use Think\Model;
+
 class TranslationModel extends Model{
     //$field='1,2,3'需要查询的字段，$_status是否删除状态
     //$_website_id网站id,$modify是否需要修改1-需要修改0-不需修改，$order排序规则
@@ -43,10 +44,13 @@ class TranslationModel extends Model{
         return $this->where(array('id'=>intval($_tid)))->find();
     }
     //获取总数
-    public function getTranslateCount($_params){
-        $where['website_id'] = intval($_params['website_id']);
-        $where['status'] = '1';
-        return $this->where($where)->count();
+    public function getTranslateCount($_website_id){
+        return $this->where(
+            array(
+                'website_id' => intval($_website_id),
+                'status' => 1,
+            )
+        )->count();
     }
 }
 ?>

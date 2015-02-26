@@ -1,0 +1,39 @@
+<script type="text/template" id="tpl-user-center">
+    <div class="modal-container">
+        <h2>Modify User Password</h2>
+        <div class="content">
+            <form action="" method="post" data-toggle="validator">
+                <div class="form-hoder">
+                    <input type="hidden" name="id" value="<php>echo session('id');</php>" />
+                    <!--<div class="entry form-group">
+                        <label for="username">User Name:</label>
+                        <input type="text" name="username" id="username" />
+                    </div>-->
+                    <label for="username">User Name:</label>
+                    <php>echo session('username');</php>
+                    <div class="entry form-group">
+                        <label for="original-password">Original Password:</label>
+                        <input type="password" name="original-password" id="original-password" placeholder="Please enter 6-15 alphanumeric" required
+                        pattern="^.{6,15}$" data-error="Password is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                    <div class="entry form-group">
+                        <label for="new-password">New Password:</label>
+                        <input type="password" id="reg-password" name="new-password" id="new-password" placeholder="Please enter 6-15 alphanumeric" required
+                        pattern="^.{6,15}$" data-error="Password is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                    <div class="entry form-group">
+                        <label for="confirm-new-password">Confirm New Password:</label>
+                        <input type="password" name="confirm-new-password" id="confirm-new-password" placeholder="Please enter 6-15 alphanumeric"  required data-match="#reg-password" data-match-error="Password not match" data-error="Password is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                </div>
+                <a href="#" class="btn btn-edit-center btn-default">Submit</a>
+            </form>
+        </div>
+    </div>
+</script>

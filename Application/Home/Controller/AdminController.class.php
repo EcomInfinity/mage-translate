@@ -1,46 +1,57 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+
 class AdminController extends Controller {
     public function index(){
-        if(session('id')>0&&session('id')){
+        $_session_id = session('id');
+        if (isset($_session_id) && $_session_id > 0) {
             $this->redirect('/lang');
-        }else{
+        } else {
             $this->display();
         }
     }
 
     public function login(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $website_model = D('website');
-        $role_model = D('role');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $username = $back['username'];
-        $password = $back['password'];
-        if(session('uid')>'0'){
-            $uid = session('uid');
-        }else{
-            $uid = $user_model->login($username,$password);
+        $_user = D('user');
+        
+        $_uid = session('id');
+        if (isset($_uid) === false) {
+            $_params = json_decode(file_get_contents("php://input"), true);
+            $_username = $_params['username'];
+            $_password = $_params['password'];
+
+            $_uid = $_user->login($_username, $_password);
         }
-        if($uid>'0'){
-            $relation = $relation_model->getUserRelation($uid);
-            session('id',$uid);
-            session('username',$user_model->getUserName($uid));
-            session('website_id',$relation['website_id']);
-            session('website_name',$website_model->getWebsiteName($relation['website_id']));
-            session('purview',getPurviewJson($role_model->getPurview($relation['role_id'])));
-            if(session('uid')>'0'){
-                $this->redirect('/lang');
-            }else{
-                echo '1';
-            }
-        }else{
-            echo '0';
+
+        if ($_uid === false) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Incorrect Username or Password',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        } else {
+            $_relation = D('relation')->getUserRelation($_uid);
+            session('website_id', $_relation['website_id']);
+            session('website_name', D('website')->getWebsiteName($_relation['website_id']));
+            session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
+
+            $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
         }
     }
     public function logout(){
-        if(session('id')>0&&session('id')){
+        $_session_id = session('id');
+        if (isset($_session_id) && $_session_id > 0) {
             D('user')->logout();
             session('[destroy]');
         }
@@ -48,52 +59,90 @@ class AdminController extends Controller {
     }
 
     public function register(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $website_model = D('website');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $_params['username'] = $back['username'];
-        $_params['password'] = $back['password1'];
-        $_params['repeat-password'] = $back['password2'];
-        $uid = $user_model->register($_params);
-        $wid = $website_model->addWebsite($back['website_name']);
-        $_params_relation['user_id'] = $uid;
-        $_params_relation['website_id'] = $wid;
-        $_params_relation['role_id'] = '1';
-        $res = $relation_model->addRelation($_params_relation);
-        if($uid&&$wid&&$res){
-            session('uid',$uid);
-            echo '1';
-        }else{
-            echo '0';
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_params['username'] = $_params['username'];
+        $_params['password'] = $_params['password'];
+        $_params['repeat-password'] = $_params['password-rpt'];
+
+        $_user_id = D('user')->register($_params);
+        if (is_string($_user_id)) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => $_user_id,
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
         }
+
+        $_website_id = D('website')->addWebsite($_params['website_name']);
+        
+        $_relation_id = D('relation')->addRelation(
+            array(
+                'user_id' => $_user_id,
+                'website_id' => $_website_id,
+                'role_id' => 1
+            )
+        );
+
+        $_relation = D('relation')->getUserRelation($_user_id);
+        session('website_id', $_relation['website_id']);
+        session('website_name', D('website')->getWebsiteName($_relation['website_id']));
+        session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
+
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
     }
 
     public function userAdd(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $uid = $user_model->addUser($back['username'],$back['password']);
-        $_params_relation['user_id'] = $uid;
-        $_params_relation['website_id'] = session('website_id');
-        $_params_relation['role_id'] = $back['role_id'];
-        $_params_relation['parent_id'] = session('id');
-        $res = $relation_model->addRelation($_params_relation);
-        if($uid){
-            echo '1';
-        }else{
-            echo '0';
-        }
+        $_params = json_decode(file_get_contents("php://input"), true);
+        $_user_id = D('user')->addUser($_params['username'], $_params['password']);
+        
+        if (is_string($_user_id)) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => $_user_id,
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
+        } 
+
+        D('relation')->addRelation(array(
+            'user_id' => $_user_id,
+            'website_id' => session('website_id'),
+            'role_id' => $_params['role_id'],
+            'parent_id' => session('id'),
+        ));
+
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => array(),
+            ),
+            'json'
+        );
     }
 
     public function userList(){
         $user_model = D('user');
         $relation_model = D('relation');
-        $back = json_decode(file_get_contents("php://input"),true);
+        $_params = json_decode(file_get_contents("php://input"),true);
         $ids = $relation_model->getSubUser(session('id'));
         if($ids){
-            if($back['search']&&$back['search']!=null){
-                $res = $user_model->searchUser($back['search'],$ids);
+            if($_params['search']&&$_params['search']!=null){
+                $res = $user_model->searchUser($_params['search'],$ids);
             }else{
                 $res = $user_model->getUserList($ids);
             }
@@ -109,44 +158,86 @@ class AdminController extends Controller {
 
     public function centerEdit(){
         $user_model = D('user');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $user = $user_model->getOneUser($back['id']);
-        if(md5($back['original-password']) == $user['password']){
-            if($back['new-password'] == $back['confirm-new-password']){
-                $res = $user_model->setPassword($back['new-password'],$back['id']);
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $user = $user_model->getOneUser($_params['id']);
+        if(md5($_params['original-password']) == $user['password']){
+            if($_params['new-password'] == $_params['confirm-new-password']){
+                $res = $user_model->setPassword($_params['new-password'],$_params['id']);
                 if($res){
-                    echo '1';
+                    $this->ajaxReturn(
+                            array(
+                                'success' => true,
+                                'message' => '',
+                                'data' => array(),
+                            ),
+                            'json'
+                        );
                 }else{
-                    echo '0';
+                    $this->ajaxReturn(
+                            array(
+                                'success' => false,
+                                'message' => 'Modify failure.',
+                                'data' => array(),
+                            ),
+                            'json'
+                        );
                 }
             }else{
-                echo '2';
+                $this->ajaxReturn(
+                        array(
+                            'success' => false,
+                            'message' => 'Password doesn\'t match.',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
             }
         }else{
-            echo '3';
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'The password is incorrect.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }
     }
 
     public function userEdit(){
         $user_model = D('user');
         $relation_model = D('relation');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $setName = $user_model->setUsername($back['username'],$back['user_id']);
-        if($back['password']!=''){
-            $setPwd = $user_model->setPassword($back['password'],$back['user_id']);
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $setName = $user_model->setUsername($_params['username'],$_params['user_id']);
+        if(isset($_params['password'])  === true){
+            $setPwd = $user_model->setPassword($_params['password'],$_params['user_id']);
         }
-        $setRela = $relation_model->setUserRole($back['role_id'],$back['user_id']);
-        if($setName||$setPwd||$setRela){
-            echo '1';
+        $setRela = $relation_model->setUserRole($_params['role_id'],$_params['user_id']);
+        if(is_string($setName) === false||is_string($setPwd) === false||is_string($setRela) === false){
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }else{
-            echo '0';
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'Modify failure.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }
     }
 
     public function userAllow(){
         $user_model = D('user');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $res = $user_model->setAllow($back['user_id'],$back['allow']);
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $res = $user_model->setAllow($_params['user_id'],$_params['allow']);
         if($res){
             echo '1';
         }else{
@@ -158,10 +249,10 @@ class AdminController extends Controller {
         $user_model = D('user');
         $role_model = D('role');
         $relation_model = D('relation');
-        $back = json_decode(file_get_contents("php://input"),true);
+        $_params = json_decode(file_get_contents("php://input"),true);
         $rolelist = $role_model->getRoleList(session('website_id'));
-        $user = $user_model->getOneUser($back['user_id']);
-        $relation = $relation_model->getUserRelation($back['user_id']);
+        $user = $user_model->getOneUser($_params['user_id']);
+        $relation = $relation_model->getUserRelation($_params['user_id']);
         $userInfo['user_id'] = $user['id'];
         $userInfo['role_id'] = $relation['role_id'];
         $userInfo['username'] = $user['username'];
@@ -183,18 +274,32 @@ class AdminController extends Controller {
         $_params['purview'] = $purview;
         $_params['website_id'] = session('website_id');
         $id = $role_model->addRole($_params);
-        if($id > 0){
-            echo '1';
+        if(is_string($id) === false){
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }else{
-            echo '0';
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => $id,
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }
     }
 
     public function roleList(){
         $role_model = D('role');
-        $back = json_decode(file_get_contents("php://input"),true);
-        if($back['search']&&$back['search']!=null){
-            $role_list = $role_model->searchRole($back['search'],session('website_id'));
+        $_params = json_decode(file_get_contents("php://input"),true);
+        if($_params['search']&&$_params['search']!=null){
+            $role_list = $role_model->searchRole($_params['search'],session('website_id'));
         }else{
             $role_list = $role_model->getRoleList(session('website_id'));
         }
@@ -208,10 +313,10 @@ class AdminController extends Controller {
     public function roleInfo(){
         $role_model = D('role');
         $rule_model = D('rule');
-        $back = json_decode(file_get_contents("php://input"),true);
+        $_params = json_decode(file_get_contents("php://input"),true);
         $count = $rule_model->getRuleCount();
         $rule = $rule_model->getRuleList();
-        $role = $role_model->getOneRole($back['role_id']);
+        $role = $role_model->getOneRole($_params['role_id']);
         $purview = str_split(str_pad(decbin($role['purview']),$count,'0',STR_PAD_LEFT));
         foreach ($rule as $key => $value) {
             $rule[$key]['purview'] = $purview[$key];
@@ -235,10 +340,24 @@ class AdminController extends Controller {
         $_params['role_id'] = $back['role_id'];
         $_params['purview'] = bindec($purview);
         $res = $role_model->setRole($_params);
-        if($res){
-            echo '1';
+        if($res > '0'){
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }else{
-            echo '0';
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'Modify failure.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }
     }
 

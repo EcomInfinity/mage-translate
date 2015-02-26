@@ -1,0 +1,34 @@
+<script type="text/template" id="tpl-user-info">
+    <div class="modal-container">
+        <h2>User Info</h2>
+        <div class="content">
+            <form method="post" data-toggle="validator">
+                <div class="form-holder">
+                    <input type="hidden" value="<%= user_id %>" name="user_id" />
+                    <div class="entry form-group">
+                        <label for="username">username:</label>
+                        <input type="email" name="username" id="username" value="<%= username %>" required data-error="Email address is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="entry form-group">
+                        <label for="password">password</label>
+                        <input type="password" name="password" id="password" placeholder="******" />
+                    </div>
+                    <div class="entry select">
+                        <label for="user-groups">User Groups</label>
+                        <select class="form-control" id="user-groups" name="role_id">
+                            <option value="0">default</option>
+                            <% _.each(rolelist, function(role){ %>
+                                <option <% if(role.id == role_id){ %> selected <% } %>value="<%= role.id %>"><%= role.role_name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    
+                </div>
+                <div class="btn-set">
+                    <a href="#" class="btn btn-edit btn-primary">User Save</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>

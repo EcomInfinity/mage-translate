@@ -1,0 +1,18 @@
+<script type="text/template" id="tpl-role-list">
+    <div class="jump">
+        <a href="#roleadd" class="btn btn-primary btn-list-role-add">Role Add</a>
+        <a href="#" class="btn btn-primary btn-right btn-user-list">User List</a>
+    </div>
+    <table class="table table-hover" cellspacing="0" cellpadding="0">
+        <tr>
+            <th>RoleName</th>
+            <th>Operation</th>
+        </tr>
+        <% _.each(roleList, function(role){ %>
+            <tr data-id="<%= role.id %>">
+                <td><%= role.role_name %></td>
+                <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail"><i class="glyphicon glyphicon-edit"></i></a></td>
+            </tr>
+        <% }) %>
+    </table>
+</script>

@@ -2,6 +2,7 @@
 namespace Home\Model;
 use Think\Model;
 class TranslationImageModel extends Model{
+    //
     public function saveImage($_lang_id){
         $save['lang_id'] = $_lang_id;
         return $this->where(array('lang_id'=>'0'))->save($save);
@@ -35,8 +36,8 @@ class TranslationImageModel extends Model{
         return $this->where($where)->select();
     }
 
-    public function getOneImage($_iid){
-        return $this->where(array('id'=>intval($_iid)))->find();
-    }
+    // public function getOneImage($_iid){
+    //     return $this->where(array('id'=>intval($_iid)))->find();
+    // }
 }
 ?>

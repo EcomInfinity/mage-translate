@@ -4,22 +4,17 @@
         <main>
             <div class="container-fluid page-width">
 
-                <h1>Mage Translation</h1>
+                <h1>Happy Translating! - <php>echo session('website_name');</php></h1>
 
-                <div class="search-box">
-                </div>
+                <div class="search-box"></div>
 
-                <div class="block block-translation-export" style="width:960px;">
-                </div>
+                <div class="block block-translation-export" style="width:960px;"></div>
 
-                <div class="block block-translation-list">
-                </div>
+                <div class="block block-translation-list"></div>
 
-                <div class="block block-translation-detail" style="width:960px;">
-                </div>
+                <div class="block block-translation-detail" style="width:960px;"></div>
 
-                <div class="block block-translation-add" style="width:960px;">
-                </div>
+                <div class="block block-translation-add" style="width:960px;"></div>
         </main>
     </block>
 
@@ -63,395 +58,39 @@
     </block>
 
     <block name="template-translate">
-        <script type="text/template" id="tpl-lang-add">
 
-            <div class="batch-import">
-                <form action="" method="post" enctype="multipart/form-data">
-                    <div class="form-holder">
-                        <div class="entry file">
-                            <label>Batch Import:</label>
-                            <input type="file" name="csv" id="batch-import" />
-                        </div>
-                    </div>
-                </form>
-                <p>Please select the *.csv file format batch import</p>
-            </div>
+        <include file="Template/tpl-lang-add" />
 
-            <div class="col col5 fl">
-                <div class="tip tip-langadd"></div>
-                    <form action="" method="post" name="lang_add">
-                        <div class="form-holder">
-                            <div class="entry textarea">
-                                <label for="en">EN:</label>
-                                <textarea name="en" id="en"></textarea>
-                            </div>
-                            <div class="entry textarea">
-                                <label for="de">DE:</label>
-                                <textarea name="de" id="de"></textarea>
-                            </div>
-                            <div class="entry textarea">
-                                <label for="nl">NL:</label>
-                                <textarea name="nl" id="nl"></textarea>
-                            </div>
-    <!--                        <div class="entry">
-                                <label for="fr">FR:</label>
-                                <input type="text" name="fr" id="fr" />
-                            </div>-->
-                            <div class="entry">
-                                <label for="remarks">Remarks:</label>
-                                <input type="text" name="remarks" id="remarks" />
-                            </div>
-                        </div>
-                        <div class="btn-set">
-                            <a href="#" class="btn btn-add btn-primary up">Add</a>
-                        </div>
-                    </form>
-                </div>
+        <include file="Template/tpl-lang-edit" />
 
-                <div class="images_list col col5 fr">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        <div class="form-holder">
-                            <div class="entry file">
-                                <label>Images:</label>
-                                <input type="file" name="images" id="images-add" />
-                                <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
-                            </div>
-                        </div>
-                    </form>
-                    <ul>
-                    </ul>
-                    <div id="enlarge_images"></div>
-                </div>
-        </script>
+        <include file="Template/tpl-lang-export" />
 
-        <script type="text/template" id="tpl-lang-search">
-            <!-- <form action="" data-get=""> -->
-            <div class="form-holder">
-                <div class="entry">
-                    <input type="text" name="search" class="search" placeholder="Search EN ..."/>
-                </div>
-            </div>
-            <!-- </form> -->
-        </script>
+        <include file="Template/tpl-lang-list" />
 
-        <script type="text/template" id="tpl-lang-list">
-        <div class="jump">
-        <a href="#export" class="btn btn-list-export btn-primary">Lang Export</a>
-        <a href="#add" class="btn btn-list-add btn-primary">Lang Add</a>
-        <a href="#" class="btn btn-list-modify btn-primary">Back Modify</a>
-        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
-            <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
-            <%}%>Records</span>
-        </div>
-        <div class="line"></div>
-        <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
-          <thead>
-            <tr>
-              <th>EN</th>
-              <th>DE</th>
-              <th>NL</th>
-              <!--<th>MODIFY</th>-->
-              <th>OPERATION</th>
-            </tr>
-          </thead>
-          <tbody>
-           <% _.each(lists, function(list){ %>
-            <tr  data-id="<%= list.id %>">
-              <td><%= list.en %></td>
-              <td><%= list.de %></td>
-              <td><%= list.nl %></td>
-              <!--<td>
-                  <a href="#" class="btn <% if(list.modify == '1'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="1">Yes</a>
-                  <a href="#" class="btn <% if(list.modify == '0'){ %> btn-success <% }else{ %> btn-default <% } %> btn-modify" data-modify="0">&nbspNo&nbsp</a>
-              </td>-->
-              <td>
-                <a href="#edit/<%= list.id %>" class="btn btn-edit btn-info">&nbsp&nbspEdit&nbsp&nbsp</a>
-                <a href="#delete/<%= list.id %>" class="btn btn-delete btn-danger">Delect</a>
-              </td>
-            </tr>
-           <% }) %>
-          </tbody>
-        </table>
-        </script>
+        <include file="Template/tpl-lang-search" />
 
-        <script type="text/template" id="tpl-lang-export">
-            <div class="entry select">
-                <select id="export" class="form-control">
-                    <% _.each(allField,function(field){ %>
-                        <option value="<%= field %>"><%= field %></option>
-                    <% }) %>
-                </select>
-            </div>
-            <div class="btn-set">
-                <a href="#" class="btn btn-export btn-primary">Export</a>
-                <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
-            </div>
-        </script>
-
-        <script type="text/template" id="tpl-lang-edit">
-            <div class="col col5 fl">
-                <div class="tip tip-langedit"></div>
-                <form action="" method="post">
-                    <div class="form-holder">
-                        <input type="hidden" value="<%= langDetail['id'] %>" name="id" />
-                        <% _.each(_.keys(langDetail), function(detail){ if(detail!='id'&&detail!='status'&&detail!='website_id'&&detail!='fr'&&detail!='modify'){ %>
-                            <div class="entry textarea">
-                            <label for="edit-<%= detail %>">
-                            <%= detail %>
-                            </label>
-                            <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit"><%= langDetail[detail] %></textarea>
-                            </div>
-                            <% } %>
-                            <% if(detail == 'modify'){ %>
-                                <label><%= detail %></label>
-                                <div class="entry radio">
-                                    <label for="modify-yes" class="radio-inline">
-                                    <input type="radio" value="1" name="modify" id="modify-yes" <%if(langDetail[detail] == '1'){%>checked<%}%> />Yes
-                                    </label>
-                                    <label for="modify-no" class="radio-inline">
-                                    <input type="radio" value="0" name="modify" id="modify-no" <%if(langDetail[detail] == '0'){%>checked<%}%> />No
-                                    </label>
-                                </div>
-                            <% } %>
-                        <%})%>
-                    </div>
-                    <div class="btn-set">
-                        <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
-                    </div>
-                </form>
-            </div>
-
-            <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
-                <form action="" method="post" enctype="multipart/form-data">
-                    <div class="form-holder">
-                        <div class="entry file">
-                            <label>Images:</label>
-                            <input type="file" name="images" id="images" en-id="<{$en_id}>" />
-                            <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
-                        </div>
-                    </div>
-                </form>
-                <ul>
-                    <% _.each(langImages, function(image){ %>
-                        <li>
-                            <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
-                            <div class="btn-set">
-                                <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
-                            </div>
-                        </li>
-                    <% })%>
-                </ul>
-                <div id="enlarge_images"></div>
-            </div>
-        </script>
     </block>
 
     <block name="template-user">
-        <script type="text/template" id="tpl-user-search">
-            <div class="form-holder">
-                <div class="entry">
-                    <input type="text" name="search" class="user-search" placeholder="Search User ...">
-                </div>
-            </div>
-        </script>
 
-        <script type="text/template" id="tpl-user-center">
-            <form action="" method="post">
-                <div class="form-hoder">
-                    <h2>Modify User Password</h2>
-                    <div class="tip tip-center-main"></div>
-                    <input type="hidden" name="id" value="<php>echo session('id');</php>" />
-                    <!--<div class="entry form-group">
-                        <label for="username">User Name:</label>
-                        <input type="text" name="username" id="username" />
-                    </div>
-                    <div class="tip tip-username"></div>-->
-                    <label for="username">User Name:</label>
-                    <php>echo session('username');</php>
-                    <div class="entry form-group">
-                        <label for="original-password">Original Password:</label>
-                        <input type="password" name="original-password" id="original-password" placeholder="Please enter 5-15 alphanumeric" />
-                    </div>
-                    <div class="tip tip-original-password"></div>
-                    <div class="entry form-group">
-                        <label for="new-password">New Password:</label>
-                        <input type="password" name="new-password" id="new-password" placeholder="Please enter 5-15 alphanumeric" />
-                    </div>
-                    <div class="entry form-group">
-                        <label for="confirm-new-password">Confirm New Password:</label>
-                        <input type="password" name="confirm-new-password" id="confirm-new-password" placeholder="Please enter 5-15 alphanumeric" />
-                    </div>
-                    <div class="tip tip-confirm-new-password"></div>
-                </div>
-                <a href="#" class="btn btn-edit-center btn-default">Submit</a>
-            </form>
-        </script>
-        <script type="text/template" id="tpl-role-search">
-            <div class="form-holder">
-                <div class="entry">
-                    <input type="text" name="search" class="role-search" placeholder="Search Role ...">
-                </div>
-            </div>
-        </script>
+        <include file="Template/tpl-user-center" />
 
-        <script type="text/template" id="tpl-role-add">
-            <div class="tip tip-roleadd"></div>
-            <form action="" method="post" name="role_add">
-                <div class="form-holder">
-                    <h3>Role Add</h3>
-                    <div class="entry">
-                        <label for="role">Role Name</label>
-                        <input type="text" id="role" name="role" placeholder="Please enter 1-20 characters" />
-                    </div>
-                    <% _.each(ruleList, function(rule){ %>
-                        <div class="entry radio">
-                        <h3>Allow <%= rule.rule_name %></h3>
-                        <label for="role-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
-                        <input type="radio" name="<%= rule.rule_name.toLowerCase() %>" value="1" id="role-yes-<%= rule.rule_name.toLowerCase() %>"/>
-                        Yes</label>
-                        <label for="roel-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
-                        <input type="radio" checked name="<%= rule.rule_name.toLowerCase() %>" value="0" id="roel-no-<%= rule.rule_name.toLowerCase() %>"/>
-                        No</label>
-                    </div>
-                    <% }) %>
-                </div>
-                <div class="btn-set">
-                    <a href="#" class="btn btn-role-add btn-primary">Role Add</a>
-                </div>
-            </form>
-        </script>
+        <include file="Template/tpl-user-search" />
 
-        <script type="text/template" id="tpl-role-list">
-            <div class="jump">
-                <a href="#roleadd" class="btn btn-primary btn-list-role-add">Role Add</a>
-                <a href="#" class="btn btn-primary btn-right btn-user-list">User List</a>
-            </div>
-            <table class="table table-hover" cellspacing="0" cellpadding="0">
-                <tr>
-                    <th>RoleName</th>
-                    <th>Operation</th>
-                </tr>
-                <% _.each(roleList, function(role){ %>
-                    <tr data-id="<%= role.id %>">
-                        <td><%= role.role_name %></td>
-                        <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail">Edit</a></td>
-                    </tr>
-                <% }) %>
-            </table>
-        </script>
+        <include file="Template/tpl-user-add" />
 
-        <script type="text/template" id="tpl-role-info">
-            <div class="tip tip-roleedit"></div>
-            <form action="" method="post">
-                <div class="form-holder">
-                    <input type="hidden" value="<%= role_id %>" name="role_id" />
-                    <div class="entry">
-                        <label for="role_name">Role Name</label>
-                        <input type="text" value="<%= role_name %>" name="role_name" id="role_name" />
-                    </div>
-                </div>
-                <% _.each(ruleList, function(rule){ %>
-                    <div class="entry radio">
-                    <h3>Allow <%= rule.rule_name %></h3>
-                    <label for="edit-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
-                    <input type="radio" <% if(rule.purview == '1'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="1" id="edit-yes-<%= rule.rule_name.toLowerCase() %>"/>
-                    Yes</label>
-                    <label for="edit-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
-                    <input type="radio" <% if(rule.purview == '0'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="0" id="edit-no-<%= rule.rule_name.toLowerCase() %>"/>
-                    No</label>
-                </div>
-                <% }) %>
-                <a href="#" class="btn btn-primary btn-edit">Role Edit</a>
-            </form>
-            <!--<% _.each(roleInfo, function(info){ %>
-                <%= info %>
-            <% }) %>-->
-        </script>
+        <include file="Template/tpl-user-info" />
 
-        <script type="text/template" id="tpl-user-add">
-            <form method="post" name="user_add">
-                <div class="form-holder">
-                    <h3>User Add</h3>
-                    <div class="tip tip-useradd"></div>
-                    <div class="entry">
-                        <label for="username">username</label>
-                        <input type="text" name="username" id="username" placeholder="Please enter 5-15 alphanumeric" />
-                    </div>
-                    <div class="entry">
-                        <label for="password">password</label>
-                        <input type="password" name="password" id="password" placeholder="Please enter 5-15 alphanumeric" />
-                    </div>
-                    <div class="entry select">
-                        <label for="user-groups">User Groups</label>
-                        <select class="form-control" id="user-groups" name="role_id">
-                            <option value="0">default</option>
-                            <% _.each(rolelist, function(role){ %>
-                                <option value="<%= role.id %>"><%= role.role_name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-                </div>
-                <div class="btn-set">
-                    <a href="#" class="btn btn-user-add btn-primary">User Add</a>
-                </div>
-            </form>
-        </script>
+        <include file="Template/tpl-user-list" />
 
-        <script type="text/template" id="tpl-user-list">
-            <div class="jump">
-                <a href="#useradd" class="btn btn-primary btn-list-user-add">User Add</a>
-                <a href="#" class="btn btn-primary btn-right btn-role-list">Role List</a>
-            </div>
-            <table class="table table-hover">
-                <tr>
-                    <!--<th>Id</th>-->
-                    <th>UserName</th>
-                    <th>Is Allow</th>
-                    <th>Operation</th>
-                </tr>
-                <% _.each(userList, function(user){%>
-                    <tr data-id="<%= user.id %>">
-                        <!--<td><%= user.id %></td>-->
-                        <td><%= user.username %></td>
-                        <td>
-                        <a href="#" class="btn btn-allow <% if(user.allow == '1'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="1">Yes</a>
-                        <a href="#" class="btn btn-allow <% if(user.allow == '0'){ %> btn-success <% }else{ %> btn-default <% } %>" data-allow="0">N o</a>
-                        </td>
-                        <td>
-                        <a href="#useredit/<%= user.id %>" class="btn btn-user-detail btn-info">Edit</a>
-                        </td>
-                    </tr>
-                <% }) %>
-            </table>
-        </script>
+        <include file="Template/tpl-role-search" />
 
-        <script type="text/template" id="tpl-user-info">
-            <div class="tip tip-useredit"></div>
-            <form method="post">
-                <div class="form-holder">
-                    <h3>User Info</h3>
-                    <input type="hidden" value="<%= user_id %>" name="user_id" />
-                        <label for="username">username:</label>
-                        <input type="text" name="username" id="username" value="<%= username %>" />
-                    <div class="entry">
-                        <label for="password">password</label>
-                        <input type="password" name="password" id="password" placeholder="******" />
-                    </div>
-                    <div class="entry select">
-                        <label for="user-groups">User Groups</label>
-                        <select class="form-control" id="user-groups" name="role_id">
-                            <option value="0">default</option>
-                            <% _.each(rolelist, function(role){ %>
-                                <option <% if(role.id == role_id){ %> selected <% } %>value="<%= role.id %>"><%= role.role_name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-                </div>
-                <div class="btn-set">
-                    <a href="#" class="btn btn-edit btn-primary">User Save</a>
-                </div>
-            </form>
-        </script>
+        <include file="Template/tpl-role-list" />
+
+        <include file="Template/tpl-role-info" />
+
+        <include file="Template/tpl-role-add" />
+
     </block>
 
 </body>

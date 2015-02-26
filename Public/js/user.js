@@ -4,6 +4,7 @@ if (Backbone.emulateJSON) {
     params.contentType = 'application/x-www-form-urlencoded';
     params.data = params.data ? {model: params.data} : {};
 }
+
 jQuery(function() {
     (function(){
         var root = this;
@@ -19,112 +20,159 @@ jQuery(function() {
         user.Model.Base = Backbone.Model.extend({
             defaults:{
                 'timestamp':-1
+            },
+            save: function(attributes, options) {
+                $.fancybox.showLoading();
+                return Backbone.Model.prototype.save.call(this, attributes, options);
             }
         });
 
         user.View.UserLoginView = Backbone.View.extend({
             template: _.template($('#tpl-user-login').html()),
             events:{
-                'click .btn-login': 'userLogin',
-                'keypress .login-container': 'clickLogin',
-                'click .btn-register': 'userRegister'
+                'click .btn-login': 'clickBtnLogin',
+                'keypress .login-container': 'keypress',
+                'click .btn-register': 'clickBtnRegister'
             },
-            userLogin: function(event){
-                var $form = $(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                this.userModel.save(this.data_form,
-                    {url:UrlApi('_app')+'/login'}
-                    ).done(function (response){
-                    if(response == '1'){
-                        window.open(UrlApi('_app')+'/lang','_self');
+            _login: function() {
+                var _self = this,
+                    $form = this.$el.find('form'),
+                    data = $form.serializeObject();
+                this.userModel.save(
+                    data,
+                    {
+                        url: UrlApi('_app') + '/login'
+                    }
+                ).done(function (response){
+                    $.fancybox.hideLoading();
+                    if (response.success === true) {
+                        _self.$el.find('.modal-container').notify(
+                            'Success', 
+                            { 
+                                position: 'top', 
+                                className: 'success'
+                            }
+                        );
+                        setTimeout(function() {
+                             window.open(UrlApi('_app')+'/lang', '_self');
+                        }, 1000);
+                    } else {
+                        _self.$el.find('.modal-container').notify(
+                            response.message, 
+                            { 
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
                     }
                 });
             },
-            clickLogin: function(event){
-                if(event.keyCode == '13'){
-                    $('.btn-login').click();
+            clickBtnLogin: function(event){
+                this.$el.find('form').submit();
+            },
+            keypress: function(event){
+                if (event.keyCode === 13){
+                    this.$el.find('form').submit();
                 }
             },
-            userRegister: function(event){
-                $('.block-user-register').show();
-                $('.block-user-login').hide();
-                this._userEvents.trigger('refresh','login');
+            clickBtnRegister: function(event){
+                this._events.trigger('show', 'register');
+            },
+            show: function() {
+                this.$el.show();
+            },
+            hide: function() {
+                this.$el.hide();
             },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
-                this._userEvents = options._userEvents;
+                this._events = options._events;
                 this.render();
             },
             render: function(){
-                var data = {};
-                this.$el.html(this.template(data));
+                var _self = this;
+                this.$el.html(this.template({}));
+                this.$el.find('form').validator().on('submit', function(e) {
+                    if (e.isDefaultPrevented()) {
+                    } else {
+                        _self._login.call(_self);
+                        return false;
+                    }
+                });
+                return this;
             }
         });
 
         user.View.UserRegisterView = Backbone.View.extend({
             template: _.template($('#tpl-user-register').html()),
             events:{
-                'click .btn-register': 'userRegister',
-                'click .btn-back': 'userLogin'
+                'click .btn-register': 'clickBtnRegister',
+                'click .btn-back': 'clickBtnBack'
             },
-            userRegister: function(event){
-                var $form = $(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                var user_match = this.data_form['username'].match(/^[a-zA-Z0-9]{5,15}$/),
-                pwd_match = this.data_form['password1'].match(/^[a-zA-Z0-9]{5,15}$/),
-                web_match = this.data_form['website_name'].match(/^[a-zA-Z0-9]{1,15}$/);
-                if(this.data_form['password1'] == this.data_form['password2']){
-                    var pwd_confirm = '1';
-                }else{
-                    var pwd_confirm = '0';
-                }
-                if(user_match == null){
-                    $('.tip-username').text('The username must have 5-15 digits or letters.');
-                }else{
-                    $('.tip-username').text('');
-                }
-                if(pwd_match == null){
-                    $('.tip-password1').text('The password must have 5-15 digits or letters.');
-                }else{
-                    $('.tip-password1').text('');
-                }
-                if(pwd_confirm == '1'){
-                    $('.tip-password2').text('');
-                }else{
-                    $('.tip-password2').text('Please make sure your passwords match.');
-                }
-                if(web_match == null){
-                    $('.tip-website_name').text('The websiteName must have 1-15 digits or letters.');
-                }else{
-                    $('.tip-website_name').text('');
-                }
-                if(user_match!=null&&pwd_match!=null&&web_match!=null&&pwd_confirm == '1'){
-                    this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/register'}
-                        ).done(function (response){
-                        if(response == '1'){
-                            window.open(UrlApi('_app')+'/login','_self');
-                        }
-                    }).fail(function (){
-                        $('.tip-main').text('Username repeated or failure to create.');
-                    });
-                }
+            _register: function() {
+                var _self = this,
+                    $form = this.$el.find('form'),
+                    data = $form.serializeObject();
+                
+                this.userModel.save(
+                    data,
+                    {
+                        url: UrlApi('_app') + '/register'
+                    }
+                ).done(function (response) {
+                    $.fancybox.hideLoading();
+                    if (response.success == true){
+                        _self.$el.find('.modal-container').notify(
+                            'Success', 
+                            { 
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        setTimeout(function() {
+                            window.open(UrlApi('_app')+'/admin', '_self');
+                        }, 1000);
+                    } else {
+                        _self.$el.find('.modal-container').notify(
+                            response.message, 
+                            { 
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
+            },
+            clickBtnRegister: function(event){
+                this.$el.find('form').submit();
                 return false;
             },
-            userLogin: function(event){
-                $('.block-user-login').show();
-                $('.block-user-register').hide();
-                this._userEvents.trigger('refresh','register');
+            clickBtnBack: function(event){
+                this._events.trigger('show', 'login');
+            },
+            show: function() {
+                this.$el.show();  
+            },
+            hide: function() {
+                this.$el.hide();
             },
             initialize: function(options){
                 options || (options = {});
                 this.userModel = options.userModel;
-                this._userEvents = options._userEvents;
+                this._events = options._events;
             },
             render: function(){
-                var data = {};
-                this.$el.html(this.template(data));
+                var _self = this;
+                this.$el.html(this.template({}));
+                this.$el.find('form').validator().on('submit', function(e) {
+                    if (e.isDefaultPrevented()) {
+                    } else {
+                        _self._register.call(_self);
+                        return false;
+                    }
+                });
+                return this;
             }
         });
 
@@ -133,33 +181,33 @@ jQuery(function() {
                 options || (options = {});
                 this.userModel = options.userModel;
 
-                var _userEvents = {};
-                _.extend(_userEvents, Backbone.Events);
+                var _events = {};
+                _.extend(_events, Backbone.Events);
 
-                var userloginView = new user.View.UserLoginView({
+                var loginView = new user.View.UserLoginView({
                     el: '.block-user-login',
                     userModel: this.userModel,
-                    _userEvents: _userEvents
+                    _events: _events
                 });
 
-                var userregisterView = new user.View.UserRegisterView({
+                var registerView = new user.View.UserRegisterView({
                     el: '.block-user-register',
                     userModel: this.userModel,
-                    _userEvents: _userEvents
+                    _events: _events
                 });
 
-                _userEvents.on('refresh', function (view){
-                    switch (view)
-                    {
-                        case 'login':
-                            userregisterView.render();
+                _events.on('show', function(view) {
+                    switch(view) {
+                        case 'login': 
+                            loginView.render().show();
+                            registerView.hide();
                             break;
-                        case 'register':
-                            userloginView.render();
+                        case 'register': 
+                            loginView.hide();
+                            registerView.render().show();
                             break;
                     }
                 });
-
             }
         });
 

@@ -2,10 +2,11 @@
 namespace Home\Model;
 use Think\Model;
 class RelationModel extends Model{
+    //$uid用户id
     public function getUserRelation($uid){
         return $this->where(array('user_id'=>intval($uid)))->find();
     }
-
+    //$_params(user_id,website_id,role_id)
     public function addRelation($_params){
         return $this->add($_params);
     }
@@ -24,7 +25,12 @@ class RelationModel extends Model{
 
     public function setUserRole($_role_id,$uid){
         $save['role_id'] = $_role_id;
-        return $this->where(array('user_id'=>intval($uid)))->save($save);
+        $_result = $this->where(array('user_id'=>intval($uid)))->save($save);
+        if($_result > '0'){
+            return $_result;
+        }else{
+            return 'Modify failure.';
+        }
     }
 }
 ?>

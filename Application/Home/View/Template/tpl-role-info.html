@@ -1,0 +1,32 @@
+<script type="text/template" id="tpl-role-info">
+<div class="modal-container">
+    <h2>Role Info</h2>
+    <div class="content">
+        <form action="" method="post" data-toggle="validator" role="form">
+            <div class="form-holder">
+                <input type="hidden" value="<%= role_id %>" name="role_id" />
+                <div class="entry form-group">
+                    <label for="role_name">Role Name</label>
+                    <input type="text" value="<%= role_name %>" name="role_name" id="role_name" required pattern="^.{1,20}$" data-error="Role name is invalid."  />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <% _.each(ruleList, function(rule){ %>
+                <div class="entry radio">
+                <h3>Allow <%= rule.rule_name %></h3>
+                <label for="edit-yes-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                <input type="radio" <% if(rule.purview == '1'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="1" id="edit-yes-<%= rule.rule_name.toLowerCase() %>"/>
+                Yes</label>
+                <label for="edit-no-<%= rule.rule_name.toLowerCase() %>" class="checkbox-inline">
+                <input type="radio" <% if(rule.purview == '0'){ %> checked <% } %> name="<%= rule.rule_name.toLowerCase() %>" value="0" id="edit-no-<%= rule.rule_name.toLowerCase() %>"/>
+                No</label>
+            </div>
+            <% }) %>
+            <a href="#" class="btn btn-primary btn-edit">Role Edit</a>
+        </form>
+    </div>
+</div>
+    <!--<% _.each(roleInfo, function(info){ %>
+        <%= info %>
+    <% }) %>-->
+</script>

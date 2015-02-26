@@ -1,0 +1,63 @@
+<script type="text/template" id="tpl-lang-edit">
+    <div class="modal-container">
+        <h2>Edit</h2>
+        <div class="content">
+            <div class="col col5 fl">
+                <form action="" method="post"  data-toggle="validator" role="form">
+                    <div class="form-holder">
+                        <input type="hidden" value="<%= langDetail['id'] %>" name="id" />
+        <% _.each(_.keys(langDetail), function(detail) { 
+            if (detail != 'id' && detail != 'status' && detail != 'website_id' && detail !='fr' && detail!='modify') { %>
+            <div class="entry textarea form-group">
+                <label for="edit-<%= detail %>"><%= detail %></label>
+                <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit" <% if(detail == 'en'){ %>required data-error="English is invalid."<% } %>><%= langDetail[detail] %></textarea>
+                <div class="help-block with-errors"></div>
+            </div>
+            <% } %>
+            <% if(detail == 'modify'){ %>
+            <div class="entry">
+                <label>Need Update</label>
+                <div>
+                    <label class="radio-inline">
+                        <input type="radio" value="1" name="modify" id="modify-yes" <%if(langDetail[detail] == '1'){%>checked<%}%> />Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="0" name="modify" id="modify-no" <%if(langDetail[detail] == '0'){%>checked<%}%> />No
+                    </label>
+                </div>
+            </div>
+            <% } %>
+        <%})%>
+                    </div>
+                    <div class="btn-set">
+                        <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="form-holder">
+                        <div class="entry file">
+                            <label>Images:</label>
+                            <input type="file" name="images" id="images" en-id="<{$en_id}>" />
+                            <p style="margin-top: 10px;">Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
+                        </div>
+                    </div>
+                </form>
+                <ul>
+                    <% _.each(langImages, function(image){ %>
+                        <li>
+                            <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
+                            <div class="btn-set">
+                                <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
+                            </div>
+                        </li>
+                    <% })%>
+                </ul>
+                <div id="enlarge_images"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,42 @@
+<script type="text/template" id="tpl-lang-list">
+    <div class="jump">
+        <a href="#export" class="btn btn-list-export btn-primary" title="Export">
+            <i class="glyphicon glyphicon-share"></i>
+        </a>
+        <a href="#add" class="btn btn-list-add btn-primary" title="Add New Entry">
+            <i class="glyphicon glyphicon-plus"></i>
+        </a>
+        <a href="#" class="btn btn-list-modify btn-primary">Back Modify</a>
+        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
+        <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <%}%>Records</span>
+    </div>
+    <div class="line"></div>
+    <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover">
+      <thead>
+        <tr>
+          <th class="col-language">EN</th>
+          <th class="col-language">DE</th>
+          <th class="col-language">NL</th>
+          <th class="col-operation">OPERATION</th>
+        </tr>
+      </thead>
+      <tbody>
+       <% _.each(lists, function(list){ %>
+        <tr  data-id="<%= list.id %>">
+          <td><%= list.en %></td>
+          <td><%= list.de %></td>
+          <td><%= list.nl %></td>
+          <td>
+            <a href="#edit/<%= list.id %>" class="btn btn-edit btn-info" title="Edit">
+                <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a href="#delete/<%= list.id %>" class="btn btn-delete btn-danger" title="Delete">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+          </td>
+        </tr>
+       <% }) %>
+      </tbody>
+    </table>
+</script>
