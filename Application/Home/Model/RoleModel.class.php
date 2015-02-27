@@ -1,6 +1,7 @@
 <?php
 namespace Home\Model;
 use Think\Model;
+
 class RoleModel extends Model{
     //$_rid->$role_id
     public function getPurview($_rid){
@@ -38,13 +39,11 @@ class RoleModel extends Model{
     }
 
     public function setRole($_params){
-        if($this->roleMatch($_params['role_name']) == '1'){
-            $save['role_name'] = $_params['role_name'];
-            $save['purview'] = $_params['purview'];
-            $save['id'] = intval($_params['role_id']);
-            return intval($this->save($save));
-        }else{
-            return 'Rolename must have 1-20 characters';
+        if (preg_match('/^.{1,20}$/', $_params['role_name']) == '1'){
+            $this->save($_params);
+            return true;
+        } else {
+            return 'Role name must have 1-20 characters';
         }
     }
 }
