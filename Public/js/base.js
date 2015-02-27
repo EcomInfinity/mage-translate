@@ -315,12 +315,12 @@ jQuery(function() {
             backSort: function(event){
                 var sort = $('table').attr('data-sort');
                 if(sort == 'modify'){
-                    this.inrender = '1';
+                    this.inrender = true;
                     this.searchData = {search:'',inrender:this.inrender};
                     this._events.trigger('alernately',this.searchData,'search');
                 }
                 if(sort == 'search'){
-                    this.setList({inrender:'0'}).render();
+                    this.setList({inrender: false}).render();
                 }
             },
             setList: function(data){
@@ -333,22 +333,26 @@ jQuery(function() {
                 this.lists = options.lists;
                 this._events = options._events;
                 this.translate = options.translate;
-                this.inrender = '0';
+                this.inrender = false;
                 this.render();
             },
             render: function(){
                 var _self = this;
-                var data = {};
-                this.translate.save({search:this.search,inrender:this.inrender},
-                    {url:UrlApi('_app')+'/langlist'}
-                    ).done(function (response){
-                    data['lists'] = response.lists;
-                    data['count'] = response.count;
-                    data['current_count'] = response.current_count;
+                this.translate.save(
+                    { 
+                        search: this.search,
+                        inrender: this.inrender
+                    },
+                    { url:UrlApi('_app')+'/langlist' }
+                ).done(function (response){
+                    var data = {
+                        'lists': response.data.list,
+                        'count': response.data.total,
+                        'current_count': response.data.count,
+                        'inrender': _self.inrender
+                    };
+                    
                     _self.$el.html(_self.template(data));
-                    if(_self.inrender == '1'){
-                        $('table').attr('data-sort','search');
-                    }
                 });
             }
         });

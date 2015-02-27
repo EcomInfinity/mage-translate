@@ -6,20 +6,27 @@
         <a href="#add" class="btn btn-list-add btn-primary" title="Add New Entry">
             <i class="glyphicon glyphicon-plus"></i>
         </a>
-<<<<<<< HEAD
-        <a href="#" class="btn btn-list-sort btn-primary"><i class="glyphicon glyphicon-share-alt"></i></a>
-        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
-=======
-        <a href="#" class="btn btn-list-modify btn-primary" title="TODO List">
-            <i class="glyphicon glyphicon-tasks"></i>
+        <a href="#" class="btn btn-list-sort btn-primary" title="Show All">
+          <% if (inrender == '1') { %>
+          <i class="glyphicon glyphicon-eye-open"></i>
+          <% } else { %>
+          <i class="glyphicon glyphicon-eye-close"></i>
+          <% } %>
         </a>
-        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>
->>>>>>> c778e6a4bbe7f418ace80d6b6abb2a7444ab45e5
+        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
         <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
         <%}%>Records</span>
     </div>
     <div class="line"></div>
-    <table cellpadding="0" cellspacing="0" class="tbl-translation-list table table-hover"  data-sort="modify">
+    <table cellpadding="0" 
+           cellspacing="0" 
+           class="tbl-translation-list table table-hover" 
+           <% if (inrender === true) { %>
+           data-sort="search"
+           <% } else { %>
+           data-sort="modify"
+           <% } %>
+    >
       <thead>
         <tr>
           <th class="col-language">EN</th>
