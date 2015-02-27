@@ -24,11 +24,19 @@ class TranslationController extends BaseController {
     public function export(){
         $translation_model = D('translation');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $fields = $_params['field'];
+
         if($_params['exrender'] == '0'){
-            $field = 'en,'.$fields;
             // $title = explode(",", $field);
-            $export_get = $translation_model->getTranslateList($field,'1',session('website_id'),'','id',$fields);
+            $export_get = D('translation')->gets(
+                            'en,' . $_params['field'],
+                            array(
+                                'status' => 1,
+                                'website_id' => session('website_id'),
+                                $_params['field'] => array('neq', ''),
+                            ),
+                            'en asc',
+                            array()
+                        );
             foreach ($export_get['list'] as $key => $value) {
                 # code...
                 foreach ($value as $k => $val) {
@@ -37,8 +45,8 @@ class TranslationController extends BaseController {
                 }
             }
             // S('title',$title);
-            S('export',$export);
-            S('filename',$fields);
+            S('export', $export);
+            S('filename', $_params['field']);
             echo '1';
         }
         if($_params['exrender'] == '1'){
@@ -203,30 +211,50 @@ class TranslationController extends BaseController {
     }
     //lang lists
     public function getList(){
-        $translation_model = D('translation');
         $_params = json_decode(file_get_contents("php://input"),true);
-        if($_params['inrender'] == '0'){
-            $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1','id desc');
+        if ($_params['inrender'] == '0') {
+            $_list = D('translation')->gets(
+                        '', 
+                        array(
+                            'statue' => 1,
+                            'website_id' => session('website_id'),
+                            'modify' => 1,
+                        ),
+                        'id desc',
+                        array()
+                    );
+        } else {
+            $_list = D('translation')->gets(
+                        '',
+                        array(
+                            'en' => array('like', "%$_search%"),
+                            'website_id' => session('website_id'),
+                            'status' => 1,
+                            'modify' => 0,
+                        ),
+                        'id desc',
+                        array()
+                    );
         }
-        if($_params['inrender'] == '1'){
-            $translation_list_get = $translation_model->searchTranslate($_params['search'],session('website_id'),'0','1');
-        }
-        foreach ($translation_list_get['list'] as $key => $value) {
-            # code...
+
+        foreach ($_list as $key => $value) {
             foreach ($value as $k => $val) {
-                # code...
                 $translation_list[$key][$k] = htmlentities($val);
             }
         }
-        $count = $translation_model->getTranslateCount(session('website_id'));
-        $list['lists'] = $translation_list;
-        $list['current_count'] = $translation_list_get['count'];
-        $list['count'] = $count;
-        if($translation_list||$count){
-            echo json_encode($list);
-        }else{
-            echo '0';
-        }
+
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => array(
+                    'total' => D('translation')->total(session('website_id')),
+                    'count' => count($_list),
+                    'list' => $_list,
+                ),
+            ),
+            'json'
+        );
     }
     //lang edit detail
     public function getInfo(){
