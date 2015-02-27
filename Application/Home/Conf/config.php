@@ -29,11 +29,11 @@ return array(
         array('userinfo','Admin/userInfo'),
         array('centeredit','Admin/centerEdit'),
 
-        array('roleadd','Admin/roleAdd'),
-        array('rolelist','Admin/roleList'),
-        array('roleinfo','Admin/roleInfo'),
-        array('roleedit','Admin/roleEdit'),
+        array('roleadd','Role/add'),
+        array('roleinfo','Role/get'),
+        array('rolelist','Role/gets'),
+        array('roleedit','Role/edit'),
         
-        array('rulelist','Admin/ruleList'),
+        array('rulelist','Rule/gets'),
     ),
 );
