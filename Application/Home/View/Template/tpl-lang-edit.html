@@ -10,7 +10,7 @@
             if (detail != 'id' && detail != 'status' && detail != 'website_id' && detail !='fr' && detail!='modify') { %>
             <div class="entry textarea form-group">
                 <label for="edit-<%= detail %>"><%= detail %></label>
-                <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit" <% if(detail == 'en'){ %>required data-error="English is invalid."<% } %>><%= langDetail[detail] %></textarea>
+                <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit" <% if(detail == 'en'){ %>required data-error="English can not be empty."<% } %>><%= langDetail[detail] %></textarea>
                 <div class="help-block with-errors"></div>
             </div>
             <% } %>

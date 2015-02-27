@@ -6,7 +6,7 @@
                 <div class="form-holder">
                     <div class="entry form-group">
                         <label for="role">Role Name</label>
-                        <input type="text" id="role" name="role" placeholder="Please enter 1-20 characters" required pattern="^.{1,20}$" data-error="Role name is invalid." />
+                        <input type="text" id="role" name="role" placeholder="Please enter 1-20 characters" required pattern="^\S[\s\S]{0,20}$" data-error="Role name is invalid." />
                         <div class="help-block with-errors"></div>
                     </div>
                     <% _.each(ruleList, function(rule){ %>

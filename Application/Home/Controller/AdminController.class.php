@@ -264,35 +264,46 @@ class AdminController extends Controller {
         $role_model = D('role');
         $rule_model = D('rule');
         $back = json_decode(file_get_contents("php://input"),true);
-        $rule = $rule_model->getRuleList();
-        foreach ($rule as $k => $val) {
-            # code...
-            $purview = $purview.$back[strtolower($val['rule_name'])];
-        }
-        $purview = bindec($purview);
-        $_params['role_name'] = $back['role'];
-        $_params['purview'] = $purview;
-        $_params['website_id'] = session('website_id');
-        $id = $role_model->addRole($_params);
-        if(is_string($id) === false){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => $id,
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
+        // if(str_replace(" ", "", $back['role'])!=""){
+            $rule = $rule_model->getRuleList();
+            foreach ($rule as $k => $val) {
+                # code...
+                $purview = $purview.$back[strtolower($val['rule_name'])];
+            }
+            $purview = bindec($purview);
+            $_params['role_name'] = $back['role'];
+            $_params['purview'] = $purview;
+            $_params['website_id'] = session('website_id');
+            $id = $role_model->addRole($_params);
+            if(is_string($id) === false){
+                $this->ajaxReturn(
+                        array(
+                            'success' => true,
+                            'message' => '',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }else{
+                $this->ajaxReturn(
+                        array(
+                            'success' => false,
+                            'message' => $id,
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }
+        // }else{
+        //     $this->ajaxReturn(
+        //             array(
+        //                 'success' => false,
+        //                 'message' => "Role name not all spaces.",
+        //                 'data' => array(),
+        //             ),
+        //             'json'
+        //         );
+        // }
     }
 
     public function roleList(){

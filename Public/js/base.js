@@ -58,19 +58,27 @@ jQuery(function() {
             },
 
             export: function(){
-                this._events.trigger('refresh','export');
+                if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
+                    this._events.trigger('refresh','export');
+                }
             },
 
             add: function(){
-                this._events.trigger('refresh','addRender');
+                if(Purview('create') == '1'||PurviewVal() == '-1'){
+                    this._events.trigger('refresh','addRender');
+                }
             },
 
             edit: function(id){
-                this._events.trigger('alernately',id,'edit');
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    this._events.trigger('alernately',id,'edit');
+                }
             },
 
             delete: function(id){
-                this._events.trigger('alernately',id,'delete');
+                if(Purview('delete') == '1'||PurviewVal() == '-1'){
+                    this._events.trigger('alernately',id,'delete');
+                }
             },
 
         });
@@ -275,35 +283,29 @@ jQuery(function() {
                 'click .btn-list-modify': 'backModify'
             },
             deleteLanguage: function(id){
-                if(Purview('delete') == '1'||PurviewVal() == '-1'){
-                    if(confirm('Are you sure to delete?') == true){
-                        var _self = this;
-                        this.translate.save({id:id},
-                            {url:UrlApi('_app')+'/langdel'}
-                            ).done(function (response){
-                                if(response == '1'){
-                                    _self.render();
-                                }
-                        });
-                    }
-                    window.history.back();
+                if(confirm('Are you sure to delete?') == true){
+                    var _self = this;
+                    this.translate.save({id:id},
+                        {url:UrlApi('_app')+'/langdel'}
+                        ).done(function (response){
+                            if(response == '1'){
+                                _self.render();
+                            }
+                    });
                 }
+                window.history.back();
                 return false;
             },
             exportRender: function(event){
-                if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
-                    this._events.trigger('refresh','list-export');
-                }
+                this._events.trigger('refresh','list-export');
             },
             addRender: function(){
-                if(Purview('create') == '1'||PurviewVal() == '-1'){
-                    var _self = this;
-                    this.translate.save({},
-                        {url:UrlApi('_app')+'/langimgclear'}
-                        ).done(function (response){
-                            _self._events.trigger('refresh','list-add');
-                        });
-                }
+                var _self = this;
+                this.translate.save({},
+                    {url:UrlApi('_app')+'/langimgclear'}
+                    ).done(function (response){
+                        _self._events.trigger('refresh','list-add');
+                    });
                 return false;
             },
             backModify: function(){
@@ -445,17 +447,19 @@ jQuery(function() {
                 'click .btn-export': 'exportLanguage'
             },
             exportLanguage: function(event){
+                this.clickExport = '1';
                 this.select = $('#export').val();
                 this.translate.save({exrender:'0',field:this.select},
                     {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
-                        window.open(UrlApi('_app')+'/Translation/download');
+                        window.open(UrlApi('_app')+'/langdownload');
                     });
             },
             initialize: function(options){
                 options || (options = {});
                 this.translate = options.translate;
                 this.exrender = '1';
+                this.clickExport = '0';
             },
             render: function(){
                 var _self = this;
@@ -465,7 +469,15 @@ jQuery(function() {
                     ).done(function (response){
                         data['allField'] = response;
                         _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el);
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                if(_self.clickExport == '0'){
+                                    window.history.back();
+                                }else{
+                                    _self.clickExport = '0';
+                                }
+                            }
+                        });
                     });
             }
         });
@@ -582,6 +594,7 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
+                console.log(this.data_form);
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/roleadd'}
                         ).done(function (response){
@@ -676,7 +689,7 @@ jQuery(function() {
         user.View.RoleInfoView = Backbone.View.extend({
             template: _.template($('#tpl-role-info').html()),
             events: {
-                'click .btn-edit': 'roleEdit'
+                'click .btn-edit': 'clickBtnRoleEdit'
             },
             _edit: function(){
                 var _self = this;
@@ -704,6 +717,10 @@ jQuery(function() {
                                 );
                             }
                         });
+                return false;
+            },
+            clickBtnRoleEdit: function(event){
+                $(event.target).closest('form').submit();
                 return false;
             },
             initialize: function(options){

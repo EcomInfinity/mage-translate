@@ -5,9 +5,12 @@ use Think\Model;
 class TranslationModel extends Model{
     //$field='1,2,3'需要查询的字段，$_status是否删除状态
     //$_website_id网站id,$modify是否需要修改1-需要修改0-不需修改，$order排序规则
-    public function getTranslateList($field,$_status,$_website_id,$modify,$order='id'){
+    public function getTranslateList($field,$_status,$_website_id,$modify,$order='id',$operation=null){
         $where['website_id'] = $_website_id;
         $where['status'] = $_status;
+        if($operation!=null){
+            $where[$operation] = array('neq','');
+        }
         if($modify&&$modify!=''){
             $where['modify'] = $modify;
         }
