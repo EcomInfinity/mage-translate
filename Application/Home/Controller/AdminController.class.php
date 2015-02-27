@@ -260,6 +260,7 @@ class AdminController extends Controller {
         $userInfo['rolelist'] = $rolelist;
         echo json_encode($userInfo);
     }
+<<<<<<< HEAD
 
     public function roleAdd(){
         $role_model = D('role');
@@ -367,4 +368,6 @@ class AdminController extends Controller {
         $ruleList = $rule_model->getRuleList();
         echo json_encode($ruleList);
     }
+=======
+>>>>>>> c778e6a4bbe7f418ace80d6b6abb2a7444ab45e5
 }

@@ -646,24 +646,24 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.userModel.save({},
-                    {url:UrlApi('_app')+'/rulelist'}
-                    ).done(function (response){
-                        data['ruleList'] = response;
-                        _self.$el.html(_self.template(data));
-                        _self.$el.find('form').validator().on('submit', function(e) {
-                            if (e.isDefaultPrevented()) {
-                            } else {
-                                _self._add.call(_self);
-                                return false;
-                            }
-                        });
-                        $.fancybox(_self.$el, {
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                this.userModel.save(
+                    {},
+                    { url: UrlApi('_app')+'/rulelist' }
+                ).done(function (response){
+                    _self.$el.html(_self.template({ ruleList: response.data }));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._add.call(_self);
+                            return false;
+                        }
                     });
+                    $.fancybox(_self.$el, {
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
+                });
             }
         });
 
@@ -689,13 +689,12 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
-                this.userModel.save({search:this.search},
-                    {url:UrlApi('_app')+'/rolelist'}
-                    ).done(function (response){
-                        data['roleList'] = response;
-                        _self.$el.html(_self.template(data));
-                    });
+                this.userModel.save(
+                    { search: this.search },
+                    { url: UrlApi('_app')+'/rolelist' }
+                ).done(function (response){
+                    _self.$el.html(_self.template({roleList: response.data}));
+                });
             }
         });
 
@@ -751,10 +750,10 @@ jQuery(function() {
                 this.userModel.save({role_id:this.role_id},
                     {url:UrlApi('_app')+'/roleinfo'}
                     ).done(function (response){
-                        data['roleInfo'] = response;
-                        data['ruleList'] = response.rule;
-                        data['role_name'] = response.role_name;
-                        data['role_id'] = response.role_id;
+                        data['roleInfo'] = response.data;
+                        data['ruleList'] = response.data.rule;
+                        data['role_name'] = response.data.role_name;
+                        data['role_id'] = response.data.role_id;
                         _self.$el.html(_self.template(data));
                         _self.$el.find('form').validator().on('submit', function(e) {
                             if (e.isDefaultPrevented()) {
@@ -824,7 +823,7 @@ jQuery(function() {
                         url: UrlApi('_app')+'/rolelist'
                     }
                 ).done(function (response){
-                    _self.$el.html(_self.template({'rolelist': response}));
+                    _self.$el.html(_self.template({'rolelist': response.data}));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {
                         } else {
