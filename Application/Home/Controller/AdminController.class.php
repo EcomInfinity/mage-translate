@@ -156,6 +156,7 @@ class AdminController extends Controller {
         }
     }
 
+    //修改个人密码
     public function centerEdit(){
         $user_model = D('user');
         $_params = json_decode(file_get_contents("php://input"),true);
@@ -264,7 +265,6 @@ class AdminController extends Controller {
         $role_model = D('role');
         $rule_model = D('rule');
         $back = json_decode(file_get_contents("php://input"),true);
-        // if(str_replace(" ", "", $back['role'])!=""){
             $rule = $rule_model->getRuleList();
             foreach ($rule as $k => $val) {
                 # code...
@@ -294,16 +294,6 @@ class AdminController extends Controller {
                         'json'
                     );
             }
-        // }else{
-        //     $this->ajaxReturn(
-        //             array(
-        //                 'success' => false,
-        //                 'message' => "Role name not all spaces.",
-        //                 'data' => array(),
-        //             ),
-        //             'json'
-        //         );
-        // }
     }
 
     public function roleList(){

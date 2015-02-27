@@ -27,8 +27,8 @@ class TranslationController extends BaseController {
         $fields = $_params['field'];
         if($_params['exrender'] == '0'){
             $field = 'en,'.$fields;
-            $title = explode(",", $field);
-            $export_get = $translation_model->getTranslateList($field,'1',session('website_id'),'','id');
+            // $title = explode(",", $field);
+            $export_get = $translation_model->getTranslateList($field,'1',session('website_id'),'','id',$fields);
             foreach ($export_get['list'] as $key => $value) {
                 # code...
                 foreach ($value as $k => $val) {
@@ -58,6 +58,15 @@ class TranslationController extends BaseController {
        S('export',null);
        // S('title',null);
        S('filename',null);
+        // $test = C('URL_ROUTE_RULES');
+        // foreach ($test as $k => $val) {
+        //     # code...
+        //     $ryue[$k][$val['0']] = $val['1'];
+        // }
+        // // S('urlall',json_encode($ryue));
+        // var_dump(json_encode($ryue));
+        // var_dump($ryue);
+        // // S('urlall',null);
     }
 
     public function import(){
@@ -119,13 +128,18 @@ class TranslationController extends BaseController {
     }
     //lang add
     public function add(){
+        $Model = new \Think\Model();
         $translation_model = D('translation');
+        // binary id
         $images_model = D('translation_image');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $repeat_where['en'] = $_params['en'];
-        $repeat_where['website_id'] = session('website_id');
-        $repeat_lang = $translation_model->where($repeat_where)->find();
-        if($repeat_lang['status'] == '1'){
+        // $repeat_where['en'] = $_params['en'];
+        // $repeat_where['website_id'] = session('website_id');
+        $repeat_lang = $Model->query("select * from __PREFIX__translation where binary en='".$_params['en']."' and website_id='".session('website_id')."' ");
+        // var_dump($repeat_lang);
+        // $repeat_lang = $translation_model->where($repeat_where)->find();
+        // echo $translation_model->getLastSql();
+        if($repeat_lang['0']['status'] == '1'){
                 $this->ajaxReturn(
                         array(
                             'success' => false,
@@ -190,10 +204,6 @@ class TranslationController extends BaseController {
     //lang lists
     public function getList(){
         $translation_model = D('translation');
-        // $_tid = $_GET['id'];
-        // if($_tid){
-        //     $translation_list = $translation_model->getOneTranslate($_tid);
-        // }else{
         $_params = json_decode(file_get_contents("php://input"),true);
         if($_params['inrender'] == '0'){
             $translation_list_get = $translation_model->getTranslateList('','1',session('website_id'),'1','id desc');
@@ -201,7 +211,6 @@ class TranslationController extends BaseController {
         if($_params['inrender'] == '1'){
             $translation_list_get = $translation_model->searchTranslate($_params['search'],session('website_id'),'0','1');
         }
-        // }
         foreach ($translation_list_get['list'] as $key => $value) {
             # code...
             foreach ($value as $k => $val) {

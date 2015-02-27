@@ -58,24 +58,28 @@ jQuery(function() {
             },
 
             export: function(){
+                //导出权限
                 if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
                     this._events.trigger('refresh','export');
                 }
             },
 
             add: function(){
+                //增加权限
                 if(Purview('create') == '1'||PurviewVal() == '-1'){
                     this._events.trigger('refresh','addRender');
                 }
             },
 
             edit: function(id){
+                //更新权限
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
                     this._events.trigger('alernately',id,'edit');
                 }
             },
 
             delete: function(id){
+                //删除权限
                 if(Purview('delete') == '1'||PurviewVal() == '-1'){
                     this._events.trigger('alernately',id,'delete');
                 }
@@ -280,7 +284,7 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
-                'click .btn-list-modify': 'backModify'
+                'click .btn-list-sort': 'backSort'
             },
             deleteLanguage: function(id){
                 if(confirm('Are you sure to delete?') == true){
@@ -308,8 +312,16 @@ jQuery(function() {
                     });
                 return false;
             },
-            backModify: function(){
-                location.reload();
+            backSort: function(event){
+                var sort = $('table').attr('data-sort');
+                if(sort == 'modify'){
+                    this.inrender = '1';
+                    this.searchData = {search:'',inrender:this.inrender};
+                    this._events.trigger('alernately',this.searchData,'search');
+                }
+                if(sort == 'search'){
+                    this.setList({inrender:'0'}).render();
+                }
             },
             setList: function(data){
                 this.search = data.search;
@@ -322,7 +334,6 @@ jQuery(function() {
                 this._events = options._events;
                 this.translate = options.translate;
                 this.inrender = '0';
-                this.old_showClass = 'show-btn-0';
                 this.render();
             },
             render: function(){
@@ -335,6 +346,9 @@ jQuery(function() {
                     data['count'] = response.count;
                     data['current_count'] = response.current_count;
                     _self.$el.html(_self.template(data));
+                    if(_self.inrender == '1'){
+                        $('table').attr('data-sort','search');
+                    }
                 });
             }
         });
@@ -594,7 +608,6 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                console.log(this.data_form);
                     this.userModel.save(this.data_form,
                         {url:UrlApi('_app')+'/roleadd'}
                         ).done(function (response){
