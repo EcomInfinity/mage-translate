@@ -11,17 +11,21 @@ class RelationModel extends Model{
         return $this->add($_params);
     }
 
-    public function  gets($uid){
-        $user_id = $this->where(array('parent_id'=>intval($uid)))->select();
-        if($user_id){
-            foreach ($user_id as $key => $val) {
-                # code...
-                $ids = $ids.','.$val['user_id'];
-            }
-            $ids = substr($ids,1);
-        }
-        return $ids;
+    public function gets($_where) {
+        return $this->where($_where)->select();
     }
+
+    // public function gets($uid){
+    //     $user_id = $this->where(array('parent_id'=>intval($uid)))->select();
+    //     if($user_id){
+    //         foreach ($user_id as $key => $val) {
+    //             # code...
+    //             $ids = $ids.','.$val['user_id'];
+    //         }
+    //         $ids = substr($ids,1);
+    //     }
+    //     return $ids;
+    // }
 
     public function set($_user_id, $_role_id) {
         $this->where(array('user_id' => $_user_id))

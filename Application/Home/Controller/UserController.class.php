@@ -135,53 +135,40 @@ class UserController extends Controller {
         );
     }
 
-    public function userList(){
+    public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $ids = D('relation')->gets(session('id'));
-        if($ids){
-            if($_params['search']&&$_params['search']!=null){
-                $list = D('user')->gets(
-                        array(
-                                'id' => array('in', $ids),
-                                'username' => array('like','%'.$_params['search'].'%')
-                            )
-                    );
-            }else{
-                $list = D('user')->gets(
-                        array(
-                                'id' => array('in', $ids)
-                            )
-                    );
+
+        $_relations = D('relation')->gets(array('parent_id' => session('id')));
+        $_users = array();
+
+        if (count($_relations) > 0) {
+            $_user_ids = array();
+            foreach ($_relations as $_relation) {
+                $_user_ids[] = $_relation['user_id'];
             }
-            if($list){
-                $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => $list,
-                    ),
-                    'json'
-                );
-            }else{
-                $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-            }
-        }else{
-            $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(),
-                ),
-                'json'
+
+            $_where = array(
+                'id' => array('in', implode(',', $_user_ids)),
             );
+
+            if (isset($_params['search']) === true) {
+                $_where['username'] = array('like', '%'.$_params['search'].'%');
+            }
+
+            $_users = D('user')->gets($_where);
+            foreach ($_users as $_key => $_value) {
+                unset($_users[$_key]['password']);
+            }
         }
+
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => $_users,
+            ),
+            'json'
+        );
     }
 
     public function changePassword() {

@@ -23,11 +23,11 @@ return array(
         array('register','Admin/register'),
         array('logout','Admin/logout'),
         array('useradd','Admin/userAdd'),
-        array('userlist','Admin/userList'),
         
         array('userallow','Admin/userAllow'),
         array('userinfo','Admin/userInfo'),
 
+        array('userlist','User/gets'),
         array('useredit','User/edit'),
         array('change-password','User/changePassword'),
 

@@ -911,9 +911,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/userlist'}
                 ).done(function (response){
                     if(response.success === true){
-                        var data = {};
-                        data['userList'] = response.data;
-                        _self.$el.html(_self.template(data));
+                        _self.$el.html(_self.template({userList: response.data}));
                     }
                 });
             }
@@ -927,7 +925,6 @@ jQuery(function() {
             _edit: function(){
                 var _self = this,
                     $form=$(event.target).closest('form');
-                    
                 this.userModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/useredit'}
