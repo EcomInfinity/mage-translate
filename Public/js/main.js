@@ -30,7 +30,7 @@
                 },
                 error: function (data, status) {
                     if (typeof failure === 'function') {
-                        failure();
+                        failure(data);
                     }
                 }
             }
