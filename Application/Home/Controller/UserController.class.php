@@ -210,7 +210,7 @@ class UserController extends Controller {
             return;
         }
 
-        if($_params['new-password'] == $_params['confirm-new-password']) {
+        if($_params['new-password'] != $_params['confirm-new-password']) {
             $this->ajaxReturn(
                 array(
                     'success' => false,
@@ -237,7 +237,7 @@ class UserController extends Controller {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Modify failure.',
+                    'message' => $_result,
                     'data' => array(),
                 ),
                 'json'

@@ -4,28 +4,12 @@ use Think\Controller;
 class TranslationController extends BaseController {
     //index
     public function index(){
-        //Initialization then del
-        // D('translation') = M('translation');
-        // $where['de'] = array('neq','');
-        // $where['en'] = array('neq','');
-        // $where['nl'] = array('neq','');
-        // $where['website_id'] = session('website_id');
-        // $ids = D('translation')->where($where)->field('id')->select();
-        // $save['modify'] = '0';
-        // foreach ($ids as $val) {
-        //     # code...
-        //     $save['id'] = $val['id'];
-        //     D('translation')->save($save);
-        // }
-        //Initialization then del
         $this->display();
     }
 
     public function export(){
         $_params = json_decode(file_get_contents("php://input"),true);
-
         if($_params['exrender'] === false){
-            // $title = explode(",", $field);
             $export_get = D('translation')->gets(
                             'en,' . $_params['field'],
                             array(
@@ -41,7 +25,6 @@ class TranslationController extends BaseController {
                     $export[$key][$k] = '"'.str_replace('"','""',$val).'"';
                 }
             }
-            // S('title',$title);
             S('export', $export);
             S('filename', $_params['field']);
             $this->ajaxReturn(
@@ -74,17 +57,7 @@ class TranslationController extends BaseController {
     public function download(){
        exportexcel(S('export'),S('filename').time());
        S('export',null);
-       // S('title',null);
        S('filename',null);
-        // $test = C('URL_ROUTE_RULES');
-        // foreach ($test as $k => $val) {
-        //     # code...
-        //     $ryue[$k][$val['0']] = $val['1'];
-        // }
-        // // S('urlall',json_encode($ryue));
-        // var_dump(json_encode($ryue));
-        // var_dump($ryue);
-        // // S('urlall',null);
     }
 
     public function import(){
@@ -138,18 +111,10 @@ class TranslationController extends BaseController {
                     }
                 }
             }
-            // $this->ajaxReturn(
-            //     array(
-            //         'success' => true,
-            //         'message' => '',
-            //         'data' => array(),
-            //     ),
-            //     'json'
-            // );
             echo true;
         }
     }
-    //lang add
+
     public function add(){
         $Model = new \Think\Model();
         $_params = json_decode(file_get_contents("php://input"),true);
@@ -203,7 +168,7 @@ class TranslationController extends BaseController {
             }
         }
     }
-    //lang list del
+
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $_result = D('translation')->del($_params['id']);
@@ -232,7 +197,7 @@ class TranslationController extends BaseController {
                 );
         }
     }
-    //lang list
+
     public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
         if ($_params['inrender'] === false) {
@@ -247,17 +212,30 @@ class TranslationController extends BaseController {
                         array()
                     );
         } else {
-            $_list = D('translation')->gets(
-                        '',
-                        array(
-                            'en' => array('like', '%'.$_params['search'].'%'),
-                            'website_id' => session('website_id'),
-                            'status' => 1,
-                            'modify' => 0,
-                        ),
-                        'id desc',
-                        array()
-                    );
+            if($_params['complete'] === true){
+                $_list = D('translation')->gets(
+                            '',
+                            array(
+                                'en' => array('like', '%'.$_params['search'].'%'),
+                                'website_id' => session('website_id'),
+                                'status' => 1,
+                                'modify' => 0,
+                            ),
+                            'id desc',
+                            array()
+                        );
+            }else{
+                $_list = D('translation')->gets(
+                            '',
+                            array(
+                                'en' => array('like', '%'.$_params['search'].'%'),
+                                'website_id' => session('website_id'),
+                                'status' => 1,
+                            ),
+                            'id desc',
+                            array()
+                        );
+            }
         }
 
         foreach ($_list as $key => $value) {
@@ -279,7 +257,7 @@ class TranslationController extends BaseController {
             'json'
         );
     }
-    //lang edit detail
+
     public function get(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $translation_detail = D('translation')->get($_params['id']);
@@ -308,7 +286,6 @@ class TranslationController extends BaseController {
         }
     }
 
-    //edit lang info
     public function edit(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $edit_data['id'] = intval($_params['id']);

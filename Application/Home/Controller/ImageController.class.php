@@ -3,7 +3,6 @@ namespace Home\Controller;
 use Think\Controller;
 
 class ImageController extends Controller {
-    //lang add or edit del image
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $_result = D('translation_image')->del(
@@ -31,7 +30,7 @@ class ImageController extends Controller {
                 );
         }
     }
-    //before new lang clear iamges
+
     public function clear(){
         $_result = D('translation_image')->clear('0');
         if($_result){
@@ -54,7 +53,7 @@ class ImageController extends Controller {
                 );
         }
     }
-    //lang add or edit add images
+
     public function add(){
         $config = array(
             'maxSize' => 3145728,
@@ -73,25 +72,6 @@ class ImageController extends Controller {
             $_image_id = D('translation_image')->addImage($_GET['lang_id'],$info['savename']);
             $image['image_name'] = $info['savename'];
             $image['id'] = $_image_id;
-            // $this->ajaxReturn(
-            //         array(
-            //             'success' => true,
-            //             'message' => '',
-            //             'data' => array(
-            //                 'iamge_name' => $info['savename'],
-            //                 'id' => $id
-            //                 )
-            //         ),
-            //         'json'
-            //     );
-            // $this->ajaxReturn(
-            //     array(
-            //         'success' => true,
-            //         'message' => '',
-            //         'data' => $image,
-            //     ),
-            //     'json'
-            // );
             echo json_encode($image);
         }
     }
