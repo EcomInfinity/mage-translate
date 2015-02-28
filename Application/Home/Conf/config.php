@@ -22,11 +22,9 @@ return array(
         array('login','Admin/login'),
         array('register','Admin/register'),
         array('logout','Admin/logout'),
-        array('useradd','Admin/userAdd'),
         
-        array('userallow','Admin/userAllow'),
-        array('userinfo','Admin/userInfo'),
-
+        array('useradd','User/add'),
+        array('userinfo','User/get'),
         array('userlist','User/gets'),
         array('useredit','User/edit'),
         array('change-password','User/changePassword'),

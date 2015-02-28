@@ -102,7 +102,7 @@ class UserController extends Controller {
             );
     }
 
-    public function userAdd(){
+    public function add(){
         $_params = json_decode(file_get_contents("php://input"), true);
         $_user_id = D('user')->addUser($_params['username'], $_params['password']);
         
@@ -130,6 +130,29 @@ class UserController extends Controller {
                 'success' => true,
                 'message' => '',
                 'data' => array(),
+            ),
+            'json'
+        );
+    }
+
+    public function get(){
+        $_params = json_decode(file_get_contents("php://input"), true);
+        $_rolelist = D('role')->gets(
+                        array('website_id' => session('website_id'))
+                     );
+        $_user = D('user')->get($_params['user_id']);
+        $_relation = D('relation')->get($_params['user_id']);
+        $_result = array(
+            'user_id' => $_user['id'],
+            'username' => $_user['username'],
+            'role_id' => $_relation['role_id'],
+            'rolelist' => $_rolelist,
+        );
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => $_result,
             ),
             'json'
         );
@@ -263,52 +286,31 @@ class UserController extends Controller {
         );
     }
 
-    public function userAllow(){
+    public function enable() {
         $user_model = D('user');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_result = $user_model->setAllow($_params['user_id'],$_params['allow']);
-        if($_result){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
-    }
-
-    public function userInfo(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $rolelist = D('role')->gets(
-                array(
-                        'website_id' => session('website_id')
-                    )
-            );
-        $user = D('user')->get($_params['user_id']);
-        $relation = D('relation')->get($_params['user_id']);
-        $userInfo['user_id'] = $user['id'];
-        $userInfo['role_id'] = $relation['role_id'];
-        $userInfo['username'] = $user['username'];
-        $userInfo['rolelist'] = $rolelist;
+        $_result = D('user')->enable($_params['user_id']);
         $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => $userInfo,
-                ),
-                'json'
-            );
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => array(),
+            ),
+            'json'
+        );
     }
 
+    public function disable() {
+        $user_model = D('user');
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_result = D('user')->disable($_params['user_id']);
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => array(),
+            ),
+            'json'
+        );
+    }
 }

@@ -864,27 +864,23 @@ jQuery(function() {
         user.View.UserListView = Backbone.View.extend({
             template: _.template($('#tpl-user-list').html()),
             events:{
-                'click .btn-allow': 'userAllow',
                 'click .btn-role-list': 'roleList'
             },
-            userAllow: function(event){
-                var _self = this;
-                var allow = $(event.target).data('allow'),
-                user_id = $(event.target).closest('tr').data('id');
+            enable: function(elem) {
+                var user_id = $(elem).closest('tr').data('id');
                 this.userModel.save(
-                    {
-                        user_id:user_id,
-                        allow:allow
-                    },
-                    {url:UrlApi('_app')+'/userallow'}
-                ).done(function (response){
-                    if(response.success === true){
-                        $(event.target).addClass('btn-success');
-                        $(event.target).siblings().removeClass('btn-success');
-                        $(event.target).siblings().addClass('btn-default');
-                    }
+                    { user_id: user_id },
+                    { url: UrlApi('_app')+'/User/enable' }
+                ).done(function(response) {
                 });
-                return false;
+            },
+            disable: function(elem) {
+                var user_id = $(elem).closest('tr').data('id');
+                this.userModel.save(
+                    { user_id: user_id },
+                    { url: UrlApi('_app')+'/User/disable' }
+                ).done(function(response) {
+                });
             },
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
@@ -912,6 +908,14 @@ jQuery(function() {
                 ).done(function (response){
                     if(response.success === true){
                         _self.$el.html(_self.template({userList: response.data}));
+                        _self.$el.find('.ipt-checkbox-allow').bootstrapSwitch();
+                        _self.$el.find('.ipt-checkbox-allow').on('switchChange.bootstrapSwitch', function(event, state) {
+                            if (state === true) {
+                                _self.enable.call(_self, this);
+                            } else {
+                                _self.disable.call(_self, this);
+                            }
+                        });
                     }
                 });
             }

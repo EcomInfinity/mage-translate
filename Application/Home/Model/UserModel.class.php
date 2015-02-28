@@ -149,11 +149,18 @@ class UserModel extends Model{
         return true;
     }
 
-    public function setAllow($uid,$_allow){
-        $save['id'] = $uid;
-        $save['allow'] = $_allow;
-        return $this->save($save);
+    public function enable($_user_id) {
+        return $this->save(array(
+            'id' => $_user_id,
+            'allow' => '1'
+        ));
     }
 
+    public function disable($_user_id) {
+        return $this->save(array(
+            'id' => $_user_id,
+            'allow' => '0'
+        ));
+    }
 }
 ?>
