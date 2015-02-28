@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class AdminController extends Controller {
+class UserController extends Controller {
     public function index(){
         $_session_id = session('id');
         if (isset($_session_id) && $_session_id > 0) {
@@ -181,6 +181,53 @@ class AdminController extends Controller {
                 ),
                 'json'
             );
+        }
+    }
+
+    public function changePassword() {
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $user = D('user')->get($_params['id']);
+        if(md5($_params['original-password']) == $user['password']) {
+            if($_params['new-password'] == $_params['confirm-new-password']) {
+                $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
+                if($_result){
+                    $this->ajaxReturn(
+                            array(
+                                'success' => true,
+                                'message' => '',
+                                'data' => array(),
+                            ),
+                            'json'
+                        );
+                }else{
+                    $this->ajaxReturn(
+                            array(
+                                'success' => false,
+                                'message' => 'Modify failure.',
+                                'data' => array(),
+                            ),
+                            'json'
+                        );
+                }
+            }else{
+                $this->ajaxReturn(
+                        array(
+                            'success' => false,
+                            'message' => 'Password doesn\'t match.',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }
+        } else {
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'The password is incorrect.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }
     }
 

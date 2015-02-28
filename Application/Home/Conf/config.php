@@ -27,7 +27,8 @@ return array(
         array('useredit','Admin/userEdit'),
         array('userallow','Admin/userAllow'),
         array('userinfo','Admin/userInfo'),
-        array('centeredit','Admin/centerEdit'),
+
+        array('change-password','User/changePassword'),
 
         array('roleadd','Role/add'),
         array('roleinfo','Role/get'),

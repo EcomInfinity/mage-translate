@@ -547,31 +547,29 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var $form=$(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                            this.userModel.save(
-                                this.data_form,
-                                {url:UrlApi('_app')+'/centeredit'}
-                            ).done(function (response){
-                                if(response.success === true){
-                                    $form.notify(
-                                        'Success',
-                                        {
-                                            position: 'top',
-                                            className: 'success'
-                                        }
-                                    );
-                                    setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
-                                }else{
-                                    $form.notify(
-                                        response.message,
-                                        {
-                                            position: 'top',
-                                            className: 'error'
-                                        }
-                                    );
-                                }
-                            });
+                var $form = $(event.target).closest('form');
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/change-password'}
+                ).done(function (response){
+                    if(response.success === true){
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                    }else{
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
                 return false;
             },
             clickBtnUserCenter: function(event){
