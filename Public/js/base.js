@@ -25,6 +25,15 @@ jQuery(function() {
         lang.Model.Base = Backbone.Model.extend({
             defaults:{
                 'timestamp':-1
+            },
+            save: function(attributes, options) {
+                $.fancybox.showLoading();
+                var _success = options.success;
+                options.success = function(resp) {
+                    $.fancybox.hideLoading();
+                    if (_success) _success(model, resp, options);
+                };
+                return Backbone.Model.prototype.save.call(this, attributes, options);
             }
         });
 
@@ -44,6 +53,15 @@ jQuery(function() {
         user.Model.Base = Backbone.Model.extend({
             defaults:{
                 'timestamp':-1
+            },
+            save: function(attributes, options) {
+                $.fancybox.showLoading();
+                var _success = options.success;
+                options.success = function(resp) {
+                    $.fancybox.hideLoading();
+                    if (_success) _success(model, resp, options);
+                };
+                return Backbone.Model.prototype.save.call(this, attributes, options);
             }
         });
 
@@ -1020,7 +1038,7 @@ jQuery(function() {
                 this.userModel.save(
                     {user_id:this.user_id},
                     {url:UrlApi('_app')+'/userinfo'}
-                ).done(function (response){
+                ).done(function (response) {
                     if(response.success === true){
                         var data = {};
                         data['username'] = response.data.username;

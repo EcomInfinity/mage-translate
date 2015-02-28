@@ -23,6 +23,11 @@ jQuery(function() {
             },
             save: function(attributes, options) {
                 $.fancybox.showLoading();
+                var _success = options.success;
+                options.success = function(resp) {
+                    $.fancybox.hideLoading();
+                    if (_success) _success(model, resp, options);
+                };
                 return Backbone.Model.prototype.save.call(this, attributes, options);
             }
         });
@@ -44,7 +49,6 @@ jQuery(function() {
                         url: UrlApi('_app') + '/login'
                     }
                 ).done(function (response){
-                    $.fancybox.hideLoading();
                     if (response.success === true) {
                         _self.$el.find('.modal-container').notify(
                             'Success', 
@@ -121,7 +125,6 @@ jQuery(function() {
                         url: UrlApi('_app') + '/register'
                     }
                 ).done(function (response) {
-                    $.fancybox.hideLoading();
                     if (response.success == true){
                         _self.$el.find('.modal-container').notify(
                             'Success', 
