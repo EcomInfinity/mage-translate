@@ -44,8 +44,8 @@ class UserModel extends Model{
         }
     }
 
-    public function userMatch($_param){
-        return preg_match('/^.{6,15}$/',$_param);
+    public function validateUsername($_username) {
+        return filter_var($_username, FILTER_VALIDATE_EMAIL);
     }
 
     public function register($_params) {
@@ -66,7 +66,7 @@ class UserModel extends Model{
                 return 'The password must have 5-15 digits or letters.';
             }
 
-            if (! filter_var($_username, FILTER_VALIDATE_EMAIL)) {
+            if ($this->validateUsername($_username) === false) {
                 return 'Email address is not correct.';
             }
 
@@ -114,35 +114,48 @@ class UserModel extends Model{
         return $this->where($_where)->select();
     }
 
-    public function get($uid){
-        return $this->where(array('id'=>intval($uid)))->find();
+    public function get($_user_id) {
+        return $this->where(array('id'=>intval($_user_id)))->find();
     }
 
-    public function setUsername($_username,$uid){
+    public function setUsername($_username, $_user_id){
         if ($this->isExisted($_username) === true) {
             return 'User already registered.';
-        }else{
-            $save['id'] = intval($uid);
-            $save['username'] = $_username;
-            return $this->save($save);
         }
-    }
 
-    public function setPassword($_password,$uid){
-        if($this->userMatch($_password) == '1'){
-            $save['id'] = intval($uid);
-            $save['password'] = md5($_password);
-            return $this->save($save);
-        }else{
-            return 'The password must have 6-15 characters.';
+        if ($this->validateUsername($_username) === true) {
+            return 'Email address is not correct.';
         }
+
+        $this->save(array(
+            'id' => intval($_user_id),
+            'username' => $_username,
+        ));
+
+        return true;
     }
 
-    public function setAllow($uid,$_allow){
-        $save['id'] = $uid;
-        $save['allow'] = $_allow;
-        return $this->save($save);
+    public function setPassword($_password, $_user_id) {
+        $this->save(array(
+            'id' => intval($_user_id),
+            'password' => md5($_password),
+        ));
+
+        return true;
     }
 
+    public function enable($_user_id) {
+        return $this->save(array(
+            'id' => $_user_id,
+            'allow' => '1'
+        ));
+    }
+
+    public function disable($_user_id) {
+        return $this->save(array(
+            'id' => $_user_id,
+            'allow' => '0'
+        ));
+    }
 }
 ?>

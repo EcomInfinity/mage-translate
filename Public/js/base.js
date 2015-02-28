@@ -595,31 +595,29 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var $form=$('.btn-edit-center').closest('form');
-                this.data_form = $form.serializeObject();
-                            this.userModel.save(
-                                this.data_form,
-                                {url:UrlApi('_app')+'/centeredit'}
-                            ).done(function (response){
-                                if(response.success === true){
-                                    $form.notify(
-                                        'Success',
-                                        {
-                                            position: 'top',
-                                            className: 'success'
-                                        }
-                                    );
-                                    // setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
-                                }else{
-                                    $form.notify(
-                                        response.message,
-                                        {
-                                            position: 'top',
-                                            className: 'error'
-                                        }
-                                    );
-                                }
-                            });
+                var $form = $(event.target).closest('form');
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/change-password'}
+                ).done(function (response){
+                    if(response.success === true){
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                    }else{
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
                 return false;
             },
             clickBtnUserCenter: function(event){
@@ -914,27 +912,23 @@ jQuery(function() {
         user.View.UserListView = Backbone.View.extend({
             template: _.template($('#tpl-user-list').html()),
             events:{
-                'click .btn-allow': 'userAllow',
                 'click .btn-role-list': 'roleList'
             },
-            userAllow: function(event){
-                var _self = this;
-                var allow = $(event.target).data('allow'),
-                user_id = $(event.target).closest('tr').data('id');
+            enable: function(elem) {
+                var user_id = $(elem).closest('tr').data('id');
                 this.userModel.save(
-                    {
-                        user_id:user_id,
-                        allow:allow
-                    },
-                    {url:UrlApi('_app')+'/userallow'}
-                ).done(function (response){
-                    if(response.success === true){
-                        $(event.target).addClass('btn-success');
-                        $(event.target).siblings().removeClass('btn-success');
-                        $(event.target).siblings().addClass('btn-default');
-                    }
+                    { user_id: user_id },
+                    { url: UrlApi('_app')+'/User/enable' }
+                ).done(function(response) {
                 });
-                return false;
+            },
+            disable: function(elem) {
+                var user_id = $(elem).closest('tr').data('id');
+                this.userModel.save(
+                    { user_id: user_id },
+                    { url: UrlApi('_app')+'/User/disable' }
+                ).done(function(response) {
+                });
             },
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
@@ -961,9 +955,15 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/userlist'}
                 ).done(function (response){
                     if(response.success === true){
-                        var data = {};
-                        data['userList'] = response.data;
-                        _self.$el.html(_self.template(data));
+                        _self.$el.html(_self.template({userList: response.data}));
+                        _self.$el.find('.ipt-checkbox-allow').bootstrapSwitch();
+                        _self.$el.find('.ipt-checkbox-allow').on('switchChange.bootstrapSwitch', function(event, state) {
+                            if (state === true) {
+                                _self.enable.call(_self, this);
+                            } else {
+                                _self.disable.call(_self, this);
+                            }
+                        });
                     }
                 });
             }
@@ -975,33 +975,31 @@ jQuery(function() {
                 'click .btn-edit': 'clickBtnUserEdit'
             },
             _edit: function(){
-                var is_change = '0',
-                _self = this,
-                $form=$('.btn-edit').closest('form');
-                this.data_form = $form.serializeObject();
-                    this.userModel.save(
-                        this.data_form,
-                        {url:UrlApi('_app')+'/useredit'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            $form.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            _self._userEvents.trigger('refresh','userInfo');
-                        }else{
-                            $form.notify(
-                                response.message,
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
-                    });
+                var _self = this,
+                    $form=$this.$el.find('form');
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/useredit'}
+                ).done(function (response){
+                    if(response.success === true){
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        _self._userEvents.trigger('refresh','userInfo');
+                    }else{
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
                 return false;
             },
             clickBtnUserEdit: function(event){

@@ -22,12 +22,12 @@ return array(
         array('login','Admin/login'),
         array('register','Admin/register'),
         array('logout','Admin/logout'),
-        array('useradd','Admin/userAdd'),
-        array('userlist','Admin/userList'),
-        array('useredit','Admin/userEdit'),
-        array('userallow','Admin/userAllow'),
-        array('userinfo','Admin/userInfo'),
-        array('centeredit','Admin/centerEdit'),
+        
+        array('useradd','User/add'),
+        array('userinfo','User/get'),
+        array('userlist','User/gets'),
+        array('useredit','User/edit'),
+        array('change-password','User/changePassword'),
 
         array('roleadd','Role/add'),
         array('roleinfo','Role/get'),

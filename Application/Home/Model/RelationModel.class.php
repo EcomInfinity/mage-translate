@@ -11,25 +11,15 @@ class RelationModel extends Model{
         return $this->add($_params);
     }
 
-    public function  gets($uid){
-        $user_id = $this->where(array('parent_id'=>intval($uid)))->select();
-        if($user_id){
-            foreach ($user_id as $key => $val) {
-                $ids = $ids.','.$val['user_id'];
-            }
-            $ids = substr($ids,1);
-        }
-        return $ids;
+    public function gets($_where) {
+        return $this->where($_where)->select();
     }
 
-    public function setUserRole($_role_id,$uid){
-        $save['role_id'] = $_role_id;
-        $_result = $this->where(array('user_id'=>intval($uid)))->save($save);
-        if($_result > '0'){
-            return $_result;
-        }else{
-            return 'Modify failure.';
-        }
+    public function set($_user_id, $_role_id) {
+        $this->where(array('user_id' => $_user_id))
+             ->save(array('role_id' => $_role_id));
+
+        return true;
     }
 }
 ?>
