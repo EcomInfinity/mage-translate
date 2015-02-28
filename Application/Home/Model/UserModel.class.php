@@ -110,25 +110,18 @@ class UserModel extends Model{
         }
     }
 
-    public function getUserList($_ids){
-        $where['id'] = array('in',$_ids);
-        return $this->where($where)->select();
+    public function gets($_where){
+        return $this->where($_where)->select();
     }
 
-    public function searchUser($_search,$_ids){
-        $where['id'] = array('in',$_ids);
-        $where['username'] = array('like','%'.$_search.'%');
-        return $this->where($where)->select();
-    }
-
-    public function getOneUser($uid){
+    public function get($uid){
         return $this->where(array('id'=>intval($uid)))->find();
     }
 
-    public function getUserName($uid){
-        $user = $this->where(array('id'=>intval($uid)))->field('username')->find();
-        return $user['username'];
-    }
+    // public function getUserName($uid){
+    //     $user = $this->where(array('id'=>intval($uid)))->field('username')->find();
+    //     return $user['username'];
+    // }
 
     public function setUsername($_username,$uid){
         if($this->userMatch($_username) == '1'){

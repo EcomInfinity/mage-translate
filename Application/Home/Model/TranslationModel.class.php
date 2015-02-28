@@ -17,13 +17,13 @@ class TranslationModel extends Model {
         return $this->save($_params);
     }
 
-    public function delTranslate($_tid){
+    public function del($_tid){
         $save['id'] = intval($_tid);
         $save['status'] = '0';
         return $this->save($save);
     }
 
-    public function getOneTranslate($_tid){
+    public function get($_tid){
         return $this->where(array('id'=>intval($_tid)))->find();
     }
     

@@ -7,7 +7,7 @@ class RoleController extends Controller {
     public function add() {
         $_params = json_decode(file_get_contents("php://input"), true);
 
-        $_rules = D('rule')->getRuleList();
+        $_rules = D('rule')->gets();
         foreach ($_rules as $_key => $_rule) {
             $purview = $purview.$_params[strtolower($val['rule_name'])];
         }
@@ -49,9 +49,18 @@ class RoleController extends Controller {
         $_params = json_decode(file_get_contents("php://input"),true);
 
         if (isset($_params) && isset($_params['search'])) {
-            $_role_list = D('role')->searchRole($_params['search'],session('website_id'));
+            $_role_list = D('role')->gets(
+                    array(
+                            'website_id' => session('website_id'),
+                            'role_name' => array('like', '%'.$_params['search'].'%')
+                        )
+                );
         } else {
-            $_role_list = D('role')->getRoleList(session('website_id'));
+            $_role_list = D('role')->gets(
+                    array(
+                            'website_id' => session('website_id')
+                        )
+                );
         }
         
         if (! $_role_list) {
@@ -69,16 +78,10 @@ class RoleController extends Controller {
     }
 
     public function get() {
-        $_role_model = D('role');
-        $_rule_model = D('rule');
         $_params = json_decode(file_get_contents("php://input"),true);
-
-
-        $_rule_count = $_rule_model->getRuleCount();
-        $_rules = $_rule_model->getRuleList();
-
-        $_role = $_role_model->getOneRole($_params['role_id']);
-
+        $_rule_count = D('rule')->total();
+        $_rules = D('rule')->gets();
+        $_role = D('role')->get($_params['role_id']);
         $purview = str_split(str_pad(decbin($_role['purview']),$_rule_count,'0',STR_PAD_LEFT));
         foreach ($_rules as $key => $value) {
             $_rules[$key]['purview'] = $purview[$key];
@@ -102,7 +105,7 @@ class RoleController extends Controller {
 
     public function edit() {
         $_params = json_decode(file_get_contents("php://input"), true);
-        $_rules = D('rule')->getRuleList();
+        $_rules = D('rule')->gets();
         foreach ($_rules as $k => $val) {
             # code...
             $purview = $purview.$_params[strtolower($val['rule_name'])];

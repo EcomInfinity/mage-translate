@@ -14,23 +14,17 @@ class TranslationImageModel extends Model{
         return $this->add($add);
     }
 
-    public function delImage($_iid){
-        $save['id'] = intval($_iid);
+    public function del($_where){
         $save['status'] = '0';
-        return $this->save($save);
+        return $this->where($_where)->save($save);
     }
 
-    public function delImages($_tid){
-        $save['status'] = '0';
-        return $this->where(array('lang_id'=>intval($_tid)))->save($save);
-    }
-
-    public function clearImgaes($_tid){
+    public function clear($_tid){
         $save['status'] = '0';
         return $this->where(array('lang_id'=>$_tid))->save($save);
     }
 
-    public function getImages($_tid){
+    public function gets($_tid){
         $where['lang_id'] = $_tid;
         $where['status'] = '1';
         return $this->where($where)->select();

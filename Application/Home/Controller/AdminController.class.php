@@ -34,7 +34,7 @@ class AdminController extends Controller {
                 'json'
             );
         } else {
-            $_relation = D('relation')->getUserRelation($_uid);
+            $_relation = D('relation')->get($_uid);
             session('website_id', $_relation['website_id']);
             session('website_name', D('website')->getWebsiteName($_relation['website_id']));
             session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
@@ -87,7 +87,7 @@ class AdminController extends Controller {
             )
         );
 
-        $_relation = D('relation')->getUserRelation($_user_id);
+        $_relation = D('relation')->get($_user_id);
         session('website_id', $_relation['website_id']);
         session('website_name', D('website')->getWebsiteName($_relation['website_id']));
         session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
@@ -136,22 +136,29 @@ class AdminController extends Controller {
     }
 
     public function userList(){
-        $user_model = D('user');
-        $relation_model = D('relation');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $ids = $relation_model->getSubUser(session('id'));
+        $ids = D('relation')->gets(session('id'));
         if($ids){
             if($_params['search']&&$_params['search']!=null){
-                $res = $user_model->searchUser($_params['search'],$ids);
+                $list = D('user')->gets(
+                        array(
+                                'id' => array('in', $ids),
+                                'username' => array('like','%'.$_params['search'].'%')
+                            )
+                    );
             }else{
-                $res = $user_model->getUserList($ids);
+                $list = D('user')->gets(
+                        array(
+                                'id' => array('in', $ids)
+                            )
+                    );
             }
-            if($res){
+            if($list){
                 $this->ajaxReturn(
                     array(
                         'success' => true,
                         'message' => '',
-                        'data' => $res,
+                        'data' => $list,
                     ),
                     'json'
                 );
@@ -180,11 +187,11 @@ class AdminController extends Controller {
     public function centerEdit(){
         $user_model = D('user');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $user = $user_model->getOneUser($_params['id']);
+        $user = $user_model->get($_params['id']);
         if(md5($_params['original-password']) == $user['password']){
             if($_params['new-password'] == $_params['confirm-new-password']){
-                $res = $user_model->setPassword($_params['new-password'],$_params['id']);
-                if($res){
+                $_result = $user_model->setPassword($_params['new-password'],$_params['id']);
+                if($_result){
                     $this->ajaxReturn(
                             array(
                                 'success' => true,
@@ -258,8 +265,8 @@ class AdminController extends Controller {
     public function userAllow(){
         $user_model = D('user');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $res = $user_model->setAllow($_params['user_id'],$_params['allow']);
-        if($res){
+        $_result = $user_model->setAllow($_params['user_id'],$_params['allow']);
+        if($_result){
             $this->ajaxReturn(
                     array(
                         'success' => true,
@@ -281,13 +288,14 @@ class AdminController extends Controller {
     }
 
     public function userInfo(){
-        $user_model = D('user');
-        $role_model = D('role');
-        $relation_model = D('relation');
         $_params = json_decode(file_get_contents("php://input"),true);
-        $rolelist = $role_model->getRoleList(session('website_id'));
-        $user = $user_model->getOneUser($_params['user_id']);
-        $relation = $relation_model->getUserRelation($_params['user_id']);
+        $rolelist = D('role')->gets(
+                array(
+                        'website_id' => session('website_id')
+                    )
+            );
+        $user = D('user')->get($_params['user_id']);
+        $relation = D('relation')->get($_params['user_id']);
         $userInfo['user_id'] = $user['id'];
         $userInfo['role_id'] = $relation['role_id'];
         $userInfo['username'] = $user['username'];

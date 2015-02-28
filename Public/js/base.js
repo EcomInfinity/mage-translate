@@ -163,29 +163,30 @@ jQuery(function() {
                 var _self = this;
                 var $form = $(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                this.translate.save(this.data_form,
+                this.translate.save(
+                    this.data_form,
                     {url:UrlApi('_app')+'/langadd'}
-                    ).done(function (response){
-                        if (response.success === true) {
-                            $form.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            lang_add.reset();
-                            _self._events.trigger('refresh','add');
-                        } else {
-                            $form.notify(
-                                response.message,
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
-                    });
+                ).done(function (response){
+                    if (response.success === true) {
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        lang_add.reset();
+                        _self._events.trigger('refresh','add');
+                    } else {
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
                 return false;
             },
             clickBtnLangAdd: function(event){
@@ -223,13 +224,14 @@ jQuery(function() {
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
-                this.translate.save({imageId:this.imageId},
+                this.translate.save(
+                    {imageId:this.imageId},
                     {url:UrlApi('_app')+'/langimgdel'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            _click.closest('li').hide();
-                            $('#enlarge_images').html('');
-                        }
+                ).done(function (response){
+                    if(response.success === true){
+                        _click.closest('li').hide();
+                        $('#enlarge_images').html('');
+                    }
                 });
                 return false;
             },
@@ -291,12 +293,13 @@ jQuery(function() {
             deleteLanguage: function(id){
                 if(confirm('Are you sure to delete?') == true){
                     var _self = this;
-                    this.translate.save({id:id},
+                    this.translate.save(
+                        {id:id},
                         {url:UrlApi('_app')+'/langdel'}
-                        ).done(function (response){
-                            if(response.success === true){
-                                _self.render();
-                            }
+                    ).done(function (response){
+                        if(response.success === true){
+                            _self.render();
+                        }
                     });
                 }
                 window.history.back();
@@ -307,7 +310,8 @@ jQuery(function() {
             },
             addRender: function(){
                 var _self = this;
-                this.translate.save({},
+                this.translate.save(
+                    {},
                     {url:UrlApi('_app')+'/langimgclear'}
                     ).done(function (response){
                         _self._events.trigger('refresh','list-add');
@@ -370,27 +374,28 @@ jQuery(function() {
                 var _change = $(event.target);
                 var $form = _change.closest('form');
                 this.data_form = $form.serializeObject();
-                this.translate.save(this.data_form,
+                this.translate.save(
+                    this.data_form,
                     {url:UrlApi('_app')+'/langedit'}
-                    ).done(function (response){
-                        if (response.success === true) {
-                            $form.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            _self._events.trigger('refresh','edit');
-                        } else {
-                            $form.notify(
-                                response.message,
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
+                ).done(function (response){
+                    if (response.success === true) {
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        _self._events.trigger('refresh','edit');
+                    } else {
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
                 });
                 return false;
             },
@@ -406,10 +411,10 @@ jQuery(function() {
                     { imageId:this.imageId },
                     { url:UrlApi('_app')+'/langimgdel' }
                 ).done(function (response){
-                        if(response.success === true){
-                            _click.closest('li').hide();
-                            $('#enlarge_images').html('');
-                        }
+                    if(response.success === true){
+                        _click.closest('li').hide();
+                        $('#enlarge_images').html('');
+                    }
                 });
                 return false;
             },
@@ -439,24 +444,25 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.translate.save({id:this.langId},
+                this.translate.save(
+                    {id:this.langId},
                     {url:UrlApi('_app')+'/langinfo'}
-                    ).done(function (response){
-                        data['langDetail'] = response.data.detail;
-                        data['langImages'] = response.data.images;
-                        _self.$el.html(_self.template(data));
-                        _self.$el.find('form').validator().on('submit', function(e) {
-                            if (e.isDefaultPrevented()) {
-                            } else {
-                                _self._edit.call(_self);
-                                return false;
-                            }
-                        });
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                ).done(function (response){
+                    data['langDetail'] = response.data.detail;
+                    data['langImages'] = response.data.images;
+                    _self.$el.html(_self.template(data));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._edit.call(_self);
+                            return false;
+                        }
+                    });
+                    $.fancybox(_self.$el,{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 });
             }
         });
@@ -469,7 +475,11 @@ jQuery(function() {
             exportLanguage: function(event){
                 this.clickExport = true;
                 this.select = $('#export').val();
-                this.translate.save({exrender:false,field:this.select},
+                this.translate.save(
+                    {
+                        exrender:false,
+                        field:this.select
+                    },
                     {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
                         if(response.success === true){
@@ -486,21 +496,22 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.translate.save({exrender:this.exrender},
+                this.translate.save(
+                    {exrender:this.exrender},
                     {url:UrlApi('_app')+'/langexport'}
-                    ).done(function (response){
-                        data['allField'] = response.data;
-                        _self.$el.html(_self.template(data));
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                if(_self.clickExport === false){
-                                    window.history.back();
-                                }else{
-                                    _self.clickExport = false;
-                                }
+                ).done(function (response){
+                    data['allField'] = response.data;
+                    _self.$el.html(_self.template(data));
+                    $.fancybox(_self.$el,{
+                       afterClose: function () {
+                            if(_self.clickExport === false){
+                                window.history.back();
+                            }else{
+                                _self.clickExport = false;
                             }
-                        });
+                        }
                     });
+                });
             }
         });
 
@@ -538,28 +549,29 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                            this.userModel.save(this.data_form,
+                            this.userModel.save(
+                                this.data_form,
                                 {url:UrlApi('_app')+'/centeredit'}
-                                ).done(function (response){
-                                    if(response.success === true){
-                                        $form.notify(
-                                            'Success',
-                                            {
-                                                position: 'top',
-                                                className: 'success'
-                                            }
-                                        );
-                                        setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
-                                    }else{
-                                        $form.notify(
-                                            response.message,
-                                            {
-                                                position: 'top',
-                                                className: 'error'
-                                            }
-                                        );
-                                    }
-                                });
+                            ).done(function (response){
+                                if(response.success === true){
+                                    $form.notify(
+                                        'Success',
+                                        {
+                                            position: 'top',
+                                            className: 'success'
+                                        }
+                                    );
+                                    setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
+                                }else{
+                                    $form.notify(
+                                        response.message,
+                                        {
+                                            position: 'top',
+                                            className: 'error'
+                                        }
+                                    );
+                                }
+                            });
                 return false;
             },
             clickBtnUserCenter: function(event){
@@ -616,30 +628,31 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                    this.userModel.save(this.data_form,
+                    this.userModel.save(
+                        this.data_form,
                         {url:UrlApi('_app')+'/roleadd'}
-                        ).done(function (response){
-                            if (response.success === true) {
-                                $form.notify(
-                                    'Success',
-                                    {
-                                        position: 'top',
-                                        className: 'success'
-                                    }
-                                );
-                                role_add.reset();
-                                setTimeout("$('.tip-roleadd').empty()",1000);
-                                _self._userEvents.trigger('refresh','roleAdd');
-                            } else {
-                                $form.notify(
-                                    response.message,
-                                    {
-                                        position: 'top',
-                                        className: 'error'
-                                    }
-                                );
-                            }
-                        });
+                    ).done(function (response){
+                        if (response.success === true) {
+                            $form.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            role_add.reset();
+                            setTimeout("$('.tip-roleadd').empty()",1000);
+                            _self._userEvents.trigger('refresh','roleAdd');
+                        } else {
+                            $form.notify(
+                                response.message,
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
                 return false;
             },
             clickBtnRoleAdd: function(event){
@@ -715,28 +728,29 @@ jQuery(function() {
                 var _self = this;
                 var $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                    this.userModel.save(this.data_form,
-                        {url:UrlApi('_app')+'/roleedit'}
-                        ).done(function (response){
-                           if (response.success === true) {
-                                $form.notify(
-                                    'Success',
-                                    {
-                                        position: 'top',
-                                        className: 'success'
-                                    }
-                                );
-                                _self._userEvents.trigger('refresh','roleInfo');
-                            } else {
-                                $form.notify(
-                                    response.message,
-                                    {
-                                        position: 'top',
-                                        className: 'error'
-                                    }
-                                );
-                            }
-                        });
+                    this.userModel.save(
+                        this.data_form,
+                        { url:UrlApi('_app')+'/roleedit' }
+                    ).done(function (response){
+                       if (response.success === true) {
+                            $form.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            _self._userEvents.trigger('refresh','roleInfo');
+                        } else {
+                            $form.notify(
+                                response.message,
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
                 return false;
             },
             clickBtnRoleEdit: function(event){
@@ -755,27 +769,28 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 var data = {};
-                this.userModel.save({role_id:this.role_id},
+                this.userModel.save(
+                    {role_id:this.role_id},
                     {url:UrlApi('_app')+'/roleinfo'}
-                    ).done(function (response){
-                        data['roleInfo'] = response.data;
-                        data['ruleList'] = response.data.rule;
-                        data['role_name'] = response.data.role_name;
-                        data['role_id'] = response.data.role_id;
-                        _self.$el.html(_self.template(data));
-                        _self.$el.find('form').validator().on('submit', function(e) {
-                            if (e.isDefaultPrevented()) {
-                            } else {
-                                _self._edit.call(_self);
-                                return false;
-                            }
-                        });
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                ).done(function (response){
+                    data['roleInfo'] = response.data;
+                    data['ruleList'] = response.data.rule;
+                    data['role_name'] = response.data.role_name;
+                    data['role_id'] = response.data.role_id;
+                    _self.$el.html(_self.template(data));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._edit.call(_self);
+                            return false;
+                        }
                     });
+                    $.fancybox(_self.$el,{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
+                });
             }
         });
 
@@ -858,15 +873,19 @@ jQuery(function() {
                 var _self = this;
                 var allow = $(event.target).data('allow'),
                 user_id = $(event.target).closest('tr').data('id');
-                this.userModel.save({user_id:user_id,allow:allow},
+                this.userModel.save(
+                    {
+                        user_id:user_id,
+                        allow:allow
+                    },
                     {url:UrlApi('_app')+'/userallow'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            $(event.target).addClass('btn-success');
-                            $(event.target).siblings().removeClass('btn-success');
-                            $(event.target).siblings().addClass('btn-default');
-                        }
-                    });
+                ).done(function (response){
+                    if(response.success === true){
+                        $(event.target).addClass('btn-success');
+                        $(event.target).siblings().removeClass('btn-success');
+                        $(event.target).siblings().addClass('btn-default');
+                    }
+                });
                 return false;
             },
             roleList: function(){
@@ -889,15 +908,16 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                this.userModel.save({search:this.search},
+                this.userModel.save(
+                    {search:this.search},
                     {url:UrlApi('_app')+'/userlist'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            var data = {};
-                            data['userList'] = response.data;
-                            _self.$el.html(_self.template(data));
-                        }
-                    });
+                ).done(function (response){
+                    if(response.success === true){
+                        var data = {};
+                        data['userList'] = response.data;
+                        _self.$el.html(_self.template(data));
+                    }
+                });
             }
         });
 
@@ -911,28 +931,29 @@ jQuery(function() {
                 _self = this,
                 $form=$(event.target).closest('form');
                 this.data_form = $form.serializeObject();
-                    this.userModel.save(this.data_form,
+                    this.userModel.save(
+                        this.data_form,
                         {url:UrlApi('_app')+'/useredit'}
-                        ).done(function (response){
-                            if(response.success === true){
-                                $form.notify(
-                                    'Success',
-                                    {
-                                        position: 'top',
-                                        className: 'success'
-                                    }
-                                );
-                                _self._userEvents.trigger('refresh','userInfo');
-                            }else{
-                                $form.notify(
-                                    response.message,
-                                    {
-                                        position: 'top',
-                                        className: 'error'
-                                    }
-                                );
-                            }
-                        });
+                    ).done(function (response){
+                        if(response.success === true){
+                            $form.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            _self._userEvents.trigger('refresh','userInfo');
+                        }else{
+                            $form.notify(
+                                response.message,
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
                 return false;
             },
             clickBtnUserEdit: function(event){
@@ -950,30 +971,31 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                this.userModel.save({user_id:this.user_id},
+                this.userModel.save(
+                    {user_id:this.user_id},
                     {url:UrlApi('_app')+'/userinfo'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            var data = {};
-                            data['username'] = response.data.username;
-                            data['user_id'] = response.data.user_id;
-                            data['role_id'] = response.data.role_id;
-                            data['rolelist'] = response.data.rolelist;
-                            _self.$el.html(_self.template(data));
-                            _self.$el.find('form').validator().on('submit', function(e) {
-                                if (e.isDefaultPrevented()) {
-                                } else {
-                                    _self._edit.call(_self);
-                                    return false;
-                                }
-                            });
-                            $.fancybox(_self.$el,{
-                               afterClose: function () {
-                                    window.history.back();
-                                }
-                            });
-                        }
-                    });
+                ).done(function (response){
+                    if(response.success === true){
+                        var data = {};
+                        data['username'] = response.data.username;
+                        data['user_id'] = response.data.user_id;
+                        data['role_id'] = response.data.role_id;
+                        data['rolelist'] = response.data.rolelist;
+                        _self.$el.html(_self.template(data));
+                        _self.$el.find('form').validator().on('submit', function(e) {
+                            if (e.isDefaultPrevented()) {
+                            } else {
+                                _self._edit.call(_self);
+                                return false;
+                            }
+                        });
+                        $.fancybox(_self.$el,{
+                           afterClose: function () {
+                                window.history.back();
+                            }
+                        });
+                    }
+                });
             }
         });
 

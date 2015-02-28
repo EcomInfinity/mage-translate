@@ -8,19 +8,12 @@ class RoleModel extends Model{
         $purview = $this->where(array('id'=>intval($_rid)))->field('purview')->find();
         return $purview['purview'];
     }
-    //$_wid->$website_id
-    public function getRoleList($_wid){
-        return $this->where(array('website_id'=>intval($_wid)))->select();
+    public function gets($_where){
+        return $this->where($_where)->select();
     }
 
-    public function getOneRole($_rid){
+    public function get($_rid){
         return $this->where(array('id'=>intval($_rid)))->find();
-    }
-    //$_search搜索条件
-    public function searchRole($_search,$_wid){
-        $where['role_name'] = array('like','%'.$_search.'%');
-        $where['website_id'] = $_wid;
-        return $this->where($where)->select();
     }
 
     public function roleMatch($_param){
@@ -34,7 +27,7 @@ class RoleModel extends Model{
             $add['website_id'] = $_params['website_id'];
             return intval($this->add($add));
         }else{
-            return 'Rolename must have 4-20 characters';
+            return 'Rolename must have 1-20 characters';
         }
     }
 
