@@ -118,8 +118,13 @@ class TranslationController extends BaseController {
     public function add(){
         $Model = new \Think\Model();
         $_params = json_decode(file_get_contents("php://input"),true);
-        $repeat_lang = $Model->query("select * from __PREFIX__translation where binary en='".$_params['en']."' and website_id='".session('website_id')."' ");
-        if($repeat_lang['0']['status'] == '1'){
+        $_translation = D('translation')->where(array('en' => $_params['en']))->find();
+        if($_params['en'] === $_translation['en']){
+            $repeat_lang = true;
+        }else{
+            $repeat_lang = false;
+        }
+        if($repeat_lang === true){
                 $this->ajaxReturn(
                         array(
                             'success' => false,
@@ -146,6 +151,7 @@ class TranslationController extends BaseController {
                 }else{
                     $trans_data['website_id'] = session('website_id');
                     $id=D('translation')->addTranslate($trans_data);
+                    // echo D('translation')->_sql();
                 }
                 D('translation_image')->saveImage($id);
                 $this->ajaxReturn(
