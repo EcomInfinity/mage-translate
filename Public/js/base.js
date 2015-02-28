@@ -31,7 +31,14 @@ jQuery(function() {
         lang.Model.Language = lang.Model.Base.extend({
             constructor: function(){
                 Backbone.Model.apply(this,arguments);
-            }
+            },
+            // defaults:{
+            //     'timestamp':-1
+            // },
+            // save: function(attributes, options) {
+            //     $.fancybox.showLoading();
+            //     return Backbone.Model.prototype.save.call(this, attributes, options);
+            // }
         });
 
         user.Model.Base = Backbone.Model.extend({
@@ -161,7 +168,7 @@ jQuery(function() {
             },
             _add: function(){
                 var _self = this;
-                var $form = $(event.target).closest('form');
+                var $form = $('.btn-add').closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(
                     this.data_form,
@@ -194,16 +201,31 @@ jQuery(function() {
                 return false;
             },
             batchImport: function(event){
+                $.fancybox.showLoading();
                 var _self = this;
                 ajaxFileUpload(
                     UrlApi('_app')+'/langimport',
                     'batch-import',
                     function() {
                         _self._events.trigger('refresh','edit');
-                        alert('Import Success');
+                        $.fancybox.hideLoading();
+                        $('.batch-import').notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
                     },
                     function() {
-                        alert('Import Fail');
+                        $.fancybox.hideLoading();
+                        $('.batch-import').notify(
+                            'Import Failure.',
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
                     }
                 );
             },
@@ -213,10 +235,23 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd',
                     'images-add',
                     function(data) {
+                        $('.images_list').notify(
+                                'Success.', 
+                                { 
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
                         $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
                     },
                     function() {
-                        alert('Add Fail');
+                        $('.images_list').notify(
+                                'Upload Failure.', 
+                                { 
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
                     }
                 );
             },
@@ -371,7 +406,7 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var _change = $(event.target);
+                var _change = $('.btn-lang-save');
                 var $form = _change.closest('form');
                 this.data_form = $form.serializeObject();
                 this.translate.save(
@@ -425,10 +460,23 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd/lang_id/'+this.langId,
                     'images',
                     function(response) {
+                        $('.images_list').notify(
+                                'Success.', 
+                                { 
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
                         $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response['id']+'">X</a></div></li>');
                     }, 
                     function() {
-                        alert('Add Fail');
+                        $('.images_list').notify(
+                                'Upload Failure.', 
+                                { 
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
                     }
                 );
             },
@@ -547,7 +595,7 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var $form=$(event.target).closest('form');
+                var $form=$('.btn-edit-center').closest('form');
                 this.data_form = $form.serializeObject();
                             this.userModel.save(
                                 this.data_form,
@@ -561,7 +609,7 @@ jQuery(function() {
                                             className: 'success'
                                         }
                                     );
-                                    setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
+                                    // setTimeout("window.open(UrlApi('_app')+'/logout','_self')",3000);
                                 }else{
                                     $form.notify(
                                         response.message,
@@ -626,7 +674,7 @@ jQuery(function() {
             },
             _add: function(){
                 var _self = this;
-                var $form=$(event.target).closest('form');
+                var $form=$('.btn-role-add').closest('form');
                 this.data_form = $form.serializeObject();
                     this.userModel.save(
                         this.data_form,
@@ -726,7 +774,7 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var $form=$(event.target).closest('form');
+                var $form=$('.btn-edit').closest('form');
                 this.data_form = $form.serializeObject();
                     this.userModel.save(
                         this.data_form,
@@ -801,7 +849,7 @@ jQuery(function() {
             },
             _add: function() {
                 var _self = this,
-                    $form = $(event.target).closest('form'),
+                    $form = $('.btn-user-add').closest('form'),
                     data = $form.serializeObject();
 
                 this.userModel.save(
@@ -929,7 +977,7 @@ jQuery(function() {
             _edit: function(){
                 var is_change = '0',
                 _self = this,
-                $form=$(event.target).closest('form');
+                $form=$('.btn-edit').closest('form');
                 this.data_form = $form.serializeObject();
                     this.userModel.save(
                         this.data_form,

@@ -4,19 +4,19 @@ return array(
     'URL_ROUTER_ON' => true, // 是否开启URL路由
     'URL_ROUTE_RULES' => array(
         array('lang','Translation/index'),
-        array('langlist','Translation/getList'),
+        array('langlist','Translation/gets'),
         // array('langlist/:id\d','Translation/getList','',array('method'=>'get')),
         array('langexport','Translation/export'),
         array('langimport','Translation/import'),
         array('langadd','Translation/add'),
         array('langdel','Translation/del'),
-        array('langinfo','Translation/getInfo'),
-        array('langedit','Translation/editInfo'),
-        array('langimgdel','Translation/imageDel'),
-        array('langimgclear','Translation/imageClear'),
-        array('langimgadd','Translation/imageAdd'),
-        array('langimg','Translation/getImage'),
+        array('langinfo','Translation/get'),
+        array('langedit','Translation/edit'),
         array('langdownload','Translation/download'),
+
+        array('langimgdel','Image/del'),
+        array('langimgclear','Image/clear'),
+        array('langimgadd','Image/add'),
 
         array('admin','Admin/index'),
         array('login','Admin/login'),

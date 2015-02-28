@@ -45,7 +45,7 @@ class UserModel extends Model{
     }
 
     public function userMatch($_param){
-        return preg_match('/^[a-zA-Z0-9]{5,15}$/',$_param);
+        return preg_match('/^.{6,15}$/',$_param);
     }
 
     public function register($_params) {
@@ -118,22 +118,13 @@ class UserModel extends Model{
         return $this->where(array('id'=>intval($uid)))->find();
     }
 
-    // public function getUserName($uid){
-    //     $user = $this->where(array('id'=>intval($uid)))->field('username')->find();
-    //     return $user['username'];
-    // }
-
     public function setUsername($_username,$uid){
-        if($this->userMatch($_username) == '1'){
-            if ($this->isExisted($_username) == false) {
-                return '0';
-            }else{
-                $save['id'] = intval($uid);
-                $save['username'] = $_username;
-                return $this->save($save);
-            }
+        if ($this->isExisted($_username) === true) {
+            return 'User already registered.';
         }else{
-            return 'The username must have 5-15 digits or letters.';
+            $save['id'] = intval($uid);
+            $save['username'] = $_username;
+            return $this->save($save);
         }
     }
 

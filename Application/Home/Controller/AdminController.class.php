@@ -241,12 +241,12 @@ class AdminController extends Controller {
             $setPwd = $user_model->setPassword($_params['password'],$_params['user_id']);
         }
         $setRela = $relation_model->setUserRole($_params['role_id'],$_params['user_id']);
-        if(is_string($setName) === false||is_string($setPwd) === false||is_string($setRela) === false){
+        if($setName > 0||$setPwd > 0||$setRela > 0){
             $this->ajaxReturn(
                     array(
                         'success' => true,
                         'message' => '',
-                        'data' => array(),
+                        'data' => $setName,
                     ),
                     'json'
                 );
@@ -255,7 +255,7 @@ class AdminController extends Controller {
                     array(
                         'success' => false,
                         'message' => 'Modify failure.',
-                        'data' => array(),
+                        'data' => $setName,
                     ),
                     'json'
                 );

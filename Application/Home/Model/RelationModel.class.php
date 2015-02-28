@@ -15,7 +15,6 @@ class RelationModel extends Model{
         $user_id = $this->where(array('parent_id'=>intval($uid)))->select();
         if($user_id){
             foreach ($user_id as $key => $val) {
-                # code...
                 $ids = $ids.','.$val['user_id'];
             }
             $ids = substr($ids,1);
