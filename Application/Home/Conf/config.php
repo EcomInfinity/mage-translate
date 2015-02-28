@@ -24,10 +24,11 @@ return array(
         array('logout','Admin/logout'),
         array('useradd','Admin/userAdd'),
         array('userlist','Admin/userList'),
-        array('useredit','Admin/userEdit'),
+        
         array('userallow','Admin/userAllow'),
         array('userinfo','Admin/userInfo'),
 
+        array('useredit','User/edit'),
         array('change-password','User/changePassword'),
 
         array('roleadd','Role/add'),

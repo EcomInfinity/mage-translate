@@ -231,34 +231,45 @@ class UserController extends Controller {
         }
     }
 
-    public function userEdit(){
-        $user_model = D('user');
-        $relation_model = D('relation');
+    public function edit() {
         $_params = json_decode(file_get_contents("php://input"),true);
-        $setName = $user_model->setUsername($_params['username'],$_params['user_id']);
-        if(isset($_params['password'])  === true){
-            $setPwd = $user_model->setPassword($_params['password'],$_params['user_id']);
-        }
-        $setRela = $relation_model->setUserRole($_params['role_id'],$_params['user_id']);
-        if(is_string($setName) === false||is_string($setPwd) === false||is_string($setRela) === false){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
+        $_user_id = $_params['user_id'];
+        $_username = $_params['username'];
+        $_role_id = $_params['role_id'];
+
+        $_user = D('user')->get($_user_id);
+
+        // change user name
+        if ($_user['username'] != $_username) {
+            $_result = D('user')->setUsername($_username, $_user_id);
+            if ($_result !== true) {
+                $this->ajaxReturn(
                     array(
                         'success' => false,
-                        'message' => 'Modify failure.',
+                        'message' => $_result,
                         'data' => array(),
                     ),
                     'json'
                 );
+            }
         }
+
+        // chnage role
+        D('relation')->set($_user_id, $_role_id);
+
+        // change password
+        if(isset($_params['password'])  === true) {
+            $setPwd = D('user')->setPassword($_params['password'], $_user_id);
+        }
+
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => array(),
+            ),
+            'json'
+        );
     }
 
     public function userAllow(){

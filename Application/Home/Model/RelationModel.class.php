@@ -23,14 +23,11 @@ class RelationModel extends Model{
         return $ids;
     }
 
-    public function setUserRole($_role_id,$uid){
-        $save['role_id'] = $_role_id;
-        $_result = $this->where(array('user_id'=>intval($uid)))->save($save);
-        if($_result > '0'){
-            return $_result;
-        }else{
-            return 'Modify failure.';
-        }
+    public function set($_user_id, $_role_id) {
+        $this->where(array('user_id' => $_user_id))
+             ->save(array('role_id' => $_role_id));
+
+        return true;
     }
 }
 ?>

@@ -925,33 +925,32 @@ jQuery(function() {
                 'click .btn-edit': 'clickBtnUserEdit'
             },
             _edit: function(){
-                var is_change = '0',
-                _self = this,
-                $form=$(event.target).closest('form');
-                this.data_form = $form.serializeObject();
-                    this.userModel.save(
-                        this.data_form,
-                        {url:UrlApi('_app')+'/useredit'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            $form.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            _self._userEvents.trigger('refresh','userInfo');
-                        }else{
-                            $form.notify(
-                                response.message,
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
-                    });
+                var _self = this,
+                    $form=$(event.target).closest('form');
+                    
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/useredit'}
+                ).done(function (response){
+                    if(response.success === true){
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        _self._userEvents.trigger('refresh','userInfo');
+                    }else{
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
                 return false;
             },
             clickBtnUserEdit: function(event){

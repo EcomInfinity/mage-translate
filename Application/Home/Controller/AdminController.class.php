@@ -184,36 +184,6 @@ class AdminController extends Controller {
         }
     }
 
-    public function userEdit(){
-        $user_model = D('user');
-        $relation_model = D('relation');
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $setName = $user_model->setUsername($_params['username'],$_params['user_id']);
-        if(isset($_params['password'])  === true){
-            $setPwd = $user_model->setPassword($_params['password'],$_params['user_id']);
-        }
-        $setRela = $relation_model->setUserRole($_params['role_id'],$_params['user_id']);
-        if(is_string($setName) === false||is_string($setPwd) === false||is_string($setRela) === false){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => 'Modify failure.',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
-    }
-
     public function userAllow(){
         $user_model = D('user');
         $_params = json_decode(file_get_contents("php://input"),true);
