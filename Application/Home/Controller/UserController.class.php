@@ -174,47 +174,51 @@ class UserController extends Controller {
     public function changePassword() {
         $_params = json_decode(file_get_contents("php://input"),true);
         $user = D('user')->get($_params['id']);
-        if(md5($_params['original-password']) == $user['password']) {
-            if($_params['new-password'] == $_params['confirm-new-password']) {
-                $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
-                if($_result){
-                    $this->ajaxReturn(
-                            array(
-                                'success' => true,
-                                'message' => '',
-                                'data' => array(),
-                            ),
-                            'json'
-                        );
-                }else{
-                    $this->ajaxReturn(
-                            array(
-                                'success' => false,
-                                'message' => 'Modify failure.',
-                                'data' => array(),
-                            ),
-                            'json'
-                        );
-                }
-            }else{
-                $this->ajaxReturn(
-                        array(
-                            'success' => false,
-                            'message' => 'Password doesn\'t match.',
-                            'data' => array(),
-                        ),
-                        'json'
-                    );
-            }
+
+        if(md5($_params['original-password']) != $user['password']) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'The password is incorrect.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
+        }
+
+        if($_params['new-password'] == $_params['confirm-new-password']) {
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Password doesn\'t match.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
+        }
+
+        $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
+
+        if ($_result === true) {
+            $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
         } else {
             $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => 'The password is incorrect.',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
+                array(
+                    'success' => false,
+                    'message' => 'Modify failure.',
+                    'data' => array(),
+                ),
+                'json'
+            );
         }
     }
 

@@ -135,55 +135,6 @@ class AdminController extends Controller {
         );
     }
 
-    public function userList(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $ids = D('relation')->gets(session('id'));
-        if($ids){
-            if($_params['search']&&$_params['search']!=null){
-                $list = D('user')->gets(
-                        array(
-                                'id' => array('in', $ids),
-                                'username' => array('like','%'.$_params['search'].'%')
-                            )
-                    );
-            }else{
-                $list = D('user')->gets(
-                        array(
-                                'id' => array('in', $ids)
-                            )
-                    );
-            }
-            if($list){
-                $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => $list,
-                    ),
-                    'json'
-                );
-            }else{
-                $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-            }
-        }else{
-            $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(),
-                ),
-                'json'
-            );
-        }
-    }
-
     public function userAllow(){
         $user_model = D('user');
         $_params = json_decode(file_get_contents("php://input"),true);
