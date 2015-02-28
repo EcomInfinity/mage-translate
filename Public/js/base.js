@@ -226,8 +226,10 @@ jQuery(function() {
                 this.translate.save({imageId:this.imageId},
                     {url:UrlApi('_app')+'/langimgdel'}
                     ).done(function (response){
-                        _click.closest('li').hide();
-                        $('#enlarge_images').html('');
+                        if(response.success === true){
+                            _click.closest('li').hide();
+                            $('#enlarge_images').html('');
+                        }
                 });
                 return false;
             },
@@ -264,7 +266,7 @@ jQuery(function() {
             searchLanguage: function(event){
                 if(event.keyCode == '13'){
                         this.search = $(event.target).val();
-                        this.inrender = '1';
+                        this.inrender = true;
                         this.searchData = {search:this.search,inrender:this.inrender};
                         this._events.trigger('alernately',this.searchData,'search');
                 }
@@ -292,7 +294,7 @@ jQuery(function() {
                     this.translate.save({id:id},
                         {url:UrlApi('_app')+'/langdel'}
                         ).done(function (response){
-                            if(response == '1'){
+                            if(response.success === true){
                                 _self.render();
                             }
                     });
@@ -351,7 +353,6 @@ jQuery(function() {
                         'current_count': response.data.count,
                         'inrender': _self.inrender
                     };
-                    
                     _self.$el.html(_self.template(data));
                 });
             }
@@ -401,13 +402,14 @@ jQuery(function() {
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
-                this.translate.save({imageId:this.imageId},
-                    {url:UrlApi('_app')+'/langimgdel'}
-                    ).done(function (response){
-                    if(response == '1'){
-                        _click.closest('li').hide();
-                        $('#enlarge_images').html('');
-                    }
+                this.translate.save(
+                    { imageId:this.imageId },
+                    { url:UrlApi('_app')+'/langimgdel' }
+                ).done(function (response){
+                        if(response.success === true){
+                            _click.closest('li').hide();
+                            $('#enlarge_images').html('');
+                        }
                 });
                 return false;
             },
@@ -417,8 +419,8 @@ jQuery(function() {
                 ajaxFileUpload(
                     UrlApi('_app')+'/langimgadd/lang_id/'+this.langId,
                     'images',
-                    function(data) {
-                        $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
+                    function(response) {
+                        $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response['id']+'">X</a></div></li>');
                     }, 
                     function() {
                         alert('Add Fail');
@@ -440,8 +442,8 @@ jQuery(function() {
                 this.translate.save({id:this.langId},
                     {url:UrlApi('_app')+'/langinfo'}
                     ).done(function (response){
-                        data['langDetail'] = response.detail;
-                        data['langImages'] = response.images;
+                        data['langDetail'] = response.data.detail;
+                        data['langImages'] = response.data.images;
                         _self.$el.html(_self.template(data));
                         _self.$el.find('form').validator().on('submit', function(e) {
                             if (e.isDefaultPrevented()) {
@@ -465,19 +467,21 @@ jQuery(function() {
                 'click .btn-export': 'exportLanguage'
             },
             exportLanguage: function(event){
-                this.clickExport = '1';
+                this.clickExport = true;
                 this.select = $('#export').val();
-                this.translate.save({exrender:'0',field:this.select},
+                this.translate.save({exrender:false,field:this.select},
                     {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
-                        window.open(UrlApi('_app')+'/langdownload');
+                        if(response.success === true){
+                            window.open(UrlApi('_app')+'/langdownload');
+                        }
                     });
             },
             initialize: function(options){
                 options || (options = {});
                 this.translate = options.translate;
-                this.exrender = '1';
-                this.clickExport = '0';
+                this.exrender = true;
+                this.clickExport = false;
             },
             render: function(){
                 var _self = this;
@@ -485,14 +489,14 @@ jQuery(function() {
                 this.translate.save({exrender:this.exrender},
                     {url:UrlApi('_app')+'/langexport'}
                     ).done(function (response){
-                        data['allField'] = response;
+                        data['allField'] = response.data;
                         _self.$el.html(_self.template(data));
                         $.fancybox(_self.$el,{
                            afterClose: function () {
-                                if(_self.clickExport == '0'){
+                                if(_self.clickExport === false){
                                     window.history.back();
                                 }else{
-                                    _self.clickExport = '0';
+                                    _self.clickExport = false;
                                 }
                             }
                         });
@@ -857,7 +861,7 @@ jQuery(function() {
                 this.userModel.save({user_id:user_id,allow:allow},
                     {url:UrlApi('_app')+'/userallow'}
                     ).done(function (response){
-                        if(response == '1'){
+                        if(response.success === true){
                             $(event.target).addClass('btn-success');
                             $(event.target).siblings().removeClass('btn-success');
                             $(event.target).siblings().addClass('btn-default');
@@ -885,12 +889,14 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
                 this.userModel.save({search:this.search},
                     {url:UrlApi('_app')+'/userlist'}
                     ).done(function (response){
-                        data['userList'] = response;
-                        _self.$el.html(_self.template(data));
+                        if(response.success === true){
+                            var data = {};
+                            data['userList'] = response.data;
+                            _self.$el.html(_self.template(data));
+                        }
                     });
             }
         });
@@ -944,27 +950,29 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
                 this.userModel.save({user_id:this.user_id},
                     {url:UrlApi('_app')+'/userinfo'}
                     ).done(function (response){
-                        data['username'] = response.username;
-                        data['user_id'] = response.user_id;
-                        data['role_id'] = response.role_id;
-                        data['rolelist'] = response.rolelist;
-                        _self.$el.html(_self.template(data));
-                        _self.$el.find('form').validator().on('submit', function(e) {
-                            if (e.isDefaultPrevented()) {
-                            } else {
-                                _self._edit.call(_self);
-                                return false;
-                            }
-                        });
-                        $.fancybox(_self.$el,{
-                           afterClose: function () {
-                                window.history.back();
-                            }
-                        });
+                        if(response.success === true){
+                            var data = {};
+                            data['username'] = response.data.username;
+                            data['user_id'] = response.data.user_id;
+                            data['role_id'] = response.data.role_id;
+                            data['rolelist'] = response.data.rolelist;
+                            _self.$el.html(_self.template(data));
+                            _self.$el.find('form').validator().on('submit', function(e) {
+                                if (e.isDefaultPrevented()) {
+                                } else {
+                                    _self._edit.call(_self);
+                                    return false;
+                                }
+                            });
+                            $.fancybox(_self.$el,{
+                               afterClose: function () {
+                                    window.history.back();
+                                }
+                            });
+                        }
                     });
             }
         });

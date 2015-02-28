@@ -5,7 +5,7 @@ use Think\Model;
 class TranslationModel extends Model {
 
     public function gets($_field, $_where, $_order_by, $_options = array()) {
-        return $this->where($_where)->order($_order_by)->select();
+        return $this->where($_where)->order($_order_by)->field($_field)->select();
     }
 
     //$_params数组(各种语言，remarks,status,website_id,modify)

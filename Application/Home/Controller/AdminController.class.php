@@ -147,12 +147,33 @@ class AdminController extends Controller {
                 $res = $user_model->getUserList($ids);
             }
             if($res){
-                echo json_encode($res);
+                $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => $res,
+                    ),
+                    'json'
+                );
             }else{
-                echo '0';
+                $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
             }
         }else{
-            echo '0';
+            $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
         }
     }
 
@@ -239,9 +260,23 @@ class AdminController extends Controller {
         $_params = json_decode(file_get_contents("php://input"),true);
         $res = $user_model->setAllow($_params['user_id'],$_params['allow']);
         if($res){
-            echo '1';
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }else{
-            echo '0';
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
         }
     }
 
@@ -257,113 +292,14 @@ class AdminController extends Controller {
         $userInfo['role_id'] = $relation['role_id'];
         $userInfo['username'] = $user['username'];
         $userInfo['rolelist'] = $rolelist;
-        echo json_encode($userInfo);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => $userInfo,
+                ),
+                'json'
+            );
     }
 
-    public function roleAdd(){
-        $role_model = D('role');
-        $rule_model = D('rule');
-        $back = json_decode(file_get_contents("php://input"),true);
-            $rule = $rule_model->getRuleList();
-            foreach ($rule as $k => $val) {
-                # code...
-                $purview = $purview.$back[strtolower($val['rule_name'])];
-            }
-            $purview = bindec($purview);
-            $_params['role_name'] = $back['role'];
-            $_params['purview'] = $purview;
-            $_params['website_id'] = session('website_id');
-            $id = $role_model->addRole($_params);
-            if(is_string($id) === false){
-                $this->ajaxReturn(
-                        array(
-                            'success' => true,
-                            'message' => '',
-                            'data' => array(),
-                        ),
-                        'json'
-                    );
-            }else{
-                $this->ajaxReturn(
-                        array(
-                            'success' => false,
-                            'message' => $id,
-                            'data' => array(),
-                        ),
-                        'json'
-                    );
-            }
-    }
-
-    public function roleList(){
-        $role_model = D('role');
-        $_params = json_decode(file_get_contents("php://input"),true);
-        if($_params['search']&&$_params['search']!=null){
-            $role_list = $role_model->searchRole($_params['search'],session('website_id'));
-        }else{
-            $role_list = $role_model->getRoleList(session('website_id'));
-        }
-        if($role_list){
-            echo json_encode($role_list);
-        }else{
-            echo '0';
-        }
-    }
-
-    public function roleInfo(){
-        $role_model = D('role');
-        $rule_model = D('rule');
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $count = $rule_model->getRuleCount();
-        $rule = $rule_model->getRuleList();
-        $role = $role_model->getOneRole($_params['role_id']);
-        $purview = str_split(str_pad(decbin($role['purview']),$count,'0',STR_PAD_LEFT));
-        foreach ($rule as $key => $value) {
-            $rule[$key]['purview'] = $purview[$key];
-        }
-        $roleInfo['role_name'] = $role['role_name'];
-        $roleInfo['role_id'] = $role['id'];
-        $roleInfo['rule'] = $rule;
-        echo json_encode($roleInfo);
-    }
-
-    public function roleEdit(){
-        $role_model = D('role');
-        $rule_model = D('rule');
-        $back = json_decode(file_get_contents("php://input"),true);
-        $rule = $rule_model->getRuleList();
-        foreach ($rule as $k => $val) {
-            # code...
-            $purview = $purview.$back[strtolower($val['rule_name'])];
-        }
-        $_params['role_name'] = $back['role_name'];
-        $_params['role_id'] = $back['role_id'];
-        $_params['purview'] = bindec($purview);
-        $res = $role_model->setRole($_params);
-        if($res > '0'){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => 'Modify failure.',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
-    }
-
-    public function ruleList(){
-        $rule_model = D('rule');
-        $ruleList = $rule_model->getRuleList();
-        echo json_encode($ruleList);
-    }
 }
