@@ -33,8 +33,12 @@ class RoleModel extends Model{
 
     public function setRole($_params){
         if (preg_match('/^.{1,20}$/', $_params['role_name']) == '1'){
-            $this->save($_params);
-            return true;
+            $_result = $this->save($_params);
+            if($_result > 0){
+                return $_result;
+            }else{
+                return 'Modify Failure.';
+            }
         } else {
             return 'Role name must have 1-20 characters';
         }

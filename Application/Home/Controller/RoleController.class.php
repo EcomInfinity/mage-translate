@@ -117,7 +117,7 @@ class RoleController extends Controller {
             'purview' => bindec($purview),
         ));
 
-        if (is_string($_result) === false){
+        if ($_result > 0){
             $this->ajaxReturn(
                     array(
                         'success' => true,

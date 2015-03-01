@@ -136,12 +136,15 @@ class UserModel extends Model{
     }
 
     public function setPassword($_password, $_user_id) {
-        $this->save(array(
+        $_result = $this->save(array(
             'id' => intval($_user_id),
             'password' => md5($_password),
         ));
-
-        return true;
+        if($_result > 0){
+            return true;
+        }else{
+            return 'Modify Failure.';
+        }
     }
 
     public function enable($_user_id) {

@@ -4,28 +4,12 @@ use Think\Controller;
 class TranslationController extends BaseController {
     //index
     public function index(){
-        //Initialization then del
-        // D('translation') = M('translation');
-        // $where['de'] = array('neq','');
-        // $where['en'] = array('neq','');
-        // $where['nl'] = array('neq','');
-        // $where['website_id'] = session('website_id');
-        // $ids = D('translation')->where($where)->field('id')->select();
-        // $save['modify'] = '0';
-        // foreach ($ids as $val) {
-        //     # code...
-        //     $save['id'] = $val['id'];
-        //     D('translation')->save($save);
-        // }
-        //Initialization then del
         $this->display();
     }
 
     public function export(){
         $_params = json_decode(file_get_contents("php://input"),true);
-
         if($_params['exrender'] === false){
-            // $title = explode(",", $field);
             $export_get = D('translation')->gets(
                             'en,' . $_params['field'],
                             array(
@@ -41,7 +25,6 @@ class TranslationController extends BaseController {
                     $export[$key][$k] = '"'.str_replace('"','""',$val).'"';
                 }
             }
-            // S('title',$title);
             S('export', $export);
             S('filename', $_params['field']);
             $this->ajaxReturn(
@@ -54,37 +37,27 @@ class TranslationController extends BaseController {
             );
         }
         if($_params['exrender'] === true){
-        $data = D('translation')->find();
-        foreach ($data as $k => $val) {
-            if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'&&$k!='fr'){
-                $allField[] = $k;
+            $data = D('translation')->find();
+            foreach ($data as $k => $val) {
+                if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'&&$k!='fr'){
+                    $allField[] = $k;
+                }
             }
-        }
-        $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => $allField,
-                ),
-                'json'
-        );
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => $allField,
+                    ),
+                    'json'
+            );
         }
     }
 
     public function download(){
        exportexcel(S('export'),S('filename').time());
        S('export',null);
-       // S('title',null);
        S('filename',null);
-        // $test = C('URL_ROUTE_RULES');
-        // foreach ($test as $k => $val) {
-        //     # code...
-        //     $ryue[$k][$val['0']] = $val['1'];
-        // }
-        // // S('urlall',json_encode($ryue));
-        // var_dump(json_encode($ryue));
-        // var_dump($ryue);
-        // // S('urlall',null);
     }
 
     public function import(){
@@ -138,23 +111,20 @@ class TranslationController extends BaseController {
                     }
                 }
             }
-            // $this->ajaxReturn(
-            //     array(
-            //         'success' => true,
-            //         'message' => '',
-            //         'data' => array(),
-            //     ),
-            //     'json'
-            // );
             echo true;
         }
     }
-    //lang add
+
     public function add(){
         $Model = new \Think\Model();
         $_params = json_decode(file_get_contents("php://input"),true);
-        $repeat_lang = $Model->query("select * from __PREFIX__translation where binary en='".$_params['en']."' and website_id='".session('website_id')."' ");
-        if($repeat_lang['0']['status'] == '1'){
+        $_translation = D('translation')->where(array('en' => $_params['en']))->find();
+        if($_params['en'] === $_translation['en']){
+            $repeat_lang = true;
+        }else{
+            $repeat_lang = false;
+        }
+        if($repeat_lang === true){
                 $this->ajaxReturn(
                         array(
                             'success' => false,
@@ -181,6 +151,7 @@ class TranslationController extends BaseController {
                 }else{
                     $trans_data['website_id'] = session('website_id');
                     $id=D('translation')->addTranslate($trans_data);
+                    // echo D('translation')->_sql();
                 }
                 D('translation_image')->saveImage($id);
                 $this->ajaxReturn(
@@ -203,7 +174,7 @@ class TranslationController extends BaseController {
             }
         }
     }
-    //lang list del
+
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $_result = D('translation')->del($_params['id']);
@@ -232,8 +203,8 @@ class TranslationController extends BaseController {
                 );
         }
     }
-    //lang list
-    public function getList(){
+
+    public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
         if ($_params['inrender'] === false) {
             $_list = D('translation')->gets(
@@ -247,17 +218,30 @@ class TranslationController extends BaseController {
                         array()
                     );
         } else {
-            $_list = D('translation')->gets(
-                        '',
-                        array(
-                            'en' => array('like', '%'.$_params['search'].'%'),
-                            'website_id' => session('website_id'),
-                            'status' => 1,
-                            'modify' => 0,
-                        ),
-                        'id desc',
-                        array()
-                    );
+            if($_params['complete'] === true){
+                $_list = D('translation')->gets(
+                            '',
+                            array(
+                                'en' => array('like', '%'.$_params['search'].'%'),
+                                'website_id' => session('website_id'),
+                                'status' => 1,
+                                'modify' => 0,
+                            ),
+                            'id desc',
+                            array()
+                        );
+            }else{
+                $_list = D('translation')->gets(
+                            '',
+                            array(
+                                'en' => array('like', '%'.$_params['search'].'%'),
+                                'website_id' => session('website_id'),
+                                'status' => 1,
+                            ),
+                            'id desc',
+                            array()
+                        );
+            }
         }
 
         foreach ($_list as $key => $value) {
@@ -279,8 +263,8 @@ class TranslationController extends BaseController {
             'json'
         );
     }
-    //lang edit detail
-    public function getInfo(){
+
+    public function get(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $translation_detail = D('translation')->get($_params['id']);
         $images = D('translation_image')->gets($_params['id']);
@@ -308,8 +292,7 @@ class TranslationController extends BaseController {
         }
     }
 
-    //edit lang info
-    public function editInfo(){
+    public function edit(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $edit_data['id'] = intval($_params['id']);
         $edit_data['en'] = $_params['en'];
@@ -336,90 +319,6 @@ class TranslationController extends BaseController {
                     ),
                     'json'
                 );
-        }
-    }
-    //lang add or edit del image
-    public function imageDel(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $_result = D('translation_image')->del(
-                array(
-                        'id' => intval($_params['imageId'])
-                    )
-            );
-        if($_result){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-             $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
-    }
-    //before new lang clear iamges
-    public function imageClear(){
-        $_result = D('translation_image')->clear('0');
-        if($_result){
-             $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }else{
-             $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
-    }
-    //lang add or edit add images
-    public function imageAdd(){
-        $config = array(
-            'maxSize' => 3145728,
-            'rootPath' => './Uploads/',
-            'savePath' => '',
-            'saveName' => array('uniqid','mm_'),
-            'exts' => array('jpg', 'gif', 'png', 'jpeg'),
-            'autoSub' => true,
-            'subName' => 'Translation',
-        );
-        $upload = new \Think\Upload($config );
-        $info = $upload->uploadOne($_FILES['images']);
-        if(!$info){
-            die();
-        }else{
-            $id = D('translation_image')->addImage($_GET['lang_id'],$info['savename']);
-            $image['image_name'] = $info['savename'];
-            $image['id'] = $id;
-            // $this->ajaxReturn(
-            //         array(
-            //             'success' => true,
-            //             'message' => '',
-            //             'data' => array(
-            //                 'iamge_name' => $info['savename'],
-            //                 'id' => $id
-            //                 )
-            //         ),
-            //         'json'
-            //     );
-            echo json_encode($image);
         }
     }
 

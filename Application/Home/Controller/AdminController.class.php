@@ -14,7 +14,6 @@ class AdminController extends Controller {
 
     public function login(){
         $_user = D('user');
-        
         $_uid = session('id');
         if (isset($_uid) === false) {
             $_params = json_decode(file_get_contents("php://input"), true);
@@ -87,7 +86,7 @@ class AdminController extends Controller {
             )
         );
 
-        $_relation = D('relation')->getUserRelation($_user_id);
+        $_relation = D('relation')->get($_user_id);
         session('website_id', $_relation['website_id']);
         session('website_name', D('website')->getWebsiteName($_relation['website_id']));
         session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));

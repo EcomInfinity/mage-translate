@@ -41,13 +41,6 @@ jQuery(function() {
             constructor: function(){
                 Backbone.Model.apply(this,arguments);
             },
-            // defaults:{
-            //     'timestamp':-1
-            // },
-            // save: function(attributes, options) {
-            //     $.fancybox.showLoading();
-            //     return Backbone.Model.prototype.save.call(this, attributes, options);
-            // }
         });
 
         user.Model.Base = Backbone.Model.extend({
@@ -187,9 +180,8 @@ jQuery(function() {
             _add: function(){
                 var _self = this;
                 var $form = $('.btn-add').closest('form');
-                this.data_form = $form.serializeObject();
                 this.translate.save(
-                    this.data_form,
+                    $form.serializeObject(),
                     {url:UrlApi('_app')+'/langadd'}
                 ).done(function (response){
                     if (response.success === true) {
@@ -374,17 +366,17 @@ jQuery(function() {
             backSort: function(event){
                 var sort = $('table').attr('data-sort');
                 if(sort == 'modify'){
+                    this.setList({complete: true}).render();
                     this.inrender = true;
-                    this.searchData = {search:'',inrender:this.inrender};
-                    this._events.trigger('alernately',this.searchData,'search');
                 }
                 if(sort == 'search'){
-                    this.setList({inrender: false}).render();
+                    this.setList({inrender: false,complete: false}).render();
                 }
             },
             setList: function(data){
                 this.search = data.search;
                 this.inrender = data.inrender;
+                this.complete = data.complete;
                 return this;
             },
             initialize: function(options){
@@ -393,6 +385,7 @@ jQuery(function() {
                 this._events = options._events;
                 this.translate = options.translate;
                 this.inrender = false;
+                this.complete = false;
                 this.render();
             },
             render: function(){
@@ -400,7 +393,8 @@ jQuery(function() {
                 this.translate.save(
                     { 
                         search: this.search,
-                        inrender: this.inrender
+                        inrender: this.inrender,
+                        complete: this.complete
                     },
                     { url:UrlApi('_app')+'/langlist' }
                 ).done(function (response){
@@ -426,9 +420,8 @@ jQuery(function() {
                 var _self = this;
                 var _change = $('.btn-lang-save');
                 var $form = _change.closest('form');
-                this.data_form = $form.serializeObject();
                 this.translate.save(
-                    this.data_form,
+                    $form.serializeObject(),
                     {url:UrlApi('_app')+'/langedit'}
                 ).done(function (response){
                     if (response.success === true) {
@@ -613,7 +606,7 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var $form = $(event.target).closest('form');
+                var $form = this.$el.find('form');
                 this.userModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/change-password'}
@@ -690,10 +683,9 @@ jQuery(function() {
             },
             _add: function(){
                 var _self = this;
-                var $form=$('.btn-role-add').closest('form');
-                this.data_form = $form.serializeObject();
+                var $form = this.$el.find('form');
                     this.userModel.save(
-                        this.data_form,
+                        $form.serializeObject(),
                         {url:UrlApi('_app')+'/roleadd'}
                     ).done(function (response){
                         if (response.success === true) {
@@ -790,10 +782,9 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this;
-                var $form=$('.btn-edit').closest('form');
-                this.data_form = $form.serializeObject();
+                var $form = this.$el.find('form');
                     this.userModel.save(
-                        this.data_form,
+                        $form.serializeObject(),
                         { url:UrlApi('_app')+'/roleedit' }
                     ).done(function (response){
                        if (response.success === true) {
@@ -865,11 +856,10 @@ jQuery(function() {
             },
             _add: function() {
                 var _self = this,
-                    $form = $('.btn-user-add').closest('form'),
-                    data = $form.serializeObject();
+                    $form = this.$el.find('form');
 
                 this.userModel.save(
-                    data, 
+                    $form.serializeObject(), 
                     { url: UrlApi('_app') + '/useradd' }
                 ).done(function(response) {
                     if (response.success === true) {
