@@ -34,7 +34,7 @@ class AdminController extends Controller {
                 'json'
             );
         } else {
-            $_relation = D('relation')->getUserRelation($_uid);
+            $_relation = D('relation')->get($_uid);
             session('website_id', $_relation['website_id']);
             session('website_name', D('website')->getWebsiteName($_relation['website_id']));
             session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
