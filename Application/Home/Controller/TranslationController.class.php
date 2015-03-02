@@ -92,12 +92,19 @@ class TranslationController extends BaseController {
                         $lang_add['modify'] = '0';
                     }
                     $lang_add['website_id'] = session('website_id');
-                    $import['en'] = $lang_add['en'];
-                    $import['website_id'] = session('website_id');
-                    $_result = D('translation')->where($import)->find();
-                    if($_result){
+                    $_import['en'] = $lang_add['en'];
+                    $_import['website_id'] = session('website_id');
+                    $_result = D('translation')->where($_import)->select();
+                    $_repeat_lang = false;
+                    foreach ($_result as $val) {
+                        if(strcmp($_import['en'],$val['en']) === 0){
+                            $_repeat_lang = true;
+                            $_repeat_id = $val['id'];
+                        }
+                    }
+                    if($_repeat_lang === true){
                         $lang_save = $lang_add;
-                        $lang_save['id'] = $_result['id'];
+                        $lang_save['id'] = $_repeat_id;
                         $lang_save['status'] = '1';
                         D('translation')->save($lang_save);
                         $modify = D('translation')->where(array('id'=>$_result['id']))->find();
@@ -118,11 +125,13 @@ class TranslationController extends BaseController {
     public function add(){
         $Model = new \Think\Model();
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_translation = D('translation')->where(array('en' => $_params['en']))->find();
-        if($_params['en'] === $_translation['en']){
-            $repeat_lang = true;
-        }else{
-            $repeat_lang = false;
+        $_translation = M('translation')->where(array('en' => $_params['en'],'website_id' => session('website_id')))->select();
+        foreach ($_translation as $val) {
+            if(strcmp($_params['en'],$val['en']) === 0 && $val['status'] == 1){
+                $repeat_lang = true;
+            }elseif(strcmp($_params['en'],$val['en']) === 0){
+                $repeat_lang = $val;
+            }
         }
         if($repeat_lang === true){
                 $this->ajaxReturn(
@@ -151,7 +160,6 @@ class TranslationController extends BaseController {
                 }else{
                     $trans_data['website_id'] = session('website_id');
                     $id=D('translation')->addTranslate($trans_data);
-                    // echo D('translation')->_sql();
                 }
                 D('translation_image')->saveImage($id);
                 $this->ajaxReturn(
