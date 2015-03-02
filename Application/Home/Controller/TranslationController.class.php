@@ -94,7 +94,7 @@ class TranslationController extends BaseController {
                     $lang_add['website_id'] = session('website_id');
                     $_import['en'] = $lang_add['en'];
                     $_import['website_id'] = session('website_id');
-                    $_result = D('translation')->where($_import)->select();
+                    $_result = D('translation')->gets('',$_import);
                     $_repeat_lang = false;
                     foreach ($_result as $val) {
                         if(strcmp($_import['en'],$val['en']) === 0){
@@ -106,10 +106,10 @@ class TranslationController extends BaseController {
                         $lang_save = $lang_add;
                         $lang_save['id'] = $_repeat_id;
                         $lang_save['status'] = '1';
-                        D('translation')->save($lang_save);
-                        $modify = D('translation')->where(array('id'=>$_result['id']))->find();
-                        if($modify['en']!=''&&$modify['ne']!=''&&$modify['nl']!=''){
-                            $lang_modify['id'] = $_result['id'];
+                        D('translation')->setTranslate($lang_save);
+                        $modify = M('translation')->where(array('id' => $_repeat_id))->find();
+                        if($modify['en']!=''&&$modify['de']!=''&&$modify['nl']!=''){
+                            $lang_modify['id'] = $_repeat_id;
                             $lang_modify['modify'] = '0';
                             D('translation')->setTranslate($lang_modify);
                         }
@@ -125,7 +125,7 @@ class TranslationController extends BaseController {
     public function add(){
         $Model = new \Think\Model();
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_translation = M('translation')->where(array('en' => $_params['en'],'website_id' => session('website_id')))->select();
+        $_translation = D('translation')->gets('',array('en' => $_params['en'],'website_id' => session('website_id')));
         foreach ($_translation as $val) {
             if(strcmp($_params['en'],$val['en']) === 0 && $val['status'] == 1){
                 $repeat_lang = true;
