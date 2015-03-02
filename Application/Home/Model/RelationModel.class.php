@@ -16,10 +16,14 @@ class RelationModel extends Model{
     }
 
     public function set($_user_id, $_role_id) {
-        $this->where(array('user_id' => $_user_id))
+        $_result = $this->where(array('user_id' => $_user_id))
              ->save(array('role_id' => $_role_id));
-
-        return true;
+        if($_result > 0){
+            return true;
+        }else{
+            return 'Modify Failure.';
+        }
     }
+
 }
 ?>

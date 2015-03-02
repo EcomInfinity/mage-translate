@@ -770,7 +770,7 @@ jQuery(function() {
                     { search: this.search },
                     { url: UrlApi('_app')+'/rolelist' }
                 ).done(function (response){
-                    _self.$el.html(_self.template({roleList: response.data}));
+                    _self.$el.html(_self.template({roleList: response.data.roles,current_count:response.data.count,'count':response.data.total}));
                 });
             }
         });
@@ -963,7 +963,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/userlist'}
                 ).done(function (response){
                     if(response.success === true){
-                        _self.$el.html(_self.template({userList: response.data}));
+                        _self.$el.html(_self.template({userList: response.data.users,current_count:response.data.count,count:response.data.total}));
                         _self.$el.find('.ipt-checkbox-allow').bootstrapSwitch();
                         _self.$el.find('.ipt-checkbox-allow').on('switchChange.bootstrapSwitch', function(event, state) {
                             if (state === true) {
@@ -984,7 +984,7 @@ jQuery(function() {
             },
             _edit: function(){
                 var _self = this,
-                    $form=$this.$el.find('form');
+                    $form=this.$el.find('form');
                 this.userModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/useredit'}

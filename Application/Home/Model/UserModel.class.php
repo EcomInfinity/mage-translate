@@ -62,8 +62,8 @@ class UserModel extends Model{
                 return 'User already registered.';
             }
 
-            if (preg_match('/^.{6,15}$/', $_password) == 0) {
-                return 'The password must have 5-15 digits or letters.';
+            if (preg_match('/^.{6,30}$/', $_password) == 0) {
+                return 'The password must have 6-30 characters.';
             }
 
             if ($this->validateUsername($_username) === false) {
@@ -89,8 +89,8 @@ class UserModel extends Model{
                 return 'User already registered.';
             }
 
-            if (preg_match('/^.{6,15}$/', $_password) == 0) {
-                return 'The password must have 6-15 digits or letters.';
+            if (preg_match('/^.{6,30}$/', $_password) == 0) {
+                return 'The password must have 6-30 characters.';
             }
 
             if (! filter_var($_username, FILTER_VALIDATE_EMAIL)) {
@@ -136,6 +136,9 @@ class UserModel extends Model{
     }
 
     public function setPassword($_password, $_user_id) {
+        if (preg_match('/^.{6,30}$/', $_password) == 0) {
+            return 'The password must have 6-30 characters.';
+        }
         $_result = $this->save(array(
             'id' => intval($_user_id),
             'password' => md5($_password),

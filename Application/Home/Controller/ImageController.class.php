@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class ImageController extends Controller {
+class ImageController extends ImagePermissionController {
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $_result = D('translation_image')->del(

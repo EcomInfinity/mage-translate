@@ -1,7 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-class TranslationController extends BaseController {
+class TranslationController extends TranslationPermissionController {
     //index
     public function index(){
         $this->display();
@@ -123,7 +123,6 @@ class TranslationController extends BaseController {
     }
 
     public function add(){
-        $Model = new \Think\Model();
         $_params = json_decode(file_get_contents("php://input"),true);
         $_translation = D('translation')->gets('',array('en' => $_params['en'],'website_id' => session('website_id')));
         foreach ($_translation as $val) {

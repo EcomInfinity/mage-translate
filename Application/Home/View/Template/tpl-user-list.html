@@ -1,8 +1,12 @@
 <script type="text/template" id="tpl-user-list">
     <div class="jump">
-        <a href="#useradd" class="btn btn-primary btn-list-user-add">User Add</a>
-        <a href="#" class="btn btn-primary btn-right btn-role-list">Role List</a>
+        <a href="#useradd" class="btn btn-primary btn-list-user-add" title="User Add"><i class="glyphicon glyphicon-plus"></i></a>
+        <a href="#" class="btn btn-primary btn-role-list" title="Role List"><i class="glyphicon glyphicon-lock"></i></a>
+        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
+        <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <%}%>Records</span>
     </div>
+    <div class="line"></div>
     <table class="table table-hover">
         <tr>
             <th>UserName</th>
@@ -16,7 +20,7 @@
                 <td class="td-is-allowed">
                     <input class="ipt-checkbox-allow" type="checkbox" name="allow" <% if(user.allow == '1'){ %> checked <%}%>>
                 <td>
-                <a href="#useredit/<%= user.id %>" class="btn btn-user-detail btn-info"><i class="glyphicon glyphicon-edit"></i></a>
+                <a href="#useredit/<%= user.id %>" class="btn btn-user-detail btn-info" title="Edit"><i class="glyphicon glyphicon-edit"></i></a>
                 </td>
             </tr>
         <% }) %>

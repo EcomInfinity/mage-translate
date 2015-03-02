@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class RoleController extends Controller {
+class RoleController extends RolePermissionController {
 
     public function add() {
         $_params = json_decode(file_get_contents("php://input"), true);
@@ -62,7 +62,7 @@ class RoleController extends Controller {
                         )
                 );
         }
-        
+
         if (! $_role_list) {
             $_role_list = array();
         }
@@ -71,7 +71,11 @@ class RoleController extends Controller {
                 array(
                     'success' => true,
                     'message' => '',
-                    'data' => $_role_list,
+                    'data' => array(
+                            'roles' => $_role_list,
+                            'total' => D('role')->total(session('website_id')),
+                            'count' => count($_role_list)
+                        ),
                 ),
                 'json'
             );

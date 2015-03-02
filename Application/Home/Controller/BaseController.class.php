@@ -8,7 +8,8 @@ class BaseController extends RestController {
     protected function _empty(){
         $this->error('Please enter the correct URL');
     }
-     protected function _initialize(){
+
+    protected function _initialize(){
         if(session('id')<0||!session('id')){
             $this->redirect('/admin');
         }
@@ -17,5 +18,5 @@ class BaseController extends RestController {
                 $this->redirect('/logout');
             }
         }
-     }
+    }
 }

@@ -48,6 +48,7 @@ class AdminController extends Controller {
             );
         }
     }
+
     public function logout(){
         $_session_id = session('id');
         if (isset($_session_id) && $_session_id > 0) {
@@ -77,7 +78,7 @@ class AdminController extends Controller {
         }
 
         $_website_id = D('website')->addWebsite($_params['website_name']);
-        
+
         $_relation_id = D('relation')->addRelation(
             array(
                 'user_id' => $_user_id,

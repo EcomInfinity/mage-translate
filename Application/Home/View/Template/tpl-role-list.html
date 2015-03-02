@@ -1,8 +1,12 @@
 <script type="text/template" id="tpl-role-list">
     <div class="jump">
-        <a href="#roleadd" class="btn btn-primary btn-list-role-add">Role Add</a>
-        <a href="#" class="btn btn-primary btn-right btn-user-list">User List</a>
+        <a href="#roleadd" class="btn btn-primary btn-list-role-add" title="Role Add"><i class="glyphicon glyphicon-plus"></i></a>
+        <a href="#" class="btn btn-primary btn-user-list" title="User List"><i class="glyphicon glyphicon-user"></i></a>
+        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
+        <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <%}%>Records</span>
     </div>
+    <div class="line"></div>
     <table class="table table-hover" cellspacing="0" cellpadding="0">
         <tr>
             <th>RoleName</th>
@@ -11,7 +15,7 @@
         <% _.each(roleList, function(role){ %>
             <tr data-id="<%= role.id %>">
                 <td><%= role.role_name %></td>
-                <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail"><i class="glyphicon glyphicon-edit"></i></a></td>
+                <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
             </tr>
         <% }) %>
     </table>

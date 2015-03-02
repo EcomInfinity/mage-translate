@@ -35,13 +35,17 @@ class RoleModel extends Model{
         if (preg_match('/^.{1,20}$/', $_params['role_name']) == '1'){
             $_result = $this->save($_params);
             if($_result > 0){
-                return $_result;
+                return true;
             }else{
                 return 'Modify Failure.';
             }
         } else {
             return 'Role name must have 1-20 characters';
         }
+    }
+
+    public function total($_wid){
+        return $this->where(array('website_id' => $_wid))->count();
     }
 }
 ?>

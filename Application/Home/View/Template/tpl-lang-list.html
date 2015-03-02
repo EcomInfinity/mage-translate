@@ -6,12 +6,12 @@
         <a href="#add" class="btn btn-list-add btn-primary" title="Add New Entry">
             <i class="glyphicon glyphicon-plus"></i>
         </a>
-        <a href="#" class="btn btn-list-sort btn-primary" title="Show All">
-          <% if (inrender == '1') { %>
-          <i class="glyphicon glyphicon-eye-open"></i>
-          <% } else { %>
-          <i class="glyphicon glyphicon-eye-close"></i>
-          <% } %>
+        <a href="#" class="btn btn-list-sort btn-primary" title="<% if (inrender == '1') { %>Show Modify<% } else { %>Show All<% } %>">
+            <% if (inrender == '1') { %>
+            <i class="glyphicon glyphicon-eye-open"></i>
+            <% } else { %>
+            <i class="glyphicon glyphicon-eye-close"></i>
+            <% } %>
         </a>
         <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
         <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 

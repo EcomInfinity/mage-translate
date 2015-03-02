@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class UserController extends Controller {
+class UserController extends UserPermissionController {
     public function index(){
         $_session_id = session('id');
         if (isset($_session_id) && $_session_id > 0) {
@@ -188,7 +188,11 @@ class UserController extends Controller {
             array(
                 'success' => true,
                 'message' => '',
-                'data' => $_users,
+                'data' => array(
+                        'users' => $_users,
+                        'total' => count($_relations),
+                        'count' => count($_users)
+                    ),
             ),
             'json'
         );
@@ -269,21 +273,41 @@ class UserController extends Controller {
         }
 
         // chnage role
-        D('relation')->set($_user_id, $_role_id);
+        $_setRela = D('relation')->set($_user_id, $_role_id);
 
         // change password
-        if(isset($_params['password'])  === true) {
-            $setPwd = D('user')->setPassword($_params['password'], $_user_id);
+        if(strlen($_params['password']) > 6 && strlen($_params['password']) < 30) {
+            $_setPwd = D('user')->setPassword($_params['password'], $_user_id);
+            if ($_setPwd !== true) {
+                $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => $_setPwd,
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+            }
         }
-
-        $this->ajaxReturn(
-            array(
-                'success' => true,
-                'message' => '',
-                'data' => array(),
-            ),
-            'json'
-        );
+        if($_result === true || $_setPwd === true || $_setRela === true){
+            $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        }else{
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Modify Failure.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        }
     }
 
     public function enable() {
