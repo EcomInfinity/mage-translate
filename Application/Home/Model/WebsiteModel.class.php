@@ -15,10 +15,13 @@ class WebsiteModel extends Model{
         // if (preg_match('/^[a-zA-Z0-9]{5,15}$/', $_website_name) == 0) {
         //     return 'The website name must have 1-15 digits or letters.';
         // }
-
-        return $this->add(array(
-            'name' => $_website_name
-        ));
+        if(strlen($_website_name) > 0){
+            return $this->add(array(
+                'name' => $_website_name
+            ));
+        }else{
+            return 'Website name not empty.';
+        }
     }
 }
 ?>

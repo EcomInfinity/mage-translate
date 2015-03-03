@@ -230,6 +230,7 @@ class UserController extends UserPermissionController {
 
         if ($_result === true) {
             $this->ajaxReturn(
+
                 array(
                     'success' => true,
                     'message' => '',
@@ -276,7 +277,7 @@ class UserController extends UserPermissionController {
         $_setRela = D('relation')->set($_user_id, $_role_id);
 
         // change password
-        if(strlen($_params['password']) > 6 && strlen($_params['password']) < 30) {
+        if(strlen($_params['password']) > 5 && strlen($_params['password']) < 31) {
             $_setPwd = D('user')->setPassword($_params['password'], $_user_id);
             if ($_setPwd !== true) {
                 $this->ajaxReturn(

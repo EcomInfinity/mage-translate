@@ -84,14 +84,14 @@ jQuery(function() {
 
             add: function(){
                 //增加权限
-                if(Purview('create') == '1'||PurviewVal() == '-1'){
+                if(Purview('create') == '1'||PurviewVal() == '-1'||Purview('update') == '1'){
                     this._events.trigger('refresh','addRender');
                 }
             },
 
             edit: function(id){
                 //更新权限
-                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                if(Purview('update') == '1'||PurviewVal() == '-1'||Purview('create') == '1'){
                     this._events.trigger('alernately',id,'edit');
                 }
             },
@@ -333,7 +333,26 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
-                'click .btn-list-sort': 'backSort'
+                'click .btn-list-sort': 'backSort',
+                'click td': 'Selected',
+                'click .btn-delete-selected': 'deleteSelected'
+            },
+            Selected: function(event){
+                if($(event.target).closest('tr').attr('class') == 'selection'){
+                    $(event.target).closest('tr').attr('class','');
+                }else{
+                    $(event.target).closest('tr').attr('class','selection');
+                }
+            },
+            deleteSelected: function(event){
+                // this.data = {};
+                // console.log('123');
+                // console.log($('.selection').length);
+                // for($('.selection') in val){
+                //     console.log(val[x]);
+                //     // this.data[i] = $('.selection')[i].attr('data-id');
+                // }
+                // console.log(this.data);
             },
             deleteLanguage: function(id){
                 if(confirm('Are you sure to delete?') == true){

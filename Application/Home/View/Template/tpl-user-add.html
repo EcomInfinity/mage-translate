@@ -5,7 +5,7 @@
     <form method="post" name="user_add" data-toggle="validator" role="form">
         <div class="form-holder">
             <div class="entry form-group">
-                <input type="email" name="username" id="username" placeholder="Email: joe@example.com" required data-error="Email address is invalid.">
+                <input type="email" name="username" id="username" placeholder="Email: joe@example.com" required pattern="[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?" data-error="Email address is invalid.">
                 <div class="help-block with-errors"></div>
             </div>
             <div class="entry form-group">

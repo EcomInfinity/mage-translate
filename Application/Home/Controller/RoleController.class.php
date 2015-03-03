@@ -9,7 +9,7 @@ class RoleController extends RolePermissionController {
 
         $_rules = D('rule')->gets();
         foreach ($_rules as $_key => $_rule) {
-            $purview = $purview.$_params[strtolower($val['rule_name'])];
+            $purview = $purview.$_params[strtolower($_rule['rule_name'])];
         }
 
         $purview = bindec($purview);
@@ -29,7 +29,7 @@ class RoleController extends RolePermissionController {
                     array(
                         'success' => true,
                         'message' => '',
-                        'data' => array(),
+                        'data' => '',
                     ),
                     'json'
                 );

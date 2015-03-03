@@ -5,7 +5,7 @@ use Think\Controller;
 class ImagePermissionController extends BaseController {
     public function _before_del(){
         $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['delete'] == 0){
+        if($_purview >= 0 && $_purview['delete'] == 0 && $_purview['update'] == 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,
@@ -35,7 +35,7 @@ class ImagePermissionController extends BaseController {
 
     public function _before_add(){
         $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['create'] == 0){
+        if($_purview >= 0 && $_purview['create'] == 0 && $_purview['update'] == 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,

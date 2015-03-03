@@ -37,7 +37,7 @@ jQuery(function() {
             events:{
                 'click .btn-login': 'clickBtnLogin',
                 'keypress .login-container': 'keypress',
-                'click .btn-register': 'clickBtnRegister'
+                'click .link-register': 'clickBtnRegister'
             },
             _login: function() {
                 var _self = this,
@@ -112,15 +112,14 @@ jQuery(function() {
             template: _.template($('#tpl-user-register').html()),
             events:{
                 'click .btn-register': 'clickBtnRegister',
-                'click .btn-back': 'clickBtnBack'
+                'click .link-back': 'clickBtnBack'
             },
             _register: function() {
                 var _self = this,
-                    $form = this.$el.find('form'),
-                    data = $form.serializeObject();
-                
+                    $form = this.$el.find('form');
+                    console.log($form.serializeObject());
                 this.userModel.save(
-                    data,
+                    $form.serializeObject(),
                     {
                         url: UrlApi('_app') + '/register'
                     }

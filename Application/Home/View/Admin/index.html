@@ -52,7 +52,7 @@
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
-                <a href="#" class="btn btn-register btn-default">Create an account</a>
+                <a href="#" class="link link-register">Create an account</a>
                 <a href="#" class="fr btn btn-login btn-primary">Sign In</a>
             </form>
             </div>
@@ -65,11 +65,11 @@
             <form action="" method="post" data-toggle="validator" role="form">
                 <div class="form-hoder">
                     <div class="entry form-group">
-                        <input type="email" name="username" required placeholder="Email: joe@example.com" data-error="Email address is invalid.">
+                        <input type="email" name="username" required pattern="[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?"placeholder="Email: joe@example.com" data-error="Email address is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
-                        <input type="password" id="reg-password" name="password" placeholder="Password: 6-30 characters" pattern="^.{6,30}$" required data-error="Password is invalid.">
+                        <input type="password" id="reg-password" name="password" placeholder="Password: 6-30 characters" pattern="^.\S{6,30}$" required data-error="Password is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
@@ -77,11 +77,11 @@
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
-                        <input type="text" name="website_name" placeholder="Website Name" pattern="[a-zA-Z0-9]+[a-zA-Z0-9 ]*[a-zA-Z0-9]+" required data-error="Website name is invalid.">
+                        <input type="text" name="website_name" placeholder="Website Name: must be alphanumeric" required data-error="Website name is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
-                <a href="#" class="btn btn-back btn-default">Already have an account</a>
+                <a href="#" class="link link-back">Already have an account</a>
                 
                 <a href="#" class="fr btn btn-register btn-primary">Sign Up</a>
             </form>

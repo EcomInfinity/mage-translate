@@ -31,7 +31,7 @@ function getPurviewJson($purNum){
     if($purNum == '-1'){
         $purview = '-1';
     }else{
-        $purview_f = str_split(str_pad(decbin($role['purview']),$count,'0',STR_PAD_LEFT));
+        $purview_f = str_split(str_pad(decbin($purNum),$count,'0',STR_PAD_LEFT));
         foreach ($rule as $k=>$val) {
             # code...
             $purview[strtolower($val['rule_name'])] = $purview_f[$k];
