@@ -8,22 +8,26 @@
     </div>
     <div class="line"></div>
     <table class="table table-hover">
-        <tr>
-            <th>UserName</th>
-            <th>Is Allowed</th>
-            <th>Operation</th>
-        </tr>
-        <% _.each(userList, function(user){%>
-            <tr data-id="<%= user.id %>">
-                <!--<td><%= user.id %></td>-->
-                <td><%= user.username %></td>
-                <td class="td-is-allowed">
-                    <input class="ipt-checkbox-allow" type="checkbox" name="allow" <% if(user.allow == '1'){ %> checked <%}%>>
-                <td>
-                <a href="#useredit/<%= user.id %>" class="btn btn-user-detail btn-info" title="Edit"><i class="glyphicon glyphicon-edit"></i></a>
-                </td>
+        <thead>
+            <tr>
+                <th>UserName</th>
+                <th>Is Allowed</th>
+                <th>Operation</th>
             </tr>
-        <% }) %>
+        </thead>
+        <tbody>
+            <% _.each(userList, function(user){%>
+                <tr data-id="<%= user.id %>">
+                    <!--<td><%= user.id %></td>-->
+                    <td><%= user.username %></td>
+                    <td class="td-is-allowed">
+                        <input class="ipt-checkbox-allow" type="checkbox" name="allow" <% if(user.allow == '1'){ %> checked <%}%>>
+                    <td>
+                    <a href="#useredit/<%= user.id %>" class="btn btn-user-detail btn-info" title="Edit"><i class="glyphicon glyphicon-edit"></i></a>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
     </table>
 </script>
 

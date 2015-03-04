@@ -1,19 +1,35 @@
 (function($) {
     $(function(){
          //Enlarge Image
-         $('body').on('click', 'ul img', function(){
-            $('#enlarge_images').html('');
-            $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
-            $('#enlarge_images').show();
-            return false;
-         });
+        $('body').on('click', 'ul img', function(){
+        $('#enlarge_images').html('');
+        $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
+        $('#enlarge_images').show();
+        return false;
+        });
 
-         $('body').on('click', '#enlarge_images', function(){
-            $('#enlarge_images').html('');
-            $('#enlarge_images').hide();
-            return false;
-         });
+        $('body').on('click', '#enlarge_images', function(){
+        $('#enlarge_images').html('');
+        $('#enlarge_images').hide();
+        return false;
+        });
 
+        $('body').on('click', 'td', function (event){
+            if($(event.target).closest('tr').attr('class') == 'selection'){
+                $(event.target).closest('tr').attr('class','');
+            }else{
+                $(event.target).closest('tr').addClass('selection');
+            }
+        });
+
+        // $('body').on('keydown', '', function (event){
+        //     $('body').on('click', 'td', function (event){
+        //         $(event.target).closest('tr').addClass('selection');
+        //         if($('.selection').length > 1){
+        //             $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
+        //         }
+        //     });
+        // });
     });
 
     ajaxFileUpload = function (url, fileId, callback, failure){

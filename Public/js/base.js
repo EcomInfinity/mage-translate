@@ -77,8 +77,14 @@ jQuery(function() {
 
             export: function(){
                 //导出权限
-                if(Purview('retrieve') == '1'||PurviewVal() == '-1'){
+                if(Purview('export') == '1'||PurviewVal() == '-1'){
                     this._events.trigger('refresh','export');
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 }
             },
 
@@ -86,6 +92,12 @@ jQuery(function() {
                 //增加权限
                 if(Purview('create') == '1'||PurviewVal() == '-1'||Purview('update') == '1'){
                     this._events.trigger('refresh','addRender');
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 }
             },
 
@@ -93,6 +105,12 @@ jQuery(function() {
                 //更新权限
                 if(Purview('update') == '1'||PurviewVal() == '-1'||Purview('create') == '1'){
                     this._events.trigger('alernately',id,'edit');
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 }
             },
 
@@ -100,6 +118,12 @@ jQuery(function() {
                 //删除权限
                 if(Purview('delete') == '1'||PurviewVal() == '-1'){
                     this._events.trigger('alernately',id,'delete');
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 }
             },
 
@@ -334,31 +358,98 @@ jQuery(function() {
             template: _.template($('#tpl-lang-list').html()),
             events:{
                 'click .btn-list-sort': 'backSort',
-                'click td': 'Selected',
-                'click .btn-delete-selected': 'deleteSelected'
+                // 'click td': 'clickSelection',
+                // 'click .btn-delete-selected': 'deleteSelection',
+                // 'click .btn-modify': 'setModify',
+                'click .btn-app': 'appLang'
+                // 'click .block-view-translate': 'keydownSelection'
             },
-            Selected: function(event){
-                if($(event.target).closest('tr').attr('class') == 'selection'){
-                    $(event.target).closest('tr').attr('class','');
-                }else{
-                    $(event.target).closest('tr').attr('class','selection');
+            appLang: function(event){
+                var _self = this;
+                this.data = {};
+                this.operation = $('[name = "operation"]').val();
+                if($('.selection').length < 1 || this.operation == '0'){
+                    return;
+                }
+                $('.selection').each(function (i){
+                    _self.data[i] = $(this).data('id');
+                });
+                if(this.operation == 'update'){
+                    this.translate.save(
+                        {ids: this.data},
+                        {url:UrlApi('_app')+'/setmodify'}
+                    ).done(function (response){
+                        if(response.success === true){
+                            _self.render();
+                        }
+                    });
+                }
+
+                if(this.operation == 'delete'){
+                    this.translate.save(
+                        {ids: this.data},
+                        {url:UrlApi('_app')+'/langsdel'}
+                    ).done(function (response){
+                        if(response.success === true){
+                            _self.render();
+                        }
+                    });
                 }
             },
-            deleteSelected: function(event){
-                // this.data = {};
-                // console.log('123');
-                // console.log($('.selection').length);
-                // for($('.selection') in val){
-                //     console.log(val[x]);
-                //     // this.data[i] = $('.selection')[i].attr('data-id');
-                // }
-                // console.log(this.data);
-            },
+            // clickSelection: function(event){
+            //     if($(event.target).closest('tr').attr('class') == 'selection'){
+            //         $(event.target).closest('tr').attr('class','');
+            //     }else{
+            //         $(event.target).closest('tr').attr('class','selection');
+            //     }
+            // },
+            // keydownSelection: function(event){
+            //     // if(event.keyCode === 16){
+            //         // console.log('16');
+            //     // }
+            //     alert('1');
+            // },
+            // deleteSelection: function(event){
+            //     var _self = this;
+            //     this.data = {};
+            //     if($('.selection').length < 1){
+            //         return;
+            //     }
+            //     $('.selection').each(function (i){
+            //         _self.data[i] = $(this).data('id');
+            //     });
+            //     this.translate.save(
+            //         {ids: this.data},
+            //         {url:UrlApi('_app')+'/langsdel'}
+            //     ).done(function (response){
+            //         if(response.success === true){
+            //             _self.render();
+            //         }
+            //     });
+            // },
+            // setModify: function(event){
+            //     var _self = this;
+            //     this.data = {};
+            //     if($('.selection').length < 1){
+            //         return;
+            //     }
+            //     $('.selection').each(function (i){
+            //         _self.data[i] = $(this).data('id');
+            //     });
+            //     this.translate.save(
+            //         {ids: this.data},
+            //         {url:UrlApi('_app')+'/setmodify'}
+            //     ).done(function (response){
+            //         if(response.success === true){
+            //             _self.render();
+            //         }
+            //     });
+            // },
             deleteLanguage: function(id){
                 if(confirm('Are you sure to delete?') == true){
                     var _self = this;
                     this.translate.save(
-                        {id:id},
+                        {id: id},
                         {url:UrlApi('_app')+'/langdel'}
                     ).done(function (response){
                         if(response.success === true){
@@ -439,6 +530,12 @@ jQuery(function() {
                 var _self = this;
                 var _change = $('.btn-lang-save');
                 var $form = _change.closest('form');
+                console.log($form.serializeObject().modify);
+                if($form.serializeObject().modify != this.modify){
+                    if(confirm('Are you sure you change the status of this record?') === false){
+                        return;
+                    }
+                }
                 this.translate.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/langedit'}
@@ -514,6 +611,7 @@ jQuery(function() {
                 options || (options = {});
                 this.translate = options.translate;
                 this._events = options._events;
+                this.modify = '';
             },
             setLanguage: function(langId){
                 this.langId = parseInt(langId);
@@ -528,6 +626,7 @@ jQuery(function() {
                 ).done(function (response){
                     data['langDetail'] = response.data.detail;
                     data['langImages'] = response.data.images;
+                    _self.modify = response.data.detail['modify'];
                     _self.$el.html(_self.template(data));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {

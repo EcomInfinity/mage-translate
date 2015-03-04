@@ -5,7 +5,7 @@ use Think\Controller;
 class TranslationPermissionController extends BaseController {
     public function _before_export(){
         $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['retrieve'] == 0){
+        if($_purview >= 0 && $_purview['export'] == 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,
@@ -20,7 +20,7 @@ class TranslationPermissionController extends BaseController {
 
     public function _before_download(){
         $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['retrieve'] == 0){
+        if($_purview >= 0 && $_purview['export'] == 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,

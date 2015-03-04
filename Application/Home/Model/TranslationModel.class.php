@@ -35,5 +35,11 @@ class TranslationModel extends Model {
             )
         )->count();
     }
+
+    public function setModify($_lang_id){
+        $_save['modify'] = 1;
+        $_save['id'] = $_lang_id;
+        return $this->save($_save);
+    }
 }
 ?>

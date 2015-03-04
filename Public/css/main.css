@@ -57,10 +57,14 @@ select{text-transform: uppercase;}
 
 .line{background-color: black;padding: 1px;margin: 10px 0px;}
 
-.link{text-decoration: underline;font-size: 20px;}
+.link{text-decoration: underline;}
 
-.selection{background-color: #2F70A9;color: #fff}
+.selection{background-color: #2F70A9;color: #fff;}
 .selection:hover{background-color: #2F70A9 !important;}
+
+.table{overflow: auto;height: 100px;}
+
+/*html { overflow: hidden; }*/
 
 /*.btn-right{float: right;}*/
 

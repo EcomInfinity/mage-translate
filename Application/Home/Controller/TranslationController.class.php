@@ -211,6 +211,42 @@ class TranslationController extends TranslationPermissionController {
         }
     }
 
+    public function dels(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_lang_ids = $_params['ids'];
+        foreach ($_lang_ids as $val) {
+            D('translation')->del($val);
+            D('translation_image')->del(
+                    array(
+                        'lang_id' => intval($val)
+                        )
+                );
+        }
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+    }
+
+    public function needUpdate(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        foreach ($_params['ids'] as $val) {
+            D('translation')->setModify($val);
+        }
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+    }
+
     public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
         if ($_params['inrender'] === false) {
