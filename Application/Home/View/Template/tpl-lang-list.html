@@ -1,17 +1,5 @@
 <script type="text/template" id="tpl-lang-list">
     <div class="jump">
-        <select name="operation">
-          <option value='0'>Batch operation</option>
-          <option value='update'>Need update</option>
-          <option value='delete'>Delete</option>
-        </select>
-        <a class="btn btn-primary btn-app"><i class="glyphicon glyphicon-saved"></i></a>
-        <a href="#export" class="btn btn-list-export btn-primary" title="Export">
-            <i class="glyphicon glyphicon-share"></i>
-        </a>
-        <a href="#add" class="btn btn-list-add btn-primary" title="Add New Entry">
-            <i class="glyphicon glyphicon-plus"></i>
-        </a>
         <!--
         <a href="#" class="btn btn-delete-selected btn-primary" title="Delete">
             <i class="glyphicon glyphicon-remove"></i>
@@ -30,8 +18,10 @@
         <%}%>Records</span>
     </div>
     <div class="line"></div>
-    <table cellpadding="0" 
-           cellspacing="0" 
+    <div class="data-list">
+    <table cellpadding = "0" 
+           cellspacing = "0" 
+           operation = "batch"
            class="tbl-translation-list table table-hover" 
            <% if (inrender === true) { %>
            data-sort="search"
@@ -70,4 +60,20 @@
       <% } %>
       </tbody>
     </table>
+    </div>
+    <div class="line"></div>
+    <div>
+        <select name="operation" class="batch-app">
+          <option value='0'>Batch operation</option>
+          <option value='update'>Need update</option>
+          <option value='delete'>Delete</option>
+        </select>
+        <!--<a class="btn btn-primary btn-app" title="Application"><i class="glyphicon glyphicon-saved"></i></a>-->
+        <a href="#export" class="btn btn-list-export btn-primary" title="Export">
+            <i class="glyphicon glyphicon-download-alt"></i>
+        </a>
+        <a href="#add" class="btn btn-list-add btn-primary" title="Add New Entry">
+            <i class="glyphicon glyphicon-plus"></i>
+        </a>
+    </div>
 </script>

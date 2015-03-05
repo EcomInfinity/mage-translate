@@ -64,10 +64,9 @@ select{text-transform: uppercase;}
 
 .table{overflow: auto;height: 100px;}
 
-/*html { overflow: hidden; }*/
+/*html {overflow: hidden;}*/
 
 /*.btn-right{float: right;}*/
 
-
-
+.data-list{overflow: auto;height: 500px;}
 /*.jump{z-index: 100;position: fixed;right: 0;left: 0;}*/

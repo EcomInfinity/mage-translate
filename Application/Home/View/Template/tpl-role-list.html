@@ -7,16 +7,19 @@
         <%}%>Records</span>
     </div>
     <div class="line"></div>
-    <table class="table table-hover" cellspacing="0" cellpadding="0">
-        <tr>
-            <th>RoleName</th>
-            <th>Operation</th>
-        </tr>
-        <% _.each(roleList, function(role){ %>
-            <tr data-id="<%= role.id %>">
-                <td><%= role.role_name %></td>
-                <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
+    <div class="data-list">
+        <table class="table table-hover" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>RoleName</th>
+                <th>Operation</th>
             </tr>
-        <% }) %>
-    </table>
+            <% _.each(roleList, function(role){ %>
+                <tr data-id="<%= role.id %>">
+                    <td><%= role.role_name %></td>
+                    <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
+                </tr>
+            <% }) %>
+        </table>
+    </div>
+    <div class="line"></div>
 </script>

@@ -37,7 +37,12 @@ class TranslationModel extends Model {
     }
 
     public function setModify($_lang_id){
-        $_save['modify'] = 1;
+        $_result = $this->find($_lang_id);
+        if($_result['modify'] == 0){
+            $_save['modify'] = 1;
+        }else{
+            $_save['modify'] = 0;
+        }
         $_save['id'] = $_lang_id;
         return $this->save($_save);
     }

@@ -358,16 +358,12 @@ jQuery(function() {
             template: _.template($('#tpl-lang-list').html()),
             events:{
                 'click .btn-list-sort': 'backSort',
-                // 'click td': 'clickSelection',
-                // 'click .btn-delete-selected': 'deleteSelection',
-                // 'click .btn-modify': 'setModify',
-                'click .btn-app': 'appLang'
-                // 'click .block-view-translate': 'keydownSelection'
+                'change .batch-app': 'appLang'
             },
             appLang: function(event){
                 var _self = this;
                 this.data = {};
-                this.operation = $('[name = "operation"]').val();
+                this.operation = $(event.target).val();
                 if($('.selection').length < 1 || this.operation == '0'){
                     return;
                 }
@@ -375,76 +371,31 @@ jQuery(function() {
                     _self.data[i] = $(this).data('id');
                 });
                 if(this.operation == 'update'){
-                    this.translate.save(
-                        {ids: this.data},
-                        {url:UrlApi('_app')+'/setmodify'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            _self.render();
-                        }
-                    });
+                    if(confirm('Are you sure to update?') == true){
+                        this.translate.save(
+                            {ids: this.data},
+                            {url:UrlApi('_app')+'/setmodify'}
+                        ).done(function (response){
+                            if(response.success === true){
+                                _self.render();
+                            }
+                        });
+                    }
                 }
 
                 if(this.operation == 'delete'){
-                    this.translate.save(
-                        {ids: this.data},
-                        {url:UrlApi('_app')+'/langsdel'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            _self.render();
-                        }
-                    });
+                    if(confirm('Are you sure to delete?') == true){
+                        this.translate.save(
+                            {ids: this.data},
+                            {url:UrlApi('_app')+'/langsdel'}
+                        ).done(function (response){
+                            if(response.success === true){
+                                _self.render();
+                            }
+                        });
+                    }
                 }
             },
-            // clickSelection: function(event){
-            //     if($(event.target).closest('tr').attr('class') == 'selection'){
-            //         $(event.target).closest('tr').attr('class','');
-            //     }else{
-            //         $(event.target).closest('tr').attr('class','selection');
-            //     }
-            // },
-            // keydownSelection: function(event){
-            //     // if(event.keyCode === 16){
-            //         // console.log('16');
-            //     // }
-            //     alert('1');
-            // },
-            // deleteSelection: function(event){
-            //     var _self = this;
-            //     this.data = {};
-            //     if($('.selection').length < 1){
-            //         return;
-            //     }
-            //     $('.selection').each(function (i){
-            //         _self.data[i] = $(this).data('id');
-            //     });
-            //     this.translate.save(
-            //         {ids: this.data},
-            //         {url:UrlApi('_app')+'/langsdel'}
-            //     ).done(function (response){
-            //         if(response.success === true){
-            //             _self.render();
-            //         }
-            //     });
-            // },
-            // setModify: function(event){
-            //     var _self = this;
-            //     this.data = {};
-            //     if($('.selection').length < 1){
-            //         return;
-            //     }
-            //     $('.selection').each(function (i){
-            //         _self.data[i] = $(this).data('id');
-            //     });
-            //     this.translate.save(
-            //         {ids: this.data},
-            //         {url:UrlApi('_app')+'/setmodify'}
-            //     ).done(function (response){
-            //         if(response.success === true){
-            //             _self.render();
-            //         }
-            //     });
-            // },
             deleteLanguage: function(id){
                 if(confirm('Are you sure to delete?') == true){
                     var _self = this;
