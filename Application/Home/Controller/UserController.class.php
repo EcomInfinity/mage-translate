@@ -162,7 +162,7 @@ class UserController extends UserPermissionController {
         $_params = json_decode(file_get_contents("php://input"),true);
 
         $_relations = D('relation')->gets(array('parent_id' => session('id')));
-        $_users = array();
+        // $_users = array();
 
         if (count($_relations) > 0) {
             $_user_ids = array();

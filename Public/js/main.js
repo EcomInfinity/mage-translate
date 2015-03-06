@@ -1,24 +1,42 @@
 (function($) {
     $(function(){
-        // alert($(window).height());
-        $('body').on('scroll', '.data-list', function(){
-            console.log($('.data-list'));
-        });
+        // $(window).resize(function () {
+        //     var other = $('.navbar').outerHeight(true)
+        //     +$('h1').outerHeight(true)
+        //     +$('.search-box').outerHeight(true)
+        //     +$('.record-view').outerHeight(true)
+        //     +$('.list-head').outerHeight(true)
+        //     +$('.operation-view').outerHeight(true)
+        //     +$('.line').outerHeight(true)*2;
+        //     $('.data-list').height($(window).height() - other);
+        // });
+
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
-        $('#enlarge_images').html('');
-        $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
-        $('#enlarge_images').show();
-        return false;
+            $('#enlarge_images').html('');
+            $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
+            $('#enlarge_images').show();
+            return false;
         });
 
         $('body').on('click', '#enlarge_images', function(){
-        $('#enlarge_images').html('');
-        $('#enlarge_images').hide();
-        return false;
+            $('#enlarge_images').html('');
+            $('#enlarge_images').hide();
+            return false;
         });
 
+        // var _shift_click = false;
+        // $('body').on('keydown', '', function (event){
+        //     if(event.keyCode === 16){
+        //         _shift_click = true;
+        //     }
+        // });
+        // $('body').on('keyup', '', function(){
+        //     _shift_click = false;
+        // });
+
         $('body').on('click', "td", function (event){
+            $('.batch-app option')[0].selected = true;
             if($(event.target).closest('table').attr('operation') == 'batch'){
                 if($(event.target).closest('tr').attr('class') == 'selection'){
                     $(event.target).closest('tr').attr('class','');
@@ -27,15 +45,13 @@
                 }
             }
         });
-
         // $('body').on('keydown', '', function (event){
         //     if(event.keyCode === 16){
-        //         console.log('1');
         //         $('body').on('click', 'td', function (event){
-        //             $(event.target).closest('tr').addClass('selection');
-        //             if($('.selection').length > 1){
-        //                 $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
-        //             }
+        //                 $(this).closest('tr').addClass('selection');
+        //                 if($('.selection').length > 1){
+        //                     $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
+        //                 }
         //         });
         //     }
         // });

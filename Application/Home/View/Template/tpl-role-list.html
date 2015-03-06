@@ -7,18 +7,34 @@
         <%}%>Records</span>
     </div>
     <div class="line"></div>
+    <table class="list-head tbl-role-list">
+        <thead>
+            <tr>
+                <th class="col-role">RoleName</th>
+                <th class="col-operation">Operation</th>
+            </tr>
+        </thead>
+    </table>
     <div class="data-list">
         <table class="table table-hover" cellspacing="0" cellpadding="0">
-            <tr>
-                <th>RoleName</th>
-                <th>Operation</th>
-            </tr>
-            <% _.each(roleList, function(role){ %>
-                <tr data-id="<%= role.id %>">
-                    <td><%= role.role_name %></td>
-                    <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
+            <thead>
+                <tr>
+                    <th class="col-role"> </th>
+                    <th class="col-operation"> </th>
                 </tr>
-            <% }) %>
+            </thead>
+            <tbody>
+            <% if(roleList){ %>
+                <% _.each(roleList, function(role){ %>
+                    <tr data-id="<%= role.id %>">
+                        <td><%= role.role_name %></td>
+                        <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
+                    </tr>
+                <% }) %>
+            <% }else{ %>
+                <tr><td colspan="2" align="center">No Records !</td></tr>
+            <% } %>
+            </tbody>
         </table>
     </div>
     <div class="line"></div>

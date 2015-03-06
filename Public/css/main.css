@@ -42,8 +42,9 @@ table td, table th { padding: 5px; }
 
 .tip{color:red;}
 
-table.tbl-translation-list th.col-language { width: 275px; }
-table.tbl-translation-list th.col-operation { width: 100px; }
+table.tbl-translation-list th.col-language { width: 29%; }
+/*table.tbl-translation-list th.col-operation { width: 13%; }*/
+th.col-operation { width: 13%; }
 table.tbl-translation-list tbody td { word-break: break-all; vertical-align: middle; }
 
 #enlarge_images{display:none;}
@@ -62,11 +63,9 @@ select{text-transform: uppercase;}
 .selection{background-color: #2F70A9;color: #fff;}
 .selection:hover{background-color: #2F70A9 !important;}
 
-.table{overflow: auto;height: 100px;}
-
-/*html {overflow: hidden;}*/
-
-/*.btn-right{float: right;}*/
+html {overflow: hidden;}
 
 .data-list{overflow: auto;height: 500px;}
-/*.jump{z-index: 100;position: fixed;right: 0;left: 0;}*/
+
+.operation-view{margin-bottom: 10px;}
+.batch-app{float: right;}

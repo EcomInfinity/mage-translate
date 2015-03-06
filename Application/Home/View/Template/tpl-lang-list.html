@@ -1,5 +1,5 @@
 <script type="text/template" id="tpl-lang-list">
-    <div class="jump">
+    <div class="record-view" style="height:30px;">
         <!--
         <a href="#" class="btn btn-delete-selected btn-primary" title="Delete">
             <i class="glyphicon glyphicon-remove"></i>
@@ -18,6 +18,16 @@
         <%}%>Records</span>
     </div>
     <div class="line"></div>
+    <table class="list-head tbl-translation-list">
+        <thead>
+            <tr>
+              <th class="col-language">EN</th>
+              <th class="col-language">DE</th>
+              <th class="col-language">NL</th>
+              <th class="col-operation">OPERATION</th>
+            </tr>
+        </thead>
+    </table>
     <div class="data-list">
     <table cellpadding = "0" 
            cellspacing = "0" 
@@ -31,10 +41,10 @@
     >
       <thead>
         <tr>
-          <th class="col-language">EN</th>
-          <th class="col-language">DE</th>
-          <th class="col-language">NL</th>
-          <th class="col-operation">OPERATION</th>
+          <th class="col-language"> </th>
+          <th class="col-language"> </th>
+          <th class="col-language"> </th>
+          <th class="col-operation"> </th>
         </tr>
       </thead>
       <tbody>
@@ -62,10 +72,16 @@
     </table>
     </div>
     <div class="line"></div>
-    <div>
+    <div class="operation-view">
         <select name="operation" class="batch-app">
           <option value='0'>Batch operation</option>
-          <option value='update'>Need update</option>
+          <option value='update'>
+            <% if (inrender == '1') { %>
+            Need update
+            <% } else { %>
+            No update
+            <% } %>
+          </option>
           <option value='delete'>Delete</option>
         </select>
         <!--<a class="btn btn-primary btn-app" title="Application"><i class="glyphicon glyphicon-saved"></i></a>-->

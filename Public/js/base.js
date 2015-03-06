@@ -360,6 +360,16 @@ jQuery(function() {
                 'click .btn-list-sort': 'backSort',
                 'change .batch-app': 'appLang'
             },
+            backSort: function(event){
+                var sort = $('.table').attr('data-sort');
+                if(sort == 'modify'){
+                    this.setList({complete: true}).render();
+                    this.inrender = true;
+                }
+                if(sort == 'search'){
+                    this.setList({inrender: false,complete: false}).render();
+                }
+            },
             appLang: function(event){
                 var _self = this;
                 this.data = {};
@@ -370,27 +380,46 @@ jQuery(function() {
                 $('.selection').each(function (i){
                     _self.data[i] = $(this).data('id');
                 });
+
                 if(this.operation == 'update'){
-                    if(confirm('Are you sure to update?') == true){
-                        this.translate.save(
-                            {ids: this.data},
-                            {url:UrlApi('_app')+'/setmodify'}
-                        ).done(function (response){
-                            if(response.success === true){
-                                _self.render();
+                    if(Purview('update') == '1'||PurviewVal() == '-1'){
+                            if(confirm('Are you sure to update?') == true){
+                                this.translate.save(
+                                    {ids: this.data},
+                                    {url:UrlApi('_app')+'/setmodify'}
+                                ).done(function (response){
+                                    if(response.success === true){
+                                        _self.render();
+                                    }
+                                });
+                            }else{
+                                $(event.target).find('option')[0].selected = true;
+                            }
+                    }else{
+                        $.fancybox($('.message'),{
+                           afterClose: function () {
                             }
                         });
                     }
                 }
 
                 if(this.operation == 'delete'){
-                    if(confirm('Are you sure to delete?') == true){
-                        this.translate.save(
-                            {ids: this.data},
-                            {url:UrlApi('_app')+'/langsdel'}
-                        ).done(function (response){
-                            if(response.success === true){
-                                _self.render();
+                    if(Purview('delete') == '1'||PurviewVal() == '-1'){
+                            if(confirm('Are you sure to delete?') == true){
+                                this.translate.save(
+                                    {ids: this.data},
+                                    {url:UrlApi('_app')+'/langsdel'}
+                                ).done(function (response){
+                                    if(response.success === true){
+                                        _self.render();
+                                    }
+                                });
+                            }else{
+                                $(event.target).find('option')[0].selected = true;
+                            }
+                    }else{
+                        $.fancybox($('.message'),{
+                           afterClose: function () {
                             }
                         });
                     }
@@ -423,16 +452,6 @@ jQuery(function() {
                         _self._events.trigger('refresh','list-add');
                     });
                 return false;
-            },
-            backSort: function(event){
-                var sort = $('table').attr('data-sort');
-                if(sort == 'modify'){
-                    this.setList({complete: true}).render();
-                    this.inrender = true;
-                }
-                if(sort == 'search'){
-                    this.setList({inrender: false,complete: false}).render();
-                }
             },
             setList: function(data){
                 this.search = data.search;
@@ -1286,7 +1305,7 @@ jQuery(function() {
 
 
                 var searchView = new lang.View.LanguageSearchView({
-                    el: '.search-box',
+                    el: '.search-box-lang',
                     _events:_events,
                     translate: this.translate
                 });

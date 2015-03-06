@@ -1,5 +1,5 @@
 <script type="text/template" id="tpl-user-list">
-    <div class="jump">
+    <div class="record-view">
         <a href="#useradd" class="btn btn-primary btn-list-user-add" title="User Add"><i class="glyphicon glyphicon-plus"></i></a>
         <a href="#" class="btn btn-primary btn-role-list" title="Role List"><i class="glyphicon glyphicon-lock"></i></a>
         <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
@@ -7,16 +7,26 @@
         <%}%>Records</span>
     </div>
     <div class="line"></div>
+    <table class="list-head tbl-user-list">
+        <thead>
+            <tr>
+                <th class="col-user">UserName</th>
+                <th class="col-user">Is Allowed</th>
+                <th class="col-operation">Operation</th>
+            </tr>
+        </thead>
+    </table>
     <div class="data-list">
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>UserName</th>
-                    <th>Is Allowed</th>
-                    <th>Operation</th>
+                    <th class="col-user"> </th>
+                    <th class="col-user"> </th>
+                    <th class="col-operation"> </th>
                 </tr>
             </thead>
             <tbody>
+            <% if(userList){ %>
                 <% _.each(userList, function(user){%>
                     <tr data-id="<%= user.id %>">
                         <!--<td><%= user.id %></td>-->
@@ -28,6 +38,9 @@
                         </td>
                     </tr>
                 <% }) %>
+            <% }else{ %>
+                <tr><td colspan="3" align="center">No Records !</td></tr>
+            <% } %>
             </tbody>
         </table>
     </div>

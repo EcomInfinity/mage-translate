@@ -63,9 +63,9 @@ class RoleController extends RolePermissionController {
                 );
         }
 
-        if (! $_role_list) {
-            $_role_list = array();
-        }
+        // if (! $_role_list) {
+        //     $_role_list = array();
+        // }
 
         $this->ajaxReturn(
                 array(
