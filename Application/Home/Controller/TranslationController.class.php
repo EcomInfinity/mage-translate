@@ -249,43 +249,85 @@ class TranslationController extends TranslationPermissionController {
 
     public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if ($_params['inrender'] === false) {
-            $_list = D('translation')->gets(
-                        '', 
+        $_search = D('translation')->gets(
+                        '',
                         array(
-                            'status' => 1,
-                            'website_id' => session('website_id'),
-                            'modify' => 1,
-                        ),
+                                'status' => 1,
+                                'website_id' => session('website_id'),
+                                'en' => array('like', '%'.$_params['search'].'%')
+                            ),
                         'id desc',
                         array()
                     );
-        } else {
-            if($_params['complete'] === true){
-                $_list = D('translation')->gets(
-                            '',
-                            array(
-                                'en' => array('like', '%'.$_params['search'].'%'),
-                                'website_id' => session('website_id'),
+        $_no_modify = D('translation')->gets(
+                        '',
+                        array(
                                 'status' => 1,
-                                'modify' => 0,
-                            ),
-                            'id desc',
-                            array()
-                        );
-            }else{
-                $_list = D('translation')->gets(
-                            '',
-                            array(
-                                'en' => array('like', '%'.$_params['search'].'%'),
                                 'website_id' => session('website_id'),
-                                'status' => 1,
+                                'en' =>array('like', '%'.$_params['search'].'%'),
+                                'modify' => 0
                             ),
-                            'id desc',
-                            array()
-                        );
-            }
+                        'id desc',
+                        array()
+                    );
+        $_need_modify = D('translation')->gets(
+                        '',
+                        array(
+                                'status' => 1,
+                                'website_id' => session('website_id'),
+                                'en' =>array('like', '%'.$_params['search'].'%'),
+                                'modify' => 1
+                            ),
+                        'id desc',
+                        array()
+                    );
+        if($_params['modify'] === 1){
+            $_list = $_need_modify;
+            $_show = 1;
+        }elseif($_params['modify'] === 0){
+            $_list = $_no_modify;
+            $_show = 2;
+        }else{
+            $_list = $_search;
+            $_show = 3;
         }
+        // if ($_params['inrender'] === false) {
+        //     $_list = D('translation')->gets(
+        //                 '',
+        //                 array(
+        //                     'status' => 1,
+        //                     'website_id' => session('website_id'),
+        //                     'modify' => 1,
+        //                 ),
+        //                 'id desc',
+        //                 array()
+        //             );
+        // } else {
+        //     if($_params['complete'] === true){
+        //         $_list = D('translation')->gets(
+        //                     '',
+        //                     array(
+        //                         'en' => array('like', '%'.$_params['search'].'%'),
+        //                         'website_id' => session('website_id'),
+        //                         'status' => 1,
+        //                         'modify' => 0,
+        //                     ),
+        //                     'id desc',
+        //                     array()
+        //                 );
+        //     }else{
+        //         $_list = D('translation')->gets(
+        //                     '',
+        //                     array(
+        //                         'en' => array('like', '%'.$_params['search'].'%'),
+        //                         'website_id' => session('website_id'),
+        //                         'status' => 1,
+        //                     ),
+        //                     'id desc',
+        //                     array()
+        //                 );
+        //     }
+        // }
 
         foreach ($_list as $key => $value) {
             foreach ($value as $k => $val) {
@@ -298,9 +340,11 @@ class TranslationController extends TranslationPermissionController {
                 'success' => true,
                 'message' => '',
                 'data' => array(
-                    'total' => D('translation')->total(session('website_id')),
-                    'count' => count($_list),
+                    'total' => count($_search),
+                    'need_modify' => count($_need_modify),
+                    'no_modify' => count($_no_modify),
                     'list' => $translation_list,
+                    'show' => $_show
                 ),
             ),
             'json'

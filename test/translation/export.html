@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://192.168.2.102/" />
+<title>export</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">export</td></tr>
+</thead><tbody>
+<!-- 登录 835088700@qq.com  20860xzh  start -->
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=835088700@qq.com</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - welcome</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th.col-operation</td>
+	<td>OPERATION</td>
+</tr>
+<!-- 登录完成 end -->
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-plus</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=batch-import</td>
+	<td>F:\boss file\my_test\2015.02.28\translation\translation-fr(1).csv</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=en</td>
+	<td>TEST_1234</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=de</td>
+	<td>TEST_1234</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a.fancybox-item.fancybox-close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span.record</td>
+	<td>1 / 9 Records</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-share</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Export</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=export</td>
+	<td>label=nl</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Export</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a.fancybox-item.fancybox-close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-eye-close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span.record</td>
+	<td>0 Records</td>
+</tr>
+<!-- 退出登录 starte -->
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

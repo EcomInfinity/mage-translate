@@ -332,15 +332,42 @@ jQuery(function() {
         lang.View.LanguageSearchView = Backbone.View.extend({
             template: _.template($('#tpl-lang-search').html()),
             events:{
-                'keypress .search': 'searchLanguage'
+                'keypress .search': 'searchLanguage',
+                'focus .search': 'searchFocus',
+                'click .search-clear': 'searchClear',
+                'click .search-enter': 'searchEnter'
             },
             searchLanguage: function(event){
                 if(event.keyCode == '13'){
-                        this.search = $(event.target).val();
-                        this.inrender = true;
-                        this.searchData = {search:this.search,inrender:this.inrender};
-                        this._events.trigger('alernately',this.searchData,'search');
+                    $(event.target).blur();
+                    $('.search-enter').hide();
+                    $('.search-clear').show();
+                    this.search = $(event.target).val();
+                    this.inrender = true;
+                    this.searchData = {search:this.search,inrender:this.inrender};
+                    this._events.trigger('alernately',this.searchData,'search');
                 }
+            },
+            searchFocus: function (event){
+                $('.search-enter').show();
+                $('.search-clear').hide();
+            },
+            searchClear: function (event){
+                $('.search').val('');
+                $('.search').focus();
+                $('.search-enter').show();
+                $('.search-clear').hide();
+                return false;
+            },
+            searchEnter: function (event){
+                $('.search').blur();
+                $('.search-enter').hide();
+                $('.search-clear').show();
+                this.search = $('.search').val();
+                this.inrender = true;
+                this.searchData = {search:this.search,inrender:this.inrender};
+                this._events.trigger('alernately',this.searchData,'search');
+                return false;
             },
             initialize:function(options){
                 options || (options = {});
@@ -358,7 +385,37 @@ jQuery(function() {
             template: _.template($('#tpl-lang-list').html()),
             events:{
                 'click .btn-list-sort': 'backSort',
-                'change .batch-app': 'appLang'
+                'change .batch-app': 'appLang',
+                'click .translate-modify': 'showNeedModify',
+                'click .translate-complete': 'showNoModify',
+                'click .translate-total': 'showTotalRecords'
+            },
+            showNeedModify: function (event){
+                var _self = this;
+                this.translate.save(
+                    {modify:1},
+                    {url: UrlApi('_app')+'/langlist'}
+                ).done(function (response){
+                    _self.render();
+                });
+            },
+            showNoModify: function (event){
+                var _self = this;
+                this.translate.save(
+                    {modify:0},
+                    {url: UrlApi('_app')+'/langlist'}
+                ).done(function (response){
+                    _self.render();
+                });
+            },
+            showTotalRecords: function (event){
+                var _self = this;
+                this.translate.save(
+                    {modify:2},
+                    {url: UrlApi('_app')+'/langlist'}
+                ).done(function (response){
+                    _self.render();
+                });
             },
             backSort: function(event){
                 var sort = $('.table').attr('data-sort');
@@ -480,12 +537,15 @@ jQuery(function() {
                 ).done(function (response){
                     var data = {
                         'lists': response.data.list,
-                        'count': response.data.total,
-                        'current_count': response.data.count,
+                        'total': response.data.total,
+                        'need_modify': response.data.need_modify,
+                        'no_modify': response.data.no_modify,
+                        'click_show': response.data.show,
                         'inrender': _self.inrender
                     };
                     _self.$el.html(_self.template(data));
                 });
+                return this;
             }
         });
         //LanguageEdit

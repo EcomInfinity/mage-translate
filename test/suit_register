@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="right register.html">right register</a></td></tr>
+<tr><td><a href="register1.html">register1</a></td></tr>
+<tr><td><a href="two Email can register.html">right Email can registe</a></td></tr>
+<tr><td><a href="register2.html">register2</a></td></tr>
+<tr><td><a href="register3.html">register3</a></td></tr>
+<tr><td><a href="register4.html">register4</a></td></tr>
+<tr><td><a href="password different.html">password different</a></td></tr>
+</tbody></table>
+</body>
+</html>

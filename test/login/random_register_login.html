@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost/" />
+<title>random_register_login</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">random_register_login</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/redesign/admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Create an account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeRandom</td>
+	<td>random</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='username'])[2]</td>
+	<td>TEST${random}@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>TEST${random}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>TEST${random}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>TEST${random}</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span.record</td>
+	<td>0 Records</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - TEST${random}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>TEST${random}@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>TEST${random}</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>TEST${random}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=TEST${random}@qq.com</td>
+	<td>TEST${random}@qq.com</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Sign In</td>
+	<td>Sign In</td>
+</tr>
+</tbody></table>
+</body>
+</html>

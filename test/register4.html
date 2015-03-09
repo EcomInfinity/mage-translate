@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://192.168.2.102/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<!-- 只要是字符都能输入，而website不能是特殊字符，左右都不能有空格 -->
+<tr>
+	<td>click</td>
+	<td>link=Create an account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>########</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>########</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>@#$</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-error</td>
+	<td>User already registered.</td>
+</tr>
+<!-- 测试website的字符长度，至少两字符，-->
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>35088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>########</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>########</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=li</td>
+	<td>Website name is invalid.</td>
+</tr>
+<!-- Email长字符注册 -->
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>1111111111111111111111111fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr11111111wqertrttttttttttttttttttttttttttttttttttttttttttttttdgffgdfgdfgdfgdfg35088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>111112222233333</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>111112222233333</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>22</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span</td>
+	<td>Email address is not correct.</td>
+</tr>
+<!--- 密码长度验证`6-16 -->
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>83508700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>12345</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>12345</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>welcome</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=li</td>
+	<td>Password is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>123456</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>123456</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>welcome</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span</td>
+	<td>User already registered.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>1234567890123456</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>1234567890123456</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>welcome</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span</td>
+	<td>User already registered.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>1835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>1234567890123451234567890123456</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=password-rpt</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>1234567890123451234567890123456</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>welcome6</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=li</td>
+	<td>Password is invalid.</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Already have an account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+</tbody></table>
+</body>
+</html>

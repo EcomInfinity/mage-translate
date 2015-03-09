@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="../user_role/Retrieve_yes.html">Retrieve_yes</a></td></tr>
+<tr><td><a href="../user_role/update_yes.html">update_yes</a></td></tr>
+<tr><td><a href="../user_role/delete_yes.html">delete_yes</a></td></tr>
+<tr><td><a href="../user_role/C_R_yes.html">C_R_yes</a></td></tr>
+<tr><td><a href="../user_role/C_U_yes.html">C_U_yes</a></td></tr>
+<tr><td><a href="../user_role/R_U_D_yes.html">R_U_D_yes</a></td></tr>
+<tr><td><a href="../user_role/C_D_yes.html">C_D_yes</a></td></tr>
+<tr><td><a href="../user_role/CREATE_yes.html">CREATE_yes</a></td></tr>
+<tr><td><a href="../user_role/C_R_U_D_yes.html">C_R_U_D_yes</a></td></tr>
+</tbody></table>
+</body>
+</html>

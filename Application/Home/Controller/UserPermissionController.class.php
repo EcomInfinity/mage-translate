@@ -50,7 +50,7 @@ class UserPermissionController extends Controller {
 
     public function _before_changePassword(){
         $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['update'] == 0){
+        if($_purview >= 0 && $_purview['update'] == 0 && session('id') <= 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,

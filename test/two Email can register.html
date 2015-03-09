@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://192.168.2.102/" />
+<title>right Email can registe</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">right Email can registe</td></tr>
+</thead><tbody>
+<!-- aa@sina.com
+bb@163.com 这两个帐号能注册成功 -->
+<tr>
+	<td>click</td>
+	<td>link=Create an account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>aa@sina.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>welcome to my Website</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Happy Translating! - welcome to my Website-1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span.record</td>
+	<td>0 Records</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mage Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Create an account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div.form-hoder &gt; div.entry.form-group &gt; input[name=&quot;username&quot;]</td>
+	<td>bb@163.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password-rpt</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=website_name</td>
+	<td>welcome to my Website</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign Up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Happy Translating! - welcome to my Website-1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=span.record</td>
+	<td>0 Records</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mage Login</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://192.168.2.102/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<!-- 登录 835088700@qq.com  20860xzh  start -->
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=835088700@qq.com</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - welcome</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th.col-operation</td>
+	<td>OPERATION</td>
+</tr>
+<!-- 登录完成 end -->
+<tr>
+	<td>click</td>
+	<td>link=User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.block.block-view-user &gt; main &gt; div.container-fluid.page-width &gt; h1</td>
+	<td>Mage User</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn.btn-primary.btn-list-user-add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Invite User</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Invite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Email address is invalid.</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//form/div/div[2]/div/ul/li</td>
+	<td>Password is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>123456</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>123456</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Email address is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>835088700@QQ</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Invite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Email address is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>12345</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Password is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>aaaaa</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Password is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>1234567890123456789012345678901</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Password is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>@#$@#$</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Invite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-error &gt; span</td>
+	<td>User already registered.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>855350887@qq.com</td>
+</tr>
+<!-- 建立一个用户8350887@qq.com  20860xzh -->
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Invite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1200</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a.fancybox-item.fancybox-close</td>
+	<td></td>
+</tr>
+<!-- 退出登录 starte -->
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+<!-- 完成退出登录 end -->
+</tbody></table>
+</body>
+</html>

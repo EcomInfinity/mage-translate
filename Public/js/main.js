@@ -1,15 +1,15 @@
 (function($) {
     $(function(){
-        // $(window).resize(function () {
-        //     var other = $('.navbar').outerHeight(true)
-        //     +$('h1').outerHeight(true)
-        //     +$('.search-box').outerHeight(true)
-        //     +$('.record-view').outerHeight(true)
-        //     +$('.list-head').outerHeight(true)
-        //     +$('.operation-view').outerHeight(true)
-        //     +$('.line').outerHeight(true)*2;
-        //     $('.data-list').height($(window).height() - other);
-        // });
+        $(window).resize(function () {
+            var other = $('.navbar').outerHeight(true)
+            +$('h1').outerHeight(true)
+            +$('.search-box').outerHeight(true)
+            +$('.record-view').outerHeight(true)
+            +$('.list-head').outerHeight(true)
+            +$('.operation-view').outerHeight(true)
+            +$('.line').outerHeight(true)*2;
+            $('.data-list').height($(window).height() - other);
+        });
 
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
@@ -25,35 +25,60 @@
             return false;
         });
 
-        // var _shift_click = false;
-        // $('body').on('keydown', '', function (event){
-        //     if(event.keyCode === 16){
-        //         _shift_click = true;
-        //     }
-        // });
-        // $('body').on('keyup', '', function(){
-        //     _shift_click = false;
-        // });
+        var _shift_click = false;
+        $('body').on('keydown', '', function (event){
+            if(event.keyCode === 16){
+                _shift_click = true;
+            }
+        });
+        $('body').on('keyup', '', function(){
+            _shift_click = false;
+        });
 
         $('body').on('click', "td", function (event){
             $('.batch-app option')[0].selected = true;
-            if($(event.target).closest('table').attr('operation') == 'batch'){
-                if($(event.target).closest('tr').attr('class') == 'selection'){
-                    $(event.target).closest('tr').attr('class','');
-                }else{
-                    $(event.target).closest('tr').addClass('selection');
+            if(_shift_click === true){
+                $(this).closest('tr').addClass('selection');
+                if($('.selection').length > 1){
+                    $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
+                }
+            }else{
+                if($(event.target).closest('table').attr('operation') == 'batch'){
+                    if($(event.target).closest('tr').attr('class') == 'selection'){
+                        $(event.target).closest('tr').attr('class','');
+                    }else{
+                        $(event.target).closest('tr').addClass('selection');
+                    }
                 }
             }
         });
-        // $('body').on('keydown', '', function (event){
-        //     if(event.keyCode === 16){
-        //         $('body').on('click', 'td', function (event){
-        //                 $(this).closest('tr').addClass('selection');
-        //                 if($('.selection').length > 1){
-        //                     $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
-        //                 }
-        //         });
+
+        // $('body').on('keypress', '.search-box', function(){
+        //     // if(event.type == 'focus'){
+        //     //         $('.search-enter').show();
+        //     //         $('.search-clear').hide();
+        //     // }
+        //     if(event.type == 'keypress'){
+        //         if(event.keyCode == '13'){
+        //             $(event.target).blur();
+        //             $('.search-enter').hide();
+        //             $('.search-clear').show();
+        //         }
         //     }
+        // });
+
+        // $('body').on('click', '.search-clear', function (){
+        //     $('.search').val('');
+        //     $('.search-enter').show();
+        //     $('.search-clear').hide();
+        //     return false;
+        // });
+
+        // $('body').on('click', '.search-enter', function (){
+        //     $(event.target).blur();
+        //     $('.search-enter').hide();
+        //     $('.search-clear').show();
+        //     return false;
         // });
     });
 

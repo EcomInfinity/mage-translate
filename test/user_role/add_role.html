@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://192.168.2.102/" />
+<title>add_role</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">add_role</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/redesign/admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td>_self</td>
+	<td>30000</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - welcome</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th.col-operation</td>
+	<td>OPERATION</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.block.block-view-user &gt; main &gt; div.container-fluid.page-width &gt; h1</td>
+	<td>Mage User</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-lock</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn.btn-primary.btn-list-role-add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Role Add</td>
+	<td>Role Add</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=label</td>
+	<td>Role Name</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn.btn-role-add.btn-primary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Role name is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>123456789012345678901</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>1234567890123456789011</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=ul.list-unstyled &gt; li</td>
+	<td>Role name is invalid.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>@#$</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>Create</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>Retrieve</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>Update</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>Delete</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>c_r</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>c_u</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=label.checkbox-inline</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>c_d</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>r_u</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>r_d</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>u_d</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>c_r_u</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>c_u_D</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>r_u_d</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=role</td>
+	<td>c_r_u_d</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-retrieve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=role-yes-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Role Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a.fancybox-item.fancybox-close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1800</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+</tbody></table>
+</body>
+</html>

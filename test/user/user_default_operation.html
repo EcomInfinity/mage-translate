@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://192.168.2.102/" />
+<title>user_default_operation</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">user_default_operation</td></tr>
+</thead><tbody>
+<!-- 835088700@qq.com 20860xzh 建立一组测试数据 starte-->
+<!-- 登录 835088700@qq.com  20860xzh  start -->
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=835088700@qq.com</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - welcome</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th.col-operation</td>
+	<td>OPERATION</td>
+</tr>
+<!-- 登录完成 end -->
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-plus</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=images-add</td>
+	<td>F:\023b5bb5c9ea15ce013df442b6003af33b87b2ad.jpg</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=en</td>
+	<td>english</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=de</td>
+	<td>ok</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=nl</td>
+	<td>you are right</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=remarks</td>
+	<td>smoking </td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=en</td>
+	<td>TEST_ni hao ya </td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=nl</td>
+	<td>TEST_wo hen ok</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=remarks</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.notifyjs-bootstrap-base.notifyjs-bootstrap-success &gt; span</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Add Entries</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a.fancybox-item.fancybox-close</td>
+	<td></td>
+</tr>
+<!-- 退出登录 starte -->
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+<!-- 完成退出登录 end -->
+<!-- 835088700@qq.com 20860xzh 建立一组测试数据 end-->
+<!-- 登录 835088700@qq.com  20860xzh  start -->
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=835088700@qq.com</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - welcome</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th.col-operation</td>
+	<td>OPERATION</td>
+</tr>
+<!-- 登录完成 end -->
+<tr>
+	<td>click</td>
+	<td>link=User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn.btn-user-detail.btn-info</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=user-groups</td>
+	<td>label=default</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=User Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<!-- 退出登录 starte -->
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+<!-- 完成退出登录 end -->
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>6610197@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-share</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=message</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=mySmallModalLabel</td>
+	<td>Message</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button.close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-plus</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=message</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=mySmallModalLabel</td>
+	<td>Message</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button.close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, '#edit/16710')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=message</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button.close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, '#delete/16710')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=message</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button.close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mage Login</td>
+	<td></td>
+</tr>
+<!-- 835088700@qq.com 20860xzh 删除所建立一组测试数据 starte-->
+<!-- 登录 835088700@qq.com  20860xzh  start -->
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>20860xzh</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=835088700@qq.com</td>
+	<td>835088700@qq.com</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h1</td>
+	<td>Happy Translating! - welcome</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th.col-operation</td>
+	<td>OPERATION</td>
+</tr>
+<!-- 登录完成 end -->
+<tr>
+	<td>click</td>
+	<td>css=.btn.btn-delete.btn-danger</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.glyphicon.glyphicon-eye-close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn.btn-delete.btn-danger</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure to delete?</td>
+	<td></td>
+</tr>
+<!-- 退出登录 starte -->
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Sign In</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Create an account</td>
+	<td>Create an account</td>
+</tr>
+<!-- 完成退出登录 end -->
+<!-- 835088700@qq.com 20860xzh  删除所建立一组测试数据 end-->
+</tbody></table>
+</body>
+</html>

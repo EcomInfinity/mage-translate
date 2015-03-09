@@ -50,9 +50,6 @@ table.tbl-translation-list tbody td { word-break: break-all; vertical-align: mid
 #enlarge_images{display:none;}
 
 select{text-transform: uppercase;}
-/*#export{background-color: #E7E7E7;}*/
-
-/*.block-translation-export{background-color: #E7E7E7;}*/
 
 .record{font-size: 18px;font-style: italic;font-weight: bold;float: right;padding: 6px 12px;}
 
@@ -69,3 +66,5 @@ html {overflow: hidden;}
 
 .operation-view{margin-bottom: 10px;}
 .batch-app{float: right;}
+.search-icon{position: relative;top: 33px;left: 910px;}
+.word-black{color: black;}

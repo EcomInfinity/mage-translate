@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="0-4的随机数测试用户和密码.html">0-4的随机数测试用户和密码</a></td></tr>
+<tr><td><a href="随机值测试秘密和用户名.html">随机值测试秘密和用户名</a></td></tr>
+<tr><td><a href="true_login.html">true_login</a></td></tr>
+<tr><td><a href="admin_login_change_password.html">admin_login_change_password</a></td></tr>
+<tr><td><a href="login_number.html">login_number</a></td></tr>
+<tr><td><a href="login16_30.html">login16_30</a></td></tr>
+<tr><td><a href="random_register_login.html">random_register_login</a></td></tr>
+</tbody></table>
+</body>
+</html>
