@@ -61,9 +61,10 @@ jQuery(function() {
                              window.open(UrlApi('_app')+'/lang', '_self');
                         }, 1000);
                     } else {
+                        $('img').click();
                         _self.$el.find('.modal-container').notify(
-                            response.message, 
-                            { 
+                            response.message,
+                            {
                                 position: 'top',
                                 className: 'error'
                             }
@@ -117,7 +118,6 @@ jQuery(function() {
             _register: function() {
                 var _self = this,
                     $form = this.$el.find('form');
-                    console.log($form.serializeObject());
                 this.userModel.save(
                     $form.serializeObject(),
                     {
@@ -136,6 +136,7 @@ jQuery(function() {
                             window.open(UrlApi('_app')+'/admin', '_self');
                         }, 1000);
                     } else {
+                        $('img').click();
                         _self.$el.find('.modal-container').notify(
                             response.message, 
                             { 
@@ -154,7 +155,7 @@ jQuery(function() {
                 this._events.trigger('show', 'login');
             },
             show: function() {
-                this.$el.show();  
+                this.$el.show();
             },
             hide: function() {
                 this.$el.hide();

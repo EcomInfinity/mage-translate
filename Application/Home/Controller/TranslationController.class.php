@@ -329,12 +329,33 @@ class TranslationController extends TranslationPermissionController {
         //     }
         // }
 
-        foreach ($_list as $key => $value) {
+        foreach ($_search as $key => $value) {
             foreach ($value as $k => $val) {
-                $translation_list[$key][$k] = htmlentities($val);
+                $_search_list[$key][$k] = htmlentities($val);
             }
         }
+        $search_list['show'] = -1;
+        $search_list['list'] = $_search_list; 
 
+        foreach ($_no_modify as $key => $value) {
+            foreach ($value as $k => $val) {
+                $_no_modify_list[$key][$k] = htmlentities($val);
+            }
+        }
+        $no_modify_list['show'] = 0;
+        $no_modify_list['list'] = $_no_modify_list;
+
+        foreach ($_need_modify as $key => $value) {
+            foreach ($value as $k => $val) {
+                $_need_modify_list[$key][$k] = htmlentities($val);
+            }
+        }
+        $need_modify_list['show'] = 1;
+        $need_modify_list['list'] = $_need_modify_list;
+
+        $translation_list['search'] = $search_list;
+        $translation_list['no_modify'] = $no_modify_list;
+        $translation_list['need_modify'] = $need_modify_list;
         $this->ajaxReturn(
             array(
                 'success' => true,

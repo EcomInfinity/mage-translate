@@ -391,31 +391,16 @@ jQuery(function() {
                 'click .translate-total': 'showTotalRecords'
             },
             showNeedModify: function (event){
-                var _self = this;
-                this.translate.save(
-                    {modify:1},
-                    {url: UrlApi('_app')+'/langlist'}
-                ).done(function (response){
-                    _self.render();
-                });
+                this.record = 1;
+                this.render();
             },
             showNoModify: function (event){
-                var _self = this;
-                this.translate.save(
-                    {modify:0},
-                    {url: UrlApi('_app')+'/langlist'}
-                ).done(function (response){
-                    _self.render();
-                });
+                this.record = 0;
+                this.render();
             },
             showTotalRecords: function (event){
-                var _self = this;
-                this.translate.save(
-                    {modify:2},
-                    {url: UrlApi('_app')+'/langlist'}
-                ).done(function (response){
-                    _self.render();
-                });
+                this.record = -1;
+                this.render();
             },
             backSort: function(event){
                 var sort = $('.table').attr('data-sort');
@@ -513,7 +498,7 @@ jQuery(function() {
             setList: function(data){
                 this.search = data.search;
                 this.inrender = data.inrender;
-                this.complete = data.complete;
+                // this.complete = data.complete;
                 return this;
             },
             initialize: function(options){
@@ -522,7 +507,8 @@ jQuery(function() {
                 this._events = options._events;
                 this.translate = options.translate;
                 this.inrender = false;
-                this.complete = false;
+                this.record = -1;
+                // this.complete = false;
                 this.render();
             },
             render: function(){
@@ -531,19 +517,30 @@ jQuery(function() {
                     { 
                         search: this.search,
                         inrender: this.inrender,
-                        complete: this.complete
+                        // complete: this.complete
                     },
                     { url:UrlApi('_app')+'/langlist' }
                 ).done(function (response){
+                    if(_self.record === 0){
+                        _self.list = response.data.list.no_modify.list;
+                        _self.show = response.data.list.no_modify.show;
+                    }else if(_self.record === 1){
+                        _self.list = response.data.list.need_modify.list;
+                        _self.show = response.data.list.need_modify.show;
+                    }else{
+                        _self.list = response.data.list.search.list;
+                        _self.show = response.data.list.search.show;
+                    }
                     var data = {
-                        'lists': response.data.list,
+                        'lists': _self.list,
                         'total': response.data.total,
                         'need_modify': response.data.need_modify,
                         'no_modify': response.data.no_modify,
-                        'click_show': response.data.show,
+                        'click_show': _self.show,
                         'inrender': _self.inrender
                     };
                     _self.$el.html(_self.template(data));
+                    _self.record = -1;
                 });
                 return this;
             }
@@ -560,7 +557,6 @@ jQuery(function() {
                 var _self = this;
                 var _change = $('.btn-lang-save');
                 var $form = _change.closest('form');
-                console.log($form.serializeObject().modify);
                 if($form.serializeObject().modify != this.modify){
                     if(confirm('Are you sure you change the status of this record?') === false){
                         return;
@@ -725,13 +721,35 @@ jQuery(function() {
         user.View.UserSearchView = Backbone.View.extend({
             template: _.template($('#tpl-user-search').html()),
             events:{
-                'keypress .user-search': 'searchUser'
+                'keypress .user-search': 'searchUser',
+                'focus .user-search': 'searchFocus',
+                'click .search-user-clear': 'searchClear',
+                'click .search-user-enter': 'searchEnter'
             },
             searchUser: function(event){
                 if(event.keyCode == '13'){
                     this.search = $(event.target).val();
                     this._userEvents.trigger('alernately',this.search,'user-search');
                 }
+            },
+            searchFocus: function (event){
+                $('.search-user-enter').show();
+                $('.search-user-clear').hide();
+            },
+            searchClear: function (event){
+                $('.user-search').val('');
+                $('.user-search').focus();
+                $('.search-user-enter').show();
+                $('.search-user-clear').hide();
+                return false;
+            },
+            searchEnter: function (event){
+                $('.user-search').blur();
+                $('.search-user-enter').hide();
+                $('.search-user-clear').show();
+                this.search = $('.user-search').val();
+                this._userEvents.trigger('alernately',this.search,'user-search');
+                return false;
             },
             initialize:function(options){
                 options || (options = {});
@@ -805,13 +823,35 @@ jQuery(function() {
         user.View.RoleSearchView = Backbone.View.extend({
             template: _.template($('#tpl-role-search').html()),
             events:{
-                'keypress .role-search': 'searchRole'
+                'keypress .role-search': 'searchRole',
+                'focus .role-search': 'searchFocus',
+                'click .search-clear': 'searchClear',
+                'click .search-enter': 'searchEnter'
             },
             searchRole: function(event){
                 if(event.keyCode == '13'){
                     this.search = $(event.target).val();
                     this._userEvents.trigger('alernately',this.search,'role-search');
                 }
+            },
+            searchFocus: function (event){
+                $('.search-enter').show();
+                $('.search-clear').hide();
+            },
+            searchClear: function (event){
+                $('.role-search').val('');
+                $('.role-search').focus();
+                $('.search-enter').show();
+                $('.search-clear').hide();
+                return false;
+            },
+            searchEnter: function (event){
+                $('.role-search').blur();
+                $('.search-enter').hide();
+                $('.search-clear').show();
+                this.search = $('.role-search').val();
+                this._userEvents.trigger('alernately',this.search,'role-search');
+                return false;
             },
             initialize:function(options){
                 options || (options = {});
