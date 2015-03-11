@@ -13,7 +13,6 @@
 
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
-            
             $('#enlarge_images').html('');
             $('#enlarge_images').html('<a href=""><img src="' + this.src + '" /></a>');
             $('#enlarge_images').show();

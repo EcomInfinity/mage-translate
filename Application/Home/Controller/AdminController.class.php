@@ -19,16 +19,16 @@ class AdminController extends Controller {
             $_params = json_decode(file_get_contents("php://input"), true);
             $_username = $_params['username'];
             $_password = $_params['password'];
-            if(check_verify($_params['verify']) === false){
-                $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => 'Incorrect Verify Code.',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-            }
+            // if(check_verify($_params['verify']) === false){
+            //     $this->ajaxReturn(
+            //         array(
+            //             'success' => false,
+            //             'message' => 'Incorrect Verify Code.',
+            //             'data' => array(),
+            //         ),
+            //         'json'
+            //     );
+            // }
             $_uid = $_user->login($_username, $_password);
         }
 
@@ -69,16 +69,16 @@ class AdminController extends Controller {
 
     public function register(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(check_verify($_params['verify']) === false){
-            $this->ajaxReturn(
-                array(
-                    'success' => false,
-                    'message' => 'Incorrect Verify Code.',
-                    'data' => array(),
-                ),
-                'json'
-            );
-        }
+        // if(check_verify($_params['verify']) === false){
+        //     $this->ajaxReturn(
+        //         array(
+        //             'success' => false,
+        //             'message' => 'Incorrect Verify Code.',
+        //             'data' => array(),
+        //         ),
+        //         'json'
+        //     );
+        // }
         $_params['username'] = $_params['username'];
         $_params['password'] = $_params['password'];
         $_params['repeat-password'] = $_params['password-rpt'];
