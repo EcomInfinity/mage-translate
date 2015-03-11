@@ -28,7 +28,7 @@
                 <% _.each(roleList, function(role){ %>
                     <tr data-id="<%= role.id %>">
                         <td><%= role.role_name %></td>
-                        <td><a href="#roleedit/<%= role.id %>" class="btn btn-info btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
+                        <td><a href="#roleedit/<%= role.id %>" class="btn btn-primary btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
                     </tr>
                 <% }) %>
             <% }else{ %>

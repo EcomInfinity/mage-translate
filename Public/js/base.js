@@ -343,9 +343,7 @@ jQuery(function() {
                     $('.search-enter').hide();
                     $('.search-clear').show();
                     this.search = $(event.target).val();
-                    this.inrender = true;
-                    this.searchData = {search:this.search,inrender:this.inrender};
-                    this._events.trigger('alernately',this.searchData,'search');
+                    this._events.trigger('alernately',{search:this.search},'search');
                 }
             },
             searchFocus: function (event){
@@ -355,6 +353,7 @@ jQuery(function() {
             searchClear: function (event){
                 $('.search').val('');
                 $('.search').focus();
+                this._events.trigger('alernately',{search:''},'search');
                 $('.search-enter').show();
                 $('.search-clear').hide();
                 return false;
@@ -497,8 +496,6 @@ jQuery(function() {
             },
             setList: function(data){
                 this.search = data.search;
-                this.inrender = data.inrender;
-                // this.complete = data.complete;
                 return this;
             },
             initialize: function(options){
@@ -508,7 +505,6 @@ jQuery(function() {
                 this.translate = options.translate;
                 this.inrender = false;
                 this.record = -1;
-                // this.complete = false;
                 this.render();
             },
             render: function(){
@@ -516,8 +512,6 @@ jQuery(function() {
                 this.translate.save(
                     { 
                         search: this.search,
-                        inrender: this.inrender,
-                        // complete: this.complete
                     },
                     { url:UrlApi('_app')+'/langlist' }
                 ).done(function (response){
@@ -739,6 +733,7 @@ jQuery(function() {
             searchClear: function (event){
                 $('.user-search').val('');
                 $('.user-search').focus();
+                this._userEvents.trigger('alernately','','user-search');
                 $('.search-user-enter').show();
                 $('.search-user-clear').hide();
                 return false;
@@ -841,6 +836,7 @@ jQuery(function() {
             searchClear: function (event){
                 $('.role-search').val('');
                 $('.role-search').focus();
+                this._userEvents.trigger('alernately','','role-search');
                 $('.search-enter').show();
                 $('.search-clear').hide();
                 return false;
