@@ -81,40 +81,33 @@ class TranslationController extends TranslationPermissionController {
                 while ($data = fgetcsv($handle)) {
                     $lang_arr[] = $data;
                 }
+                //整理csv数据
                 foreach ($lang_arr as $k => $val) {
                     if($k == '0'){
                         continue;
                     }
                     foreach ($lang_arr['0'] as $key => $value) {
-                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
-                    }
-                    if($lang_add['en']!=''&&$lang_add['de']!=''&&$lang_add['nl']!=''){
-                        $lang_add['modify'] = '0';
-                    }
-                    $lang_add['website_id'] = session('website_id');
-                    $_import['en'] = $lang_add['en'];
-                    $_import['website_id'] = session('website_id');
-                    $_result = D('translation')->gets('',$_import);
-                    $_repeat_lang = false;
-                    foreach ($_result as $val) {
-                        if(strcmp($_import['en'],$val['en']) === 0){
-                            $_repeat_lang = true;
-                            $_repeat_id = $val['id'];
+                        if($value == 'en_us'){
+                            $_lang_list[$k]['0'] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+                        }else{
+                            $_lang_list[$k]['other'][$value] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
                         }
                     }
-                    if($_repeat_lang === true){
-                        $lang_save = $lang_add;
-                        $lang_save['id'] = $_repeat_id;
-                        $lang_save['status'] = '1';
-                        D('translation')->setTranslate($lang_save);
-                        $modify = M('translation')->where(array('id' => $_repeat_id))->find();
-                        if($modify['en']!=''&&$modify['de']!=''&&$modify['nl']!=''){
-                            $lang_modify['id'] = $_repeat_id;
-                            $lang_modify['modify'] = '0';
-                            D('translation')->setTranslate($lang_modify);
-                        }
-                    }else{
-                        D('translation')->addTranslate($lang_add);
+                }
+                //增加至数据表
+                foreach ($_lang_list as $key => $value) {
+                    # code...
+                    $_repeat_list = M('base_translate')->where(array('content' => $value['0']))->select();
+                    $_base_add['content'] = $value['0'];
+                    $_base_add['website_id'] = session('website_id');
+                    $_base_id = M('base_translate')->add($_base_add);
+                    foreach ($value['other'] as $k => $val) {
+                        # code...
+                        $_language = M('language')->where(array('simple_name' => trim($k)))->find();
+                        $_other_add['lang_id'] = $_language['id'];
+                        $_other_add['content'] = $val;
+                        $_other_add['base_id'] = $_base_id;
+                        M('other_translate')->add($_other_add);
                     }
                 }
             }
