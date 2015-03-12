@@ -1,18 +1,5 @@
 <script type="text/template" id="tpl-lang-list">
     <div class="record-view" style="height:30px;">
-        <!--
-        <a href="#" class="btn btn-delete-selected btn-primary" title="Delete">
-            <i class="glyphicon glyphicon-remove"></i>
-        </a>
-        <a href="#" class="btn btn-primary btn-modify">Need Update</a>
-        
-        <a href="#" class="btn btn-list-sort btn-primary" title="<% if (inrender == '1') { %>Show Modify<% } else { %>Show All<% } %>">
-            <% if (inrender == '1') { %>
-            <i class="glyphicon glyphicon-eye-open"></i>
-            <% } else { %>
-            <i class="glyphicon glyphicon-eye-close"></i>
-            <% } %>
-        </a>-->
         <div class="record">
           <a href="#" class="translate-modify <% if(click_show === 1){ %> word-black <% } %>"><span>(<%= need_modify %> Modify)</span></a>&nbsp / &nbsp
           <a href="#" class="translate-complete <% if(click_show === 0){ %> word-black <% } %>"><span>(<%= no_modify %> Complete)</span></a>
@@ -24,10 +11,17 @@
     <table class="list-head tbl-translation-list">
         <thead>
             <tr>
-              <th class="col-language">EN</th>
-              <th class="col-language">DE</th>
-              <th class="col-language">NL</th>
-              <th class="col-operation">OPERATION</th>
+                <th class="col-language">EN_US</th>
+                <th class="col-language">
+                    <select name="language" class="lang-list">
+                        <% _.each(langs, function(lang,key){ %>
+                            <option value = "<%= lang.lang_id %>" 
+                            <% if(lang_id === lang.lang_id){ %> selected <% } %>
+                            ><%= lang.simple_name %></option>
+                        <% }) %>
+                    </select>
+                </th>
+                <th class="col-operation">OPERATION</th>
             </tr>
         </thead>
     </table>
@@ -36,38 +30,32 @@
            cellspacing = "0" 
            operation = "batch"
            class="tbl-translation-list table table-hover" 
-           <% if (inrender === true) { %>
-           data-sort="search"
-           <% } else { %>
-           data-sort="modify"
-           <% } %>
     >
       <thead>
         <tr>
-          <th class="col-language"> </th>
           <th class="col-language"> </th>
           <th class="col-language"> </th>
           <th class="col-operation"> </th>
         </tr>
       </thead>
       <tbody>
-      <% if(lists){ %>
-        <% _.each(lists, function(list){ %>
-        <tr  data-id="<%= list.id %>">
-          <input type="hidden" value="<%= list.id %>" name="ids[]" />
-          <td><%= list.en %></td>
-          <td><%= list.de %></td>
-          <td><%= list.nl %></td>
-          <td>
-            <a href="#edit/<%= list.id %>" class="btn btn-edit btn-primary" title="Edit">
-                <i class="glyphicon glyphicon-edit"></i>
-            </a>
-            <a href="#delete/<%= list.id %>" class="btn btn-delete btn-danger" title="Delete">
-                <i class="glyphicon glyphicon-remove"></i>
-            </a>
-          </td>
-        </tr>
-        <% }) %>
+      <% if(list){ %>
+          <% _.each(list, function(translate){ %>
+              <tr data-base_id="<%= translate.id %>">
+                  <td><%= translate.content %></td>
+                  <% _.each(translate.other, function(other){ %>
+                      <td><%= other.content %></td>
+                  <% }) %>
+                  <td>
+                      <a href="#edit/<%= translate.id %>" class="btn btn-edit btn-primary" title="Edit">
+                          <i class="glyphicon glyphicon-edit"></i>
+                      </a>
+                      <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
+                          <i class="glyphicon glyphicon-remove"></i>
+                      </a>
+                  </td>
+              </tr>
+          <% }) %>
       <% }else{ %>
         <tr><td colspan="4" align="center">No Records !</td></tr>
       <% } %>
@@ -79,11 +67,7 @@
         <select name="operation" class="batch-app">
           <option value='0'>Batch operation</option>
           <option value='update'>
-            <% if (inrender == '1') { %>
-            Need update
-            <% } else { %>
-            No update
-            <% } %>
+            Update Modify Status
           </option>
           <option value='delete'>Delete</option>
         </select>

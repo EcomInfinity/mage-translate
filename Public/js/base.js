@@ -383,11 +383,20 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
+                'click .btn-edit': 'langInfo',
                 'click .btn-list-sort': 'backSort',
                 'change .batch-app': 'appLang',
                 'click .translate-modify': 'showNeedModify',
                 'click .translate-complete': 'showNoModify',
-                'click .translate-total': 'showTotalRecords'
+                'click .translate-total': 'showTotalRecords',
+                'change .lang-list': 'showLangList'
+            },
+            langInfo: function (event){
+                console.log($('.lang_list').val());
+            },
+            showLangList: function (event){
+                this.lang_id = $(event.target).val();
+                this.render();
             },
             showNeedModify: function (event){
                 this.record = 1;
@@ -503,38 +512,35 @@ jQuery(function() {
                 this.lists = options.lists;
                 this._events = options._events;
                 this.translate = options.translate;
-                this.inrender = false;
+                // this.inrender = false;
+                this.lang_id = false;
                 this.record = -1;
                 this.render();
             },
             render: function(){
                 var _self = this;
+                console.log(this.record);
                 this.translate.save(
                     { 
                         search: this.search,
+                        language: this.lang_id,
+                        record: this.record,
                     },
                     { url:UrlApi('_app')+'/langlist' }
                 ).done(function (response){
-                    if(_self.record === 0){
-                        _self.list = response.data.list.no_modify.list;
-                        _self.show = response.data.list.no_modify.show;
-                    }else if(_self.record === 1){
-                        _self.list = response.data.list.need_modify.list;
-                        _self.show = response.data.list.need_modify.show;
-                    }else{
-                        _self.list = response.data.list.search.list;
-                        _self.show = response.data.list.search.show;
-                    }
+                    console.log(response);
                     var data = {
-                        'lists': _self.list,
+                        'list': response.data.list,
+                        'langs': response.data.langs,
+                        'lang_id': _self.lang_id,
                         'total': response.data.total,
                         'need_modify': response.data.need_modify,
                         'no_modify': response.data.no_modify,
-                        'click_show': _self.show,
-                        'inrender': _self.inrender
+                        'click_show': _self.record,
+                        // 'inrender': _self.inrender
                     };
                     _self.$el.html(_self.template(data));
-                    _self.record = -1;
+                    // _self.record = -1;
                 });
                 return this;
             }
@@ -638,6 +644,7 @@ jQuery(function() {
                 return this;
             },
             render: function(){
+                console.log(this.langId);
                 var _self = this;
                 var data = {};
                 this.translate.save(

@@ -95,19 +95,49 @@ class TranslationController extends TranslationPermissionController {
                     }
                 }
                 //增加至数据表
+                $_repeat_lang =false;
                 foreach ($_lang_list as $key => $value) {
                     # code...
-                    $_repeat_list = M('base_translate')->where(array('content' => $value['0']))->select();
-                    $_base_add['content'] = $value['0'];
-                    $_base_add['website_id'] = session('website_id');
-                    $_base_id = M('base_translate')->add($_base_add);
-                    foreach ($value['other'] as $k => $val) {
+                    $_repeat_base_list = D('base_translate')->where(array('content' => $value['0']))->select();
+                    //验证是否有重复
+                    foreach ($_repeat_base_list as $val) {
                         # code...
-                        $_language = M('language')->where(array('simple_name' => trim($k)))->find();
-                        $_other_add['lang_id'] = $_language['id'];
-                        $_other_add['content'] = $val;
-                        $_other_add['base_id'] = $_base_id;
-                        M('other_translate')->add($_other_add);
+                        if($value['0'] === $val['content']){
+                            $_repeat_lang = true;
+                            $_repeat_lang_id = $val['id'];
+                        }
+                    }
+                    if($_repeat_lang === true){
+                        //base content重复
+                        foreach ($value['other'] as $k => $val) {
+                            # code...
+                            $_language = D('language')->where(array('simple_name' => trim($k)))->find();
+                            $_repeat_other = D('other_translate')->where(array('base_id' => $_repeat_lang_id, 'lang_id' => $_language['id']))->find();
+                            if($_repeat_other['id'] > 0){
+                                //覆盖已有的其他语言
+                                $_other_save['content'] = $val;
+                                $_other_save['id'] = $_repeat_other['id'];
+                                D('other_translate')->save($_other_save);
+                            }else{
+                                //创建没有的其他语言
+                                $_other_add['lang_id'] = $_language['id'];
+                                $_other_add['content'] = $val;
+                                $_other_add['base_id'] = $_repeat_lang_id;
+                                D('other_translate')->add($_other_add);
+                            }
+                        }
+                    }else{
+                        $_base_add['content'] = $value['0'];
+                        $_base_add['website_id'] = session('website_id');
+                        $_base_id = D('base_translate')->add($_base_add);
+                        foreach ($value['other'] as $k => $val) {
+                            # code...
+                            $_language = D('language')->where(array('simple_name' => trim($k)))->find();
+                            $_other_add['lang_id'] = $_language['id'];
+                            $_other_add['content'] = $val;
+                            $_other_add['base_id'] = $_base_id;
+                            D('other_translate')->add($_other_add);
+                        }
                     }
                 }
             }
@@ -177,12 +207,9 @@ class TranslationController extends TranslationPermissionController {
 
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_result = D('translation')->del($_params['id']);
-        D('translation_image')->del(
-                array(
-                        'lang_id' => intval($_params['id'])
-                    )
-            );
+        $_save['id'] = $_params['id'];
+        $_save['status'] = 0;
+        $_result = D('base_translate')->save($_save);
         if($_result){
             $this->ajaxReturn(
                     array(
@@ -242,124 +269,45 @@ class TranslationController extends TranslationPermissionController {
 
     public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_search = D('translation')->gets(
-                        '',
-                        array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                'en' => array('like', '%'.$_params['search'].'%')
-                            ),
-                        'id desc',
-                        array()
-                    );
-        $_no_modify = D('translation')->gets(
-                        '',
-                        array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                'en' =>array('like', '%'.$_params['search'].'%'),
-                                'modify' => 0
-                            ),
-                        'id desc',
-                        array()
-                    );
-        $_need_modify = D('translation')->gets(
-                        '',
-                        array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                'en' =>array('like', '%'.$_params['search'].'%'),
-                                'modify' => 1
-                            ),
-                        'id desc',
-                        array()
-                    );
-        if($_params['modify'] === 1){
-            $_list = $_need_modify;
-            $_show = 1;
-        }elseif($_params['modify'] === 0){
-            $_list = $_no_modify;
-            $_show = 2;
+        if($_params['record'] === 0){
+            $_translate_list = D('base_translate')->where(array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->order('id desc')->select();
+        }elseif($_params['record'] === 1){
+            $_translate_list = D('base_translate')->where(array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->order('id desc')->select();
         }else{
-            $_list = $_search;
-            $_show = 3;
+            $_translate_list = D('base_translate')->where(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->order('id desc')->select();
         }
-        // if ($_params['inrender'] === false) {
-        //     $_list = D('translation')->gets(
-        //                 '',
-        //                 array(
-        //                     'status' => 1,
-        //                     'website_id' => session('website_id'),
-        //                     'modify' => 1,
-        //                 ),
-        //                 'id desc',
-        //                 array()
-        //             );
-        // } else {
-        //     if($_params['complete'] === true){
-        //         $_list = D('translation')->gets(
-        //                     '',
-        //                     array(
-        //                         'en' => array('like', '%'.$_params['search'].'%'),
-        //                         'website_id' => session('website_id'),
-        //                         'status' => 1,
-        //                         'modify' => 0,
-        //                     ),
-        //                     'id desc',
-        //                     array()
-        //                 );
-        //     }else{
-        //         $_list = D('translation')->gets(
-        //                     '',
-        //                     array(
-        //                         'en' => array('like', '%'.$_params['search'].'%'),
-        //                         'website_id' => session('website_id'),
-        //                         'status' => 1,
-        //                     ),
-        //                     'id desc',
-        //                     array()
-        //                 );
-        //     }
-        // }
-
-        foreach ($_search as $key => $value) {
-            foreach ($value as $k => $val) {
-                $_search_list[$key][$k] = htmlentities($val);
+        $_language_list = D('website_lang')->where(array('website_id' => session('website_id')))->relation(true)->select();
+        if($_params['language'] === false){
+            $_lang_id = $_language_list['0']['lang_id'];
+        }else{
+            $_lang_id = $_params['language'];
+        }
+        foreach ($_translate_list as $k => $val) {
+            # code...
+            $_translate_list[$k]['other'] = D('other_translate')->where(array('base_id' => $val['id'], 'lang_id' => $_lang_id))->relation(true)->select();
+        }
+        foreach ($_translate_list as $key => $value) {
+            # code...
+            $_translate_list[$key]['content'] = htmlentities($value['content']);
+            foreach ($value['other'] as $k => $val) {
+                # code...
+                $_translate_list[$key]['other'][$k]['content'] = htmlentities($val['content']);
             }
         }
-        $search_list['show'] = -1;
-        $search_list['list'] = $_search_list; 
-
-        foreach ($_no_modify as $key => $value) {
-            foreach ($value as $k => $val) {
-                $_no_modify_list[$key][$k] = htmlentities($val);
-            }
-        }
-        $no_modify_list['show'] = 0;
-        $no_modify_list['list'] = $_no_modify_list;
-
-        foreach ($_need_modify as $key => $value) {
-            foreach ($value as $k => $val) {
-                $_need_modify_list[$key][$k] = htmlentities($val);
-            }
-        }
-        $need_modify_list['show'] = 1;
-        $need_modify_list['list'] = $_need_modify_list;
-
-        $translation_list['search'] = $search_list;
-        $translation_list['no_modify'] = $no_modify_list;
-        $translation_list['need_modify'] = $need_modify_list;
+        $_search_count = D('base_translate')->where(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
+        $_need_modify_count = D('base_translate')->where(array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
+        $_no_modify_count = D('base_translate')->where(array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
         $this->ajaxReturn(
             array(
                 'success' => true,
                 'message' => '',
                 'data' => array(
-                    'total' => count($_search),
-                    'need_modify' => count($_need_modify),
-                    'no_modify' => count($_no_modify),
-                    'list' => $translation_list,
-                    'show' => $_show
-                ),
+                            'total' => $_search_count,
+                            'list' => $_translate_list,
+                            'langs' => $_language_list,
+                            'need_modify' => $_need_modify_count,
+                            'no_modify' => $_no_modify_count,
+                        ),
             ),
             'json'
         );
@@ -367,30 +315,30 @@ class TranslationController extends TranslationPermissionController {
 
     public function get(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $translation_detail = D('translation')->get($_params['id']);
-        $images = D('translation_image')->gets($_params['id']);
-        if($images||$translation_detail){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(
-                            'images'=>$images,
-                            'detail'=>$translation_detail,
-                        ),
-                    ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
+        // $translation_detail = D('translation')->get($_params['id']);
+        // $images = D('translation_image')->gets($_params['id']);
+        // if($images||$translation_detail){
+        //     $this->ajaxReturn(
+        //             array(
+        //                 'success' => true,
+        //                 'message' => '',
+        //                 'data' => array(
+        //                     'images'=>$images,
+        //                     'detail'=>$translation_detail,
+        //                 ),
+        //             ),
+        //             'json'
+        //         );
+        // }else{
+        //     $this->ajaxReturn(
+        //             array(
+        //                 'success' => false,
+        //                 'message' => '',
+        //                 'data' => array(),
+        //             ),
+        //             'json'
+        //         );
+        // }
     }
 
     public function edit(){
