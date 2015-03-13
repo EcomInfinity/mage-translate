@@ -70,23 +70,23 @@ jQuery(function() {
             },
             routes: {
                 "add": "add",
-                "export": "export",
-                "edit/:id\d": "edit",
+                // "export": "export",
+                "edit/:base_id\d/:other_id\d": "edit",
                 "delete/:id\d": "delete",
             },
 
-            export: function(){
-                //导出权限
-                if(Purview('export') == '1'||PurviewVal() == '-1'){
-                    this._events.trigger('refresh','export');
-                }else{
-                    $.fancybox($('.message'),{
-                       afterClose: function () {
-                            window.history.back();
-                        }
-                    });
-                }
-            },
+            // export: function(){
+            //     //导出权限
+            //     if(Purview('export') == '1'||PurviewVal() == '-1'){
+            //         this._events.trigger('refresh','export');
+            //     }else{
+            //         $.fancybox($('.message'),{
+            //            afterClose: function () {
+            //                 window.history.back();
+            //             }
+            //         });
+            //     }
+            // },
 
             add: function(){
                 //增加权限
@@ -101,10 +101,10 @@ jQuery(function() {
                 }
             },
 
-            edit: function(id){
+            edit: function(base_id,other_id){
                 //更新权限
                 if(Purview('update') == '1'||PurviewVal() == '-1'||Purview('create') == '1'){
-                    this._events.trigger('alernately',id,'edit');
+                    this._events.trigger('alernately',{base_id:base_id,other_id:other_id},'edit');
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -217,6 +217,7 @@ jQuery(function() {
                             }
                         );
                         lang_add.reset();
+                        $('.images_list ul li').hide();
                         _self._events.trigger('refresh','add');
                     } else {
                         $form.notify(
@@ -311,19 +312,25 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
-                this.$el.html(this.template(data));
-                this.$el.find('[name="lang_add"]').validator().on('submit', function(e) {
-                    if (e.isDefaultPrevented()) {
-                    } else {
-                        _self._add.call(_self);
-                        return false;
-                    }
-                });
-                $.fancybox(this.$el,{
-                   afterClose: function () {
-                        window.history.back();
-                    }
+                this.translate.save({}, 
+                    {url: UrlApi('_app')+'/weblang'}
+                ).done(function (response){
+                    console.log(response.data);
+                    var data = {};
+                    data['weblanglist'] = response.data;
+                    _self.$el.html(_self.template(data));
+                    _self.$el.find('[name="lang_add"]').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._add.call(_self);
+                            return false;
+                        }
+                    });
+                    $.fancybox(_self.$el,{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 });
             }
         });
@@ -383,7 +390,7 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
-                'click .btn-edit': 'langInfo',
+                'click .btn-list-export': 'exportList',
                 'click .btn-list-sort': 'backSort',
                 'change .batch-app': 'appLang',
                 'click .translate-modify': 'showNeedModify',
@@ -391,9 +398,10 @@ jQuery(function() {
                 'click .translate-total': 'showTotalRecords',
                 'change .lang-list': 'showLangList'
             },
-            langInfo: function (event){
-                console.log($('.lang_list').val());
-            },
+            // langInfo: function (event){
+            //     console.log($('.lang-list').val());
+            //     // alert('1');
+            // },
             showLangList: function (event){
                 this.lang_id = $(event.target).val();
                 this.render();
@@ -428,7 +436,7 @@ jQuery(function() {
                     return;
                 }
                 $('.selection').each(function (i){
-                    _self.data[i] = $(this).data('id');
+                    _self.data[i] = $(this).data('base_id');
                 });
 
                 if(this.operation == 'update'){
@@ -490,8 +498,28 @@ jQuery(function() {
                 window.history.back();
                 return false;
             },
-            exportRender: function(event){
-                this._events.trigger('refresh','list-export');
+            exportList: function(event){
+                //导出权限
+                if(Purview('export') == '1'||PurviewVal() == '-1'){
+                    // this._events.trigger('alernately',$('.lang-list').val(),'export-list');
+                    this.translate.save(
+                        {
+                            lang_id: $('.lang-list').val()
+                        },
+                        {url:UrlApi('_app')+'/langexport'}
+                        ).done(function (response){
+                            if(response.success === true){
+                                window.open(UrlApi('_app')+'/langdownload');
+                            }
+                        });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
+                }
+                return false;
             },
             addRender: function(){
                 var _self = this;
@@ -519,7 +547,6 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                console.log(this.record);
                 this.translate.save(
                     { 
                         search: this.search,
@@ -528,7 +555,6 @@ jQuery(function() {
                     },
                     { url:UrlApi('_app')+'/langlist' }
                 ).done(function (response){
-                    console.log(response);
                     var data = {
                         'list': response.data.list,
                         'langs': response.data.langs,
@@ -639,21 +665,22 @@ jQuery(function() {
                 this._events = options._events;
                 this.modify = '';
             },
-            setLanguage: function(langId){
-                this.langId = parseInt(langId);
+            setLanguage: function(data){
+                this.base_id = parseInt(data.base_id);
+                this.other_id = parseInt(data.other_id);
                 return this;
             },
             render: function(){
-                console.log(this.langId);
                 var _self = this;
-                var data = {};
                 this.translate.save(
-                    {id:this.langId},
+                    {base_id:this.base_id, other_id:this.other_id},
                     {url:UrlApi('_app')+'/langinfo'}
                 ).done(function (response){
-                    data['langDetail'] = response.data.detail;
+                    var data = {};
+                    data['base_info'] = response.data.base;
+                    data['other_info'] = response.data.other;
                     data['langImages'] = response.data.images;
-                    _self.modify = response.data.detail['modify'];
+                    _self.modify = response.data.base['modify'];
                     _self.$el.html(_self.template(data));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {
@@ -670,54 +697,44 @@ jQuery(function() {
                 });
             }
         });
-        //export
-        lang.View.LanguageExportView = Backbone.View.extend({
-            template: _.template($('#tpl-lang-export').html()),
-            events:{
-                'click .btn-export': 'exportLanguage'
-            },
-            exportLanguage: function(event){
-                this.clickExport = true;
-                this.select = $('#export').val();
-                this.translate.save(
-                    {
-                        exrender:false,
-                        field:this.select
-                    },
-                    {url:UrlApi('_app')+'/langexport'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            window.open(UrlApi('_app')+'/langdownload');
-                        }
-                    });
-            },
-            initialize: function(options){
-                options || (options = {});
-                this.translate = options.translate;
-                this.exrender = true;
-                this.clickExport = false;
-            },
-            render: function(){
-                var _self = this;
-                var data = {};
-                this.translate.save(
-                    {exrender:this.exrender},
-                    {url:UrlApi('_app')+'/langexport'}
-                ).done(function (response){
-                    data['allField'] = response.data;
-                    _self.$el.html(_self.template(data));
-                    $.fancybox(_self.$el,{
-                       afterClose: function () {
-                            if(_self.clickExport === false){
-                                window.history.back();
-                            }else{
-                                _self.clickExport = false;
-                            }
-                        }
-                    });
-                });
-            }
-        });
+        // //export
+        // lang.View.LanguageExportView = Backbone.View.extend({
+        //     template: _.template($('#tpl-lang-export').html()),
+        //     exportLanguage: function(id){
+        //         console.log(id);
+        //         this.select = $('#export').val();
+        //         this.translate.save(
+        //             {
+        //                 lang_id: id
+        //             },
+        //             {url:UrlApi('_app')+'/langexport'}
+        //             ).done(function (response){
+        //                 if(response.success === true){
+        //                     window.open(UrlApi('_app')+'/langdownload');
+        //                 }
+        //             });
+        //     },
+        //     initialize: function(options){
+        //         options || (options = {});
+        //         this.translate = options.translate;
+        //         this.exrender = true;
+        //     },
+        //     render: function(){
+        //         var _self = this;
+        //         var data = {};
+        //         this.translate.save(
+        //             {exrender:this.exrender},
+        //             {url:UrlApi('_app')+'/langexport'}
+        //         ).done(function (response){
+        //             data['allField'] = response.data;
+        //             _self.$el.html(_self.template(data));
+        //             $.fancybox(_self.$el,{
+        //                afterClose: function () {
+        //                 }
+        //             });
+        //         });
+        //     }
+        // });
 
         user.View.UserSearchView = Backbone.View.extend({
             template: _.template($('#tpl-user-search').html()),
@@ -1413,10 +1430,10 @@ jQuery(function() {
                     translate: this.translate
                 });
 
-                var exportView = new lang.View.LanguageExportView({
-                    el: '.block-translation-export',
-                    translate: this.translate
-                });
+                // var exportView = new lang.View.LanguageExportView({
+                //     el: '.block-translation-export',
+                //     translate: this.translate
+                // });
 
                 var router = new LangRouter({
                     _events:_events
@@ -1431,18 +1448,18 @@ jQuery(function() {
                         case 'edit':
                             listView.render();
                             break;
-                        case 'list-export':
-                            exportView.render();
-                            break;
+                        // case 'list-export':
+                        //     exportView.render();
+                        //     break;
                         case 'list-add':
                             addView.render();
                             break;
                         case 'addRender':
                             listView.addRender();
                             break;
-                        case 'export':
-                            listView.exportRender();
-                            break;
+                        // case 'export':
+                        //     listView.exportList();
+                        //     break;
                     }
                 });
 
@@ -1458,6 +1475,8 @@ jQuery(function() {
                         case 'delete':
                             listView.deleteLanguage(data);
                             break;
+                        // case 'export-list':
+                        //     exportView.exportLanguage(data);
                     }
                 });
 

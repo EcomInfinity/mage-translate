@@ -5,29 +5,34 @@
             <div class="col col5 fl">
                 <form action="" method="post"  data-toggle="validator" role="form">
                     <div class="form-holder">
-                        <input type="hidden" value="<%= langDetail['id'] %>" name="id" />
-        <% _.each(_.keys(langDetail), function(detail) { 
-            if (detail != 'id' && detail != 'status' && detail != 'website_id' && detail !='fr' && detail!='modify') { %>
-            <div class="entry textarea form-group">
-                <label for="edit-<%= detail %>"><%= detail %></label>
-                <textarea name="<%= detail %>" id="edit-<%= detail %>" lang_type="<%= detail %>" class="lang_edit" <% if(detail == 'en'){ %>required data-error="English can not be empty."<% } %>><%= langDetail[detail] %></textarea>
-                <div class="help-block with-errors"></div>
-            </div>
-            <% } %>
-            <% if(detail == 'modify'){ %>
-            <div class="entry">
-                <label>Need Update</label>
-                <div>
-                    <label class="radio-inline">
-                        <input type="radio" value="1" name="modify" id="modify-yes" <%if(langDetail[detail] == '1'){%>checked<%}%> />Yes
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" value="0" name="modify" id="modify-no" <%if(langDetail[detail] == '0'){%>checked<%}%> />No
-                    </label>
-                </div>
-            </div>
-            <% } %>
-        <%})%>
+                        <input type="hidden" value="<%= base_info['id'] %>" name="base_id" />
+                        <div class="entry textarea form-group">
+                            <label for="edit-en_US">en_US</label>
+                            <textarea name="en_us" id="edit-en_US" class="lang_edit" required data-error="English can not be empty."><%= base_info['content'] %></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <input type="hidden" value="<%= other_info['id'] %>" name="other_id" />
+                        <div class="entry textarea form-group">
+                            <label for="edit-<%= other_info['simple_name'] %>"><%= other_info['simple_name'] %></label>
+                            <textarea name="<%= other_info['simple_name'].toLowerCase() %>" id="edit-<%= other_info['simple_name'] %>" class="lang_edit"><%= other_info['content'] %></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="entry textarea form-group">
+                            <label for="edit-remarks">Remarks</label>
+                            <textarea name="remarks" id="edit-remarks" class="lang_edit"><%= base_info['remarks'] %></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="entry">
+                            <label>Need Update</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" value="1" name="modify" id="modify-yes" <%if(base_info['modify'] == '1'){%>checked<%}%> />Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="0" name="modify" id="modify-no" <%if(base_info['modify'] == '0'){%>checked<%}%> />No
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="btn-set">
                         <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
@@ -35,7 +40,7 @@
                 </form>
             </div>
 
-            <div class="images_list col col5 fr" data-id="<%= langDetail['id'] %>">
+            <div class="images_list col col5 fr" data-id="<%= base_info['id'] %>">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-holder">
                         <div class="entry file">

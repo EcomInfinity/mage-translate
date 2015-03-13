@@ -13,5 +13,9 @@ class WebsiteLangModel extends RelationModel{
                 'as_fields' => 'simple_name',
             ),
         );
+
+    public function gets($_where){
+        return $this->where($_where)->relation(true)->select();
+    }
 }
 ?>

@@ -37,5 +37,7 @@ return array(
         array('roleedit', 'Role/edit'),
         
         array('rulelist', 'Rule/gets'),
+
+        array('weblang', 'WebsiteLang/gets'),
     ),
 );

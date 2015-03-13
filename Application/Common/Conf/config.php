@@ -5,7 +5,7 @@ return array(
     'TMPL_R_DELIM' => '}>',
     'DB_TYPE' => 'mysqli',
     'DB_HOST' => 'localhost',
-    'DB_NAME' => 'redesign',
+    'DB_NAME' => 'translate',
     'DB_USER' => 'root',
     'DB_PWD' => '123456',
     'DB_PREFIX' =>'rs_',
