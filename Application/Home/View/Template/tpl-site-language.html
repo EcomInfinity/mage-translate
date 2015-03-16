@@ -1,0 +1,29 @@
+<script type="text/template" id="tpl-site-language">
+
+        <h2>Personal Setting</h2>
+        <div class="content">
+            <div class="modal-container" style="width:40%;float:left;">
+                <div class="language-checked">
+                    <select multiple class="form-control">
+                        <% _.each(lang_checked,function(lang){ %>
+                            <option value="<%= lang.id %>"><%= lang.simple_name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div style="width:15%;float:left;margin-left:3%;">
+              <a href="#" class="btn btn-checked" style="display:block;"><i class="glyphicon glyphicon-arrow-left"></i></a>
+              <a href="#" class="btn btn-unchecked" style="display:block;"><i class="glyphicon glyphicon-arrow-right"></i></a>
+            </div>
+            <div class="modal-container" style="width:40%;float:right;">
+                <div class="language-unchecked">
+                    <select multiple class="form-control" name="unchecked">
+                        <% _.each(lang_unchecked,function(lang){ %>
+                            <option value="<%= lang.id %>"><%= lang.simple_name %> / <%= lang.full_name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+</script>

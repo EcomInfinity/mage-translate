@@ -74,73 +74,75 @@ class TranslationController extends TranslationPermissionController {
                 //增加至数据表
                 foreach ($_lang_list as $key => $value) {
                     # code...
-                    $_repeat_base_list = D('base_translate')->where(array('content' => $value['0']))->select();
-                    //验证是否有重复
-                    $_repeat_lang =false;
-                    foreach ($_repeat_base_list as $val) {
-                        # code...
-                        if(strcmp($value['0'],$val['content']) === 0){
-                            $_repeat_lang = true;
-                            $_repeat_lang_id = $val['id'];
-                        }
-                    }
-                    if($_repeat_lang === true){
-                        //base content重复
-                        D('base_translate')->save(array('id' =>$_repeat_lang_id, 'status' => 1));
-                        foreach ($value['other'] as $k => $val) {
+                    if(!empty($value['0'])){
+                        $_repeat_base_list = D('base_translate')->where(array('content' => $value['0']))->select();
+                        //验证是否有重复
+                        $_repeat_lang =false;
+                        foreach ($_repeat_base_list as $val) {
                             # code...
-                            $_language = D('language')->where(array('simple_name' => trim($k)))->find();
-                            $_repeat_other = D('other_translate')->where(array('base_id' => $_repeat_lang_id, 'lang_id' => $_language['id']))->find();
-                            // if($_repeat_other['id'] > 0){
-                            //     //覆盖已有的其他语言
-                            $_other_save['content'] = $val;
-                            $_other_save['id'] = $_repeat_other['id'];
-                            D('other_translate')->save($_other_save);
-                            // }else{
-                            //     //创建没有的其他语言
+                            if(strcmp($value['0'],$val['content']) === 0){
+                                $_repeat_lang = true;
+                                $_repeat_lang_id = $val['id'];
+                            }
+                        }
+                        if($_repeat_lang === true){
+                            //base content重复
+                            D('base_translate')->save(array('id' =>$_repeat_lang_id, 'status' => 1));
+                            foreach ($value['other'] as $k => $val) {
+                                # code...
+                                $_language = D('language')->where(array('simple_name' => trim($k)))->find();
+                                $_repeat_other = D('other_translate')->where(array('base_id' => $_repeat_lang_id, 'lang_id' => $_language['id']))->find();
+                                // if($_repeat_other['id'] > 0){
+                                //     //覆盖已有的其他语言
+                                $_other_save['content'] = $val;
+                                $_other_save['id'] = $_repeat_other['id'];
+                                D('other_translate')->save($_other_save);
+                                // }else{
+                                //     //创建没有的其他语言
+                                //     $_other_add['lang_id'] = $_language['id'];
+                                //     $_other_add['content'] = $val;
+                                //     $_other_add['base_id'] = $_repeat_lang_id;
+                                //     D('other_translate')->add($_other_add);
+                                // }
+                            }
+                        }else{
+                            $_base_add['content'] = $value['0'];
+                            $_base_add['website_id'] = session('website_id');
+                            $_base_id = D('base_translate')->add($_base_add);
+                            if($_base_id > 0){
+                                $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
+                                foreach ($_website_lang as $key => $val) {
+                                    # code...
+                                    $_other_add['lang_id'] = $val['lang_id'];
+                                    $_other_add['content'] = $value['other'][strtolower($val['simple_name'])];
+                                    $_other_add['base_id'] = $_base_id;
+                                    D('other_translate')->add($_other_add);
+                                }
+                            }
+                            // foreach ($value['other'] as $k => $val) {
+                            //     # code...
+                            //     $_language = D('language')->where(array('simple_name' => trim($k)))->find();
                             //     $_other_add['lang_id'] = $_language['id'];
                             //     $_other_add['content'] = $val;
-                            //     $_other_add['base_id'] = $_repeat_lang_id;
+                            //     $_other_add['base_id'] = $_base_id;
                             //     D('other_translate')->add($_other_add);
                             // }
                         }
-                    }else{
-                        $_base_add['content'] = $value['0'];
-                        $_base_add['website_id'] = session('website_id');
-                        $_base_id = D('base_translate')->add($_base_add);
-                        if($_base_id > 0){
-                            $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
-                            foreach ($_website_lang as $key => $val) {
-                                # code...
-                                $_other_add['lang_id'] = $val['lang_id'];
-                                $_other_add['content'] = $value['other'][strtolower($val['simple_name'])];
-                                $_other_add['base_id'] = $_base_id;
-                                D('other_translate')->add($_other_add);
-                            }
-                        }
-                        // foreach ($value['other'] as $k => $val) {
-                        //     # code...
-                        //     $_language = D('language')->where(array('simple_name' => trim($k)))->find();
-                        //     $_other_add['lang_id'] = $_language['id'];
-                        //     $_other_add['content'] = $val;
-                        //     $_other_add['base_id'] = $_base_id;
-                        //     D('other_translate')->add($_other_add);
-                        // }
                     }
-                    if($_base_id > 0){
-                        $base_id = $_base_id;
-                    }else{
-                        $base_id = $_repeat_lang_id;
-                    }
-                    $_website_lang_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
-                    foreach ($_website_lang_list as $k => $val) {
-                        # code...
-                        $_other = D('other_translate')->where(array('base_id' => $base_id, 'lang_id' => $val['lang_id']))->find();
-                        if(empty($_other['content'])){
-                            D('base_translate')->save(array('id' => $base_id,'modify' => 1));
-                            break;
-                        }
-                    }
+                    // if($_base_id > 0){
+                    //     $base_id = $_base_id;
+                    // }else{
+                    //     $base_id = $_repeat_lang_id;
+                    // }
+                    // $_website_lang_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
+                    // foreach ($_website_lang_list as $k => $val) {
+                    //     # code...
+                    //     $_other = D('other_translate')->where(array('base_id' => $base_id, 'lang_id' => $val['lang_id']))->find();
+                    //     if(empty($_other['content'])){
+                    //         D('base_translate')->save(array('id' => $base_id,'modify' => 1));
+                    //         break;
+                    //     }
+                    // }
                 }
             }
             echo true;

@@ -29,7 +29,8 @@ return array(
         array('userinfo', 'User/get'),
         array('userlist', 'User/gets'),
         array('useredit', 'User/edit'),
-        array('change-password', 'User/changePassword'),
+        array('personal-setting', 'User/personalSetting'),
+        array('rest-sync', 'User/restSync'),
 
         array('roleadd', 'Role/add'),
         array('roleinfo', 'Role/get'),
@@ -39,5 +40,11 @@ return array(
         array('rulelist', 'Rule/gets'),
 
         array('weblang', 'WebsiteLang/gets'),
+        array('site-lang-add', 'WebsiteLang/add'),
+        array('site-lang-del', 'WebsiteLang/del'),
+
+        array('websiteinfo', 'Website/get'),
+        array('lang-info', 'Website/langInfo'),
+
     ),
 );

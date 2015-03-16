@@ -23,5 +23,9 @@ class WebsiteModel extends Model{
             return 'Website name not empty.';
         }
     }
+
+    public function get($_where){
+        return $this->where($_where)->find();
+    }
 }
 ?>

@@ -17,5 +17,9 @@ class WebsiteLangModel extends RelationModel{
     public function gets($_where){
         return $this->where($_where)->relation(true)->select();
     }
+
+    public function get($_where){
+        return $this->where($_where)->relation(true)->find();
+    }
 }
 ?>

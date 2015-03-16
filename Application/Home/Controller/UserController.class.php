@@ -198,21 +198,20 @@ class UserController extends UserPermissionController {
         );
     }
 
-    public function changePassword() {
+    public function personalSetting() {
         $_params = json_decode(file_get_contents("php://input"),true);
-        $user = D('user')->get($_params['id']);
-
-        if(md5($_params['original-password']) != $user['password']) {
-            $this->ajaxReturn(
-                array(
-                    'success' => false,
-                    'message' => 'The password is incorrect.',
-                    'data' => array(),
-                ),
-                'json'
-            );
-            return;
-        }
+        // $user = D('user')->get($_params['id']);
+        // if(md5($_params['original-password']) != $user['password']) {
+        //     $this->ajaxReturn(
+        //         array(
+        //             'success' => false,
+        //             'message' => 'The password is incorrect.',
+        //             'data' => array(),
+        //         ),
+        //         'json'
+        //     );
+        //     return;
+        // }
 
         if($_params['new-password'] != $_params['confirm-new-password']) {
             $this->ajaxReturn(
@@ -225,12 +224,15 @@ class UserController extends UserPermissionController {
             );
             return;
         }
-
-        $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
-
-        if ($_result === true) {
+        $_website = D('website')->get(array('id' => session('website_id')));
+        if($_params['website-name'] != $_website['name'] && !empty($_params['website-name'])){
+            $_website_result = D('website')->save(array('id'=>session('website_id'), 'name' => $_params['website-name']));
+        }
+        if(!empty($_params['new-password'])){
+            $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
+        }
+        if ($_result === true || $_website_result > 0) {
             $this->ajaxReturn(
-
                 array(
                     'success' => true,
                     'message' => '',
@@ -242,7 +244,41 @@ class UserController extends UserPermissionController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => $_result,
+                    'message' => 'Modify Failure.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        }
+    }
+
+    public function restSync() {
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_save['id'] = session('website_id');
+        if(!empty($_params['domain'])){
+            $_save['domain'] = $_params['domain'];
+        }
+        if(!empty($_params['rest_user'])){
+            $_save['rest_user'] = $_params['rest_user'];
+        }
+        if(!empty($_params['rest_password'])){
+            $_save['rest_password'] = md5($_params['rest_password']);
+        }
+        $_result = D('website')->save($_save);
+        if($_result > 0){
+            $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        }else{
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Modify Failure.',
                     'data' => array(),
                 ),
                 'json'
