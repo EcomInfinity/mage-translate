@@ -14,11 +14,15 @@
                 <th class="col-language">EN_US</th>
                 <th class="col-language">
                     <select name="language" class="lang-list">
-                        <% _.each(langs, function(lang,key){ %>
-                            <option value = "<%= lang.lang_id %>" 
-                            <% if(lang_id === lang.lang_id){ %> selected <% } %>
-                            ><%= lang.simple_name %></option>
-                        <% }) %>
+                        <% if(langs){ %>
+                            <% _.each(langs, function(lang,key){ %>
+                                <option value = "<%= lang.lang_id %>" 
+                                <% if(lang_id === lang.lang_id){ %> selected <% } %>
+                                ><%= lang.simple_name %></option>
+                            <% }) %>
+                        <% }else{ %>
+                            <option value="-1">No Other Language</option>
+                        <% } %>
                     </select>
                 </th>
                 <th class="col-operation">OPERATION</th>
@@ -43,18 +47,30 @@
           <% _.each(list, function(translate){ %>
               <tr data-base_id = "<%= translate.id %>">
                   <td><%= translate.content %></td>
-                  <% _.each(translate.other, function(other){ %>
-                      <td data-other-id="<%= other.id %>"><%= other.content %>
-                      </td>
-                      <td>
-                          <a href="#edit/<%= translate.id %>/<%= other.id %>" class="btn btn-edit btn-primary" title="Edit">
-                              <i class="glyphicon glyphicon-edit"></i>
-                          </a>
-                          <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
-                              <i class="glyphicon glyphicon-remove"></i>
-                          </a>
-                      </td>
-                  <% }) %>
+                  <% if(translate.other){ %>
+                    <% _.each(translate.other, function(other){ %>
+                        <td data-other-id="<%= other.id %>"><%= other.content %>
+                        </td>
+                        <td>
+                            <a href="#edit/<%= translate.id %>/<%= other.id %>" class="btn btn-edit btn-primary" title="Edit">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                            <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </td>
+                    <% }) %>
+                  <% }else{ %>
+                    <td> </td>
+                    <td>
+                        <a href="#edit/<%= translate.id %>/-1" class="btn btn-edit btn-primary" title="Edit">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>
+                        <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    </td>
+                  <% } %>
               </tr>
           <% }) %>
       <% }else{ %>

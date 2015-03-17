@@ -73,7 +73,7 @@
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
-                        <input type="password" id="reg-password" name="password" placeholder="Password: 6-30 characters" pattern="^.{6,30}$" required data-error="Password is invalid.">
+                        <input type="password" id="reg-password" name="password" placeholder="Password: 6-30 characters" pattern="^.{5,30}.*[^ ].*$" required data-error="Password is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
@@ -81,7 +81,7 @@
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="entry form-group">
-                        <input type="text" name="website_name" placeholder="Website Name: must be alphanumeric" required data-error="Website name is invalid.">
+                        <input type="text" name="website_name" placeholder="Website Name: must be alphanumeric" required pattern=".*[^ ].*" data-error="Website name is invalid.">
                         <div class="help-block with-errors"></div>
                     </div>
                     <!--<div class="entry verify">

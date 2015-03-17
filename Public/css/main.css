@@ -68,3 +68,7 @@ select{text-transform: uppercase;}
 .batch-app{float: right;color: white;background: rgb(43, 102, 153);height: 34px;}
 .search-icon{position: relative;top: 33px;left: 910px;}
 .word-black{color: black;}
+
+/*.block-personal-setting{width: 45%;float:left;}
+.block-rest-sync{width: 45%;float:right;}*/
+.block-site-language{margin-bottom: 30px;}

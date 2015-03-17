@@ -45,6 +45,7 @@ return array(
 
         array('websiteinfo', 'Website/get'),
         array('lang-info', 'Website/langInfo'),
+        array('save-name', 'Website/saveName'),
 
     ),
 );

@@ -136,7 +136,7 @@ class UserModel extends Model{
     }
 
     public function setPassword($_password, $_user_id) {
-        if (preg_match('/^.{6,30}$/', $_password) == 0) {
+        if (preg_match('/^.{5,30}.*[^ ].*$/', $_password) == 0) {
             return 'The password must have 6-30 characters.';
         }
         $_result = $this->save(array(

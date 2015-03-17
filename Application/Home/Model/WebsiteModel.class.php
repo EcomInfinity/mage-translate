@@ -12,15 +12,15 @@ class WebsiteModel extends Model{
     }
 
     public function addWebsite($_website_name){
-        // if (preg_match('/^[a-zA-Z0-9]{5,15}$/', $_website_name) == 0) {
+        // if (preg_match('/.*[^ ].*/', $_website_name) == 0) {
         //     return 'The website name must have 1-15 digits or letters.';
         // }
-        if(strlen($_website_name) > 0){
+        if(preg_match('/.*[^ ].*/', $_website_name) == 0){
+            return 'Website name not empty.';
+        }else{
             return $this->add(array(
                 'name' => $_website_name
             ));
-        }else{
-            return 'Website name not empty.';
         }
     }
 

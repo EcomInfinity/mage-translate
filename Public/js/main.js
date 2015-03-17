@@ -53,33 +53,6 @@
             }
         });
 
-        // $('body').on('keypress', '.search-box', function(){
-        //     // if(event.type == 'focus'){
-        //     //         $('.search-enter').show();
-        //     //         $('.search-clear').hide();
-        //     // }
-        //     if(event.type == 'keypress'){
-        //         if(event.keyCode == '13'){
-        //             $(event.target).blur();
-        //             $('.search-enter').hide();
-        //             $('.search-clear').show();
-        //         }
-        //     }
-        // });
-
-        // $('body').on('click', '.search-clear', function (){
-        //     $('.search').val('');
-        //     $('.search-enter').show();
-        //     $('.search-clear').hide();
-        //     return false;
-        // });
-
-        // $('body').on('click', '.search-enter', function (){
-        //     $(event.target).blur();
-        //     $('.search-enter').hide();
-        //     $('.search-clear').show();
-        //     return false;
-        // });
     });
 
     ajaxFileUpload = function (url, fileId, callback, failure){

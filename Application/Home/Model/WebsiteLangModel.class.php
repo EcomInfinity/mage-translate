@@ -9,8 +9,8 @@ class WebsiteLangModel extends RelationModel{
                 'class_name' => 'Language',
                 'foreign_key' => 'lang_id',
                 'mapping_name' => 'language',
-                'mapping_fields' => 'simple_name',
-                'as_fields' => 'simple_name',
+                'mapping_fields' => 'simple_name,full_name',
+                'as_fields' => 'simple_name,full_name',
             ),
         );
 

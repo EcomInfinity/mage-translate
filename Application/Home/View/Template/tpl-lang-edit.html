@@ -3,23 +3,25 @@
         <h2>Edit</h2>
         <div class="content">
             <div class="col col5 fl">
-                <form action="" method="post"  data-toggle="validator" role="form">
+                <form action="" method="post"  data-toggle="validator">
                     <div class="form-holder">
                         <input type="hidden" value="<%= base_info['id'] %>" name="base_id" />
                         <div class="entry textarea form-group">
                             <label for="edit-en_US">en_US</label>
-                            <textarea name="en_us" id="edit-en_US" class="lang_edit" required data-error="English can not be empty."><%= base_info['content'] %></textarea>
+                            <textarea name="en_us" id="edit-en_US" required pattern=".*[^ ].*" data-error="English can not be empty."><%= base_info['content'] %></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
-                        <input type="hidden" value="<%= other_info['id'] %>" name="other_id" />
-                        <div class="entry textarea form-group">
-                            <label for="edit-<%= other_info['simple_name'] %>"><%= other_info['simple_name'] %></label>
-                            <textarea name="<%= other_info['simple_name'].toLowerCase() %>" id="edit-<%= other_info['simple_name'] %>" class="lang_edit"><%= other_info['content'] %></textarea>
-                            <div class="help-block with-errors"></div>
-                        </div>
+                        <% if(other_info){ %>
+                            <input type="hidden" value="<%= other_info['id'] %>" name="other_id" />
+                            <div class="entry textarea form-group">
+                                <label for="edit-<%= other_info['simple_name'] %>"><%= other_info['simple_name'] %></label>
+                                <textarea name="<%= other_info['simple_name'].toLowerCase() %>" id="edit-<%= other_info['simple_name'] %>"><%= other_info['content'] %></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        <% } %>
                         <div class="entry textarea form-group">
                             <label for="edit-remarks">Remarks</label>
-                            <textarea name="remarks" id="edit-remarks" class="lang_edit"><%= base_info['remarks'] %></textarea>
+                            <textarea name="remarks" id="edit-remarks"><%= base_info['remarks'] %></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="entry">

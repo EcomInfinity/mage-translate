@@ -224,14 +224,15 @@ class UserController extends UserPermissionController {
             );
             return;
         }
-        $_website = D('website')->get(array('id' => session('website_id')));
-        if($_params['website-name'] != $_website['name'] && !empty($_params['website-name'])){
-            $_website_result = D('website')->save(array('id'=>session('website_id'), 'name' => $_params['website-name']));
-        }
-        if(!empty($_params['new-password'])){
+        // $_website = D('website')->get(array('id' => session('website_id')));
+        // if($_params['website-name'] != $_website['name'] && !empty($_params['website-name'])){
+        //     $_website_result = D('website')->save(array('id'=>session('website_id'), 'name' => $_params['website-name']));
+        //     session('website_name',$_params['website-name']);
+        // }
+        if(strlen($_params['password']) > 5 && strlen($_params['password']) < 31) {
             $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
         }
-        if ($_result === true || $_website_result > 0) {
+        if ($_result === true) {
             $this->ajaxReturn(
                 array(
                     'success' => true,
@@ -262,7 +263,7 @@ class UserController extends UserPermissionController {
             $_save['rest_user'] = $_params['rest_user'];
         }
         if(!empty($_params['rest_password'])){
-            $_save['rest_password'] = md5($_params['rest_password']);
+            $_save['rest_password'] = $_params['rest_password'];
         }
         $_result = D('website')->save($_save);
         if($_result > 0){
