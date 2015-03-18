@@ -376,7 +376,7 @@ class TranslationController extends TranslationPermissionController {
 
     public function edit(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_base_result = D('base_translate')->save(array('id' => $_params['base_id'], 'content' => $_params['en_us'], 'remarks' => $_params['remarks']));
+        $_base_result = D('base_translate')->save(array('id' => $_params['base_id'], 'content' => $_params['en_us'], 'remarks' => $_params['remarks'], 'modify' => $_params['modify']));
         if($_params['other_id'] != -1){
             $_other = D('other_translate')->get(array('id' => $_params['other_id']));
             $_other_result = D('other_translate')->save(array('id' => $_params['other_id'], 'content' => $_params[strtolower($_other['simple_name'])]));
