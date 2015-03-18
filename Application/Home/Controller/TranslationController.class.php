@@ -15,8 +15,8 @@ class TranslationController extends TranslationPermissionController {
             # code...
             $_other = D('other_translate')->get(array('base_id' => $val['id'], 'lang_id' => $_params['lang_id']));
             if(!empty($_other['content'])){
-                $_list[$k]['en_us'] = $val['content'];
-                $_list[$k][strtolower($_other['simple_name'])] = $_other['content'];
+                $_list[$k]['en_us'] = '"'.str_replace('"','""',$val['content']).'"';
+                $_list[$k][strtolower($_other['simple_name'])] = '"'.str_replace('"','""',$_other['content']).'"';
             }
         }
         S('export', $_list);
@@ -75,7 +75,7 @@ class TranslationController extends TranslationPermissionController {
                 foreach ($_lang_list as $key => $value) {
                     # code...
                     if(!empty($value['0'])){
-                        $_repeat_base_list = D('base_translate')->gets(array('content' => $value['0']));
+                        $_repeat_base_list = D('base_translate')->gets(array('content' => $value['0'], 'website_id' => session('website_id')));
                         //验证是否有重复
                         $_repeat_lang =false;
                         foreach ($_repeat_base_list as $val) {
@@ -185,22 +185,24 @@ class TranslationController extends TranslationPermissionController {
                     );
             }
         }else{
-            $_base_add['modify'] = $_params['modify'];
-            $_base_add['content'] = $_params['en_us'];
-            $_base_add['website_id'] = session('website_id');
-            $_base_result = D('base_translate')->add($_base_add);
-            $_images = D('translation_image')->where(array('lang_id' => '0'))->select();
-            foreach ($_images as $val) {
-                # code...
-                D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_base_result));
-            }
-            $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
-            foreach ($_website_lang as $val) {
-                # code...
-                $_other_add['content'] = $_params[strtolower($val['simple_name'])];
-                $_other_add['base_id'] = $_base_result;
-                $_other_add['lang_id'] = $val['lang_id'];
-                D('other_translate')->add($_other_add);
+            if(preg_match('/.*[^ ].*/', $_params['en_us']) != 0){
+                $_base_add['modify'] = $_params['modify'];
+                $_base_add['content'] = $_params['en_us'];
+                $_base_add['website_id'] = session('website_id');
+                $_base_result = D('base_translate')->add($_base_add);
+                $_images = D('translation_image')->where(array('lang_id' => '0'))->select();
+                foreach ($_images as $val) {
+                    # code...
+                    D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_base_result));
+                }
+                $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
+                foreach ($_website_lang as $val) {
+                    # code...
+                    $_other_add['content'] = $_params[strtolower($val['simple_name'])];
+                    $_other_add['base_id'] = $_base_result;
+                    $_other_add['lang_id'] = $val['lang_id'];
+                    D('other_translate')->add($_other_add);
+                }
             }
             if($_base_result > 0){
                 $this->ajaxReturn(
@@ -304,7 +306,9 @@ class TranslationController extends TranslationPermissionController {
             $_translate_list = D('base_translate')->gets(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
         }
         $_language_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
+        
         if($_params['language'] === false){
+            //默认显示语言
             $_lang_id = $_language_list['0']['lang_id'];
         }else{
             $_lang_id = $_params['language'];

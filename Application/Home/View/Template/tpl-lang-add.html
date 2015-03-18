@@ -25,13 +25,21 @@
                                 <textarea name="en_us" id="en_us" required data-error="English can not be empty."></textarea>
                                 <div class="help-block with-errors"></div>
                             </div>
-                            <% _.each(weblanglist, function(list){ %>
+                            <div class="entry">
+                                <select class="create-language">
+                                    <option value='-1'>Please select</option>
+                                    <% _.each(weblanglist, function(list){ %>
+                                        <option value="<%= list.simple_name %>"><%= list.simple_name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <!--<% _.each(weblanglist, function(list){ %>
                                 <div class="entry textarea form-group">
                                     <label for="<%= list.simple_name %>"><%= list.simple_name %>:</label>
                                     <textarea name="<%= list.simple_name.toLowerCase() %>" id="<%= list.simple_name %>"></textarea>
                                     <div class="help-block with-errors"></div>
                                 </div>
-                            <% }) %>
+                            <% }) %>-->
                             <div class="entry">
                             <label>Need Update</label>
                                 <div>

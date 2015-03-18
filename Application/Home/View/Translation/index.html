@@ -60,17 +60,25 @@
     <block name="main-personal">
         <main>
             <div class="container-fluid page-width">
-
                 <h1>Mage Personal</h1>
-
-                <div class="block block-personal-setting">
+            <div>
+                <div class="block block-personal-sidebar" style="width:30%;float:left;">
                 </div>
 
-                <div class="block block-rest-sync">
-                </div>
+                <div class="block block-personal-container" style="width:70%;float:left;">
+                    <div class="block block-website-setting">
+                    </div>
 
-                <div class="block block-site-language">
+                    <div class="block block-personal-setting" style="display:none;">
+                    </div>
+
+                    <div class="block block-rest-sync" style="display:none;">
+                    </div>
+
+                    <div class="block block-site-language" style="display:none;">
+                    </div>
                 </div>
+            </div>
 
             </div>
         </main>
@@ -111,8 +119,14 @@
     </block>
 
     <block name="template-personal">
+        <include file="Template/tpl-personal-sidebar" />
+
+        <include file="Template/tpl-website-setting" />
+
         <include file="Template/tpl-personal-setting" />
+
         <include file="Template/tpl-rest-sync" />
+
         <include file="Template/tpl-site-language" />
     </block>
 

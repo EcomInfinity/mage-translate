@@ -10,7 +10,6 @@
         //     +$('.line').outerHeight(true)*2;
         //     $('.data-list').height($(window).height() - other);
         // });
-
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
             $('#enlarge_images').html('');

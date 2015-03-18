@@ -69,6 +69,12 @@ select{text-transform: uppercase;}
 .search-icon{position: relative;top: 33px;left: 910px;}
 .word-black{color: black;}
 
-/*.block-personal-setting{width: 45%;float:left;}
-.block-rest-sync{width: 45%;float:right;}*/
-.block-site-language{margin-bottom: 30px;}
+/*.block-personal-setting{margin-bottom: 10px;}
+.block-rest-sync{margin-bottom: 10px;}
+.block-site-language{margin-bottom: 30px;}*/
+.block-personal-container .block{margin-bottom: 30px;}
+select[multiple], select[size] {
+  height: 170px;
+}
+.menu-selection a {color: black;}
+.block-personal-sidebar ul li {padding: 10px 0;}

@@ -229,7 +229,7 @@ class UserController extends UserPermissionController {
         //     $_website_result = D('website')->save(array('id'=>session('website_id'), 'name' => $_params['website-name']));
         //     session('website_name',$_params['website-name']);
         // }
-        if(strlen($_params['password']) > 5 && strlen($_params['password']) < 31) {
+        if(strlen($_params['new-password']) > 5 && strlen($_params['new-password']) < 31) {
             $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
         }
         if ($_result === true) {

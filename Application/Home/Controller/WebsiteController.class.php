@@ -42,18 +42,7 @@ class WebsiteController extends Controller {
 
     public function saveName(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_result = D('website')->save(array('id' => session('website_id'),'name' => $_params['website_name']));
-        if($_result > 0){
-            session('website_name', $_params['website_name']);
-            $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(),
-                ),
-                'json'
-            );
-        }else{
+        if(preg_match('/.*[^ ].*/', $_params['website_name']) == 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,
@@ -62,6 +51,28 @@ class WebsiteController extends Controller {
                 ),
                 'json'
             );
+        }else{
+            $_result = D('website')->save(array('id' => session('website_id'),'name' => $_params['website_name']));
+            if($_result > 0){
+                session('website_name', $_params['website_name']);
+                $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+            }else{
+                $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'Modify Failure.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 <script type="text/template" id="tpl-personal-setting">
-    <div class="entry form-group">
+    <!--<div class="entry form-group">
         <label for="website-name">Website Name:</label>
         <input type="text" name="website-name" id="website-name" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Website name is invalid." value="<php>echo session('website_name');</php>" />
         <div class="help-block with-errors"></div>
-    </div>
+    </div>-->
     <div class="modal-container">
         <h2>Personal Setting</h2>
         <div class="content">
@@ -30,7 +30,9 @@
                     </div>
 
                 </div>
-                <a href="#" class="btn btn-personal-setting btn-primary">Save</a>
+                <div class="btn-set">
+                    <a href="#" class="btn btn-personal-setting btn-primary">Save</a>
+                </div>
             </form>
         </div>
     </div>

@@ -184,11 +184,11 @@ jQuery(function() {
                 $('.block-view-personal').slideDown("slow");
                 $('.block-view-user').slideUp("slow");
                 $('.block-view-translate').slideUp("slow");
-                if(PurviewVal() == '-1'){
+                // if(PurviewVal() == '-1'){
                     this._userEvents.trigger('refresh','personalCenter');
-                }else{
-                    this._userEvents.trigger('refresh','personal');
-                }
+                // }else{
+                //     this._userEvents.trigger('refresh','personal');
+                // }
                 return false;
             },
             initialize: function(options){
@@ -209,11 +209,20 @@ jQuery(function() {
                 'click .btn-add': 'clickBtnLangAdd',
                 'change #batch-import': 'batchImport',
                 'change #images-add': 'imagesAdd',
-                'click .btn-image-delete': 'imgageDel'
+                'click .btn-image-delete': 'imgageDel',
+                'change .create-language': 'createLanguage'
+            },
+            createLanguage: function (event){
+                var create_language = $(event.target).val();
+                if(create_language != '-1'){
+                    $(event.target).before('<div class="entry textarea form-group"><label for="'+create_language.toLowerCase()+'">'+create_language+':</label><textarea name="'+create_language.toLowerCase()+'" id="'+create_language.toLowerCase()+'"></textarea></div>');
+                    $(event.target).find(':selected').hide();
+                }
             },
             _add: function(){
                 var _self = this;
                 var $form = $('.btn-add').closest('form');
+                console.log($form.serializeObject());
                 this.translate.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/langadd'}
@@ -239,6 +248,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             clickBtnLangAdd: function(event){
@@ -313,6 +323,7 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             initialize: function(options){
@@ -325,7 +336,7 @@ jQuery(function() {
                 this.translate.save({}, 
                     {url: UrlApi('_app')+'/weblang'}
                 ).done(function (response){
-                    console.log(response.data);
+                    // console.log(response.data);
                     var data = {};
                     data['weblanglist'] = response.data;
                     _self.$el.html(_self.template(data));
@@ -342,6 +353,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.translate.clear();
             }
         });
 
@@ -460,6 +472,7 @@ jQuery(function() {
                                         _self.render();
                                     }
                                 });
+                                this.translate.clear();
                             }else{
                                 $(event.target).find('option')[0].selected = true;
                             }
@@ -482,6 +495,7 @@ jQuery(function() {
                                         _self.render();
                                     }
                                 });
+                                this.translate.clear();
                             }else{
                                 $(event.target).find('option')[0].selected = true;
                             }
@@ -504,6 +518,7 @@ jQuery(function() {
                             _self.render();
                         }
                     });
+                    this.translate.clear();
                 }
                 window.history.back();
                 return false;
@@ -522,6 +537,7 @@ jQuery(function() {
                                 window.open(UrlApi('_app')+'/langdownload');
                             }
                         });
+                        this.translate.clear();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -539,6 +555,7 @@ jQuery(function() {
                     ).done(function (response){
                         _self._events.trigger('refresh','list-add');
                     });
+                    this.translate.clear();
                 return false;
             },
             setList: function(data){
@@ -578,6 +595,7 @@ jQuery(function() {
                     _self.$el.html(_self.template(data));
                     // _self.record = -1;
                 });
+                this.translate.clear();
                 return this;
             }
         });
@@ -621,6 +639,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             clickBtnEditInfo: function(event){
@@ -640,6 +659,7 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             imagesAdd: function(event){
@@ -705,6 +725,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.translate.clear();
             }
         });
         // //export
@@ -797,19 +818,66 @@ jQuery(function() {
             }
         });
 
-        user.View.PersonalSettingView = Backbone.View.extend({
-            template: _.template($('#tpl-personal-setting').html()),
-            events:{
-                'click .btn-personal-setting': 'clickBtnPersonalSetting',
-                'change #website-name': 'changeWebsiteName'
+        user.View.PersonalSidebar = Backbone.View.extend({
+            template: _.template($('#tpl-personal-sidebar').html()),
+            events: {
+                'click .website': 'websiteSetting',
+                'click .personal': 'personalSetting',
+                'click .rest-sync': 'restSyncSetting',
+                'click .site-language': 'siteLanguageSetting'
             },
-            changeWebsiteName: function(event){
+            'websiteSetting': function (event){
+                $('.menu-selection').removeClass('menu-selection');
+                $(event.target).closest('li').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'website-setting');
+                $('.block-personal-container .block').hide();
+                $('.block-website-setting').show();
+            },
+            'personalSetting': function (event){
+                $('.menu-selection').removeClass('menu-selection');
+                $(event.target).closest('li').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'personal-setting');
+                $('.block-personal-container .block').hide();
+                $('.block-personal-setting').show();
+            },
+            'restSyncSetting': function (event){
+                $('.menu-selection').removeClass('menu-selection');
+                $(event.target).closest('li').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'rest-setting');
+                $('.block-personal-container .block').hide();
+                $('.block-rest-sync').show();
+            },
+            'siteLanguageSetting': function (event){
+                $('.menu-selection').removeClass('menu-selection');
+                $(event.target).closest('li').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'language-setting');
+                $('.block-personal-container .block').hide();
+                $('.block-site-language').show();
+            },
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.render();
+            },
+            render: function(){
+                this.$el.html(this.template({}));
+            }
+        });
+
+        user.View.WebsiteSettingView = Backbone.View.extend({
+            template: _.template($('#tpl-website-setting').html()),
+            events: {
+                'click .btn-website-setting': 'clickBtnWebsiteSetting',
+            },
+            changeWebsiteName: function(){
+                var _self = this;
+                var $form = this.$el.find('form');
                 this.userModel.save(
-                    {'website_name': $(event.target).val()},
+                    $form.serializeObject(),
                     {url: UrlApi('_app')+'/save-name'}
                 ).done(function (response){
                     if(response.success === true){
-                        $(event.target).notify(
+                        _self.$el.notify(
                             'Success',
                             {
                                 position: 'top',
@@ -817,7 +885,7 @@ jQuery(function() {
                             }
                         );
                     }else{
-                        $(event.target).notify(
+                        _self.$el.notify(
                             response.message,
                             {
                                 position: 'top',
@@ -826,11 +894,38 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
+            },
+            clickBtnWebsiteSetting: function(event){
+                $(event.target).closest('form').submit();
+                return false;
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                var _self = this;
+                this.$el.html(this.template({}));
+                this.$el.find('form').validator().on('submit', function(e) {
+                    if (e.isDefaultPrevented()) {
+                    } else {
+                        _self.changeWebsiteName.call(_self);
+                        return false;
+                    }
+                });
+            }
+        });
+
+        user.View.PersonalSettingView = Backbone.View.extend({
+            template: _.template($('#tpl-personal-setting').html()),
+            events:{
+                'click .btn-personal-setting': 'clickBtnPersonalSetting',
             },
             _edit: function(){
                 var _self = this;
                 var $form = this.$el.find('form');
-                console.log($form.serializeObject());
+                // console.log($form.serializeObject());
                 this.userModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/personal-setting'}
@@ -853,6 +948,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             clickBtnPersonalSetting: function(event){
@@ -886,7 +982,7 @@ jQuery(function() {
             _edit: function(){
                 var _self = this;
                 var $form = this.$el.find('form');
-                console.log($form.serializeObject());
+                // console.log($form.serializeObject());
                 this.userModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/rest-sync'}
@@ -909,6 +1005,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             clickBtnRestSync: function(event){
@@ -934,6 +1031,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -969,6 +1067,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             delLang: function (){
@@ -996,12 +1095,13 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             _edit: function(){
                 var _self = this;
                 var $form = this.$el.find('form');
-                console.log($form.serializeObject());
+                // console.log($form.serializeObject());
                 this.userModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/personal-setting'}
@@ -1024,6 +1124,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             // clickBtnPersonalSetting: function(event){
@@ -1052,6 +1153,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1136,6 +1238,7 @@ jQuery(function() {
                             );
                         }
                     });
+                this.userModel.clear();
                 return false;
             },
             clickBtnRoleAdd: function(event){
@@ -1168,6 +1271,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1199,6 +1303,7 @@ jQuery(function() {
                 ).done(function (response){
                     _self.$el.html(_self.template({roleList: response.data.roles,current_count:response.data.count,'count':response.data.total}));
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1233,6 +1338,7 @@ jQuery(function() {
                             );
                         }
                     });
+                this.userModel.clear();
                 return false;
             },
             clickBtnRoleEdit: function(event){
@@ -1273,6 +1379,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1309,6 +1416,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
             },
             clickBtnUserAdd: function(event) {
                 this.$el.find('form').submit();
@@ -1341,6 +1449,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1356,6 +1465,7 @@ jQuery(function() {
                     { url: UrlApi('_app')+'/User/enable' }
                 ).done(function(response) {
                 });
+                this.userModel.clear();
             },
             disable: function(elem) {
                 var user_id = $(elem).closest('tr').data('id');
@@ -1364,6 +1474,7 @@ jQuery(function() {
                     { url: UrlApi('_app')+'/User/disable' }
                 ).done(function(response) {
                 });
+                this.userModel.clear();
             },
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
@@ -1401,6 +1512,7 @@ jQuery(function() {
                         });
                     }
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1435,6 +1547,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             clickBtnUserEdit: function(event){
@@ -1477,6 +1590,7 @@ jQuery(function() {
                         });
                     }
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1490,6 +1604,18 @@ jQuery(function() {
 
                 this.navView = new lang.View.LanguageNavView({
                     el: '.navbar-collapse',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var personalsidebarView = new user.View.PersonalSidebar({
+                    el: '.block-personal-sidebar',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var websitesettingView = new user.View.WebsiteSettingView({
+                    el: '.block-website-setting',
                     userModel: this.userModel,
                     _userEvents: _userEvents
                 });
@@ -1594,12 +1720,25 @@ jQuery(function() {
                             userlistView.render();
                             break;
                         case 'personalCenter':
-                            personalsettingView.render();
-                            restsyncView.render();
-                            sitelanguageView.render();
+                            websitesettingView.render();
+                            // personalsettingView.render();
+                            // restsyncView.render();
+                            // sitelanguageView.render();
                             break;
-                        case 'personalCenter':
+                        // case 'personalCenter':
+                        //     websitesettingView.render();
+                        //     personalsettingView.render();
+                        //     break;
+                        case 'website-setting':
+                            websitesettingView.render();
+                            break;
+                        case 'personal-setting':
                             personalsettingView.render();
+                        case 'rest-setting':
+                            restsyncView.render();
+                            break;
+                        case 'language-setting':
+                            sitelanguageView.render();
                             break;
                     }
                 });
