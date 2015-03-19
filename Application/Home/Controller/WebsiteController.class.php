@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class WebsiteController extends Controller {
+class WebsiteController extends WebsitePermissionController {
     public function get() {
         $_result = D('website')->get(array('id' => session('website_id')));
         $this->ajaxReturn(

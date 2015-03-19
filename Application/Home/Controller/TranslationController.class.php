@@ -190,7 +190,7 @@ class TranslationController extends TranslationPermissionController {
                 $_base_add['content'] = $_params['en_us'];
                 $_base_add['website_id'] = session('website_id');
                 $_base_result = D('base_translate')->add($_base_add);
-                $_images = D('translation_image')->where(array('lang_id' => '0'))->select();
+                $_images = D('translation_image')->where(array('lang_id' => '0', 'status' => 1))->select();
                 foreach ($_images as $val) {
                     # code...
                     D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_base_result));
@@ -313,8 +313,17 @@ class TranslationController extends TranslationPermissionController {
         }else{
             $_lang_id = $_params['language'];
         }
+        $_empty = false;
         foreach ($_translate_list as $k => $val) {
             # code...
+            $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']));
+            foreach ($_empty_other as $value) {
+                # code...
+                if(empty($value['content'])){
+                    $_empty = true;
+                }
+            }
+            $_translate_list[$k]['other_empty'] = $_empty;
             $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id));
         }
         foreach ($_translate_list as $key => $value) {

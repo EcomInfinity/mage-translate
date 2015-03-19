@@ -168,15 +168,18 @@ jQuery(function() {
                 'click .btn-user-center': 'personalCenter'
             },
             showUser: function(){
-                $('.block-view-user').slideDown("slow");
-                $('.block-view-translate').slideUp("slow");
-                $('.block-view-personal').slideUp("slow");
+                if(PurviewVal() == '-1'){
+                    this._userEvents.trigger('refresh','userhandle');
+                    $('.block-view-user').slideDown("slow");
+                    $('.block-view-translate').slideUp("slow");
+                    $('.block-view-personal').slideUp("slow");
+                }
                 return false;
             },
             showList: function(){
-                $('.block-view-translate').slideDown("slow");
-                $('.block-view-user').slideUp("slow");
-                $('.block-view-personal').slideUp("slow");
+                // $('.block-view-translate').slideDown("slow");
+                // $('.block-view-user').slideUp("slow");
+                // $('.block-view-personal').slideUp("slow");
                 location.reload();
                 return false;
             },
@@ -222,7 +225,7 @@ jQuery(function() {
             _add: function(){
                 var _self = this;
                 var $form = $('.btn-add').closest('form');
-                console.log($form.serializeObject());
+                // console.log($form.serializeObject());
                 this.translate.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/langadd'}
@@ -541,7 +544,7 @@ jQuery(function() {
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
-                            window.history.back();
+                            // window.history.back();
                         }
                     });
                 }
@@ -808,9 +811,9 @@ jQuery(function() {
                 options || (options = {});
                 this._userEvents = options._userEvents;
                 this.userModel = options.userModel;
-                if(PurviewVal()=='-1'){
-                    this.render();
-                }
+                // if(PurviewVal()=='-1'){
+                //     this.render();
+                // }
             },
             render: function(){
                 var data = {};
@@ -827,11 +830,19 @@ jQuery(function() {
                 'click .site-language': 'siteLanguageSetting'
             },
             'websiteSetting': function (event){
-                $('.menu-selection').removeClass('menu-selection');
-                $(event.target).closest('li').addClass('menu-selection');
-                this._userEvents.trigger('refresh', 'website-setting');
-                $('.block-personal-container .block').hide();
-                $('.block-website-setting').show();
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    $('.menu-selection').removeClass('menu-selection');
+                    $(event.target).closest('li').addClass('menu-selection');
+                    this._userEvents.trigger('refresh', 'website-setting');
+                    $('.block-personal-container .block').hide();
+                    $('.block-website-setting').show();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
             },
             'personalSetting': function (event){
                 $('.menu-selection').removeClass('menu-selection');
@@ -841,18 +852,34 @@ jQuery(function() {
                 $('.block-personal-setting').show();
             },
             'restSyncSetting': function (event){
-                $('.menu-selection').removeClass('menu-selection');
-                $(event.target).closest('li').addClass('menu-selection');
-                this._userEvents.trigger('refresh', 'rest-setting');
-                $('.block-personal-container .block').hide();
-                $('.block-rest-sync').show();
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    $('.menu-selection').removeClass('menu-selection');
+                    $(event.target).closest('li').addClass('menu-selection');
+                    this._userEvents.trigger('refresh', 'rest-setting');
+                    $('.block-personal-container .block').hide();
+                    $('.block-rest-sync').show();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
             },
             'siteLanguageSetting': function (event){
-                $('.menu-selection').removeClass('menu-selection');
-                $(event.target).closest('li').addClass('menu-selection');
-                this._userEvents.trigger('refresh', 'language-setting');
-                $('.block-personal-container .block').hide();
-                $('.block-site-language').show();
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    $('.menu-selection').removeClass('menu-selection');
+                    $(event.target).closest('li').addClass('menu-selection');
+                    this._userEvents.trigger('refresh', 'language-setting');
+                    $('.block-personal-container .block').hide();
+                    $('.block-site-language').show();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
             },
             initialize: function(options){
                 options || (options = {});
@@ -1490,9 +1517,9 @@ jQuery(function() {
                 options || (options = {});
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
-                if(PurviewVal()=='-1'){
-                    this.render();
-                }
+                // if(PurviewVal()=='-1'){
+                //     this.render();
+                // }
             },
             render: function(){
                 var _self = this;
@@ -1720,8 +1747,8 @@ jQuery(function() {
                             userlistView.render();
                             break;
                         case 'personalCenter':
-                            websitesettingView.render();
-                            // personalsettingView.render();
+                            // websitesettingView.render();
+                            personalsettingView.render();
                             // restsyncView.render();
                             // sitelanguageView.render();
                             break;
@@ -1739,6 +1766,10 @@ jQuery(function() {
                             break;
                         case 'language-setting':
                             sitelanguageView.render();
+                            break;
+                        case 'userhandle':
+                            usersearchView.render();
+                            userlistView.render();
                             break;
                     }
                 });

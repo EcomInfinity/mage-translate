@@ -14,9 +14,9 @@ return array(
     'MODULE_ALLOW_LIST'    =>    array('Home'),
     // 'DEFAULT_MODULE' => 'Home',
     'SESSION_OPTIONS' => array(
-    'expire' => '10',
+        'expire' => '10',
     ),
     'TMPL_PARSE_STRING' => array(
-    '__UPLOADS__' => __ROOT__.'/Uploads',
+        '__UPLOADS__' => __ROOT__.'/Uploads',
     ),
 );
