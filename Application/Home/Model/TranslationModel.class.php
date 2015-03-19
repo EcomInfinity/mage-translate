@@ -1,8 +1,19 @@
 <?php
 namespace Home\Model;
-use Think\Model;
+// use Think\Model;
+use Think\Model\RelationModel;
 
-class TranslationModel extends Model {
+class TranslationModel extends RelationModel {
+    protected $_link = array(
+            'TranslationImage'=> array(  
+                'mapping_type' =>self::HAS_MANY,
+                'class_name' => 'TranslationImage',
+                'foreign_key' => 'lang_id',
+                'mapping_name' => 'translation_image',
+                // 'mapping_fields' => 'image_name,status',
+                // 'as_fields' => 'image_name,status',
+            ),
+        );
 
     public function gets($_field, $_where, $_order_by, $_options = array()) {
         return $this->where($_where)->order($_order_by)->field($_field)->select();

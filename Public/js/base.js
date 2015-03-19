@@ -363,9 +363,7 @@ jQuery(function() {
                 $('.search-enter').hide();
                 $('.search-clear').show();
                 this.search = $('.search').val();
-                this.inrender = true;
-                this.searchData = {search:this.search,inrender:this.inrender};
-                this._events.trigger('alernately',this.searchData,'search');
+                this._events.trigger('alernately',{search:this.search},'search');
                 return false;
             },
             initialize:function(options){
@@ -424,7 +422,7 @@ jQuery(function() {
 
                 if(this.operation == 'update'){
                     if(Purview('update') == '1'||PurviewVal() == '-1'){
-                            if(confirm('Are you sure to update?') == true){
+                            if(confirm('Are you sure to update modify status?') == true){
                                 this.translate.save(
                                     {ids: this.data},
                                     {url:UrlApi('_app')+'/setmodify'}
@@ -433,7 +431,7 @@ jQuery(function() {
                                         _self.render();
                                     }
                                 });
-                            }else{
+                            }else{''
                                 $(event.target).find('option')[0].selected = true;
                             }
                     }else{
@@ -1084,7 +1082,7 @@ jQuery(function() {
                         url: UrlApi('_app')+'/rolelist'
                     }
                 ).done(function (response){
-                    _self.$el.html(_self.template({'rolelist': response.data}));
+                    _self.$el.html(_self.template({'rolelist': response.data.roles}));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {
                         } else {
