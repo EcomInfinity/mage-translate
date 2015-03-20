@@ -9,49 +9,26 @@ class TranslationController extends TranslationPermissionController {
 
     public function export(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if($_params['exrender'] === false){
-            $export_get = D('translation')->gets(
-                            'en,' . $_params['field'],
-                            array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                $_params['field'] => array('neq', ''),
-                            ),
-                            'en asc',
-                            array()
-                        );
-            foreach ($export_get as $key => $value) {
-                foreach ($value as $k => $val) {
-                    $export[$key][$k] = '"'.str_replace('"','""',$val).'"';
-                }
+        $_translate_list = D('base_translate')->gets(array('status' => 1, 'website_id' => session('website_id')), 'content asc');
+        $_language = D('language')->find($_params['lang_id']);
+        foreach ($_translate_list as $k => $val) {
+            # code...
+            $_other = D('other_translate')->get(array('base_id' => $val['id'], 'lang_id' => $_params['lang_id']));
+            if(!empty($_other['content'])){
+                $_list[$k]['en_us'] = '"'.str_replace('"','""',$val['content']).'"';
+                $_list[$k][strtolower($_other['simple_name'])] = '"'.str_replace('"','""',$_other['content']).'"';
             }
-            S('export', $export);
-            S('filename', $_params['field']);
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
-                    'json'
-            );
         }
-        if($_params['exrender'] === true){
-            $data = D('translation')->find();
-            foreach ($data as $k => $val) {
-                if($k!='id'&&$k!='remarks'&&$k!='status'&&$k!='en'&$k!='website_id'&&$k!='modify'&&$k!='fr'){
-                    $allField[] = $k;
-                }
-            }
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => $allField,
-                    ),
-                    'json'
-            );
-        }
+        S('export', $_list);
+        S('filename', $_language['simple_name']);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+        );
     }
 
     public function download(){
@@ -81,41 +58,91 @@ class TranslationController extends TranslationPermissionController {
                 while ($data = fgetcsv($handle)) {
                     $lang_arr[] = $data;
                 }
+                //整理csv数据
                 foreach ($lang_arr as $k => $val) {
                     if($k == '0'){
                         continue;
                     }
                     foreach ($lang_arr['0'] as $key => $value) {
-                        $lang_add[strtolower($value)] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
-                    }
-                    if($lang_add['en']!=''&&$lang_add['de']!=''&&$lang_add['nl']!=''){
-                        $lang_add['modify'] = '0';
-                    }
-                    $lang_add['website_id'] = session('website_id');
-                    $_import['en'] = $lang_add['en'];
-                    $_import['website_id'] = session('website_id');
-                    $_result = D('translation')->gets('',$_import);
-                    $_repeat_lang = false;
-                    foreach ($_result as $val) {
-                        if(strcmp($_import['en'],$val['en']) === 0){
-                            $_repeat_lang = true;
-                            $_repeat_id = $val['id'];
+                        if($value == 'en_us'){
+                            $_lang_list[$k]['0'] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+                        }else{
+                            $_lang_list[$k]['other'][$value] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
                         }
                     }
-                    if($_repeat_lang === true){
-                        $lang_save = $lang_add;
-                        $lang_save['id'] = $_repeat_id;
-                        $lang_save['status'] = '1';
-                        D('translation')->setTranslate($lang_save);
-                        $modify = M('translation')->where(array('id' => $_repeat_id))->find();
-                        if($modify['en']!=''&&$modify['de']!=''&&$modify['nl']!=''){
-                            $lang_modify['id'] = $_repeat_id;
-                            $lang_modify['modify'] = '0';
-                            D('translation')->setTranslate($lang_modify);
+                }
+                //增加至数据表
+                foreach ($_lang_list as $key => $value) {
+                    # code...
+                    if(!empty($value['0'])){
+                        $_repeat_base_list = D('base_translate')->gets(array('content' => $value['0'], 'website_id' => session('website_id')));
+                        //验证是否有重复
+                        $_repeat_lang =false;
+                        foreach ($_repeat_base_list as $val) {
+                            # code...
+                            if(strcmp($value['0'],$val['content']) === 0){
+                                $_repeat_lang = true;
+                                $_repeat_lang_id = $val['id'];
+                            }
                         }
-                    }else{
-                        D('translation')->addTranslate($lang_add);
+                        if($_repeat_lang === true){
+                            //base content重复
+                            D('base_translate')->save(array('id' =>$_repeat_lang_id, 'status' => 1));
+                            foreach ($value['other'] as $k => $val) {
+                                # code...
+                                $_language = D('language')->where(array('simple_name' => trim($k)))->find();
+                                $_repeat_other = D('other_translate')->get(array('base_id' => $_repeat_lang_id, 'lang_id' => $_language['id']));
+                                // if($_repeat_other['id'] > 0){
+                                //     //覆盖已有的其他语言
+                                $_other_save['content'] = $val;
+                                $_other_save['id'] = $_repeat_other['id'];
+                                D('other_translate')->save($_other_save);
+                                // }else{
+                                //     //创建没有的其他语言
+                                //     $_other_add['lang_id'] = $_language['id'];
+                                //     $_other_add['content'] = $val;
+                                //     $_other_add['base_id'] = $_repeat_lang_id;
+                                //     D('other_translate')->add($_other_add);
+                                // }
+                            }
+                        }else{
+                            $_base_add['content'] = $value['0'];
+                            $_base_add['website_id'] = session('website_id');
+                            $_base_id = D('base_translate')->add($_base_add);
+                            if($_base_id > 0){
+                                $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
+                                foreach ($_website_lang as $key => $val) {
+                                    # code...
+                                    $_other_add['lang_id'] = $val['lang_id'];
+                                    $_other_add['content'] = $value['other'][strtolower($val['simple_name'])];
+                                    $_other_add['base_id'] = $_base_id;
+                                    D('other_translate')->add($_other_add);
+                                }
+                            }
+                            // foreach ($value['other'] as $k => $val) {
+                            //     # code...
+                            //     $_language = D('language')->where(array('simple_name' => trim($k)))->find();
+                            //     $_other_add['lang_id'] = $_language['id'];
+                            //     $_other_add['content'] = $val;
+                            //     $_other_add['base_id'] = $_base_id;
+                            //     D('other_translate')->add($_other_add);
+                            // }
+                        }
                     }
+                    // if($_base_id > 0){
+                    //     $base_id = $_base_id;
+                    // }else{
+                    //     $base_id = $_repeat_lang_id;
+                    // }
+                    // $_website_lang_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
+                    // foreach ($_website_lang_list as $k => $val) {
+                    //     # code...
+                    //     $_other = D('other_translate')->where(array('base_id' => $base_id, 'lang_id' => $val['lang_id']))->find();
+                    //     if(empty($_other['content'])){
+                    //         D('base_translate')->save(array('id' => $base_id,'modify' => 1));
+                    //         break;
+                    //     }
+                    // }
                 }
             }
             echo true;
@@ -124,15 +151,19 @@ class TranslationController extends TranslationPermissionController {
 
     public function add(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_translation = D('translation')->gets('',array('en' => $_params['en'],'website_id' => session('website_id')));
-        foreach ($_translation as $val) {
-            if(strcmp($_params['en'],$val['en']) === 0 && $val['status'] == 1){
-                $repeat_lang = true;
-            }elseif(strcmp($_params['en'],$val['en']) === 0){
-                $repeat_lang = $val;
+        $_base = D('base_translate')->gets(array('content' => $_params['en_us'], 'website_id' => session('website_id')));
+        $_repeat_lang =false;
+        foreach ($_base as $val) {
+            # code...
+            if(strcmp($_params['en_us'],$val['content']) === 0){
+                $_repeat_lang = true;
+                $_repeat_lang_info = $val;
             }
         }
-        if($repeat_lang === true){
+        //判断是否已经存在
+        if($_repeat_lang === true){
+            //判断是否已经删除
+            if($_repeat_lang_info['status'] == 1){
                 $this->ajaxReturn(
                         array(
                             'success' => false,
@@ -141,26 +172,39 @@ class TranslationController extends TranslationPermissionController {
                         ),
                         'json'
                     );
+                return;
+            }else{
+                D('base_translate')->save(array('id' => $_repeat_lang_info['id'], 'status' => 1));
+                $this->ajaxReturn(
+                        array(
+                            'success' => true,
+                            'message' => '',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }
         }else{
-            if($_params['en']!=null||$_params['de']!=null||$_params['nl']!=null||$_params['fr']!=null||$_params['remarks']!=null){
-                $trans_data['en'] = $_params['en'];
-                $trans_data['de'] = $_params['de'];
-                $trans_data['nl'] = $_params['nl'];
-                $trans_data['fr'] = $_params['fr'];
-                if($_params['en']!=null&&$_params['de']!=null&&$_params['nl']!=null){
-                    $trans_data['modify'] = '0';
+            if(preg_match('/.*[^ ].*/', $_params['en_us']) != 0){
+                $_base_add['modify'] = $_params['modify'];
+                $_base_add['content'] = $_params['en_us'];
+                $_base_add['website_id'] = session('website_id');
+                $_base_result = D('base_translate')->add($_base_add);
+                $_images = D('translation_image')->where(array('lang_id' => '0', 'status' => 1))->select();
+                foreach ($_images as $val) {
+                    # code...
+                    D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_base_result));
                 }
-                $trans_data['remarks'] = $_params['remarks'];
-                if($repeat_lang['status'] == '0'){
-                    $trans_data['status'] = '1';
-                    $trans_data['id'] = $repeat_lang['id'];
-                    $_result = D('translation')->setTranslate($trans_data);
-                    $id = $repeat_lang['id'];
-                }else{
-                    $trans_data['website_id'] = session('website_id');
-                    $id=D('translation')->addTranslate($trans_data);
+                $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
+                foreach ($_website_lang as $val) {
+                    # code...
+                    $_other_add['content'] = $_params[strtolower($val['simple_name'])];
+                    $_other_add['base_id'] = $_base_result;
+                    $_other_add['lang_id'] = $val['lang_id'];
+                    D('other_translate')->add($_other_add);
                 }
-                D('translation_image')->saveImage($id);
+            }
+            if($_base_result > 0){
                 $this->ajaxReturn(
                         array(
                             'success' => true,
@@ -173,7 +217,7 @@ class TranslationController extends TranslationPermissionController {
                 $this->ajaxReturn(
                         array(
                             'success' => false,
-                            'message' => 'Can not all be empty.',
+                            'message' => 'Create Failure.',
                             'data' => array(),
                         ),
                         'json'
@@ -184,12 +228,9 @@ class TranslationController extends TranslationPermissionController {
 
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_result = D('translation')->del($_params['id']);
-        D('translation_image')->del(
-                array(
-                        'lang_id' => intval($_params['id'])
-                    )
-            );
+        $_save['id'] = $_params['id'];
+        $_save['status'] = 0;
+        $_result = D('base_translate')->save($_save);
         if($_result){
             $this->ajaxReturn(
                     array(
@@ -213,9 +254,8 @@ class TranslationController extends TranslationPermissionController {
 
     public function dels(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_lang_ids = $_params['ids'];
-        foreach ($_lang_ids as $val) {
-            D('translation')->del($val);
+        foreach ($_params['ids'] as $val) {
+            D('base_translate')->save(array('id' => $val, 'status' => 0));
             D('translation_image')->del(
                     array(
                         'lang_id' => intval($val)
@@ -235,7 +275,13 @@ class TranslationController extends TranslationPermissionController {
     public function needUpdate(){
         $_params = json_decode(file_get_contents("php://input"),true);
         foreach ($_params['ids'] as $val) {
-            D('translation')->setModify($val);
+            $_base = D('base_translate')->get($val);
+            if($_base['modify'] == 0){
+                $_modify = 1;
+            }else{
+                $_modify = 0;
+            }
+            D('base_translate')->save(array('id' => $val, 'modify' => $_modify));
         }
         $this->ajaxReturn(
                 array(
@@ -249,124 +295,59 @@ class TranslationController extends TranslationPermissionController {
 
     public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_search = D('translation')->gets(
-                        '',
-                        array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                'en' => array('like', '%'.$_params['search'].'%')
-                            ),
-                        'id desc',
-                        array()
-                    );
-        $_no_modify = D('translation')->gets(
-                        '',
-                        array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                'en' =>array('like', '%'.$_params['search'].'%'),
-                                'modify' => 0
-                            ),
-                        'id desc',
-                        array()
-                    );
-        $_need_modify = D('translation')->gets(
-                        '',
-                        array(
-                                'status' => 1,
-                                'website_id' => session('website_id'),
-                                'en' =>array('like', '%'.$_params['search'].'%'),
-                                'modify' => 1
-                            ),
-                        'id desc',
-                        array()
-                    );
-        if($_params['modify'] === 1){
-            $_list = $_need_modify;
-            $_show = 1;
-        }elseif($_params['modify'] === 0){
-            $_list = $_no_modify;
-            $_show = 2;
+        if($_params['record'] === 0){
+            //已完成
+            $_translate_list = D('base_translate')->gets(array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
+        }elseif($_params['record'] === 1){
+            //未完成
+            $_translate_list = D('base_translate')->gets(array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
         }else{
-            $_list = $_search;
-            $_show = 3;
+            //全部
+            $_translate_list = D('base_translate')->gets(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
         }
-        // if ($_params['inrender'] === false) {
-        //     $_list = D('translation')->gets(
-        //                 '',
-        //                 array(
-        //                     'status' => 1,
-        //                     'website_id' => session('website_id'),
-        //                     'modify' => 1,
-        //                 ),
-        //                 'id desc',
-        //                 array()
-        //             );
-        // } else {
-        //     if($_params['complete'] === true){
-        //         $_list = D('translation')->gets(
-        //                     '',
-        //                     array(
-        //                         'en' => array('like', '%'.$_params['search'].'%'),
-        //                         'website_id' => session('website_id'),
-        //                         'status' => 1,
-        //                         'modify' => 0,
-        //                     ),
-        //                     'id desc',
-        //                     array()
-        //                 );
-        //     }else{
-        //         $_list = D('translation')->gets(
-        //                     '',
-        //                     array(
-        //                         'en' => array('like', '%'.$_params['search'].'%'),
-        //                         'website_id' => session('website_id'),
-        //                         'status' => 1,
-        //                     ),
-        //                     'id desc',
-        //                     array()
-        //                 );
-        //     }
-        // }
-
-        foreach ($_search as $key => $value) {
-            foreach ($value as $k => $val) {
-                $_search_list[$key][$k] = htmlentities($val);
+        $_language_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
+        
+        if($_params['language'] === false){
+            //默认显示语言
+            $_lang_id = $_language_list['0']['lang_id'];
+        }else{
+            $_lang_id = $_params['language'];
+        }
+        $_empty = false;
+        foreach ($_translate_list as $k => $val) {
+            # code...
+            $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']));
+            foreach ($_empty_other as $value) {
+                # code...
+                if(empty($value['content'])){
+                    $_empty = true;
+                }
+            }
+            $_translate_list[$k]['other_empty'] = $_empty;
+            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id));
+        }
+        foreach ($_translate_list as $key => $value) {
+            # code...
+            $_translate_list[$key]['content'] = htmlentities($value['content']);
+            foreach ($value['other'] as $k => $val) {
+                # code...
+                $_translate_list[$key]['other'][$k]['content'] = htmlentities($val['content']);
             }
         }
-        $search_list['show'] = -1;
-        $search_list['list'] = $_search_list; 
-
-        foreach ($_no_modify as $key => $value) {
-            foreach ($value as $k => $val) {
-                $_no_modify_list[$key][$k] = htmlentities($val);
-            }
-        }
-        $no_modify_list['show'] = 0;
-        $no_modify_list['list'] = $_no_modify_list;
-
-        foreach ($_need_modify as $key => $value) {
-            foreach ($value as $k => $val) {
-                $_need_modify_list[$key][$k] = htmlentities($val);
-            }
-        }
-        $need_modify_list['show'] = 1;
-        $need_modify_list['list'] = $_need_modify_list;
-
-        $translation_list['search'] = $search_list;
-        $translation_list['no_modify'] = $no_modify_list;
-        $translation_list['need_modify'] = $need_modify_list;
+        $_search_count = D('base_translate')->where(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
+        $_need_modify_count = D('base_translate')->where(array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
+        $_no_modify_count = D('base_translate')->where(array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
         $this->ajaxReturn(
             array(
                 'success' => true,
                 'message' => '',
                 'data' => array(
-                    'total' => count($_search),
-                    'need_modify' => count($_need_modify),
-                    'no_modify' => count($_no_modify),
-                    'list' => $translation_list,
-                    'show' => $_show
-                ),
+                            'total' => $_search_count,
+                            'list' => $_translate_list,
+                            'langs' => $_language_list,
+                            'need_modify' => $_need_modify_count,
+                            'no_modify' => $_no_modify_count,
+                        ),
             ),
             'json'
         );
@@ -374,18 +355,20 @@ class TranslationController extends TranslationPermissionController {
 
     public function get(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $translation_detail = D('translation')->get($_params['id']);
-        $images = D('translation_image')->gets($_params['id']);
-        if($images||$translation_detail){
+        $base_info = D('base_translate')->get($_params['base_id']);
+        $other_info = D('other_translate')->get(array('id' => $_params['other_id']));
+        $images = D('translation_image')->gets($_params['base_id']);
+        if($base_info){
             $this->ajaxReturn(
                     array(
                         'success' => true,
                         'message' => '',
                         'data' => array(
-                            'images'=>$images,
-                            'detail'=>$translation_detail,
+                            'images' => $images,
+                            'base' => $base_info,
+                            'other' => $other_info
                         ),
-                    ),
+                    ), 
                     'json'
                 );
         }else{
@@ -402,14 +385,12 @@ class TranslationController extends TranslationPermissionController {
 
     public function edit(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $edit_data['id'] = intval($_params['id']);
-        $edit_data['en'] = $_params['en'];
-        $edit_data['de'] = $_params['de'];
-        $edit_data['nl'] = $_params['nl'];
-        $edit_data['remarks'] = $_params['remarks'];
-        $edit_data['modify'] = $_params['modify'];
-        $_result = D('translation')->setTranslate($edit_data);
-        if($_result){
+        $_base_result = D('base_translate')->save(array('id' => $_params['base_id'], 'content' => $_params['en_us'], 'remarks' => $_params['remarks'], 'modify' => $_params['modify']));
+        if($_params['other_id'] != -1){
+            $_other = D('other_translate')->get(array('id' => $_params['other_id']));
+            $_other_result = D('other_translate')->save(array('id' => $_params['other_id'], 'content' => $_params[strtolower($_other['simple_name'])]));
+        }
+        if($_base_result || $_other_result){
             $this->ajaxReturn(
                     array(
                         'success' => true,
@@ -429,5 +410,4 @@ class TranslationController extends TranslationPermissionController {
                 );
         }
     }
-
 }

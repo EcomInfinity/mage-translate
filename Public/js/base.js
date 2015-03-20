@@ -70,23 +70,23 @@ jQuery(function() {
             },
             routes: {
                 "add": "add",
-                "export": "export",
-                "edit/:id\d": "edit",
+                // "export": "export",
+                "edit/:base_id\d/:other_id\d": "edit",
                 "delete/:id\d": "delete",
             },
 
-            export: function(){
-                //导出权限
-                if(Purview('export') == '1'||PurviewVal() == '-1'){
-                    this._events.trigger('refresh','export');
-                }else{
-                    $.fancybox($('.message'),{
-                       afterClose: function () {
-                            window.history.back();
-                        }
-                    });
-                }
-            },
+            // export: function(){
+            //     //导出权限
+            //     if(Purview('export') == '1'||PurviewVal() == '-1'){
+            //         this._events.trigger('refresh','export');
+            //     }else{
+            //         $.fancybox($('.message'),{
+            //            afterClose: function () {
+            //                 window.history.back();
+            //             }
+            //         });
+            //     }
+            // },
 
             add: function(){
                 //增加权限
@@ -101,10 +101,10 @@ jQuery(function() {
                 }
             },
 
-            edit: function(id){
+            edit: function(base_id,other_id){
                 //更新权限
                 if(Purview('update') == '1'||PurviewVal() == '-1'||Purview('create') == '1'){
-                    this._events.trigger('alernately',id,'edit');
+                    this._events.trigger('alernately',{base_id:base_id,other_id:other_id},'edit');
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -165,20 +165,33 @@ jQuery(function() {
             events:{
                 'click .btn-user': 'showUser',
                 'click .btn-list': 'showList',
-                'click .btn-user-center': 'userCenter'
+                'click .btn-user-center': 'personalCenter'
             },
             showUser: function(){
-                $('.block-view-user').slideDown("slow");
-                $('.block-view-translate').slideUp("slow");
+                if(PurviewVal() == '-1'){
+                    this._userEvents.trigger('refresh','userhandle');
+                    $('.block-view-user').slideDown("slow");
+                    $('.block-view-translate').slideUp("slow");
+                    $('.block-view-personal').slideUp("slow");
+                }
                 return false;
             },
             showList: function(){
-                $('.block-view-translate').slideDown("slow");
-                $('.block-view-user').slideUp("slow");
+                // $('.block-view-translate').slideDown("slow");
+                // $('.block-view-user').slideUp("slow");
+                // $('.block-view-personal').slideUp("slow");
+                location.reload();
                 return false;
             },
-            userCenter: function(event){
-                this._userEvents.trigger('refresh','userCenter');
+            personalCenter: function(event){
+                $('.block-view-personal').slideDown("slow");
+                $('.block-view-user').slideUp("slow");
+                $('.block-view-translate').slideUp("slow");
+                // if(PurviewVal() == '-1'){
+                    this._userEvents.trigger('refresh','personalCenter');
+                // }else{
+                //     this._userEvents.trigger('refresh','personal');
+                // }
                 return false;
             },
             initialize: function(options){
@@ -199,11 +212,20 @@ jQuery(function() {
                 'click .btn-add': 'clickBtnLangAdd',
                 'change #batch-import': 'batchImport',
                 'change #images-add': 'imagesAdd',
-                'click .btn-image-delete': 'imgageDel'
+                'click .btn-image-delete': 'imgageDel',
+                'change .create-language': 'createLanguage'
+            },
+            createLanguage: function (event){
+                var create_language = $(event.target).val();
+                if(create_language != '-1'){
+                    $(event.target).before('<div class="entry textarea form-group"><label for="'+create_language.toLowerCase()+'">'+create_language+':</label><textarea name="'+create_language.toLowerCase()+'" id="'+create_language.toLowerCase()+'"></textarea></div>');
+                    $(event.target).find(':selected').hide();
+                }
             },
             _add: function(){
                 var _self = this;
                 var $form = $('.btn-add').closest('form');
+                // console.log($form.serializeObject());
                 this.translate.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/langadd'}
@@ -217,6 +239,7 @@ jQuery(function() {
                             }
                         );
                         lang_add.reset();
+                        $('.images_list ul li').hide();
                         _self._events.trigger('refresh','add');
                     } else {
                         $form.notify(
@@ -228,6 +251,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             clickBtnLangAdd: function(event){
@@ -302,6 +326,7 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             initialize: function(options){
@@ -311,20 +336,27 @@ jQuery(function() {
             },
             render: function(){
                 var _self = this;
-                var data = {};
-                this.$el.html(this.template(data));
-                this.$el.find('[name="lang_add"]').validator().on('submit', function(e) {
-                    if (e.isDefaultPrevented()) {
-                    } else {
-                        _self._add.call(_self);
-                        return false;
-                    }
+                this.translate.save({}, 
+                    {url: UrlApi('_app')+'/weblang'}
+                ).done(function (response){
+                    // console.log(response.data);
+                    var data = {};
+                    data['weblanglist'] = response.data;
+                    _self.$el.html(_self.template(data));
+                    _self.$el.find('[name="lang_add"]').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._add.call(_self);
+                            return false;
+                        }
+                    });
+                    $.fancybox(_self.$el,{
+                       afterClose: function () {
+                            window.history.back();
+                        }
+                    });
                 });
-                $.fancybox(this.$el,{
-                   afterClose: function () {
-                        window.history.back();
-                    }
-                });
+                this.translate.clear();
             }
         });
 
@@ -381,11 +413,21 @@ jQuery(function() {
         lang.View.LanguageListView = Backbone.View.extend({
             template: _.template($('#tpl-lang-list').html()),
             events:{
+                'click .btn-list-export': 'exportList',
                 'click .btn-list-sort': 'backSort',
                 'change .batch-app': 'appLang',
                 'click .translate-modify': 'showNeedModify',
                 'click .translate-complete': 'showNoModify',
-                'click .translate-total': 'showTotalRecords'
+                'click .translate-total': 'showTotalRecords',
+                'change .lang-list': 'showLangList'
+            },
+            // langInfo: function (event){
+            //     console.log($('.lang-list').val());
+            //     // alert('1');
+            // },
+            showLangList: function (event){
+                this.lang_id = $(event.target).val();
+                this.render();
             },
             showNeedModify: function (event){
                 this.record = 1;
@@ -417,7 +459,7 @@ jQuery(function() {
                     return;
                 }
                 $('.selection').each(function (i){
-                    _self.data[i] = $(this).data('id');
+                    _self.data[i] = $(this).data('base_id');
                 });
 
                 if(this.operation == 'update'){
@@ -431,7 +473,8 @@ jQuery(function() {
                                         _self.render();
                                     }
                                 });
-                            }else{''
+                                this.translate.clear();
+                            }else{
                                 $(event.target).find('option')[0].selected = true;
                             }
                     }else{
@@ -453,6 +496,7 @@ jQuery(function() {
                                         _self.render();
                                     }
                                 });
+                                this.translate.clear();
                             }else{
                                 $(event.target).find('option')[0].selected = true;
                             }
@@ -475,12 +519,34 @@ jQuery(function() {
                             _self.render();
                         }
                     });
+                    this.translate.clear();
                 }
                 window.history.back();
                 return false;
             },
-            exportRender: function(event){
-                this._events.trigger('refresh','list-export');
+            exportList: function(event){
+                //导出权限
+                if(Purview('export') == '1'||PurviewVal() == '-1'){
+                    // this._events.trigger('alernately',$('.lang-list').val(),'export-list');
+                    this.translate.save(
+                        {
+                            lang_id: $('.lang-list').val()
+                        },
+                        {url:UrlApi('_app')+'/langexport'}
+                        ).done(function (response){
+                            if(response.success === true){
+                                window.open(UrlApi('_app')+'/langdownload');
+                            }
+                        });
+                        this.translate.clear();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
+                return false;
             },
             addRender: function(){
                 var _self = this;
@@ -490,6 +556,7 @@ jQuery(function() {
                     ).done(function (response){
                         _self._events.trigger('refresh','list-add');
                     });
+                    this.translate.clear();
                 return false;
             },
             setList: function(data){
@@ -501,7 +568,8 @@ jQuery(function() {
                 this.lists = options.lists;
                 this._events = options._events;
                 this.translate = options.translate;
-                this.inrender = false;
+                // this.inrender = false;
+                this.lang_id = false;
                 this.record = -1;
                 this.render();
             },
@@ -510,30 +578,25 @@ jQuery(function() {
                 this.translate.save(
                     { 
                         search: this.search,
+                        language: this.lang_id,
+                        record: this.record,
                     },
                     { url:UrlApi('_app')+'/langlist' }
                 ).done(function (response){
-                    if(_self.record === 0){
-                        _self.list = response.data.list.no_modify.list;
-                        _self.show = response.data.list.no_modify.show;
-                    }else if(_self.record === 1){
-                        _self.list = response.data.list.need_modify.list;
-                        _self.show = response.data.list.need_modify.show;
-                    }else{
-                        _self.list = response.data.list.search.list;
-                        _self.show = response.data.list.search.show;
-                    }
                     var data = {
-                        'lists': _self.list,
+                        'list': response.data.list,
+                        'langs': response.data.langs,
+                        'lang_id': _self.lang_id,
                         'total': response.data.total,
                         'need_modify': response.data.need_modify,
                         'no_modify': response.data.no_modify,
-                        'click_show': _self.show,
-                        'inrender': _self.inrender
+                        'click_show': _self.record,
+                        // 'inrender': _self.inrender
                     };
                     _self.$el.html(_self.template(data));
-                    _self.record = -1;
+                    // _self.record = -1;
                 });
+                this.translate.clear();
                 return this;
             }
         });
@@ -543,7 +606,7 @@ jQuery(function() {
             events:{
                 'click .btn-lang-save': 'clickBtnEditInfo',
                 'click .btn-image-delete': 'imgageDel',
-                'change #images': 'imagesAdd'
+                'change #images': 'imagesAdd',
             },
             _edit: function(){
                 var _self = this;
@@ -577,6 +640,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             clickBtnEditInfo: function(event){
@@ -596,6 +660,7 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
+                this.translate.clear();
                 return false;
             },
             imagesAdd: function(event){
@@ -631,20 +696,22 @@ jQuery(function() {
                 this._events = options._events;
                 this.modify = '';
             },
-            setLanguage: function(langId){
-                this.langId = parseInt(langId);
+            setLanguage: function(data){
+                this.base_id = parseInt(data.base_id);
+                this.other_id = parseInt(data.other_id);
                 return this;
             },
             render: function(){
                 var _self = this;
-                var data = {};
                 this.translate.save(
-                    {id:this.langId},
+                    {base_id:this.base_id, other_id:this.other_id},
                     {url:UrlApi('_app')+'/langinfo'}
                 ).done(function (response){
-                    data['langDetail'] = response.data.detail;
+                    var data = {};
+                    data['base_info'] = response.data.base;
+                    data['other_info'] = response.data.other;
                     data['langImages'] = response.data.images;
-                    _self.modify = response.data.detail['modify'];
+                    _self.modify = response.data.base['modify'];
                     _self.$el.html(_self.template(data));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {
@@ -659,56 +726,47 @@ jQuery(function() {
                         }
                     });
                 });
+                this.translate.clear();
             }
         });
-        //export
-        lang.View.LanguageExportView = Backbone.View.extend({
-            template: _.template($('#tpl-lang-export').html()),
-            events:{
-                'click .btn-export': 'exportLanguage'
-            },
-            exportLanguage: function(event){
-                this.clickExport = true;
-                this.select = $('#export').val();
-                this.translate.save(
-                    {
-                        exrender:false,
-                        field:this.select
-                    },
-                    {url:UrlApi('_app')+'/langexport'}
-                    ).done(function (response){
-                        if(response.success === true){
-                            window.open(UrlApi('_app')+'/langdownload');
-                        }
-                    });
-            },
-            initialize: function(options){
-                options || (options = {});
-                this.translate = options.translate;
-                this.exrender = true;
-                this.clickExport = false;
-            },
-            render: function(){
-                var _self = this;
-                var data = {};
-                this.translate.save(
-                    {exrender:this.exrender},
-                    {url:UrlApi('_app')+'/langexport'}
-                ).done(function (response){
-                    data['allField'] = response.data;
-                    _self.$el.html(_self.template(data));
-                    $.fancybox(_self.$el,{
-                       afterClose: function () {
-                            if(_self.clickExport === false){
-                                window.history.back();
-                            }else{
-                                _self.clickExport = false;
-                            }
-                        }
-                    });
-                });
-            }
-        });
+        // //export
+        // lang.View.LanguageExportView = Backbone.View.extend({
+        //     template: _.template($('#tpl-lang-export').html()),
+        //     exportLanguage: function(id){
+        //         console.log(id);
+        //         this.select = $('#export').val();
+        //         this.translate.save(
+        //             {
+        //                 lang_id: id
+        //             },
+        //             {url:UrlApi('_app')+'/langexport'}
+        //             ).done(function (response){
+        //                 if(response.success === true){
+        //                     window.open(UrlApi('_app')+'/langdownload');
+        //                 }
+        //             });
+        //     },
+        //     initialize: function(options){
+        //         options || (options = {});
+        //         this.translate = options.translate;
+        //         this.exrender = true;
+        //     },
+        //     render: function(){
+        //         var _self = this;
+        //         var data = {};
+        //         this.translate.save(
+        //             {exrender:this.exrender},
+        //             {url:UrlApi('_app')+'/langexport'}
+        //         ).done(function (response){
+        //             data['allField'] = response.data;
+        //             _self.$el.html(_self.template(data));
+        //             $.fancybox(_self.$el,{
+        //                afterClose: function () {
+        //                 }
+        //             });
+        //         });
+        //     }
+        // });
 
         user.View.UserSearchView = Backbone.View.extend({
             template: _.template($('#tpl-user-search').html()),
@@ -720,6 +778,9 @@ jQuery(function() {
             },
             searchUser: function(event){
                 if(event.keyCode == '13'){
+                    $('.search-user-enter').hide();
+                    $('.search-user-clear').show();
+                    $('.user-search').blur();
                     this.search = $(event.target).val();
                     this._userEvents.trigger('alernately',this.search,'user-search');
                 }
@@ -748,9 +809,9 @@ jQuery(function() {
                 options || (options = {});
                 this._userEvents = options._userEvents;
                 this.userModel = options.userModel;
-                if(PurviewVal()=='-1'){
-                    this.render();
-                }
+                // if(PurviewVal()=='-1'){
+                //     this.render();
+                // }
             },
             render: function(){
                 var data = {};
@@ -758,17 +819,141 @@ jQuery(function() {
             }
         });
 
-        user.View.UserCenterView = Backbone.View.extend({
-            template: _.template($('#tpl-user-center').html()),
-            events:{
-                'click .btn-edit-center': 'clickBtnUserCenter'
+        user.View.PersonalSidebar = Backbone.View.extend({
+            template: _.template($('#tpl-personal-sidebar').html()),
+            events: {
+                'click .website': 'websiteSetting',
+                'click .personal': 'personalSetting',
+                'click .rest-sync': 'restSyncSetting',
+                'click .site-language': 'siteLanguageSetting'
             },
-            _edit: function(){
+            'websiteSetting': function (event){
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    $('.menu-selection').removeClass('menu-selection');
+                    $(event.target).closest('li').addClass('menu-selection');
+                    this._userEvents.trigger('refresh', 'website-setting');
+                    $('.block-personal-container .block').hide();
+                    $('.block-website-setting').show();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
+            },
+            'personalSetting': function (event){
+                $('.menu-selection').removeClass('menu-selection');
+                $(event.target).closest('li').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'personal-setting');
+                $('.block-personal-container .block').hide();
+                $('.block-personal-setting').show();
+            },
+            'restSyncSetting': function (event){
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    $('.menu-selection').removeClass('menu-selection');
+                    $(event.target).closest('li').addClass('menu-selection');
+                    this._userEvents.trigger('refresh', 'rest-setting');
+                    $('.block-personal-container .block').hide();
+                    $('.block-rest-sync').show();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
+            },
+            'siteLanguageSetting': function (event){
+                if(Purview('update') == '1'||PurviewVal() == '-1'){
+                    $('.menu-selection').removeClass('menu-selection');
+                    $(event.target).closest('li').addClass('menu-selection');
+                    this._userEvents.trigger('refresh', 'language-setting');
+                    $('.block-personal-container .block').hide();
+                    $('.block-site-language').show();
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
+            },
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.render();
+            },
+            render: function(){
+                this.$el.html(this.template({}));
+            }
+        });
+
+        user.View.WebsiteSettingView = Backbone.View.extend({
+            template: _.template($('#tpl-website-setting').html()),
+            events: {
+                'click .btn-website-setting': 'clickBtnWebsiteSetting',
+            },
+            changeWebsiteName: function(){
                 var _self = this;
                 var $form = this.$el.find('form');
                 this.userModel.save(
                     $form.serializeObject(),
-                    {url:UrlApi('_app')+'/change-password'}
+                    {url: UrlApi('_app')+'/save-name'}
+                ).done(function (response){
+                    if(response.success === true){
+                        _self.$el.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                    }else{
+                        _self.$el.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
+                this.userModel.clear();
+            },
+            clickBtnWebsiteSetting: function(event){
+                $(event.target).closest('form').submit();
+                return false;
+            },
+            initialize: function(options){
+                options || (options = {});
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                var _self = this;
+                this.$el.html(this.template({}));
+                this.$el.find('form').validator().on('submit', function(e) {
+                    if (e.isDefaultPrevented()) {
+                    } else {
+                        _self.changeWebsiteName.call(_self);
+                        return false;
+                    }
+                });
+            }
+        });
+
+        user.View.PersonalSettingView = Backbone.View.extend({
+            template: _.template($('#tpl-personal-setting').html()),
+            events:{
+                'click .btn-personal-setting': 'clickBtnPersonalSetting',
+            },
+            _edit: function(){
+                var _self = this;
+                var $form = this.$el.find('form');
+                // console.log($form.serializeObject());
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/personal-setting'}
                 ).done(function (response){
                     if(response.success === true){
                         $form.notify(
@@ -788,9 +973,10 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
-            clickBtnUserCenter: function(event){
+            clickBtnPersonalSetting: function(event){
                 $(event.target).closest('form').submit();
                 return false;
             },
@@ -809,7 +995,190 @@ jQuery(function() {
                         return false;
                     }
                 });
-                $.fancybox(this.$el);
+                // $.fancybox(this.$el);
+            }
+        });
+
+        user.View.RestSyncView = Backbone.View.extend({
+            template: _.template($('#tpl-rest-sync').html()),
+            events:{
+                'click .btn-rest-sync': 'clickBtnRestSync'
+            },
+            _edit: function(){
+                var _self = this;
+                var $form = this.$el.find('form');
+                // console.log($form.serializeObject());
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/rest-sync'}
+                ).done(function (response){
+                    if(response.success === true){
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                    }else{
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
+                this.userModel.clear();
+                return false;
+            },
+            clickBtnRestSync: function(event){
+                $(event.target).closest('form').submit();
+                return false;
+            },
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                var _self = this;
+                this.userModel.save({},
+                    {url: UrlApi('_app')+'/websiteinfo'}
+                ).done(function (response){
+                    _self.$el.html(_self.template({'website': response.data}));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._edit.call(_self);
+                            return false;
+                        }
+                    });
+                });
+                this.userModel.clear();
+            }
+        });
+
+        user.View.SiteLanguageView = Backbone.View.extend({
+            template: _.template($('#tpl-site-language').html()),
+            events:{
+                'click .btn-checked': 'addLang',
+                'click .btn-unchecked': 'delLang'
+                // 'click .btn-personal-setting': 'clickBtnPersonalSetting'
+            },
+            addLang: function (){
+                var _self = this;
+                this.userModel.save(
+                    {'site_lang_id': $('.language-unchecked select').val()},
+                    {url: UrlApi('_app')+'/site-lang-add'}
+                ).done(function (response){
+                    if(response.success === true){
+                        _self.$el.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        setTimeout(_self.render(),2000);
+                    }else{
+                        _self.$el.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
+                this.userModel.clear();
+                return false;
+            },
+            delLang: function (){
+                var _self = this;
+                this.userModel.save(
+                    {'site_lang_id': $('.language-checked select').val()},
+                    {url: UrlApi('_app')+'/site-lang-del'}
+                ).done(function (response){
+                    if(response.success === true){
+                        _self.$el.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        setTimeout(_self.render(),2000);
+                    }else{
+                        _self.$el.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
+                this.userModel.clear();
+                return false;
+            },
+            _edit: function(){
+                var _self = this;
+                var $form = this.$el.find('form');
+                // console.log($form.serializeObject());
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/personal-setting'}
+                ).done(function (response){
+                    if(response.success === true){
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                    }else{
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
+                this.userModel.clear();
+                return false;
+            },
+            // clickBtnPersonalSetting: function(event){
+            //     $(event.target).closest('form').submit();
+            //     return false;
+            // },
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                var _self = this;
+                this.userModel.save({},
+                    {url: UrlApi('_app')+'/lang-info'}
+                ).done(function (response){
+                    var data = {};
+                    data['lang_checked'] = response.data.checked;
+                    data['lang_unchecked'] = response.data.unchecked;
+                    _self.$el.html(_self.template(data));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self._edit.call(_self);
+                            return false;
+                        }
+                    });
+                });
+                this.userModel.clear();
             }
         });
 
@@ -823,6 +1192,9 @@ jQuery(function() {
             },
             searchRole: function(event){
                 if(event.keyCode == '13'){
+                    $('.search-enter').hide();
+                    $('.search-clear').show();
+                    $('.role-search').blur();
                     this.search = $(event.target).val();
                     this._userEvents.trigger('alernately',this.search,'role-search');
                 }
@@ -891,6 +1263,7 @@ jQuery(function() {
                             );
                         }
                     });
+                this.userModel.clear();
                 return false;
             },
             clickBtnRoleAdd: function(event){
@@ -923,6 +1296,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -954,6 +1328,7 @@ jQuery(function() {
                 ).done(function (response){
                     _self.$el.html(_self.template({roleList: response.data.roles,current_count:response.data.count,'count':response.data.total}));
                 });
+                this.userModel.clear();
             }
         });
 
@@ -988,6 +1363,7 @@ jQuery(function() {
                             );
                         }
                     });
+                this.userModel.clear();
                 return false;
             },
             clickBtnRoleEdit: function(event){
@@ -1028,6 +1404,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1064,6 +1441,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
             },
             clickBtnUserAdd: function(event) {
                 this.$el.find('form').submit();
@@ -1096,6 +1474,7 @@ jQuery(function() {
                         }
                     });
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1111,6 +1490,7 @@ jQuery(function() {
                     { url: UrlApi('_app')+'/User/enable' }
                 ).done(function(response) {
                 });
+                this.userModel.clear();
             },
             disable: function(elem) {
                 var user_id = $(elem).closest('tr').data('id');
@@ -1119,6 +1499,7 @@ jQuery(function() {
                     { url: UrlApi('_app')+'/User/disable' }
                 ).done(function(response) {
                 });
+                this.userModel.clear();
             },
             roleList: function(){
                 this._userEvents.trigger('refresh','role-list');
@@ -1134,9 +1515,9 @@ jQuery(function() {
                 options || (options = {});
                 this.userModel = options.userModel;
                 this._userEvents = options._userEvents;
-                if(PurviewVal()=='-1'){
-                    this.render();
-                }
+                // if(PurviewVal()=='-1'){
+                //     this.render();
+                // }
             },
             render: function(){
                 var _self = this;
@@ -1156,6 +1537,7 @@ jQuery(function() {
                         });
                     }
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1190,6 +1572,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
                 return false;
             },
             clickBtnUserEdit: function(event){
@@ -1232,6 +1615,7 @@ jQuery(function() {
                         });
                     }
                 });
+                this.userModel.clear();
             }
         });
 
@@ -1249,8 +1633,32 @@ jQuery(function() {
                     _userEvents: _userEvents
                 });
 
-                var usercenterView = new user.View.UserCenterView({
-                    el: '.user-center',
+                var personalsidebarView = new user.View.PersonalSidebar({
+                    el: '.block-personal-sidebar',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var websitesettingView = new user.View.WebsiteSettingView({
+                    el: '.block-website-setting',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var personalsettingView = new user.View.PersonalSettingView({
+                    el: '.block-personal-setting',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var restsyncView = new user.View.RestSyncView({
+                    el: '.block-rest-sync',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
+                var sitelanguageView = new user.View.SiteLanguageView({
+                    el: '.block-site-language',
                     userModel: this.userModel,
                     _userEvents: _userEvents
                 });
@@ -1336,8 +1744,30 @@ jQuery(function() {
                         case 'userInfo':
                             userlistView.render();
                             break;
-                        case 'userCenter':
-                            usercenterView.render();
+                        case 'personalCenter':
+                            // websitesettingView.render();
+                            personalsettingView.render();
+                            // restsyncView.render();
+                            // sitelanguageView.render();
+                            break;
+                        // case 'personalCenter':
+                        //     websitesettingView.render();
+                        //     personalsettingView.render();
+                        //     break;
+                        case 'website-setting':
+                            websitesettingView.render();
+                            break;
+                        case 'personal-setting':
+                            personalsettingView.render();
+                        case 'rest-setting':
+                            restsyncView.render();
+                            break;
+                        case 'language-setting':
+                            sitelanguageView.render();
+                            break;
+                        case 'userhandle':
+                            usersearchView.render();
+                            userlistView.render();
                             break;
                     }
                 });
@@ -1404,10 +1834,10 @@ jQuery(function() {
                     translate: this.translate
                 });
 
-                var exportView = new lang.View.LanguageExportView({
-                    el: '.block-translation-export',
-                    translate: this.translate
-                });
+                // var exportView = new lang.View.LanguageExportView({
+                //     el: '.block-translation-export',
+                //     translate: this.translate
+                // });
 
                 var router = new LangRouter({
                     _events:_events
@@ -1422,18 +1852,18 @@ jQuery(function() {
                         case 'edit':
                             listView.render();
                             break;
-                        case 'list-export':
-                            exportView.render();
-                            break;
+                        // case 'list-export':
+                        //     exportView.render();
+                        //     break;
                         case 'list-add':
                             addView.render();
                             break;
                         case 'addRender':
                             listView.addRender();
                             break;
-                        case 'export':
-                            listView.exportRender();
-                            break;
+                        // case 'export':
+                        //     listView.exportList();
+                        //     break;
                     }
                 });
 
@@ -1449,6 +1879,8 @@ jQuery(function() {
                         case 'delete':
                             listView.deleteLanguage(data);
                             break;
+                        // case 'export-list':
+                        //     exportView.exportLanguage(data);
                     }
                 });
 

@@ -10,7 +10,6 @@
         //     +$('.line').outerHeight(true)*2;
         //     $('.data-list').height($(window).height() - other);
         // });
-
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
             $('#enlarge_images').html('');
@@ -36,50 +35,25 @@
         });
 
         $('body').on('click', "td", function (event){
-            $('.batch-app option')[0].selected = true;
-            if(_shift_click === true){
-                $(this).closest('tr').addClass('selection');
-                if($('.selection').length > 1){
-                    $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
-                }
-            }else{
-                if($(event.target).closest('table').attr('operation') == 'batch'){
-                    if($(event.target).closest('tr').attr('class') == 'selection'){
-                        $(event.target).closest('tr').attr('class','');
-                    }else{
-                        $(event.target).closest('tr').addClass('selection');
+            if($(event.target).closest('table').attr('operation') == 'batch'){
+                $('.batch-app option')[0].selected = true;
+                if(_shift_click === true){
+                    $(this).closest('tr').addClass('selection');
+                    if($('.selection').length > 1){
+                        $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
                     }
+                }else{
+                    // if($(event.target).closest('table').attr('operation') == 'batch'){
+                        if($(event.target).closest('tr').attr('class') == 'selection'){
+                            $(event.target).closest('tr').attr('class','');
+                        }else{
+                            $(event.target).closest('tr').addClass('selection');
+                        }
+                    // }
                 }
             }
         });
 
-        // $('body').on('keypress', '.search-box', function(){
-        //     // if(event.type == 'focus'){
-        //     //         $('.search-enter').show();
-        //     //         $('.search-clear').hide();
-        //     // }
-        //     if(event.type == 'keypress'){
-        //         if(event.keyCode == '13'){
-        //             $(event.target).blur();
-        //             $('.search-enter').hide();
-        //             $('.search-clear').show();
-        //         }
-        //     }
-        // });
-
-        // $('body').on('click', '.search-clear', function (){
-        //     $('.search').val('');
-        //     $('.search-enter').show();
-        //     $('.search-clear').hide();
-        //     return false;
-        // });
-
-        // $('body').on('click', '.search-enter', function (){
-        //     $(event.target).blur();
-        //     $('.search-enter').hide();
-        //     $('.search-clear').show();
-        //     return false;
-        // });
     });
 
     ajaxFileUpload = function (url, fileId, callback, failure){

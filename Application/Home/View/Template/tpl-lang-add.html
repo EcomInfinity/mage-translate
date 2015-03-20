@@ -21,24 +21,35 @@
                     <form action="" method="post" name="lang_add" data-toggle="validator" role="form">
                         <div class="form-holder">
                             <div class="entry textarea form-group">
-                                <label for="en">EN:</label>
-                                <textarea name="en" id="en" required data-error="English can not be empty."></textarea>
+                                <label for="en_us">en_US:</label>
+                                <textarea name="en_us" id="en_us" required data-error="English can not be empty."></textarea>
                                 <div class="help-block with-errors"></div>
                             </div>
-                            <div class="entry textarea form-group">
-                                <label for="de">DE:</label>
-                                <textarea name="de" id="de"></textarea>
-                                <div class="help-block with-errors"></div>
+                            <div class="entry">
+                                <select class="create-language">
+                                    <option value='-1'>Please select</option>
+                                    <% _.each(weblanglist, function(list){ %>
+                                        <option value="<%= list.simple_name %>"><%= list.simple_name %></option>
+                                    <% }) %>
+                                </select>
                             </div>
-                            <div class="entry textarea form-group">
-                                <label for="nl">NL:</label>
-                                <textarea name="nl" id="nl"></textarea>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="entry form-group">
-                                <label for="remarks">Remarks:</label>
-                                <input type="text" name="remarks" id="remarks" />
-                                <div class="help-block with-errors"></div>
+                            <!--<% _.each(weblanglist, function(list){ %>
+                                <div class="entry textarea form-group">
+                                    <label for="<%= list.simple_name %>"><%= list.simple_name %>:</label>
+                                    <textarea name="<%= list.simple_name.toLowerCase() %>" id="<%= list.simple_name %>"></textarea>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            <% }) %>-->
+                            <div class="entry">
+                            <label>Need Update</label>
+                                <div>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="1" name="modify" id="modify-yes" checked />Yes
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="0" name="modify" id="modify-no" />No
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="btn-set">

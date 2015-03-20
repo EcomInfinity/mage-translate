@@ -60,11 +60,21 @@ select{text-transform: uppercase;}
 .selection{background-color: #2F70A9;color: #fff;}
 .selection:hover{background-color: #2F70A9 !important;}
 
-html {overflow: hidden;}
+/*html {overflow: hidden;}*/
 
 .data-list{overflow: auto;height: 500px;}
 
 .operation-view{margin-bottom: 10px;}
-.batch-app{float: right;}
+.batch-app{float: right;color: white;background: rgb(43, 102, 153);height: 34px;}
 .search-icon{position: relative;top: 33px;left: 910px;}
 .word-black{color: black;}
+
+/*.block-personal-setting{margin-bottom: 10px;}
+.block-rest-sync{margin-bottom: 10px;}
+.block-site-language{margin-bottom: 30px;}*/
+.block-personal-container .block{margin-bottom: 30px;}
+select[multiple], select[size] {
+  height: 170px;
+}
+.menu-selection a {color: black;}
+.block-personal-sidebar ul li {padding: 10px 0;}

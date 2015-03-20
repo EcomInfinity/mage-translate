@@ -47,4 +47,77 @@ class IndexController extends Controller {
         }
         
     }
+    public function lang(){
+        // $file_path = './Uploads/csv/'.'test.csv';
+        // if(file_exists($file_path)){
+        //     $handle = fopen($file_path,'r');
+        //     while ($data = fgetcsv($handle)) {
+        //         $lang_arr[] = $data;
+        //     }
+        //     var_dump($lang_arr);
+        //     foreach ($lang_arr as $k => $val) {
+        //         if($k == '0'){
+        //             continue;
+        //         }
+        //         foreach ($lang_arr['0'] as $key => $value) {
+        //             if($value == 'en_us'){
+        //                 $base_add[$k]['0'] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+        //             }else{
+        //                 $base_add[$k]['other'][$value] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+        //             }
+        //             //     else{
+        //             //     $test[''] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+        //             //     $base_add[$K]['other'] = '1';
+        //             // }
+        //             // if($value == 'en_us'){
+        //             //     $base_add['website_id'] = session('website_id');
+        //             //     $base_add['content'] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+        //             //     $_base_id = M('base_translate')->add($base_add);
+        //             // }else{
+        //             //     $other_add['base_id'] = $_base_id;
+        //             //     $other_add['content'] = iconv(mb_detect_encoding($val[$key], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "UTF-8" , $val[$key]);
+        //             //     M('other_translate')->add($other_add);
+        //             // }
+        //         }
+        //     }
+        //     var_dump($base_add);
+            // foreach ($base_add as $key => $value) {
+            //     # code...
+            //     $_base_id = M('base_translate')->add(array('content' => $value['0']));
+            //     foreach ($value['other'] as $k => $val) {
+            //         # code...
+            //         $other_add['content'] = $val;
+            //         $other_add['base_id'] = $_base_id;
+            //         M('other_translate')->add($other_add);
+            //     }
+            // }
+        // }
+        $export_get = D('translation')->field('de,en')->select();
+        foreach ($export_get as $key => $value) {
+            foreach ($value as $k => $val) {
+                $export[$key][$k] = '"'.str_replace('"','""',$val).'"';
+            }
+        }
+        // // var_dump($export);
+        $_translate_list = D('base_translate')->where(array('status' => 1, 'website_id' => session('website_id'), ))->order('id desc')->select();
+        foreach ($_translate_list as $k => $val) {
+            # code...
+            $_other = D('other_translate')->where(array('base_id' => $val['id'], 'lang_id' => '18'))->relation(true)->find();
+            if(!empty($_other['content'])){
+                $_list[$k]['en_us'] = $val['content'];
+                $_list[$k][strtolower($_other['simple_name'])] = $_other['content'];
+            }
+        }
+        var_dump($_list);
+        // foreach($export as $key=>$val){
+        //     // foreach ($val as $ck => $cv) {
+        //     //         $data[$key][$ck]=$cv;
+        //     // }
+        //     $export[$key]=implode(",", $export[$key]);
+            
+        // }
+        // var_dump($export);
+
+
+    }
 }
