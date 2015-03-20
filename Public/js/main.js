@@ -10,6 +10,16 @@
         //     +$('.line').outerHeight(true)*2;
         //     $('.data-list').height($(window).height() - other);
         // });
+        $('body').on('change', '[name="checked-all"]', function (event){
+            if($(event.target).prop('checked') == true){
+                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",true);
+                $('.tbl-translation-list tbody tr').addClass('selection');
+            }else{
+                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",false);
+                $('.tbl-translation-list tbody tr').removeClass('selection');
+            }
+            return false;
+        });
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
             $('#enlarge_images').html('');
@@ -25,32 +35,79 @@
         });
 
         var _shift_click = false;
+        var _ctrl_click = false;
         $('body').on('keydown', '', function (event){
             if(event.keyCode === 16){
                 _shift_click = true;
             }
+            if(event.keyCode === 17){
+                _ctrl_click = true;
+            }
         });
-        $('body').on('keyup', '', function(){
-            _shift_click = false;
+        $('body').on('keyup', '', function (event){
+            if(event.keyCode === 16){
+                _shift_click = false;
+            }
+            if(event.keyCode === 17){
+                _ctrl_click = false;
+            }
         });
 
         $('body').on('click', "td", function (event){
             if($(event.target).closest('table').attr('operation') == 'batch'){
-                $('.batch-app option')[0].selected = true;
-                if(_shift_click === true){
-                    $(this).closest('tr').addClass('selection');
-                    if($('.selection').length > 1){
-                        $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
+                if(_ctrl_click === true){
+                    console.log('_ctrl_click');
+                    if($(event.target).closest('tr').attr('class') == 'selection'){
+                        $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",false);
+                        $(event.target).closest('tr').attr('class','');
+                    }else{
+                        $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
+                        $(event.target).closest('tr').addClass('selection');
                     }
-                }else{
-                    // if($(event.target).closest('table').attr('operation') == 'batch'){
-                        if($(event.target).closest('tr').attr('class') == 'selection'){
-                            $(event.target).closest('tr').attr('class','');
-                        }else{
-                            $(event.target).closest('tr').addClass('selection');
-                        }
+                }else if(_shift_click === true){
+                    console.log('_shift_click');
+                    $(event.target).closest('tr').addClass('selection click');
+                    $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
+                    var _total = $('.selection').length;
+                    var _click_location;
+                    if(_total >1){
+                        $('.selection').each(function (i){
+                            if($(this).attr('class') == 'selection click'){
+                                _click_location = i+1;
+                            }
+                        });
+                        console.log(_total);
+                        console.log(_click_location);
+                    }
+                    // console.log($(this).closest('tr').prevUntil(".selection").length);
+                    // console.log($(this).closest('tr').nextUntil(".selection").length);
+                    // if($('.selection').length > 1){
+                    //     $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
                     // }
+                }else{
+                    console.log('none');
+                    $('.selection input[type="checkbox"]').prop("checked",false);
+                    $('.selection').attr('class','');
+                    $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
+                    $(event.target).closest('tr').addClass('selection');
                 }
+                // $('.batch-app option')[0].selected = true;
+                // if(_shift_click === true){
+                //     $(this).closest('tr').addClass('selection');
+                //     if($('.selection').length > 1){
+                //         $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
+                //     }
+                // }else{
+                //     // if($(event.target).closest('table').attr('operation') == 'batch'){
+                //         if($(event.target).closest('tr').attr('class') == 'selection'){
+                //             $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",false);
+                //             $(event.target).closest('tr').attr('class','');
+                //         }else{
+                //             $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
+                //             $(event.target).closest('tr').addClass('selection');
+                //         }
+                //     // }
+                // }
             }
         });
 

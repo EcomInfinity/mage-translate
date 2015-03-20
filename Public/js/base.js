@@ -455,11 +455,11 @@ jQuery(function() {
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
-                if($('.selection').length < 1 || this.operation == '0'){
+                if($('input:checked').length < 1){
                     return;
                 }
-                $('.selection').each(function (i){
-                    _self.data[i] = $(this).data('base_id');
+                $('input:checked').each(function (i){
+                    _self.data[i] = $(this).val();
                 });
 
                 if(this.operation == 'update'){

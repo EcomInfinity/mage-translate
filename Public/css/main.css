@@ -42,9 +42,10 @@ table td, table th { padding: 5px; }
 
 .tip{color:red;}
 
-table.tbl-translation-list th.col-language { width: 29%; }
+table.tbl-translation-list th.col-language { width: 35%; }
+table.tbl-translation-list th.col-checkbox { width: 5%; }
 /*table.tbl-translation-list th.col-operation { width: 13%; }*/
-th.col-operation { width: 13%; }
+th.col-operation { width: 10%; }
 table.tbl-translation-list tbody td { word-break: break-all; vertical-align: middle; }
 
 #enlarge_images{display:none;}
@@ -73,8 +74,9 @@ select{text-transform: uppercase;}
 .block-rest-sync{margin-bottom: 10px;}
 .block-site-language{margin-bottom: 30px;}*/
 .block-personal-container .block{margin-bottom: 30px;}
-select[multiple], select[size] {
-  height: 170px;
-}
+select[multiple], select[size] {height: 170px;}
 .menu-selection a {color: black;}
 .block-personal-sidebar ul li {padding: 10px 0;}
+textarea {height: 62px;box-sizing: border-box;}
+table th{padding: 8px;}
+table {-moz-user-select:none;-webkit-user-select:none;user-select:none;}

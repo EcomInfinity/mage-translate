@@ -10,12 +10,14 @@
     <div class="line"></div>
     <table class="list-head tbl-translation-list">
         <thead>
-            <tr>
+            <tr class>
+                <th class="col-checkbox"><input type="checkbox" name="checked-all" id="test" /></th>
                 <th class="col-language">EN_US</th>
                 <th class="col-language">
                     <select name="language" class="lang-list">
                         <% if(langs){ %>
-                            <% _.each(langs, function(lang,key){ %>
+                            <% _.each(langs, 
+                              function(lang,key){ %>
                                 <option value = "<%= lang.lang_id %>" 
                                 <% if(lang_id === lang.lang_id){ %> selected <% } %>
                                 ><%= lang.simple_name %></option>
@@ -37,15 +39,17 @@
     >
       <thead>
         <tr>
-          <th class="col-language"> </th>
-          <th class="col-language"> </th>
-          <th class="col-operation"> </th>
+          <th class="col-checkbox"></th>
+          <th class="col-language"></th>
+          <th class="col-language"></th>
+          <th class="col-operation"></th>
         </tr>
       </thead>
       <tbody>
       <% if(list){ %>
           <% _.each(list, function(translate){ %>
-              <tr data-base_id = "<%= translate.id %>">
+              <tr>
+                  <td><input type="checkbox" name="translate_id[]" value="<%= translate.id %>" /></td>
                   <td><%= translate.content %></td>
                   <% if(translate.other){ %>
                     <% _.each(translate.other, function(other){ %>
