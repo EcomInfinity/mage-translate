@@ -35,19 +35,21 @@
         });
 
         $('body').on('click', "td", function (event){
-            $('.batch-app option')[0].selected = true;
-            if(_shift_click === true){
-                $(this).closest('tr').addClass('selection');
-                if($('.selection').length > 1){
-                    $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
-                }
-            }else{
-                if($(event.target).closest('table').attr('operation') == 'batch'){
-                    if($(event.target).closest('tr').attr('class') == 'selection'){
-                        $(event.target).closest('tr').attr('class','');
-                    }else{
-                        $(event.target).closest('tr').addClass('selection');
+            if($(event.target).closest('table').attr('operation') == 'batch'){
+                $('.batch-app option')[0].selected = true;
+                if(_shift_click === true){
+                    $(this).closest('tr').addClass('selection');
+                    if($('.selection').length > 1){
+                        $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
                     }
+                }else{
+                    // if($(event.target).closest('table').attr('operation') == 'batch'){
+                        if($(event.target).closest('tr').attr('class') == 'selection'){
+                            $(event.target).closest('tr').attr('class','');
+                        }else{
+                            $(event.target).closest('tr').addClass('selection');
+                        }
+                    // }
                 }
             }
         });
