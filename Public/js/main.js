@@ -60,6 +60,7 @@
                 $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",false);
                 $(event.target).closest('tr').attr('class','');
             }else{
+                $('.batch-app').find('option')[0].selected = true;
                 $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
                 $(event.target).closest('tr').addClass('selection');
             }
