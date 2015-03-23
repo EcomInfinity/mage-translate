@@ -385,6 +385,26 @@ class TranslationController extends TranslationPermissionController {
 
     public function edit(){
         $_params = json_decode(file_get_contents("php://input"),true);
+        $_base = D('base_translate')->gets(array('content' => $_params['en_us'], 'website_id' => session('website_id')));
+        $_repeat_lang =false;
+        foreach ($_base as $val) {
+            # code...
+            if(strcmp($_params['en_us'],$val['content']) === 0){
+                $_repeat_lang = true;
+                $_repeat_lang_info = $val;
+            }
+        }
+        if($_repeat_lang === true){
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'The data already exists.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+            return;
+        }
         $_base_result = D('base_translate')->save(array('id' => $_params['base_id'], 'content' => $_params['en_us'], 'remarks' => $_params['remarks'], 'modify' => $_params['modify']));
         if($_params['other_id'] != -1){
             $_other = D('other_translate')->get(array('id' => $_params['other_id']));
