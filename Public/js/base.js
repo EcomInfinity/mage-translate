@@ -480,6 +480,7 @@ jQuery(function() {
                     }else{
                         $.fancybox($('.message'),{
                            afterClose: function () {
+                                $(event.target).find('option')[0].selected = true;
                             }
                         });
                     }
@@ -503,6 +504,7 @@ jQuery(function() {
                     }else{
                         $.fancybox($('.message'),{
                            afterClose: function () {
+                                $(event.target).find('option')[0].selected = true;
                             }
                         });
                     }

@@ -10,16 +10,6 @@
         //     +$('.line').outerHeight(true)*2;
         //     $('.data-list').height($(window).height() - other);
         // });
-        $('body').on('change', '[name="checked-all"]', function (event){
-            if($(event.target).prop('checked') == true){
-                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",true);
-                $('.tbl-translation-list tbody tr').addClass('selection');
-            }else{
-                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",false);
-                $('.tbl-translation-list tbody tr').removeClass('selection');
-            }
-            return false;
-        });
         //Enlarge Image
         $('body').on('click', 'ul img', function(){
             $('#enlarge_images').html('');
@@ -53,10 +43,34 @@
             }
         });
 
-        $('body').on('click', "td", function (event){
+        $('body').on('change', '[name="checked-all"]', function (event){
+            if($(event.target).prop('checked') == true){
+                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",true);
+                $('.tbl-translation-list tbody tr').addClass('selection');
+            }else{
+                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",false);
+                $('.tbl-translation-list tbody tr').removeClass('selection');
+            }
+            return false;
+        });
+
+        $('body').on('click', 'tbody input[type="checkbox"]', function (event){
+            event.stopPropagation();
+            if($(event.target).closest('tr').attr('class') == 'selection'){
+                $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",false);
+                $(event.target).closest('tr').attr('class','');
+            }else{
+                $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
+                $(event.target).closest('tr').addClass('selection');
+            }
+        });
+
+        $('body').on('click', "tbody tr", function (event){
+            $('.batch-app').find('option')[0].selected = true;
+            $('[name="checked-all"]').prop("checked",false);
             if($(event.target).closest('table').attr('operation') == 'batch'){
                 if(_ctrl_click === true){
-                    console.log('_ctrl_click');
+                    // console.log('_ctrl_click');
                     if($(event.target).closest('tr').attr('class') == 'selection'){
                         $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",false);
                         $(event.target).closest('tr').attr('class','');
@@ -65,32 +79,35 @@
                         $(event.target).closest('tr').addClass('selection');
                     }
                 }else if(_shift_click === true){
-                    console.log('_shift_click');
-                    $(event.target).closest('tr').addClass('selection click');
-                    $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
-                    var _total = $('.selection').length;
-                    var _click_location;
-                    if(_total >1){
-                        $('.selection').each(function (i){
-                            if($(this).attr('class') == 'selection click'){
-                                _click_location = i+1;
-                            }
-                        });
-                        console.log(_total);
-                        console.log(_click_location);
+                    // console.log('_shift_click');
+                    if($('.selection').length > 1){
+                        $('.selection input[type="checkbox"]').prop("checked",false);
+                        $('.selection').removeClass('selection');
                     }
-                    // console.log($(this).closest('tr').prevUntil(".selection").length);
-                    // console.log($(this).closest('tr').nextUntil(".selection").length);
-                    // if($('.selection').length > 1){
-                    //     $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
-                    // }
+                    $(event.target).closest('tr').addClass('selection');
+                    $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
+                    if($('.selection').length == 2){
+                        $(".selection:first").nextUntil($(".selection:last")).addClass('selection');
+                        $(".selection:first").nextUntil($(".selection:last")).find('input[type="checkbox"]').prop("checked",true);
+                    }
                 }else{
-                    console.log('none');
+                    // console.log('none');
                     $('.selection input[type="checkbox"]').prop("checked",false);
                     $('.selection').attr('class','');
                     $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
                     $(event.target).closest('tr').addClass('selection');
                 }
+                // var _total = $('.selection').length;
+                // var _click_location;
+                // if(_total >1){
+                //     $('.selection').each(function (i){
+                //         if($(this).attr('class') == 'selection click'){
+                //             _click_location = i+1;
+                //         }
+                //     });
+                //     console.log(_total);
+                //     console.log(_click_location);
+                // }
                 // $('.batch-app option')[0].selected = true;
                 // if(_shift_click === true){
                 //     $(this).closest('tr').addClass('selection');
