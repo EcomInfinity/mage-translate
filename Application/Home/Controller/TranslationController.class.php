@@ -174,7 +174,29 @@ class TranslationController extends TranslationPermissionController {
                     );
                 return;
             }else{
-                D('base_translate')->save(array('id' => $_repeat_lang_info['id'], 'status' => 1));
+                $_base_save['id'] = $_repeat_lang_info['id'];
+                $_base_save['status'] = 1;
+                if(!empty($_params['remarks'])){
+                    $_base_save['remarks'] = $_params['remarks'];
+                }
+                D('base_translate')->save($_base_save);
+                $_images = D('translation_image')->where(array('lang_id' => '0', 'status' => 1))->select();
+                foreach ($_images as $val) {
+                    # code...
+                    D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_repeat_lang_info['id']));
+                }
+                $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
+                foreach ($_website_lang as $val) {
+                    # code...
+                    $_other_where['base_id'] = $_repeat_lang_info['id'];
+                    $_other_where['lang_id'] = $val['lang_id'];
+                    $_other_id = D('other_translate')->where($_other_where)->find();
+                    if(!empty($_params[strtolower($val['simple_name'])])){
+                        $_other_save['content'] = $_params[strtolower($val['simple_name'])];
+                        $_other_save['id'] = $_other_id['id'];
+                        D('other_translate')->save($_other_save);
+                    }
+                }
                 $this->ajaxReturn(
                         array(
                             'success' => true,
@@ -189,6 +211,7 @@ class TranslationController extends TranslationPermissionController {
                 $_base_add['modify'] = $_params['modify'];
                 $_base_add['content'] = $_params['en_us'];
                 $_base_add['website_id'] = session('website_id');
+                $_base_add['remarks'] = $_params['remarks'];
                 $_base_result = D('base_translate')->add($_base_add);
                 $_images = D('translation_image')->where(array('lang_id' => '0', 'status' => 1))->select();
                 foreach ($_images as $val) {

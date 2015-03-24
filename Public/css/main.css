@@ -68,8 +68,8 @@ select{text-transform: uppercase;}
 .operation-view{margin-bottom: 10px;}
 .batch-app{float: right;color: white;background: rgb(43, 102, 153);height: 34px;}
 .search-icon{position: relative;top: 33px;left: 910px;}
-.word-black{color: black;}
-
+.word-black{color: black;text-decoration: underline;}
+/*a{text-decoration: underline;}*/
 /*.block-personal-setting{margin-bottom: 10px;}
 .block-rest-sync{margin-bottom: 10px;}
 .block-site-language{margin-bottom: 30px;}*/

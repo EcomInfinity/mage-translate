@@ -5,7 +5,7 @@ use Think\Model\RelationModel;
 
 class TranslationModel extends RelationModel {
     protected $_link = array(
-            'TranslationImage'=> array(  
+            'TranslationImage'=> array(
                 'mapping_type' =>self::HAS_MANY,
                 'class_name' => 'TranslationImage',
                 'foreign_key' => 'lang_id',

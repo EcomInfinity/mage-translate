@@ -464,19 +464,25 @@ jQuery(function() {
 
                 if(this.operation == 'update'){
                     if(Purview('update') == '1'||PurviewVal() == '-1'){
-                            if(confirm('Are you sure to update modify status?') == true){
-                                this.translate.save(
-                                    {ids: this.data},
-                                    {url:UrlApi('_app')+'/setmodify'}
-                                ).done(function (response){
-                                    if(response.success === true){
-                                        _self.render();
-                                    }
-                                });
-                                this.translate.clear();
-                            }else{
-                                $(event.target).find('option')[0].selected = true;
-                            }
+                        var modify_message;
+                        if(this.record === 1){
+                            modify_message = 'Are you sure setting the selected to not need modify?';
+                        }else{
+                            modify_message = 'Are you sure setting the selected to need modify?';
+                        }
+                        if(confirm(modify_message) == true){
+                            this.translate.save(
+                                {ids: this.data},
+                                {url: UrlApi('_app')+'/setmodify'}
+                            ).done(function (response){
+                                if(response.success === true){
+                                    _self.render();
+                                }
+                            });
+                            this.translate.clear();
+                        }else{
+                            $(event.target).find('option')[0].selected = true;
+                        }
                     }else{
                         $.fancybox($('.message'),{
                            afterClose: function () {
@@ -578,7 +584,7 @@ jQuery(function() {
             render: function(){
                 var _self = this;
                 this.translate.save(
-                    { 
+                    {
                         search: this.search,
                         language: this.lang_id,
                         record: this.record,
