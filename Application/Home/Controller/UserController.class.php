@@ -255,31 +255,49 @@ class UserController extends UserPermissionController {
 
     public function restSync() {
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_save['id'] = session('website_id');
-        if(!empty($_params['domain'])){
-            $_save['domain'] = $_params['domain'];
-        }
-        if(!empty($_params['rest_user'])){
-            $_save['rest_user'] = $_params['rest_user'];
-        }
-        if(!empty($_params['rest_password'])){
-            $_save['rest_password'] = $_params['rest_password'];
-        }
-        $_result = D('website')->save($_save);
-        if($_result > 0){
-            $this->ajaxReturn(
+        $_communication = magentoApi(
                 array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(),
-                ),
-                'json'
+                        'domain' => $_params['domain'],
+                        'rest_user' => $_params['rest_user'],
+                        'rest_password' => $_params['rest_password']
+                    )
             );
+        if($_communication === true){
+            $_save['id'] = session('website_id');
+            // if(!empty($_params['domain'])){
+                $_save['domain'] = $_params['domain'];
+            // }
+            // if(!empty($_params['rest_user'])){
+                $_save['rest_user'] = $_params['rest_user'];
+            // }
+            // if(!empty($_params['rest_password'])){
+                $_save['rest_password'] = $_params['rest_password'];
+            // }
+            $_result = D('website')->save($_save);
+            if($_result > 0){
+                $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => 'Communication Success.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+            }else{
+                $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'Modify Failure.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+            }
         }else{
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Modify Failure.',
+                    'message' => 'Communication Failure.',
                     'data' => array(),
                 ),
                 'json'

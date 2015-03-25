@@ -54,5 +54,29 @@ function check_verify($code, $id = ''){
     $verify = new \Think\Verify();
     return $verify->check($code, $id);
 }
-
+//检测通信
+function magentoApi($_website_api){
+    try{
+    $_client = new \SoapClient($_website_api['domain'].'/api/soap/?wsdl');
+    $_sessionId = $_client->login($_website_api['rest_user'], $_website_api['rest_password']);
+    // $_result = $_client->call($_sessionId, $_website_info_type, $_website_info_id);
+    }catch (SOAPFault $e){
+        // echo $e->getMessage();
+        // var_dump($e);
+        return false;
+    }
+    return true;
+}
+//同步magento数据
+function magentoApiGets($_website_api, $_website_info_type, $_website_info_id){
+    try{
+    $_client = new \SoapClient($_website_api['domain'].'/api/soap/?wsdl');
+    $_sessionId = $_client->login($_website_api['rest_user'], $_website_api['rest_password']);
+    // $_result = $_client->call($_sessionId, $_website_info_type, $_website_info_id);
+    }catch (SOAPFault $e){
+        return;
+    }
+    $_result = $_client->call($_sessionId, $_website_info_type, $_website_info_id);
+    return $_result;
+}
 ?>

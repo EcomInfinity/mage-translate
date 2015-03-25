@@ -79,4 +79,5 @@ select[multiple], select[size] {height: 170px;}
 .block-personal-sidebar ul li {padding: 10px 0;}
 textarea {height: 62px;box-sizing: border-box;}
 table th{padding: 8px;}
+table a{color: #333;}
 table {-moz-user-select:none;-webkit-user-select:none;user-select:none;}

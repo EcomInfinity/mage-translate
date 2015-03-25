@@ -1022,7 +1022,7 @@ jQuery(function() {
                 ).done(function (response){
                     if(response.success === true){
                         $form.notify(
-                            'Success',
+                            response.message,
                             {
                                 position: 'top',
                                 className: 'success'
