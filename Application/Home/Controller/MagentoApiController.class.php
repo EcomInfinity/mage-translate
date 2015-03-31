@@ -2,25 +2,17 @@
 namespace Home\Controller;
 use Think\Controller;
 ini_set('max_execution_time', 30000);
-class MagentoApiController extends Controller {
+class MagentoApiController extends BaseController {
     public function index(){
     }
     public function syncTranslatePage(){
         $_cms_page_result = magentoApiSync(
-                array(
-                        'domain' => 'http://127.0.0.1/gadgetgear',
-                        'rest_user' => '123456',
-                        'rest_password' => '123456'
-                    ),
+                session('soap'),
                 'info_cmspage.list',
                 array()
             );
         $_store_view_result = magentoApiSync(
-                array(
-                        'domain' => 'http://127.0.0.1/gadgetgear',
-                        'rest_user' => '123456',
-                        'rest_password' => '123456'
-                    ),
+                session('soap'),
                 'info_getwebinfo.storeViewList',
                 array()
             );
@@ -74,11 +66,7 @@ class MagentoApiController extends Controller {
                                 $_save['stores'] = array($val);
                                 unset($_save['page_id']);
                                 $_result = magentoApiSync(
-                                        array(
-                                                'domain' => 'http://127.0.0.1/gadgetgear',
-                                                'rest_user' => '123456',
-                                                'rest_password' => '123456'
-                                            ),
+                                        session('soap'),
                                         'info_cmspage.update',
                                         array($value['page_id'],$_save)
                                     );
@@ -96,11 +84,7 @@ class MagentoApiController extends Controller {
                                     }
                                     unset($_add['page_id']);
                                     magentoApiSync(
-                                            array(
-                                                    'domain' => 'http://127.0.0.1/gadgetgear',
-                                                    'rest_user' => '123456',
-                                                    'rest_password' => '123456'
-                                                ),
+                                            session('soap'),
                                             'info_cmspage.create',
                                             array($_add)
                                         );
@@ -127,11 +111,7 @@ class MagentoApiController extends Controller {
                 }
                 unset($_over_add['page_id']);
                 magentoApiSync(
-                        array(
-                                'domain' => 'http://127.0.0.1/gadgetgear',
-                                'rest_user' => '123456',
-                                'rest_password' => '123456'
-                            ),
+                        session('soap'),
                         'info_cmspage.create',
                         array($_over_add)
                     );
@@ -139,11 +119,7 @@ class MagentoApiController extends Controller {
         }
         //添加到translation数据库
         $_cms_page_all_result = magentoApiSync(
-                array(
-                        'domain' => 'http://127.0.0.1/gadgetgear',
-                        'rest_user' => '123456',
-                        'rest_password' => '123456'
-                    ),
+                session('soap'),
                 'info_cmspage.list',
                 array()
             );
@@ -159,7 +135,7 @@ class MagentoApiController extends Controller {
         // truncate table
         foreach ($_cms_page_all_result as $k => $val) {
             if($val['store_id']['0'] != 0){
-                $_repeat_cms_page = D('cms_translate')->where(array('type_id' => $value['page_id'], 'website_id' => session('website_id'), 'type' => 1))->find();
+                $_repeat_cms_page = D('cms_translate')->where(array('type_id' => $val['page_id'], 'website_id' => session('website_id'), 'type' => 1))->find();
                 if($_repeat_cms_page){
                     $_cms_save['content'] = json_encode($val);
                     $_cms_save['title'] = $val['title'];
@@ -168,7 +144,7 @@ class MagentoApiController extends Controller {
                     D('cms_translate')->save($_cms_save);
                 }else{
                     // unset($value['page_id']);
-                    $_cms_add['content'] = json_encode($value);
+                    $_cms_add['content'] = json_encode($val);
                     $_cms_add['title'] = $val['title'];
                     $_cms_add['identifier'] = $val['identifier'];
                     $_cms_add['website_id'] = session('website_id');
@@ -180,23 +156,28 @@ class MagentoApiController extends Controller {
                 }
             }
         }
-        var_dump($_store_view_result);
+        var_dump($_cms_page_all_result);
     }
 
     public function syncMagentoPage(){
         //更新magento,cms_page
-        $_cms_page_translate_result = D('cms_translate')->where(array('website_id' => '18', 'type' => 1))->select();
+        $_cms_save =array();
+        $_cms_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->select();
         foreach ($_cms_page_translate_result as $val) {
             # code...
-            $_cms_save = json_decode($val);
+            $_cms_save = json_decode($val['content'], true);
             unset($_cms_save['page_id']);
+            unset($_cms_save['identifier']);
+            unset($_cms_save['sort_order']);
+            unset($_cms_save['creation_time']);
+            unset($_cms_save['update_time']);
+            unset($_cms_save['store_id']);
+            unset($_cms_save['store_code']);
             $_cms_save['title'] = $val['title'];
+            var_dump($_cms_save);
+            var_dump($val['type_id']);
             magentoApiSync(
-                    array(
-                            'domain' => 'http://127.0.0.1/gadgetgear',
-                            'rest_user' => '123456',
-                            'rest_password' => '123456'
-                        ),
+                    session('soap'),
                     'info_cmspage.update',
                     array($val['type_id'],$_cms_save)
                 );
@@ -206,20 +187,12 @@ class MagentoApiController extends Controller {
 
     public function syncTranslateBlock(){
         $_cms_block_result = magentoApiSync(
-                array(
-                        'domain' => 'http://127.0.0.1/gadgetgear',
-                        'rest_user' => '123456',
-                        'rest_password' => '123456'
-                    ),
+                session('soap'),
                 'info_cmsblock.list',
                 array()
             );
         $_store_view_result = magentoApiSync(
-                array(
-                        'domain' => 'http://127.0.0.1/gadgetgear',
-                        'rest_user' => '123456',
-                        'rest_password' => '123456'
-                    ),
+                session('soap'),
                 'info_getwebinfo.storeViewList',
                 array()
             );
@@ -272,11 +245,7 @@ class MagentoApiController extends Controller {
                                 $_save['stores'] = array($val);
                                 unset($_save['block_id']);
                                 $_result = magentoApiSync(
-                                        array(
-                                                'domain' => 'http://127.0.0.1/gadgetgear',
-                                                'rest_user' => '123456',
-                                                'rest_password' => '123456'
-                                            ),
+                                        session('soap'),
                                         'info_cmsblock.update',
                                         array($value['block_id'],$_save)
                                     );
@@ -292,11 +261,7 @@ class MagentoApiController extends Controller {
                                     $_add['stores'] = array($val);
                                     unset($_add['block_id']);
                                     magentoApiSync(
-                                            array(
-                                                    'domain' => 'http://127.0.0.1/gadgetgear',
-                                                    'rest_user' => '123456',
-                                                    'rest_password' => '123456'
-                                                ),
+                                            session('soap'),
                                             'info_cmsblock.create',
                                             array($_add)
                                         );
@@ -322,11 +287,7 @@ class MagentoApiController extends Controller {
                 $_over_add['stores'] = array($value);
                 unset($_over_add['block_id']);
                 magentoApiSync(
-                        array(
-                                'domain' => 'http://127.0.0.1/gadgetgear',
-                                'rest_user' => '123456',
-                                'rest_password' => '123456'
-                            ),
+                        session('soap'),
                         'info_cmsblock.create',
                         array($_over_add)
                     );
@@ -334,11 +295,7 @@ class MagentoApiController extends Controller {
         }
         //添加到translation数据库
         $_cms_block_all_result = magentoApiSync(
-                array(
-                        'domain' => 'http://127.0.0.1/gadgetgear',
-                        'rest_user' => '123456',
-                        'rest_password' => '123456'
-                    ),
+                session('soap'),
                 'info_cmsblock.list',
                 array()
             );
@@ -354,7 +311,7 @@ class MagentoApiController extends Controller {
         // truncate table
         foreach ($_cms_block_all_result as $k => $val) {
             if($val['store_id']['0'] != 0){
-                $_repeat_cms_block = D('cms_translate')->where(array('type_id' => $value['block_id'], 'website_id' => session('website_id'), 'type' => 2))->find();
+                $_repeat_cms_block = D('cms_translate')->where(array('type_id' => $val['block_id'], 'website_id' => session('website_id'), 'type' => 2))->find();
                 if($_repeat_cms_block){
                     $_cms_save['content'] = json_encode($val);
                     $_cms_save['title'] = $val['title'];
@@ -363,7 +320,7 @@ class MagentoApiController extends Controller {
                     D('cms_translate')->save($_cms_save);
                 }else{
                     // unset($value['block_id']);
-                    $_cms_add['content'] = json_encode($value);
+                    $_cms_add['content'] = json_encode($val);
                     $_cms_add['title'] = $val['title'];
                     $_cms_add['identifier'] = $val['identifier'];
                     $_cms_add['website_id'] = session('website_id');
@@ -383,18 +340,60 @@ class MagentoApiController extends Controller {
         $_cms_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->select();
         foreach ($_cms_block_translate_result as $val) {
             # code...
-            $_cms_save = json_decode($val);
+            $_cms_save = json_decode($val['content'], true);
             unset($_cms_save['block_id']);
             $_cms_save['title'] = $val['title'];
             magentoApiSync(
-                    array(
-                            'domain' => 'http://127.0.0.1/gadgetgear',
-                            'rest_user' => '123456',
-                            'rest_password' => '123456'
-                        ),
+                    session('soap'),
                     'info_cmsblock.update',
                     array($val['type_id'],$_cms_save)
                 );
         }
+        var_dump($_cms_block_translate_result);
+    }
+    public function test(){
+        $_cms_save['title'] = 'test12323233';
+        magentoApiSync(
+                session('soap'),
+                'info_cmspage.update',
+                array('44', $_cms_save)
+            );
+        var_dump(session('soap'));
+        // $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
+        // foreach ($_page_translate_result as $k => $_page) {
+        //     # code...
+        //     $_cms_page_identifier[] = $_page['identifier'];
+        //     $_page_content = json_decode($_page['content'], true);
+        //     $_page_translate_result[$k]['content'] = $_page_content['content'];
+        //     $_page_translate_result[$k]['meta_keywords'] = $_page_content['meta_keywords'];
+        //     $_page_translate_result[$k]['meta_description'] = $_page_content['meta_description'];
+        // }
+        // $_cms_page_identifier = array_unique($_cms_page_identifier);
+        // foreach ($_cms_page_identifier as $_identifier) {
+        //     # code...
+        //     foreach ($_page_translate_result as $k => $_page) {
+        //         # code...
+        //         if($_page['identifier'] == $_identifier){
+        //             $_cms_page[$_identifier][] = $_page;
+        //         }
+        //     }
+        // }
+        // foreach ($_cms_page_identifier as $_identifier) {
+        //     # code...
+        //     foreach ($_page_translate_result as $k => $_page) {
+        //         # code...
+        //         if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
+        //             $_cms_page_kind[$_identifier] = $_page['title'];
+        //             break;
+        //         }
+        //     }
+        // }
+        // foreach ($_cms_page_kind as $k => $val) {
+        //     # code...
+        //     echo $val.'/'.$k.'<br/>';
+        // }
+        // var_dump($_cms_page_kind);
+        // var_dump($_cms_page_identifier);
+        // var_dump($_cms_page);
     }
 }

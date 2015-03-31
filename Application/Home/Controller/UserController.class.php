@@ -273,8 +273,10 @@ class UserController extends UserPermissionController {
             // if(!empty($_params['rest_password'])){
                 $_save['rest_password'] = $_params['rest_password'];
             // }
+                $_save['communication_status'] = 1;
             $_result = D('website')->save($_save);
             if($_result > 0){
+                session('soap',array('domain' => $_params['domain'], 'rest_user' => $_params['rest_user'], 'rest_password' => $_params['rest_password']));
                 $this->ajaxReturn(
                     array(
                         'success' => true,

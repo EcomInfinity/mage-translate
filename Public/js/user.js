@@ -71,6 +71,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
             },
             clickBtnLogin: function(event){
                 this.$el.find('form').submit();
@@ -146,6 +147,7 @@ jQuery(function() {
                         );
                     }
                 });
+                this.userModel.clear();
             },
             clickBtnRegister: function(event){
                 this.$el.find('form').submit();
