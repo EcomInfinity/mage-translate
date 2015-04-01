@@ -168,6 +168,7 @@ jQuery(function() {
                 'click .btn-user-center': 'personalCenter'
             },
             showUser: function(){
+                console.log('1');
                 if(PurviewVal() == '-1'){
                     this._userEvents.trigger('refresh','userhandle');
                     $('.block-view-user').slideDown("slow");
@@ -1043,7 +1044,7 @@ jQuery(function() {
             },
             clickBtnRestSync: function(event){
                 $(event.target).closest('form').submit();
-                return false;
+                return false; 
             },
             initialize: function(options){
                 options || (options = {});

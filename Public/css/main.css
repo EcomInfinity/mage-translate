@@ -81,3 +81,4 @@ textarea {height: 62px;box-sizing: border-box;}
 table th{padding: 8px;}
 table a{color: #333;}
 table {-moz-user-select:none;-webkit-user-select:none;user-select:none;}
+table tbody tr {cursor:pointer}

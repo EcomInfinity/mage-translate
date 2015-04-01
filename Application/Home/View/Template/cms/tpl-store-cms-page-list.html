@@ -1,0 +1,33 @@
+<script type="text/template" id="tpl-store-cms-page-list">
+    <div class="record-view" style="height: 30px;">
+        <span class="record">
+        <% if(store_pages_total){ %> <%= store_pages_total %> <% }else{ %> 0 
+        <%}%>Records
+        </span>
+    </div>
+    <div class="line"></div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Identifier</th>
+                <th>Store View</th>
+                <th>Sync</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if(store_page_list){ %>
+            <% _.each(store_page_list, function(page){ %>
+                <tr data-id = "<%= page.id %>">
+                    <td><%= page.title%></td>
+                    <td><%= page.identifier%></td>
+                    <td><%= page.store_view %></td>
+                    <td><a href="#">Sync</a></td>
+                </tr>
+            <% }) %>
+        <% }else{ %>
+            <tr><td colspan="4" align="center">No Records !</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>

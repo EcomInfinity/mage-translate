@@ -52,7 +52,7 @@
     <load href="__PUBLIC__/js/utility.js" />
     <load href="__PUBLIC__/js/ajaxfileupload.js" />
     <load href="__PUBLIC__/js/main.js" />
-    <load href="__PUBLIC__/js/base.js" />
+    <!-- <load href="__PUBLIC__/js/base.js" /> -->
 <!--<load href="__PUBLIC__/js/user.js" />
     <load href="__PUBLIC__/js/translate.js" /> -->
 
@@ -95,13 +95,25 @@
             <block name="main-translate"></block>
             <block name="template-translate"></block>
         </div>
+
         <div class="block block-view-user" style="display: none;">
             <block name="main-user"></block>
             <block name="template-user"></block>
         </div>
+
         <div class="block block-view-personal" style="display: none;">
             <block name="main-personal"></block>
             <block name="template-personal"></block>
+        </div>
+
+        <div class="cms-page-view">
+            <block name="main-cms-page"></block>
+            <block name="template-cms-page"></block>
+        </div>
+
+        <div class="cms-block-view">
+            <block name="main-cms-block"></block>
+            <block name="template-cms-block"></block>
         </div>
         <div class="page-width block-footer">
             <block name="footer"><!-- <php>echo rand(100000,999999);</php> --></block>

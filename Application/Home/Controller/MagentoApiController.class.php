@@ -38,11 +38,21 @@ class MagentoApiController extends BaseController {
                     foreach ($value['store_id'] as $k => $val) {
                         if($val == 0){
                             $_all_store_view_page[$_key_id] = $value;
+                            if(count($value['store_id']) == 1){
+                                $_result = magentoApiSync(
+                                        session('soap'),
+                                        'info_cmspage.update',
+                                        array($value['page_id'],array('is_active' => 0))
+                                    );
+                            }
+                            break;
                         }else{
                             if($val == $_base_store_view_id['0']){
                                 $_all_store_view_page[$_key_id] = $value;
+                                break;
                             }else{
                                 $_all_store_view_page[$_key_id] = $value;
+                                break;
                             }
                         }
                     }
@@ -76,12 +86,12 @@ class MagentoApiController extends BaseController {
                                     $_add = $value;
                                     $_add['stores'] = array($val);
                                     unset($_add['title']);
-                                    foreach ($_store_view_result as $store) {
-                                        # code...
-                                        if($val == $store['store_id']){
-                                            $_add['title'] = $store['name'];
-                                        }
-                                    }
+                                    // foreach ($_store_view_result as $store) {
+                                    //     # code...
+                                    //     if($val == $store['store_id']){
+                                    //         $_add['title'] = $store['name'];
+                                    //     }
+                                    // }
                                     unset($_add['page_id']);
                                     magentoApiSync(
                                             session('soap'),
@@ -104,11 +114,11 @@ class MagentoApiController extends BaseController {
                 $_over_add = $_all_store_view_page[$_key_id];
                 $_over_add['stores'] = array($value);
                 unset($_over_add['title']);
-                foreach ($_store_view_result as $store) {
-                    if($value == $store['store_id']){
-                        $_over_add['title'] = $store['name'];
-                    }
-                }
+                // foreach ($_store_view_result as $store) {
+                //     if($value == $store['store_id']){
+                //         $_over_add['title'] = $store['name'];
+                //     }
+                // }
                 unset($_over_add['page_id']);
                 magentoApiSync(
                         session('soap'),
@@ -129,6 +139,7 @@ class MagentoApiController extends BaseController {
             foreach ($_store_view_result as $k_s => $_store) {
                 if($_page['store_id']['0'] == $_store['store_id']){
                     $_cms_page_all_result[$k_p]['lang_code'] = $_store['store_view_language'];
+                    $_cms_page_all_result[$k_p]['store_view'] = $_store['name'];
                 }
             }
         }
@@ -140,6 +151,7 @@ class MagentoApiController extends BaseController {
                     $_cms_save['content'] = json_encode($val);
                     $_cms_save['title'] = $val['title'];
                     $_cms_save['identifier'] = $val['identifier'];
+                    $_cms_save['store_view'] = $val['store_view'];
                     $_cms_save['id'] = $_repeat_cms_page['id'];
                     D('cms_translate')->save($_cms_save);
                 }else{
@@ -147,6 +159,7 @@ class MagentoApiController extends BaseController {
                     $_cms_add['content'] = json_encode($val);
                     $_cms_add['title'] = $val['title'];
                     $_cms_add['identifier'] = $val['identifier'];
+                    $_cms_add['store_view'] = $val['store_view'];
                     $_cms_add['website_id'] = session('website_id');
                     $_cms_add['type'] = 1;
                     $_cms_add['type_id'] = $val['page_id'];
@@ -217,11 +230,21 @@ class MagentoApiController extends BaseController {
                     foreach ($value['store_id'] as $k => $val) {
                         if($val == 0){
                             $_all_store_view_block[$_key_id] = $value;
+                            if(count($value['store_id']) == 1){
+                                $_result = magentoApiSync(
+                                        session('soap'),
+                                        'info_cmspage.update',
+                                        array($value['page_id'],array('is_active' => 0))
+                                    );
+                            }
+                            break;
                         }else{
                             if($val == $_base_store_view_id['0']){
                                 $_all_store_view_block[$_key_id] = $value;
+                                break;
                             }else{
                                 $_all_store_view_block[$_key_id] = $value;
+                                break;
                             }
                         }
                     }
@@ -252,11 +275,11 @@ class MagentoApiController extends BaseController {
                                 echo 'update';
                             }else{
                                 if($_result > 0){
-                                    foreach ($_store_view_result as $store) {
-                                        if($val == $store['store_id']){
-                                            $_add['title'] = $store['name'];
-                                        }
-                                    }
+                                    // foreach ($_store_view_result as $store) {
+                                    //     if($val == $store['store_id']){
+                                    //         $_add['title'] = $store['name'];
+                                    //     }
+                                    // }
                                     $_add = $value;
                                     $_add['stores'] = array($val);
                                     unset($_add['block_id']);
@@ -278,11 +301,11 @@ class MagentoApiController extends BaseController {
             }
             $_over_store_id = array_diff($_store_view_id, $_exist_store_view_id[$_key_id]);
             foreach ($_over_store_id as $key => $value) {
-                foreach ($_store_view_result as $store) {
-                    if($value == $store['store_id']){
-                        $_over_add['title'] = $store['name'];
-                    }
-                }
+                // foreach ($_store_view_result as $store) {
+                //     if($value == $store['store_id']){
+                //         $_over_add['title'] = $store['name'];
+                //     }
+                // }
                 $_over_add = $_all_store_view_block[$_key_id];
                 $_over_add['stores'] = array($value);
                 unset($_over_add['block_id']);
@@ -305,6 +328,7 @@ class MagentoApiController extends BaseController {
             foreach ($_store_view_result as $k_s => $_store) {
                 if($_block['store_id']['0'] == $_store['store_id']){
                     $_cms_block_all_result[$k_p]['lang_code'] = $_store['store_view_language'];
+                    $_cms_block_all_result[$k_p]['store_view'] = $_store['name'];
                 }
             }
         }
@@ -313,16 +337,18 @@ class MagentoApiController extends BaseController {
             if($val['store_id']['0'] != 0){
                 $_repeat_cms_block = D('cms_translate')->where(array('type_id' => $val['block_id'], 'website_id' => session('website_id'), 'type' => 2))->find();
                 if($_repeat_cms_block){
-                    $_cms_save['content'] = json_encode($val);
+                    $_cms_save['content'] = $val['content'];
                     $_cms_save['title'] = $val['title'];
                     $_cms_save['identifier'] = $val['identifier'];
+                    $_cms_save['store_view'] = $val['store_view'];
                     $_cms_save['id'] = $_repeat_cms_block['id'];
                     D('cms_translate')->save($_cms_save);
                 }else{
                     // unset($value['block_id']);
-                    $_cms_add['content'] = json_encode($val);
+                    $_cms_add['content'] = $val['content'];
                     $_cms_add['title'] = $val['title'];
                     $_cms_add['identifier'] = $val['identifier'];
+                    $_cms_add['store_view'] = $val['store_view'];
                     $_cms_add['website_id'] = session('website_id');
                     $_cms_add['type'] = 2;
                     $_cms_add['type_id'] = $val['block_id'];
@@ -352,13 +378,13 @@ class MagentoApiController extends BaseController {
         var_dump($_cms_block_translate_result);
     }
     public function test(){
-        $_cms_save['title'] = 'test12323233';
-        magentoApiSync(
-                session('soap'),
-                'info_cmspage.update',
-                array('44', $_cms_save)
-            );
-        var_dump(session('soap'));
+        // $_cms_save['title'] = 'test13233';
+        // magentoApiSync(
+        //         session('soap'),
+        //         'info_cmsblock.update',
+        //         array('19', $_cms_save)
+        //     );
+        // var_dump(session('soap'));
         // $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
         // foreach ($_page_translate_result as $k => $_page) {
         //     # code...

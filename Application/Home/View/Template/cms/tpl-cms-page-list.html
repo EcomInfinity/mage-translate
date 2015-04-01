@@ -1,0 +1,33 @@
+<script type="text/template" id="tpl-cms-page-list">
+    <div class="record-view" style="height: 30px;">
+        <span class="record">
+        <% if(pages_count){ %> <%= pages_count %> <% }else{ %> 0 
+        <%}%>/
+        <% if(pages_total){ %> <%= pages_total %> <% }else{ %> 0 
+        <%}%>Records
+        </span>
+    </div>
+    <div class="line"></div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Identifier</th>
+                <th>Sync</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if(page_list){ %>
+            <% _.each(page_list, function(page, key){ %>
+                <tr data-identifier = "<%= key %>">
+                    <td><%= page%></td>
+                    <td><%= key%></td>
+                    <td><a href="#">Sync</a></td>
+                </tr>
+            <% }) %>
+        <% }else{ %>
+            <tr><td colspan="3" align="center">No Records !</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>

@@ -1,0 +1,23 @@
+<script type="text/template" id="tpl-store-cms-page">
+    <div class="modal-container">
+        <h2>Store Page</h2>
+        <div class="content">
+            <form method="post" data-toggle="validator">
+                <input type="hidden" value="<%= store_page.id %>" name="cms_id" />
+                <div class="form-holder">
+                    <div class="entry form-group">
+                        <label>Title:</label>
+                        <input type="text" name="title" value="<%= store_page.title %>" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Title is invalid.">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="entry form-group">
+                        <label>Content:</label>
+                        <textarea name="content" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Website name is invalid."><%= store_page.content %></textarea>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-save-page btn-primary">Save</a>
+            </form>
+        </div>
+    </div>
+</script>

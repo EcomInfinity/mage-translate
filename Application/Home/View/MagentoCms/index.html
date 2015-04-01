@@ -1,0 +1,27 @@
+<extend name="Public/base" />
+<block name="script">
+    <load href="__PUBLIC__/js/magento.js" />
+</block>
+<block name="main-cms-page">
+    <main>
+        <div class="container-fluid page-width">
+            <h1>Happy Translating! - <php>echo session('website_name');</php></h1>
+            <div class="search-box search-cms-page"  type-list="cms_page"></div>
+            <div class="search-box search-store-page"></div>
+            <div class="block block-cms-page-list"></div>
+            <div class="block block-store-cms-page-list"></div>
+            <div class="block block-store-cms-page" style="width: 960px;"></div>
+        </div>
+    </main>
+</block>
+<block name="template-cms-page">
+    <include file="Template/cms/tpl-cms-page-search" />
+
+    <include file="Template/cms/tpl-store-page-search" />
+
+    <include file="Template/cms/tpl-cms-page-list" />
+
+    <include file="Template/cms/tpl-store-cms-page-list" />
+
+    <include file="Template/cms/tpl-store-cms-page" />
+</block>

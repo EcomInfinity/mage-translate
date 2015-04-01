@@ -67,9 +67,9 @@
         });
 
         $('body').on('click', "tbody tr", function (event){
-            $('.batch-app').find('option')[0].selected = true;
-            $('[name="checked-all"]').prop("checked",false);
             if($(event.target).closest('table').attr('operation') == 'batch'){
+                $('.batch-app').find('option')[0].selected = true;
+                $('[name="checked-all"]').prop("checked",false);
                 if(_ctrl_click === true){
                     // console.log('_ctrl_click');
                     if($(event.target).closest('tr').attr('class') == 'selection'){
