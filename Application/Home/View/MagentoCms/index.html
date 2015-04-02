@@ -5,7 +5,7 @@
 <block name="main-cms-page">
     <main>
         <div class="container-fluid page-width">
-            <h1>Happy Translating! - <php>echo session('website_name');</php></h1>
+            <h1>Happy Translating! - Page</php></h1>
             <div class="search-box search-cms-page"  type-list="cms_page"></div>
             <div class="search-box search-store-page"></div>
             <div class="block block-cms-page-list"></div>
@@ -14,10 +14,28 @@
         </div>
     </main>
 </block>
+<block name="main-cms-block">
+    <main>
+        <div class="container-fluid page-width">
+            <h1>Happy Translating! - Block</h1>
+            <div class="search-box search-cms-block"  type-list="cms_page"></div>
+            <div class="block block-cms-block-list"></div>
+            <div class="block block-store-cms-block-list"></div>
+            <div class="block block-store-cms-block" style="width: 960px;"></div>
+        </div>
+    </main>
+</block>
+<block name="template-cms-block">
+    <include file="Template/cms/tpl-cms-block-search" />
+
+    <include file="Template/cms/tpl-cms-block-list" />
+
+    <include file="Template/cms/tpl-store-cms-block-list" />
+
+    <include file="Template/cms/tpl-store-cms-block" />
+</block>
 <block name="template-cms-page">
     <include file="Template/cms/tpl-cms-page-search" />
-
-    <include file="Template/cms/tpl-store-page-search" />
 
     <include file="Template/cms/tpl-cms-page-list" />
 

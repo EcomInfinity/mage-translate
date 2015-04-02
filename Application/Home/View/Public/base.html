@@ -71,6 +71,20 @@
                         </button>
                     </div>
                     <div class="collapse navbar-collapse">
+                        <div style="float:left;">
+                            <ul class="nav navbar-nav">
+                                <li><a href="#" class="btn-list">List</a></li>
+                                <php>if(session('purview') == '-1'){</php>
+                                <li><a href="#" class="btn-user">User</a></li>
+                                <php>}</php>
+                            </ul>
+                        </div>
+                        <div class="user" style="float:right;">
+                            <ul class="nav navbar-nav">
+                                <li><a href="#" class="btn-user-center"><php>echo session('username');</php></a></li>
+                                <li><a href="__APP__/logout" class="logout">Sign out</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>

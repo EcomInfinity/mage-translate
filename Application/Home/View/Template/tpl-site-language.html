@@ -19,6 +19,9 @@
             <div class="language-unchecked">
                 <label>Unchecked Language</label>
                 <select multiple class="form-control" name="unchecked">
+                    <% _.each(lang_needchecked,function(lang){ %>
+                        <option style="color:red;" value="<%= lang.id %>"><%= lang.simple_name %> / <%= lang.full_name %></option>
+                    <% }) %>
                     <% _.each(lang_unchecked,function(lang){ %>
                         <option value="<%= lang.id %>"><%= lang.simple_name %> / <%= lang.full_name %></option>
                     <% }) %>

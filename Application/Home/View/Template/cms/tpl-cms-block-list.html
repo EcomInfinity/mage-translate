@@ -1,11 +1,11 @@
-<script type="text/template" id="tpl-cms-page-list">
+<script type="text/template" id="tpl-cms-block-list">
     <div class="record-view">
-        <a href="#" class="btn btn-page-translate btn-primary"><i class="glyphicon glyphicon-log-in"></i></a>
-        <a href="#" class="btn btn-page-magento btn-primary"><i class="glyphicon glyphicon-log-out"></i></a>
+        <a href="#" class="btn btn-block-translate btn-primary"><i class="glyphicon glyphicon-log-in"></i></a>
+        <a href="#" class="btn btn-block-magento btn-primary"><i class="glyphicon glyphicon-log-out"></i></a>
         <span class="record">
-        <% if(pages_count){ %> <%= pages_count %> <% }else{ %> 0 
+        <% if(blocks_count){ %> <%= blocks_count %> <% }else{ %> 0 
         <%}%>/
-        <% if(pages_total){ %> <%= pages_total %> <% }else{ %> 0 
+        <% if(blocks_total){ %> <%= blocks_total %> <% }else{ %> 0 
         <%}%>Records
         </span>
     </div>
@@ -19,10 +19,10 @@
             </tr>
         </thead>
         <tbody>
-        <% if(page_list){ %>
-            <% _.each(page_list, function(page, key){ %>
+        <% if(block_list){ %>
+            <% _.each(block_list, function(block, key){ %>
                 <tr data-identifier = "<%= key %>">
-                    <td><%= page%></td>
+                    <td><%= block%></td>
                     <td><%= key%></td>
                     <td><a href="#">Sync</a></td>
                 </tr>

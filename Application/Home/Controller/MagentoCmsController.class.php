@@ -81,6 +81,9 @@ class MagentoCmsController extends BaseController {
         $_store_page = D('cms_translate')->find($_params['cms_id']);
         $_page_content = json_decode($_store_page['content'],true);
         $_store_page['content'] = $_page_content['content'];
+        $_store_page['meta_keywords'] = $_page_content['meta_keywords'];
+        $_store_page['meta_description'] = $_page_content['meta_description'];
+        // var_dump($_store_page);
         $this->ajaxReturn(
                 array(
                     'success' => true,
@@ -96,10 +99,127 @@ class MagentoCmsController extends BaseController {
         $_page_translate = D('cms_translate')->find($_params['cms_id']);
         $_page_content = json_decode($_page_translate['content'], true);
         $_page_content['content'] = $_params['content'];
+        $_page_content['meta_keywords'] = $_params['meta_keywords'];
+        $_page_content['meta_description'] = $_params['meta_description'];
         $_page_save['content'] = json_encode($_page_content);
         $_page_save['title'] = $_params['title'];
         $_page_save['id'] = $_params['cms_id'];
         $_result = D('cms_translate')->save($_page_save);
+        if($_result > 0){
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+        }else{
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'Modify failure.',
+                        'data' => array(),
+                    ),
+                    'json'
+                );
+        }
+    }
+
+    public function getBlocks(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        if(!empty($_params['block_search'])){
+            $_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2, 'identifier' => array('like', '%'.$_params['block_search'].'%')))->relation(true)->select();
+            foreach ($_block_translate_result as $k => $_block) {
+                //所有identifier
+                $_cms_block_identifier[] = $_block['identifier'];
+            }
+            $_cms_block_identifier = array_unique($_cms_block_identifier);
+            foreach ($_cms_block_identifier as $_identifier) {
+                foreach ($_block_translate_result as $k => $_block) {
+                    if($_block['identifier'] == $_identifier && strtolower($_block['simple_name']) == 'en_us'){
+                        $_cms_block_kind[$_identifier] = $_block['title'];
+                        break;
+                    }
+                }
+            }
+        }else{
+            $_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->relation(true)->select();
+            foreach ($_block_translate_result as $k => $_block) {
+                //所有identifier
+                $_cms_block_identifier[] = $_block['identifier'];
+            }
+            $_cms_block_identifier = array_unique($_cms_block_identifier);
+            foreach ($_cms_block_identifier as $_identifier) {
+                foreach ($_block_translate_result as $k => $_block) {
+                    if($_block['identifier'] == $_identifier && strtolower($_block['simple_name']) == 'en_us'){
+                        $_cms_block_kind[$_identifier] = $_block['title'];
+
+                        break;
+                    }
+                }
+            }
+        }
+        $_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->relation(true)->select();
+        foreach ($_block_translate_result as $k => $_block) {
+            //所有identifier
+            $_cms_block_identifier[] = $_block['identifier'];
+        }
+        $_cms_block_identifier = array_unique($_cms_block_identifier);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(
+                        'kind' => $_cms_block_kind,
+                        'count' => count($_cms_block_kind),
+                        'total' => count($_cms_block_identifier)
+                        ),
+                ),
+                'json'
+            );
+    }
+
+    public function getStoreBlocks(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_store_blocks = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2))->field('id, title, identifier, store_view')->select();
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(
+                        'store_blocks' => $_store_blocks,
+                        'total' => count($_store_blocks)
+                        ),
+                ),
+                'json'
+            );
+    }
+
+    public function getStoreBlock(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_store_block = D('cms_translate')->find($_params['cms_id']);
+        // $_page_content = json_decode($_store_page['content'],true);
+        // $_store_page['content'] = $_page_content['content'];
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => $_store_block,
+                ),
+                'json'
+            );
+    }
+
+    public function saveStoreBlock(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_block_translate = D('cms_translate')->find($_params['cms_id']);
+        $_block_content = json_decode($_block_translate['content'], true);
+        $_block_content['content'] = $_params['content'];
+        $_block_save['content'] = json_encode($_block_content);
+        $_block_save['title'] = $_params['title'];
+        $_block_save['id'] = $_params['cms_id'];
+        $_result = D('cms_translate')->save($_block_save);
         if($_result > 0){
             $this->ajaxReturn(
                     array(

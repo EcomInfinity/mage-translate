@@ -31,14 +31,18 @@ class MagentoApiController extends BaseController {
             $_cms_page_identifier[$k] = $val['identifier'];
         }
         $_cms_page_identifier = array_unique($_cms_page_identifier);
+
         foreach ($_cms_page_identifier as $_key_id => $_identifier) {
+            $_all_store_view_flag[$_key_id] = false;
+            $_base_store_view_flag[$_key_id] = false;
             foreach ($_cms_page_result as $key => $value) {
                 if($_identifier == $value['identifier']){
                     //判断cms_page中的store_id是否有等于0的
                     foreach ($value['store_id'] as $k => $val) {
                         if($val == 0){
                             $_all_store_view_page[$_key_id] = $value;
-                            if(count($value['store_id']) == 1){
+                            $_all_store_view_flag[$_key_id] = true;
+                            if(count($value['store_id']) == 1 && $value['is_active'] == 1){
                                 $_result = magentoApiSync(
                                         session('soap'),
                                         'info_cmspage.update',
@@ -46,15 +50,20 @@ class MagentoApiController extends BaseController {
                                     );
                             }
                             break;
-                        }else{
+                        }
+                    }
+                    if($_all_store_view_flag[$_key_id] !== true){
+                        foreach ($value['store_id'] as $val) {
                             if($val == $_base_store_view_id['0']){
                                 $_all_store_view_page[$_key_id] = $value;
-                                break;
-                            }else{
-                                $_all_store_view_page[$_key_id] = $value;
+                                $_base_store_view_flag[$_key_id] = true;
                                 break;
                             }
                         }
+                    }
+                    if($_all_store_view_flag[$_key_id] === false && $_base_store_view_flag[$_key_id] === false){
+                        $_all_store_view_page[$_key_id] = $value;
+                        // break;
                     }
                     if(count($value['store_id']) > 1){
                         //去除store_id = 0的
@@ -85,7 +94,7 @@ class MagentoApiController extends BaseController {
                                 if($_result > 0){
                                     $_add = $value;
                                     $_add['stores'] = array($val);
-                                    unset($_add['title']);
+                                    // unset($_add['title']);
                                     // foreach ($_store_view_result as $store) {
                                     //     # code...
                                     //     if($val == $store['store_id']){
@@ -110,10 +119,11 @@ class MagentoApiController extends BaseController {
                 }
             }
             $_over_store_id = array_diff($_store_view_id, $_exist_store_view_id[$_key_id]);
+            // var_dump($_exist_store_view_id);
             foreach ($_over_store_id as $value) {
                 $_over_add = $_all_store_view_page[$_key_id];
                 $_over_add['stores'] = array($value);
-                unset($_over_add['title']);
+                // unset($_over_add['title']);
                 // foreach ($_store_view_result as $store) {
                 //     if($value == $store['store_id']){
                 //         $_over_add['title'] = $store['name'];
@@ -169,7 +179,15 @@ class MagentoApiController extends BaseController {
                 }
             }
         }
-        var_dump($_cms_page_all_result);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        // var_dump($_cms_page_all_result);
     }
 
     public function syncMagentoPage(){
@@ -177,7 +195,6 @@ class MagentoApiController extends BaseController {
         $_cms_save =array();
         $_cms_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->select();
         foreach ($_cms_page_translate_result as $val) {
-            # code...
             $_cms_save = json_decode($val['content'], true);
             unset($_cms_save['page_id']);
             unset($_cms_save['identifier']);
@@ -187,15 +204,74 @@ class MagentoApiController extends BaseController {
             unset($_cms_save['store_id']);
             unset($_cms_save['store_code']);
             $_cms_save['title'] = $val['title'];
-            var_dump($_cms_save);
-            var_dump($val['type_id']);
             magentoApiSync(
                     session('soap'),
                     'info_cmspage.update',
                     array($val['type_id'],$_cms_save)
                 );
         }
-        var_dump($_cms_page_translate_result);
+        // var_dump($_cms_page_translate_result);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+    }
+    //更新一种identifier的所有page
+    public function syncIdentifierPage(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_identifier_page = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1, 'website_id' => session('website_id')))->select();
+        foreach ($_identifier_page as $val) {
+            $_cms_save = json_decode($val['content'], true);
+            $_cms_save['title'] = $val['title'];
+            magentoApiSync(
+                    session('soap'),
+                    'info_cmspage.update',
+                    array($val['type_id'],$_cms_save)
+                );
+        }
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                    ),
+                'json'
+            );
+    }
+    //更新单条page
+    public function syncOnePage(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_update_page = D('cms_translate')->find($_params['cms_id']);
+        $_cms_save = json_decode($_update_page['content']);
+        $_cms_save['title'] = $_update_page['title'];
+        $_result = magentoApiSync(
+                session('soap'),
+                'info_cmspage.update',
+                array($_update_page['type_id'],$_cms_save)
+            );
+        if($_result){
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                        ),
+                    'json'
+                );
+        }else{
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => '',
+                        'data' => array(),
+                        ),
+                    'json'
+                );
+        }
     }
 
     public function syncTranslateBlock(){
@@ -224,29 +300,37 @@ class MagentoApiController extends BaseController {
         }
         $_cms_block_identifier = array_unique($_cms_block_identifier);
         foreach ($_cms_block_identifier as $_key_id => $_identifier) {
+            $_all_store_view_flag[$_key_id] = false;
+            $_base_store_view_flag[$_key_id] = false;
             foreach ($_cms_block_result as $key => $value) {
                 if($_identifier == $value['identifier']){
                     //判断cms_block中的store_id是否有等于0的
                     foreach ($value['store_id'] as $k => $val) {
                         if($val == 0){
                             $_all_store_view_block[$_key_id] = $value;
-                            if(count($value['store_id']) == 1){
+                            $_all_store_view_flag[$_key_id] = true;
+                            if(count($value['store_id']) == 1 && $value['is_active'] == 1){
                                 $_result = magentoApiSync(
                                         session('soap'),
-                                        'info_cmspage.update',
-                                        array($value['page_id'],array('is_active' => 0))
+                                        'info_cmsblock.update',
+                                        array($value['block_id'],array('is_active' => 0))
                                     );
                             }
                             break;
-                        }else{
+                        }
+                    }
+                    if($_all_store_view_flag[$_key_id] !== true){
+                        foreach ($value['store_id'] as $val) {
                             if($val == $_base_store_view_id['0']){
                                 $_all_store_view_block[$_key_id] = $value;
-                                break;
-                            }else{
-                                $_all_store_view_block[$_key_id] = $value;
+                                $_base_store_view_flag[$_key_id] = true;
                                 break;
                             }
                         }
+                    }
+                    if($_all_store_view_flag[$_key_id] !== true && $_base_store_view_flag[$_key_id] !== true){
+                        $_all_store_view_block[$_key_id] = $value;
+                        // break;
                     }
                     if(count($value['store_id']) > 1){
                         //去除store_id = 0的
@@ -358,7 +442,15 @@ class MagentoApiController extends BaseController {
                 }
             }
         }
-        var_dump($_store_view_result);
+        // var_dump($_store_view_result);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
     }
 
     public function syncMagentoBlock(){
@@ -375,7 +467,69 @@ class MagentoApiController extends BaseController {
                     array($val['type_id'],$_cms_save)
                 );
         }
-        var_dump($_cms_block_translate_result);
+        // var_dump($_cms_block_translate_result);
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+            );
+    }
+
+    //更新一种identifier的所有block
+    public function syncIdentifierBlock(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_identifier_block = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2, 'website_id' => session('website_id')))->select();
+        foreach ($_identifier_block as $val) {
+            $_cms_save = json_decode($val['content'], true);
+            $_cms_save['title'] = $val['title'];
+            magentoApiSync(
+                    session('soap'),
+                    'info_cmsblock.update',
+                    array($val['type_id'],$_cms_save)
+                );
+        }
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                    ),
+                'json'
+            );
+    }
+    //更新单条block
+    public function syncOneBlock(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_update_block = D('cms_translate')->find($_params['cms_id']);
+        $_cms_save = json_decode($_update_block['content']);
+        $_cms_save['title'] = $_update_block['title'];
+        $_result = magentoApiSync(
+                session('soap'),
+                'info_cmsblock.update',
+                array($_update_block['type_id'],$_cms_save)
+            );
+        if($_result){
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                        ),
+                    'json'
+                );
+        }else{
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => '',
+                        'data' => array(),
+                        ),
+                    'json'
+                );
+        }
     }
     public function test(){
         // $_cms_save['title'] = 'test13233';

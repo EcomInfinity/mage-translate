@@ -1,0 +1,33 @@
+<script type="text/template" id="tpl-store-cms-block-list">
+    <div class="record-view" style="height: 30px;">
+        <span class="record">
+        <% if(store_blocks_total){ %> <%= store_blocks_total %> <% }else{ %> 0 
+        <%}%>Records
+        </span>
+    </div>
+    <div class="line"></div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Identifier</th>
+                <th>Store View</th>
+                <th>Sync</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if(store_block_list){ %>
+            <% _.each(store_block_list, function(block){ %>
+                <tr data-id = "<%= block.id %>">
+                    <td><%= block.title%></td>
+                    <td><%= block.identifier%></td>
+                    <td><%= block.store_view %></td>
+                    <td><a href="#">Sync</a></td>
+                </tr>
+            <% }) %>
+        <% }else{ %>
+            <tr><td colspan="4" align="center">No Records !</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>

@@ -1178,6 +1178,7 @@ jQuery(function() {
                     var data = {};
                     data['lang_checked'] = response.data.checked;
                     data['lang_unchecked'] = response.data.unchecked;
+                    data['lang_needchecked'] = response.data.needchecked;
                     _self.$el.html(_self.template(data));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {

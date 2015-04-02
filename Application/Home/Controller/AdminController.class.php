@@ -46,7 +46,7 @@ class AdminController extends Controller {
             session('website_id', $_relation['website_id']);
             session('website_name', D('website')->getWebsiteName($_relation['website_id']));
             session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
-
+            session('soap', D('website')->field('domain, rest_user, rest_password')->find(session('website_id')));
             $this->ajaxReturn(
                 array(
                     'success' => true,
