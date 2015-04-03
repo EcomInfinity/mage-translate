@@ -204,11 +204,14 @@ class MagentoApiController extends BaseController {
             unset($_cms_save['store_id']);
             unset($_cms_save['store_code']);
             $_cms_save['title'] = $val['title'];
-            magentoApiSync(
+            $_result = magentoApiSync(
                     session('soap'),
                     'info_cmspage.update',
                     array($val['type_id'],$_cms_save)
                 );
+            if($_result === false){
+                D('cms_translate')->delete($val['id']);
+            }
         }
         // var_dump($_cms_page_translate_result);
         $this->ajaxReturn(
@@ -220,28 +223,28 @@ class MagentoApiController extends BaseController {
                 'json'
             );
     }
-    //更新一种identifier的所有page
-    public function syncIdentifierPage(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $_identifier_page = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1, 'website_id' => session('website_id')))->select();
-        foreach ($_identifier_page as $val) {
-            $_cms_save = json_decode($val['content'], true);
-            $_cms_save['title'] = $val['title'];
-            magentoApiSync(
-                    session('soap'),
-                    'info_cmspage.update',
-                    array($val['type_id'],$_cms_save)
-                );
-        }
-        $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(),
-                    ),
-                'json'
-            );
-    }
+    // //更新一种identifier的所有page
+    // public function syncIdentifierPage(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     $_identifier_page = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1, 'website_id' => session('website_id')))->select();
+    //     foreach ($_identifier_page as $val) {
+    //         $_cms_save = json_decode($val['content'], true);
+    //         $_cms_save['title'] = $val['title'];
+    //         magentoApiSync(
+    //                 session('soap'),
+    //                 'info_cmspage.update',
+    //                 array($val['type_id'],$_cms_save)
+    //             );
+    //     }
+    //     $this->ajaxReturn(
+    //             array(
+    //                 'success' => true,
+    //                 'message' => '',
+    //                 'data' => array(),
+    //                 ),
+    //             'json'
+    //         );
+    // }
     //更新单条page
     public function syncOnePage(){
         $_params = json_decode(file_get_contents("php://input"),true);
@@ -461,11 +464,14 @@ class MagentoApiController extends BaseController {
             $_cms_save = json_decode($val['content'], true);
             unset($_cms_save['block_id']);
             $_cms_save['title'] = $val['title'];
-            magentoApiSync(
+            $_result = magentoApiSync(
                     session('soap'),
                     'info_cmsblock.update',
                     array($val['type_id'],$_cms_save)
                 );
+            if($_result === false){
+                D('cms_translate')->delete($val['id']);
+            }
         }
         // var_dump($_cms_block_translate_result);
         $this->ajaxReturn(
@@ -478,28 +484,28 @@ class MagentoApiController extends BaseController {
             );
     }
 
-    //更新一种identifier的所有block
-    public function syncIdentifierBlock(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $_identifier_block = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2, 'website_id' => session('website_id')))->select();
-        foreach ($_identifier_block as $val) {
-            $_cms_save = json_decode($val['content'], true);
-            $_cms_save['title'] = $val['title'];
-            magentoApiSync(
-                    session('soap'),
-                    'info_cmsblock.update',
-                    array($val['type_id'],$_cms_save)
-                );
-        }
-        $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(),
-                    ),
-                'json'
-            );
-    }
+    // //更新一种identifier的所有block
+    // public function syncIdentifierBlock(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     $_identifier_block = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2, 'website_id' => session('website_id')))->select();
+    //     foreach ($_identifier_block as $val) {
+    //         $_cms_save = json_decode($val['content'], true);
+    //         $_cms_save['title'] = $val['title'];
+    //         magentoApiSync(
+    //                 session('soap'),
+    //                 'info_cmsblock.update',
+    //                 array($val['type_id'],$_cms_save)
+    //             );
+    //     }
+    //     $this->ajaxReturn(
+    //             array(
+    //                 'success' => true,
+    //                 'message' => '',
+    //                 'data' => array(),
+    //                 ),
+    //             'json'
+    //         );
+    // }
     //更新单条block
     public function syncOneBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);
@@ -533,12 +539,12 @@ class MagentoApiController extends BaseController {
     }
     public function test(){
         // $_cms_save['title'] = 'test13233';
-        // magentoApiSync(
+        // $_result = magentoApiSync(
         //         session('soap'),
-        //         'info_cmsblock.update',
-        //         array('19', $_cms_save)
+        //         'info_cmspage.update',
+        //         array('166', $_cms_save)
         //     );
-        // var_dump(session('soap'));
+        // var_dump($_result);
         // $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
         // foreach ($_page_translate_result as $k => $_page) {
         //     # code...

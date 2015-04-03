@@ -32,17 +32,67 @@ jQuery(function() {
             }
         });
 
+        var CmsRouter = Backbone.Router.extend({
+            initialize: function(options){
+                options || (options = {});
+                this._cmsEvents = options._cmsEvents;
+            },
+            routes: {
+                "page": "pageRender",
+                "block": "blockRender",
+            },
+
+            pageRender: function(){
+                $('.cms-page-view').show();
+                $('.cms-block-view').hide();
+                this._cmsEvents.trigger('refresh', 'page-view');
+                console.log('page');
+            },
+            blockRender: function(){
+                $('.cms-block-view').show();
+                $('.cms-page-view').hide();
+                this._cmsEvents.trigger('refresh', 'block-view');
+                console.log('block');
+            }
+        });
+
         cms.View.CmsPageSearchView = Backbone.View.extend({
             template: _.template($('#tpl-cms-page-search').html()),
             events:{
-                'keypress .page-search': 'searchPage'
+                'keypress .page-search': 'searchPage',
+                'focus .page-search': 'searchFocus',
+                'click .search-clear': 'searchClear',
+                'click .search-enter': 'searchEnter'
             },
             searchPage: function (event){
                 if(event.keyCode == 13){
+                    $(event.target).blur();
+                    $('.search-enter').hide();
+                    $('.search-clear').show();
                     var page_search = $(event.target).val();
                     console.log(this.$el.attr("type-list"));
                     this._cmsEvents.trigger('alernately',{page_search: page_search},'cmsPages');
                 }
+            },
+            searchFocus: function (event){
+                $('.search-enter').show();
+                $('.search-clear').hide();
+            },
+            searchClear: function (event){
+                $('.page-search').val('');
+                $('.page-search').focus();
+                this._cmsEvents.trigger('alernately',{page_search: ''},'cmsPages');
+                $('.search-enter').show();
+                $('.search-clear').hide();
+                return false;
+            },
+            searchEnter: function (event){
+                $('.search').blur();
+                $('.search-enter').hide();
+                $('.search-clear').show();
+                this.search = $('.page-search').val();
+                this._cmsEvents.trigger('alernately',{page_search: this.search},'cmsPages');
+                return false;
             },
             initialize: function(options){
                 options || (options = {});
@@ -84,19 +134,28 @@ jQuery(function() {
         cms.View.CmsPageListView = Backbone.View.extend({
             template: _.template($('#tpl-cms-page-list').html()),
             events:{
-                'click tbody tr': 'storePages',
+                // 'click tbody tr': 'storePages',
+                'click tbody td a': 'storePage',
                 'click .btn-page-translate': 'syncToTranslate',
-                'click .btn-page-magento': 'syncToMagento'
+                'click .btn-page-magento': 'syncToMagento',
+                'change .batch-app': 'appPage'
             },
-            storePages: function (event){
-                var identifier = $(event.target).closest('tr').data("identifier");
-                console.log(identifier);
-                $('.block-cms-page-list').hide();
-                this._cmsEvents.trigger('alernately',{identifier:identifier},'storePages');
-                $('.search-cms-page').attr('type-list', 'store_page');
+            storePage: function (event){
+                var cms_id = $(event.target).closest('tr').data("id");
+                // console.log(cms_id);
+                this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storePage');
                 return false;
             },
+            // storePages: function (event){
+            //     var identifier = $(event.target).closest('tr').data("identifier");
+            //     console.log(identifier);
+            //     $('.block-cms-page-list').hide();
+            //     this._cmsEvents.trigger('alernately',{identifier:identifier},'storePages');
+            //     $('.search-cms-page').attr('type-list', 'store_page');
+            //     return false;
+            // },
             syncToTranslate: function (event){
+                $(event.target).closest('a').removeClass('btn-page-translate');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncTranslatePage'}
@@ -124,6 +183,7 @@ jQuery(function() {
                 return false;
             },
             syncToMagento: function (){
+                $(event.target).closest('a').removeClass('btn-page-magento');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncMagentoPage'}
@@ -150,6 +210,20 @@ jQuery(function() {
                 this.cmsModel.clear();
                 return false;
             },
+            appPage: function (event){
+                // this.operation = $(event.target).val();
+                var _self = this;
+                this.data = {};
+                this.operation = $(event.target).val();
+                console.log(this.operation);
+                if($('input:checked').length < 1){
+                    return;
+                }
+                $('input:checked').each(function (i){
+                    _self.data[i] = $(this).val();
+                });
+                console.log(this.data);
+            },
             setCmsPageSerach: function(data){
                 this.page_search = data.page_search;
                 console.log(this.page_search);
@@ -169,7 +243,7 @@ jQuery(function() {
                 ).done(function (response){
                     console.log(response.data);
                     var data = {};
-                    data['page_list'] = response.data.kind;
+                    data['page_list'] = response.data.list;
                     data['pages_total'] = response.data.total;
                     data['pages_count'] = response.data.count;
                     _self.$el.html(_self.template(data));
@@ -179,43 +253,43 @@ jQuery(function() {
             }
         });
 
-        cms.View.StoreCmsPageListView = Backbone.View.extend({
-            template: _.template($('#tpl-store-cms-page-list').html()),
-            events:{
-                'click tbody tr': 'storePage'
-            },
-            storePage: function (event){
-                var cms_id = $(event.target).closest('tr').data("id");
-                console.log(cms_id);
-                this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storePage');
-                return false;
-            },
-            initialize: function(options){
-                options || (options = {});
-                this.cmsModel = options.cmsModel;
-                this._cmsEvents = options._cmsEvents;
-                // this.render();
-            },
-            setStorePageList: function(data){
-                this.identifier = data.identifier;
-                return this;
-            },
-            render: function(){
-                var _self = this;
-                this.cmsModel.save(
-                    {identifier: this.identifier},
-                    {url:UrlApi('_app')+'/MagentoCms/getStorePages'}
-                ).done(function (response){
-                    console.log(response.data);
-                    var data = {};
-                    data['store_page_list'] = response.data.store_pages;
-                    data['store_pages_total'] = response.data.total;
-                    _self.$el.html(_self.template(data));
-                });
-                this.cmsModel.clear();
-                return this;
-            }
-        });
+        // cms.View.StoreCmsPageListView = Backbone.View.extend({
+        //     template: _.template($('#tpl-store-cms-page-list').html()),
+        //     events:{
+        //         'click tbody tr': 'storePage'
+        //     },
+        //     storePage: function (event){
+        //         var cms_id = $(event.target).closest('tr').data("id");
+        //         console.log(cms_id);
+        //         this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storePage');
+        //         return false;
+        //     },
+        //     initialize: function(options){
+        //         options || (options = {});
+        //         this.cmsModel = options.cmsModel;
+        //         this._cmsEvents = options._cmsEvents;
+        //         // this.render();
+        //     },
+        //     setStorePageList: function(data){
+        //         this.identifier = data.identifier;
+        //         return this;
+        //     },
+        //     render: function(){
+        //         var _self = this;
+        //         this.cmsModel.save(
+        //             {identifier: this.identifier},
+        //             {url:UrlApi('_app')+'/MagentoCms/getStorePages'}
+        //         ).done(function (response){
+        //             console.log(response.data);
+        //             var data = {};
+        //             data['store_page_list'] = response.data.store_pages;
+        //             data['store_pages_total'] = response.data.total;
+        //             _self.$el.html(_self.template(data));
+        //         });
+        //         this.cmsModel.clear();
+        //         return this;
+        //     }
+        // });
 
         cms.View.StoreCmsPageView = Backbone.View.extend({
             template: _.template($('#tpl-store-cms-page').html()),
@@ -295,20 +369,46 @@ jQuery(function() {
         cms.View.CmsBlockSearchView = Backbone.View.extend({
             template: _.template($('#tpl-cms-block-search').html()),
             events:{
-                'keypress .block-search': 'searchBlock'
+                'keypress .block-search': 'searchBlock',
+                'focus .block-search': 'searchFocus',
+                'click .search-clear': 'searchClear',
+                'click .search-enter': 'searchEnter'
             },
             searchBlock: function (event){
                 if(event.keyCode == 13){
+                    $(event.target).blur();
+                    $('.search-enter').hide();
+                    $('.search-clear').show();
                     var block_search = $(event.target).val();
                     // console.log(this.$el.attr("type-list"));
                     this._cmsEvents.trigger('alernately',{block_search: block_search},'cmsBlocks');
                 }
             },
+            searchFocus: function (event){
+                $('.search-enter').show();
+                $('.search-clear').hide();
+            },
+            searchClear: function (event){
+                $('.block-search').val('');
+                $('.block-search').focus();
+                this._cmsEvents.trigger('alernately',{block_search: ''},'cmsBlocks');
+                $('.search-enter').show();
+                $('.search-clear').hide();
+                return false;
+            },
+            searchEnter: function (event){
+                $('.search').blur();
+                $('.search-enter').hide();
+                $('.search-clear').show();
+                this.search = $('.block-search').val();
+                this._cmsEvents.trigger('alernately',{block_search: this.search},'cmsBlocks');
+                return false;
+            },
             initialize: function(options){
                 options || (options = {});
                 this.cmsModel = options.cmsModel;
                 this._cmsEvents = options._cmsEvents;
-                this.render();
+                // this.render();
             },
             render: function(){
                 var data = {};
@@ -320,19 +420,28 @@ jQuery(function() {
         cms.View.CmsBlockListView = Backbone.View.extend({
             template: _.template($('#tpl-cms-block-list').html()),
             events:{
-                'click tbody tr': 'storeBlocks',
+                // 'click tbody tr': 'storeBlocks',
+                'click tbody td a': 'storeBlock',
                 'click .btn-block-translate': 'syncToTranslate',
-                'click .btn-block-magento': 'syncToMagento'
+                'click .btn-block-magento': 'syncToMagento',
+                'change .batch-app': 'appBlock'
             },
-            storeBlocks: function (event){
-                var identifier = $(event.target).closest('tr').data("identifier");
-                console.log(identifier);
-                $('.block-cms-block-list').hide();
-                this._cmsEvents.trigger('alernately',{identifier:identifier},'storeBlocks');
-                // $('.search-cms-page').attr('type-list', 'store_page');
+            storeBlock: function (event){
+                var cms_id = $(event.target).closest('tr').data("id");
+                console.log(cms_id);
+                this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storeBlock');
                 return false;
             },
+            // storeBlocks: function (event){
+            //     var identifier = $(event.target).closest('tr').data("identifier");
+            //     console.log(identifier);
+            //     $('.block-cms-block-list').hide();
+            //     this._cmsEvents.trigger('alernately',{identifier:identifier},'storeBlocks');
+            //     // $('.search-cms-page').attr('type-list', 'store_page');
+            //     return false;
+            // },
             syncToTranslate: function (event){
+                $(event.target).closest('a').removeClass('btn-block-translate');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncTranslateBlock'}
@@ -360,6 +469,7 @@ jQuery(function() {
                 return false;
             },
             syncToMagento: function (){
+                $(event.target).closest('a').removeClass('btn-block-magento');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncMagentoBlock'}
@@ -386,6 +496,19 @@ jQuery(function() {
                 this.cmsModel.clear();
                 return false;
             },
+            appBlock: function (event){
+                var _self = this;
+                this.data = {};
+                this.operation = $(event.target).val();
+                console.log(this.operation);
+                if($('input:checked').length < 1){
+                    return;
+                }
+                $('input:checked').each(function (i){
+                    _self.data[i] = $(this).val();
+                });
+                console.log(this.data);
+            },
             setCmsBlockSerach: function(data){
                 this.block_search = data.block_search;
                 console.log(this.block_search);
@@ -395,7 +518,7 @@ jQuery(function() {
                 options || (options = {});
                 this.cmsModel = options.cmsModel;
                 this._cmsEvents = options._cmsEvents;
-                this.render();
+                // this.render();
             },
             render: function(){
                 var _self = this;
@@ -405,7 +528,7 @@ jQuery(function() {
                 ).done(function (response){
                     console.log(response.data);
                     var data = {};
-                    data['block_list'] = response.data.kind;
+                    data['block_list'] = response.data.list;
                     data['blocks_total'] = response.data.total;
                     data['blocks_count'] = response.data.count;
                     _self.$el.html(_self.template(data));
@@ -415,43 +538,43 @@ jQuery(function() {
             }
         });
 
-        cms.View.StoreCmsBlockListView = Backbone.View.extend({
-            template: _.template($('#tpl-store-cms-block-list').html()),
-            events:{
-                'click tbody tr': 'storeBlock'
-            },
-            storeBlock: function (event){
-                var cms_id = $(event.target).closest('tr').data("id");
-                console.log(cms_id);
-                this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storeBlock');
-                return false;
-            },
-            initialize: function(options){
-                options || (options = {});
-                this.cmsModel = options.cmsModel;
-                this._cmsEvents = options._cmsEvents;
-                // this.render();
-            },
-            setStoreBlockList: function(data){
-                this.identifier = data.identifier;
-                return this;
-            },
-            render: function(){
-                var _self = this;
-                this.cmsModel.save(
-                    {identifier: this.identifier},
-                    {url:UrlApi('_app')+'/MagentoCms/getStoreBlocks'}
-                ).done(function (response){
-                    console.log(response.data);
-                    var data = {};
-                    data['store_block_list'] = response.data.store_blocks;
-                    data['store_blocks_total'] = response.data.total;
-                    _self.$el.html(_self.template(data));
-                });
-                this.cmsModel.clear();
-                return this;
-            }
-        });
+        // cms.View.StoreCmsBlockListView = Backbone.View.extend({
+        //     template: _.template($('#tpl-store-cms-block-list').html()),
+        //     events:{
+        //         'click tbody tr': 'storeBlock'
+        //     },
+        //     storeBlock: function (event){
+        //         var cms_id = $(event.target).closest('tr').data("id");
+        //         console.log(cms_id);
+        //         this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storeBlock');
+        //         return false;
+        //     },
+        //     initialize: function(options){
+        //         options || (options = {});
+        //         this.cmsModel = options.cmsModel;
+        //         this._cmsEvents = options._cmsEvents;
+        //         // this.render();
+        //     },
+        //     setStoreBlockList: function(data){
+        //         this.identifier = data.identifier;
+        //         return this;
+        //     },
+        //     render: function(){
+        //         var _self = this;
+        //         this.cmsModel.save(
+        //             {identifier: this.identifier},
+        //             {url:UrlApi('_app')+'/MagentoCms/getStoreBlocks'}
+        //         ).done(function (response){
+        //             console.log(response.data);
+        //             var data = {};
+        //             data['store_block_list'] = response.data.store_blocks;
+        //             data['store_blocks_total'] = response.data.total;
+        //             _self.$el.html(_self.template(data));
+        //         });
+        //         this.cmsModel.clear();
+        //         return this;
+        //     }
+        // });
 
         cms.View.StoreCmsBlockView = Backbone.View.extend({
             template: _.template($('#tpl-store-cms-block').html()),
@@ -566,17 +689,17 @@ jQuery(function() {
                     _cmsEvents: _cmsEvents
                 });
 
-                var storepagelistView = new cms.View.StoreCmsPageListView({
-                    el: '.block-store-cms-page-list',
-                    cmsModel: this.cmsModel,
-                    _cmsEvents: _cmsEvents
-                });
+                // var storepagelistView = new cms.View.StoreCmsPageListView({
+                //     el: '.block-store-cms-page-list',
+                //     cmsModel: this.cmsModel,
+                //     _cmsEvents: _cmsEvents
+                // });
 
-                var storeblocklistView = new cms.View.StoreCmsBlockListView({
-                    el: '.block-store-cms-block-list',
-                    cmsModel: this.cmsModel,
-                    _cmsEvents: _cmsEvents
-                });
+                // var storeblocklistView = new cms.View.StoreCmsBlockListView({
+                //     el: '.block-store-cms-block-list',
+                //     cmsModel: this.cmsModel,
+                //     _cmsEvents: _cmsEvents
+                // });
 
                 var storepageView = new cms.View.StoreCmsPageView({
                     el: '.block-store-cms-page',
@@ -590,24 +713,28 @@ jQuery(function() {
                     _cmsEvents: _cmsEvents
                 });
 
+                var router = new CmsRouter({
+                    _cmsEvents: _cmsEvents
+                });
+
                 _cmsEvents.on('refresh', function(view) {
                     switch(view) {
-                        case 'login': 
-                            loginView.render().show();
-                            registerView.hide();
+                        case 'page-view':
+                            pagesearchView.render();
+                            pagelistView.render();
                             break;
-                        case 'register': 
-                            loginView.hide();
-                            registerView.render().show();
+                        case 'block-view':
+                            blocksearchView.render();
+                            blocklistView.render();
                             break;
                     }
                 });
                 _cmsEvents.on('alernately', function (data,view){
                     switch (view)
                     {
-                        case 'storePages':
-                            storepagelistView.setStorePageList(data).render();
-                            break;
+                        // case 'storePages':
+                        //     storepagelistView.setStorePageList(data).render();
+                        //     break;
                         case 'storePage':
                             storepageView.setStorePage(data).render();
                             break;
@@ -615,9 +742,9 @@ jQuery(function() {
                             pagelistView.setCmsPageSerach(data).render();
                             break;
 
-                        case 'storeBlocks':
-                            storeblocklistView.setStoreBlockList(data).render();
-                            break;
+                        // case 'storeBlocks':
+                        //     storeblocklistView.setStoreBlockList(data).render();
+                        //     break;
                         case 'storeBlock':
                             storeblockView.setStoreBlock(data).render();
                             break;
@@ -632,6 +759,7 @@ jQuery(function() {
         var cmsApp = new cms.View.CmsApp({
             cmsModel: new cms.Model.Base()
         });
+        Backbone.history.start();
 
     }).call(self);
 

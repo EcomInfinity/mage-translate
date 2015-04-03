@@ -10,16 +10,18 @@ class MagentoCmsController extends BaseController {
         if(!empty($_params['page_search'])){
             $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1, 'identifier' => array('like', '%'.$_params['page_search'].'%')))->relation(true)->select();
             foreach ($_page_translate_result as $k => $_page) {
-                //所有identifier
                 $_cms_page_identifier[] = $_page['identifier'];
             }
             $_cms_page_identifier = array_unique($_cms_page_identifier);
             foreach ($_cms_page_identifier as $_identifier) {
-                foreach ($_page_translate_result as $k => $_page) {
-                    if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
-                        $_cms_page_kind[$_identifier] = $_page['title'];
-                        break;
+                foreach ($_page_translate_result as $_page) {
+                    if($_page['identifier'] == $_identifier){
+                        $_cms_page_list[] = $_page;
                     }
+                    // if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
+                    //     $_cms_page_kind[$_identifier] = $_page['title'];
+                    //     break;
+                    // }
                 }
             }
         }else{
@@ -30,51 +32,50 @@ class MagentoCmsController extends BaseController {
             }
             $_cms_page_identifier = array_unique($_cms_page_identifier);
             foreach ($_cms_page_identifier as $_identifier) {
-                foreach ($_page_translate_result as $k => $_page) {
-                    if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
-                        $_cms_page_kind[$_identifier] = $_page['title'];
-
-                        break;
+                foreach ($_page_translate_result as $_page) {
+                    if($_page['identifier'] == $_identifier){
+                        $_cms_page_list[] = $_page;
                     }
+                    // if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
+                    //     $_cms_page_kind[$_identifier] = $_page['title'];
+                    //     break;
+                    // }
                 }
             }
         }
-        $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
-        foreach ($_page_translate_result as $k => $_page) {
-            //所有identifier
-            $_cms_page_identifier[] = $_page['identifier'];
-        }
-        $_cms_page_identifier = array_unique($_cms_page_identifier);
+        // var_dump($_cms_page_list);
+        $_page_translate_count = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->count();
+        // $_cms_page_identifier = array_unique($_cms_page_identifier);
         $this->ajaxReturn(
                 array(
                     'success' => true,
                     'message' => '',
                     'data' => array(
-                        'kind' => $_cms_page_kind,
-                        'count' => count($_cms_page_kind),
-                        'total' => count($_cms_page_identifier)
+                        'list' => $_cms_page_list,
+                        'count' => count($_cms_page_list),
+                        'total' => $_page_translate_count
                         ),
                 ),
                 'json'
             );
     }
 
-    public function getStorePages(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $_store_pages = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1))->field('id, title, identifier, store_view')->select();
-        // var_dump($_store_pages);
-        $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(
-                        'store_pages' => $_store_pages,
-                        'total' => count($_store_pages)
-                        ),
-                ),
-                'json'
-            );
-    }
+    // public function getStorePages(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     $_store_pages = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1))->field('id, title, identifier, store_view')->select();
+    //     // var_dump($_store_pages);
+    //     $this->ajaxReturn(
+    //             array(
+    //                 'success' => true,
+    //                 'message' => '',
+    //                 'data' => array(
+    //                     'store_pages' => $_store_pages,
+    //                     'total' => count($_store_pages)
+    //                     ),
+    //             ),
+    //             'json'
+    //         );
+    // }
 
     public function getStorePage(){
         $_params = json_decode(file_get_contents("php://input"),true);
@@ -137,10 +138,13 @@ class MagentoCmsController extends BaseController {
             $_cms_block_identifier = array_unique($_cms_block_identifier);
             foreach ($_cms_block_identifier as $_identifier) {
                 foreach ($_block_translate_result as $k => $_block) {
-                    if($_block['identifier'] == $_identifier && strtolower($_block['simple_name']) == 'en_us'){
-                        $_cms_block_kind[$_identifier] = $_block['title'];
-                        break;
+                    if($_block['identifier'] == $_identifier){
+                        $_cms_block_list[] = $_block;
                     }
+                    // if($_block['identifier'] == $_identifier && strtolower($_block['simple_name']) == 'en_us'){
+                    //     $_cms_block_kind[$_identifier] = $_block['title'];
+                    //     break;
+                    // }
                 }
             }
         }else{
@@ -152,49 +156,51 @@ class MagentoCmsController extends BaseController {
             $_cms_block_identifier = array_unique($_cms_block_identifier);
             foreach ($_cms_block_identifier as $_identifier) {
                 foreach ($_block_translate_result as $k => $_block) {
-                    if($_block['identifier'] == $_identifier && strtolower($_block['simple_name']) == 'en_us'){
-                        $_cms_block_kind[$_identifier] = $_block['title'];
-
-                        break;
+                    if($_block['identifier'] == $_identifier){
+                        $_cms_block_list[] = $_block;
                     }
+                    // if($_block['identifier'] == $_identifier && strtolower($_block['simple_name']) == 'en_us'){
+                    //     $_cms_block_kind[$_identifier] = $_block['title'];
+                    //     break;
+                    // }
                 }
             }
         }
-        $_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->relation(true)->select();
-        foreach ($_block_translate_result as $k => $_block) {
-            //所有identifier
-            $_cms_block_identifier[] = $_block['identifier'];
-        }
-        $_cms_block_identifier = array_unique($_cms_block_identifier);
+        $_block_translate_count = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->count();
+        // foreach ($_block_translate_result as $k => $_block) {
+        //     //所有identifier
+        //     $_cms_block_identifier[] = $_block['identifier'];
+        // }
+        // $_cms_block_identifier = array_unique($_cms_block_identifier);
         $this->ajaxReturn(
                 array(
                     'success' => true,
                     'message' => '',
                     'data' => array(
-                        'kind' => $_cms_block_kind,
-                        'count' => count($_cms_block_kind),
-                        'total' => count($_cms_block_identifier)
+                        'list' => $_cms_block_list,
+                        'count' => count($_cms_block_list),
+                        'total' => $_block_translate_count
                         ),
                 ),
                 'json'
             );
     }
 
-    public function getStoreBlocks(){
-        $_params = json_decode(file_get_contents("php://input"),true);
-        $_store_blocks = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2))->field('id, title, identifier, store_view')->select();
-        $this->ajaxReturn(
-                array(
-                    'success' => true,
-                    'message' => '',
-                    'data' => array(
-                        'store_blocks' => $_store_blocks,
-                        'total' => count($_store_blocks)
-                        ),
-                ),
-                'json'
-            );
-    }
+    // public function getStoreBlocks(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     $_store_blocks = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2))->field('id, title, identifier, store_view')->select();
+    //     $this->ajaxReturn(
+    //             array(
+    //                 'success' => true,
+    //                 'message' => '',
+    //                 'data' => array(
+    //                     'store_blocks' => $_store_blocks,
+    //                     'total' => count($_store_blocks)
+    //                     ),
+    //             ),
+    //             'json'
+    //         );
+    // }
 
     public function getStoreBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);

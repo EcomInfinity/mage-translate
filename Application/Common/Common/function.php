@@ -73,12 +73,14 @@ function magentoApiSync($_website_api, $_website_info_type, $_website_info_id){
     $_client = new \SoapClient($_website_api['domain'].'/api/soap/?wsdl');
     $_sessionId = $_client->login($_website_api['rest_user'], $_website_api['rest_password']);
     // $_result = $_client->call($_sessionId, $_website_info_type, $_website_info_id);
-    // var_dump($_result);
     }catch (SOAPFault $e){
-        // var_dump($e->getMessage());
         return;
     }
-    $_result = $_client->call($_sessionId, $_website_info_type, $_website_info_id);
+    try{
+        $_result = $_client->call($_sessionId, $_website_info_type, $_website_info_id);
+    }catch (Exception $e){
+        return false;
+    }
     return $_result;
 }
 ?>

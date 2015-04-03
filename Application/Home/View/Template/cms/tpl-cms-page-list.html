@@ -1,7 +1,5 @@
 <script type="text/template" id="tpl-cms-page-list">
-    <div class="record-view">
-        <a href="#" class="btn btn-page-translate btn-primary"><i class="glyphicon glyphicon-log-in"></i></a>
-        <a href="#" class="btn btn-page-magento btn-primary"><i class="glyphicon glyphicon-log-out"></i></a>
+    <div class="record-view" style="height:30px;">
         <span class="record">
         <% if(pages_count){ %> <%= pages_count %> <% }else{ %> 0 
         <%}%>/
@@ -10,26 +8,53 @@
         </span>
     </div>
     <div class="line"></div>
-    <table class="table table-hover">
+    <table class="tbl-cms-list">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Identifier</th>
-                <th>Sync</th>
+                <th class="col-checkbox"><input type="checkbox" name="checked-all" /></th>
+                <th class="col-content">Title</th>
+                <th class="col-content">Identifier</th>
+                <th class="col-content">Store View</th>
+                <!--<th class="col-operation">Sync</th>-->
             </tr>
         </thead>
-        <tbody>
-        <% if(page_list){ %>
-            <% _.each(page_list, function(page, key){ %>
-                <tr data-identifier = "<%= key %>">
-                    <td><%= page%></td>
-                    <td><%= key%></td>
-                    <td><a href="#">Sync</a></td>
-                </tr>
-            <% }) %>
-        <% }else{ %>
-            <tr><td colspan="3" align="center">No Records !</td></tr>
-        <% } %>
-        </tbody>
     </table>
+    <div class="data-list">
+        <table class="table table-hover tbl-cms-list" operation = "batch">
+            <thead>
+                <tr>
+                    <th class="col-checkbox"></th>
+                    <th class="col-content"></th>
+                    <th class="col-content"></th>
+                    <th class="col-content"></th>
+                    <!--<th class="col-operation"></th>-->
+                </tr>
+            </thead>
+            <tbody>
+            <% if(page_list){ %>
+                <% _.each(page_list, function(page){ %>
+                    <tr data-id = "<%= page.id %>" title="page/<%= page.id %>">
+                        <td><input type="checkbox" name="page_id[]" value="<%= page.id %>" /></td>
+                        <td><a href="#"><%= page.title%></a></td>
+                        <td><a href="#"><%= page.identifier%></a></td>
+                        <td><a href="#"><%= page.store_view %></a></td>
+                        <!--<td><a href="#"><a href="#">Sync</a></td>-->
+                    </tr>
+                <% }) %>
+            <% }else{ %>
+                <tr><td colspan="3" align="center">No Records !</td></tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="line"></div>
+    <div class="operation-view">
+        <a href="#" class="btn btn-page-translate btn-primary"><i class="glyphicon glyphicon-log-in"></i></a>
+        <a href="#" class="btn btn-page-magento btn-primary"><i class="glyphicon glyphicon-log-out"></i></a>
+        <select name="operation" class="batch-app">
+            <option value='0'>Batch operation</option>
+            <option value='translate'>Sync To Translation</option>
+            <option value='magento'>Sync To Magento</option>
+        </select>
+    </div>
 </script>

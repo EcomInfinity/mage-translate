@@ -45,11 +45,11 @@
 
         $('body').on('change', '[name="checked-all"]', function (event){
             if($(event.target).prop('checked') == true){
-                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",true);
-                $('.tbl-translation-list tbody tr').addClass('selection');
+                $('tbody tr input[type="checkbox"]').prop("checked",true);
+                $('tbody tr').addClass('selection');
             }else{
-                $('.tbl-translation-list tbody tr input[type="checkbox"]').prop("checked",false);
-                $('.tbl-translation-list tbody tr').removeClass('selection');
+                $('tbody tr input[type="checkbox"]').prop("checked",false);
+                $('tbody tr').removeClass('selection');
             }
             return false;
         });
@@ -60,7 +60,7 @@
                 $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",false);
                 $(event.target).closest('tr').attr('class','');
             }else{
-                $('.batch-app').find('option')[0].selected = true;
+                $(event.target).parents('.block').find('.batch-app option')[0].selected = true;
                 $(event.target).closest('tr').find('input[type="checkbox"]').prop("checked",true);
                 $(event.target).closest('tr').addClass('selection');
             }
@@ -68,7 +68,7 @@
 
         $('body').on('click', "tbody tr", function (event){
             if($(event.target).closest('table').attr('operation') == 'batch'){
-                $('.batch-app').find('option')[0].selected = true;
+                $(event.target).parents('.block').find('.batch-app option')[0].selected = true;
                 $('[name="checked-all"]').prop("checked",false);
                 if(_ctrl_click === true){
                     // console.log('_ctrl_click');
