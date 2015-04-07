@@ -15,7 +15,7 @@
                 <th class="col-content">Title</th>
                 <th class="col-content">Identifier</th>
                 <th class="col-content">Store View</th>
-                <!--<th class="col-operation">Sync</th>-->
+                <th class="col-operation">Operation</th>
             </tr>
         </thead>
     </table>
@@ -27,7 +27,7 @@
                     <th class="col-content"></th>
                     <th class="col-content"></th>
                     <th class="col-content"></th>
-                    <!--<th class="col-operation"></th>-->
+                    <th class="col-operation"></th>
                 </tr>
             </thead>
             <tbody>
@@ -35,10 +35,10 @@
                 <% _.each(page_list, function(page){ %>
                     <tr data-id = "<%= page.id %>" title="page/<%= page.id %>">
                         <td><input type="checkbox" name="page_id[]" value="<%= page.id %>" /></td>
-                        <td><a href="#"><%= page.title%></a></td>
-                        <td><a href="#"><%= page.identifier%></a></td>
-                        <td><a href="#"><%= page.store_view %></a></td>
-                        <!--<td><a href="#"><a href="#">Sync</a></td>-->
+                        <td><%= page.title%></td>
+                        <td><%= page.identifier%></td>
+                        <td><%= page.store_view %></td>
+                        <td><a href="#" class="btn btn-primary btn-edit-page"><i class="glyphicon glyphicon-edit"></i></a></td>
                     </tr>
                 <% }) %>
             <% }else{ %>
@@ -49,11 +49,11 @@
     </div>
     <div class="line"></div>
     <div class="operation-view">
-        <a href="#" class="btn btn-page-translate btn-primary"><i class="glyphicon glyphicon-log-in"></i></a>
-        <a href="#" class="btn btn-page-magento btn-primary"><i class="glyphicon glyphicon-log-out"></i></a>
+        <a href="#" class="btn btn-page-translate btn-primary"><i class="glyphicon glyphicon-cloud-download"></i></a>
+        <a href="#" class="btn btn-page-magento btn-primary"><i class="glyphicon glyphicon-cloud-upload"></i></a>
         <select name="operation" class="batch-app">
             <option value='0'>Batch operation</option>
-            <option value='translate'>Sync To Translation</option>
+            <!--<option value='translate'>Sync To Translation</option>-->
             <option value='magento'>Sync To Magento</option>
         </select>
     </div>

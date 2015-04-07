@@ -45,8 +45,8 @@ th.col-operation { width: 10%; }
 th.col-checkbox { width: 5%; }
 /*table.tbl-translation-list th.col-operation { width: 13%; }*/
 table.tbl-translation-list th.col-language { width: 35%; }
-table {width: 913px !important;}
-table.tbl-cms-list th.col-content {width: 35%;}
+/*table {width: 913px !important;}*/
+table.tbl-cms-list th.col-content {width: 30%;}
 table.tbl-translation-list tbody td { word-break: break-all; vertical-align: middle; }
 table th{padding: 8px;}
 table a{color: #333;}
@@ -83,4 +83,5 @@ select[multiple], select[size] {height: 170px;}
 .menu-selection a {color: black;}
 .block-personal-sidebar ul li {padding: 10px 0;}
 textarea {height: 62px;box-sizing: border-box;}
+.cms textarea {height: 280px;box-sizing: border-box;}
 /*table tbody tr {cursor:pointer}*/

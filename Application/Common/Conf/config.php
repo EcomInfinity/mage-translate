@@ -5,7 +5,7 @@ return array(
     'TMPL_R_DELIM' => '}>',
     'DB_TYPE' => 'mysqli',
     'DB_HOST' => 'localhost',
-    'DB_NAME' => 'translate',
+    'DB_NAME' => 'redesign',
     'DB_USER' => 'root',
     'DB_PWD' => '123456',
     'DB_PREFIX' =>'rs_',
@@ -19,4 +19,5 @@ return array(
     'TMPL_PARSE_STRING' => array(
         '__UPLOADS__' => __ROOT__.'/Uploads',
     ),
+    'REQUEST_VARS_FILTER' => true,
 );

@@ -46,13 +46,13 @@ jQuery(function() {
                 $('.cms-page-view').show();
                 $('.cms-block-view').hide();
                 this._cmsEvents.trigger('refresh', 'page-view');
-                console.log('page');
+                // console.log('page');
             },
             blockRender: function(){
                 $('.cms-block-view').show();
                 $('.cms-page-view').hide();
                 this._cmsEvents.trigger('refresh', 'block-view');
-                console.log('block');
+                // console.log('block');
             }
         });
 
@@ -70,7 +70,7 @@ jQuery(function() {
                     $('.search-enter').hide();
                     $('.search-clear').show();
                     var page_search = $(event.target).val();
-                    console.log(this.$el.attr("type-list"));
+                    // console.log(this.$el.attr("type-list"));
                     this._cmsEvents.trigger('alernately',{page_search: page_search},'cmsPages');
                 }
             },
@@ -135,7 +135,7 @@ jQuery(function() {
             template: _.template($('#tpl-cms-page-list').html()),
             events:{
                 // 'click tbody tr': 'storePages',
-                'click tbody td a': 'storePage',
+                'click .btn-edit-page': 'storePage',
                 'click .btn-page-translate': 'syncToTranslate',
                 'click .btn-page-magento': 'syncToMagento',
                 'change .batch-app': 'appPage'
@@ -156,24 +156,29 @@ jQuery(function() {
             // },
             syncToTranslate: function (event){
                 $(event.target).closest('a').removeClass('btn-page-translate');
+                $('.btn-page-magento').removeClass('btn-block-magento');
                 var _self = this;
+                // this.test = $(event.target).closest('div');
+                // console.log(this.test);
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncTranslatePage'}
                 ).done(function (response){
                     if (response.success === true) {
+                        // console.log(_self.test);
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'success'
                             }
                         );
+                        // setTimeout(_self.render(),10000);
                         _self.render();
                     } else {
                         _self.$el.notify(
-                            'Error',
+                            'Failure',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'error'
                             }
                         );
@@ -184,6 +189,7 @@ jQuery(function() {
             },
             syncToMagento: function (){
                 $(event.target).closest('a').removeClass('btn-page-magento');
+                $('.btn-page-translate').removeClass('btn-page-translate');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncMagentoPage'}
@@ -192,16 +198,16 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'success'
                             }
                         );
                         _self.render();
                     } else {
                         _self.$el.notify(
-                            'Error',
+                            'Failure',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'error'
                             }
                         );
@@ -215,18 +221,50 @@ jQuery(function() {
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
-                console.log(this.operation);
+                // console.log(this.operation);
                 if($('input:checked').length < 1){
                     return;
                 }
                 $('input:checked').each(function (i){
                     _self.data[i] = $(this).val();
                 });
-                console.log(this.data);
+                // console.log(this.data);
+                if(this.operation == 'translate'){
+
+                }
+                if(this.operation == 'magento'){
+                    if(confirm('Are you sure update to magento?') == true){
+                        this.cmsModel.save(
+                            {page_ids: this.data},
+                            {url: UrlApi('_app')+"/MagentoApi/syncSelectPage"}
+                        ).done(function (response){
+                            if(response.success === true){
+                                _self.$el.notify(
+                                    'Success',
+                                    {
+                                        position: 'bottom right',
+                                        className: 'success'
+                                    }
+                                );
+                            }else{
+                                _self.$el.notify(
+                                    'Failure',
+                                    {
+                                        position: 'bottom right',
+                                        className: 'error'
+                                    }
+                                );
+                            }
+                        });
+                        this.cmsModel.clear();
+                    }else{
+                        $(event.target).find('option')[0].selected = true;
+                    }
+                }
             },
             setCmsPageSerach: function(data){
                 this.page_search = data.page_search;
-                console.log(this.page_search);
+                // console.log(this.page_search);
                 return this;
             },
             initialize: function(options){
@@ -241,7 +279,7 @@ jQuery(function() {
                     {page_search: this.page_search},
                     {url:UrlApi('_app')+'/MagentoCms/getPages'}
                 ).done(function (response){
-                    console.log(response.data);
+                    // console.log(response.data);
                     var data = {};
                     data['page_list'] = response.data.list;
                     data['pages_total'] = response.data.total;
@@ -249,7 +287,7 @@ jQuery(function() {
                     _self.$el.html(_self.template(data));
                 });
                 this.cmsModel.clear();
-                return this;
+                // return this;
             }
         });
 
@@ -299,7 +337,7 @@ jQuery(function() {
             _save: function(){
                 var _self = this;
                 var $form = this.$el.find('form');
-                console.log($form.serializeObject());
+                // console.log($form.serializeObject());
                 this.cmsModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/MagentoCms/saveStorePage'}
@@ -312,6 +350,7 @@ jQuery(function() {
                                 className: 'success'
                             }
                         );
+                        _self._cmsEvents.trigger('refresh', 'page-view');
                     } else {
                         $form.notify(
                             response.message,
@@ -346,7 +385,7 @@ jQuery(function() {
                 ).done(function (response){
                     var data = {};
                     data['store_page'] = response.data;
-                    console.log(data);
+                    // console.log(data);
                     _self.$el.html(_self.template(data));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {
@@ -421,14 +460,14 @@ jQuery(function() {
             template: _.template($('#tpl-cms-block-list').html()),
             events:{
                 // 'click tbody tr': 'storeBlocks',
-                'click tbody td a': 'storeBlock',
+                'click .btn-edit-block': 'storeBlock',
                 'click .btn-block-translate': 'syncToTranslate',
                 'click .btn-block-magento': 'syncToMagento',
                 'change .batch-app': 'appBlock'
             },
             storeBlock: function (event){
                 var cms_id = $(event.target).closest('tr').data("id");
-                console.log(cms_id);
+                // console.log(cms_id);
                 this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storeBlock');
                 return false;
             },
@@ -442,6 +481,7 @@ jQuery(function() {
             // },
             syncToTranslate: function (event){
                 $(event.target).closest('a').removeClass('btn-block-translate');
+                $('.btn-block-magento').removeClass('btn-block-magento');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncTranslateBlock'}
@@ -450,16 +490,16 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'success'
                             }
                         );
                         _self.render();
                     } else {
                         _self.$el.notify(
-                            'Error',
+                            'Failure',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'error'
                             }
                         );
@@ -470,6 +510,7 @@ jQuery(function() {
             },
             syncToMagento: function (){
                 $(event.target).closest('a').removeClass('btn-block-magento');
+                $('.btn-block-translate').removeClass('btn-block-translate');
                 var _self = this;
                 this.cmsModel.save({}, 
                     {url: UrlApi('_app')+'/MagentoApi/syncMagentoBlock'}
@@ -478,16 +519,16 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'success'
                             }
                         );
                         _self.render();
                     } else {
                         _self.$el.notify(
-                            'Error',
+                            'Failure',
                             {
-                                position: 'top',
+                                position: 'bottom',
                                 className: 'error'
                             }
                         );
@@ -500,18 +541,52 @@ jQuery(function() {
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
-                console.log(this.operation);
+                // console.log(this.operation);
                 if($('input:checked').length < 1){
                     return;
                 }
                 $('input:checked').each(function (i){
                     _self.data[i] = $(this).val();
                 });
-                console.log(this.data);
+                // console.log(this.data);
+                if(this.operation == 'translate'){
+
+                }
+
+                if(this.operation == 'magento'){
+                    if(confirm('Are you sure update to magento?') == true){
+                        this.cmsModel.save(
+                            {block_ids: this.data},
+                            {url: UrlApi('_app')+"/MagentoApi/syncSelectBlock"}
+                        ).done(function (response){
+                            if (response.success === true) {
+                                _self.$el.notify(
+                                    'Success',
+                                    {
+                                        position: 'bottom right',
+                                        className: 'success'
+                                    }
+                                );
+                                _self.render();
+                            } else {
+                                _self.$el.notify(
+                                    'Failure',
+                                    {
+                                        position: 'bottom right',
+                                        className: 'error'
+                                    }
+                                );
+                            }
+                        });
+                        this.cmsModel.clear();
+                    }else{
+                        $(event.target).find('option')[0].selected = true;
+                    }
+                }
             },
             setCmsBlockSerach: function(data){
                 this.block_search = data.block_search;
-                console.log(this.block_search);
+                // console.log(this.block_search);
                 return this;
             },
             initialize: function(options){
@@ -526,7 +601,7 @@ jQuery(function() {
                     {block_search: this.block_search},
                     {url:UrlApi('_app')+'/MagentoCms/getBlocks'}
                 ).done(function (response){
-                    console.log(response.data);
+                    // console.log(response.data);
                     var data = {};
                     data['block_list'] = response.data.list;
                     data['blocks_total'] = response.data.total;
@@ -584,7 +659,8 @@ jQuery(function() {
             _save: function(){
                 var _self = this;
                 var $form = this.$el.find('form');
-                console.log($form.serializeObject());
+                // console.log($form.serializeObject());
+                alert('1');
                 this.cmsModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/MagentoCms/saveStoreBlock'}
@@ -597,6 +673,7 @@ jQuery(function() {
                                 className: 'success'
                             }
                         );
+                        _self._cmsEvents.trigger('refresh', 'block-view');
                     } else {
                         $form.notify(
                             response.message,
@@ -631,7 +708,7 @@ jQuery(function() {
                 ).done(function (response){
                     var data = {};
                     data['store_block'] = response.data;
-                    console.log(data);
+                    // console.log(data);
                     _self.$el.html(_self.template(data));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {

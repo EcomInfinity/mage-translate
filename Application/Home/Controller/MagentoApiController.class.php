@@ -223,59 +223,75 @@ class MagentoApiController extends BaseController {
                 'json'
             );
     }
-    // //更新一种identifier的所有page
-    // public function syncIdentifierPage(){
-    //     $_params = json_decode(file_get_contents("php://input"),true);
-    //     $_identifier_page = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1, 'website_id' => session('website_id')))->select();
-    //     foreach ($_identifier_page as $val) {
-    //         $_cms_save = json_decode($val['content'], true);
-    //         $_cms_save['title'] = $val['title'];
-    //         magentoApiSync(
-    //                 session('soap'),
-    //                 'info_cmspage.update',
-    //                 array($val['type_id'],$_cms_save)
-    //             );
-    //     }
-    //     $this->ajaxReturn(
-    //             array(
-    //                 'success' => true,
-    //                 'message' => '',
-    //                 'data' => array(),
-    //                 ),
-    //             'json'
-    //         );
-    // }
-    //更新单条page
-    public function syncOnePage(){
+    //更新多条page
+    public function syncSelectPage(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_update_page = D('cms_translate')->find($_params['cms_id']);
-        $_cms_save = json_decode($_update_page['content']);
-        $_cms_save['title'] = $_update_page['title'];
-        $_result = magentoApiSync(
-                session('soap'),
-                'info_cmspage.update',
-                array($_update_page['type_id'],$_cms_save)
-            );
-        if($_result){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                        ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => '',
-                        'data' => array(),
-                        ),
-                    'json'
+        // $_identifier_page = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1, 'website_id' => session('website_id')))->select();
+        foreach ($_params['page_ids'] as $val) {
+            # code...
+            $_select_pages[] = D('cms_translate')->find($val);
+        }
+        foreach ($_select_pages as $val) {
+            $_cms_save = json_decode($val['content'], true);
+            $_cms_save['title'] = $val['title'];
+            magentoApiSync(
+                    session('soap'),
+                    'info_cmspage.update',
+                    array($val['type_id'],$_cms_save)
                 );
         }
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                    ),
+                'json'
+            );
     }
+    //更新翻译到translation
+    // public function syncSelectTOMagentoPage(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     foreach ($_params['block_ids'] as $val) {
+    //         # code...
+    //         $_select_pages[] = D('cms_translate')->find($val);
+    //     }
+    //     foreach ($_select_pages as $val) {
+    //         # code...
+            
+    //     }
+    // }
+    //更新单条page
+    // public function syncOnePage(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     $_update_page = D('cms_translate')->find($_params['cms_id']);
+    //     $_cms_save = json_decode($_update_page['content']);
+    //     $_cms_save['title'] = $_update_page['title'];
+    //     $_result = magentoApiSync(
+    //             session('soap'),
+    //             'info_cmspage.update',
+    //             array($_update_page['type_id'],$_cms_save)
+    //         );
+    //     if($_result){
+    //         $this->ajaxReturn(
+    //                 array(
+    //                     'success' => true,
+    //                     'message' => '',
+    //                     'data' => array(),
+    //                     ),
+    //                 'json'
+    //             );
+    //     }else{
+    //         $this->ajaxReturn(
+    //                 array(
+    //                     'success' => false,
+    //                     'message' => '',
+    //                     'data' => array(),
+    //                     ),
+    //                 'json'
+    //             );
+    //     }
+    // }
 
     public function syncTranslateBlock(){
         $_cms_block_result = magentoApiSync(
@@ -484,59 +500,63 @@ class MagentoApiController extends BaseController {
             );
     }
 
-    // //更新一种identifier的所有block
-    // public function syncIdentifierBlock(){
-    //     $_params = json_decode(file_get_contents("php://input"),true);
-    //     $_identifier_block = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 2, 'website_id' => session('website_id')))->select();
-    //     foreach ($_identifier_block as $val) {
-    //         $_cms_save = json_decode($val['content'], true);
-    //         $_cms_save['title'] = $val['title'];
-    //         magentoApiSync(
-    //                 session('soap'),
-    //                 'info_cmsblock.update',
-    //                 array($val['type_id'],$_cms_save)
-    //             );
-    //     }
-    //     $this->ajaxReturn(
-    //             array(
-    //                 'success' => true,
-    //                 'message' => '',
-    //                 'data' => array(),
-    //                 ),
-    //             'json'
-    //         );
-    // }
-    //更新单条block
-    public function syncOneBlock(){
+    //更新多条block
+    public function syncSelectBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_update_block = D('cms_translate')->find($_params['cms_id']);
-        $_cms_save = json_decode($_update_block['content']);
-        $_cms_save['title'] = $_update_block['title'];
-        $_result = magentoApiSync(
-                session('soap'),
-                'info_cmsblock.update',
-                array($_update_block['type_id'],$_cms_save)
-            );
-        if($_result){
-            $this->ajaxReturn(
-                    array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                        ),
-                    'json'
-                );
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => '',
-                        'data' => array(),
-                        ),
-                    'json'
+        // $_identifier_page = D('cms_translate')->where(array('identifier' => $_params['identifier'], 'type' => 1, 'website_id' => session('website_id')))->select();
+        foreach ($_params['block_ids'] as $val) {
+            # code...
+            $_select_block[] = D('cms_translate')->find($val);
+        }
+        foreach ($_select_block as $val) {
+            $_cms_save = json_decode($val['content'], true);
+            $_cms_save['title'] = $val['title'];
+            magentoApiSync(
+                    session('soap'),
+                    'info_cmsblock.update',
+                    array($val['type_id'],$_cms_save)
                 );
         }
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                    ),
+                'json'
+            );
     }
+    //更新单条block
+    // public function syncOneBlock(){
+    //     $_params = json_decode(file_get_contents("php://input"),true);
+    //     $_update_block = D('cms_translate')->find($_params['cms_id']);
+    //     $_cms_save = json_decode($_update_block['content']);
+    //     $_cms_save['title'] = $_update_block['title'];
+    //     $_result = magentoApiSync(
+    //             session('soap'),
+    //             'info_cmsblock.update',
+    //             array($_update_block['type_id'],$_cms_save)
+    //         );
+    //     if($_result){
+    //         $this->ajaxReturn(
+    //                 array(
+    //                     'success' => true,
+    //                     'message' => '',
+    //                     'data' => array(),
+    //                     ),
+    //                 'json'
+    //             );
+    //     }else{
+    //         $this->ajaxReturn(
+    //                 array(
+    //                     'success' => false,
+    //                     'message' => '',
+    //                     'data' => array(),
+    //                     ),
+    //                 'json'
+    //             );
+    //     }
+    // }
     public function test(){
         // $_cms_save['title'] = 'test13233';
         // $_result = magentoApiSync(

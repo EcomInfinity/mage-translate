@@ -100,8 +100,8 @@ class MagentoCmsController extends BaseController {
         $_page_translate = D('cms_translate')->find($_params['cms_id']);
         $_page_content = json_decode($_page_translate['content'], true);
         $_page_content['content'] = $_params['content'];
-        $_page_content['meta_keywords'] = $_params['meta_keywords'];
-        $_page_content['meta_description'] = $_params['meta_description'];
+        // $_page_content['meta_keywords'] = $_params['meta_keywords'];
+        // $_page_content['meta_description'] = $_params['meta_description'];
         $_page_save['content'] = json_encode($_page_content);
         $_page_save['title'] = $_params['title'];
         $_page_save['id'] = $_params['cms_id'];
@@ -247,46 +247,46 @@ class MagentoCmsController extends BaseController {
         }
     }
     public function test(){
-        // $_cms_save['title'] = 'test12323233';
-        // magentoApiSync(
+        // $_cms_save['title'] = '仁光堂 Ren Guang Do-uyuuyuyuy';
+        // $_result = magentoApiSync(
         //         session('soap'),
         //         'info_cmspage.update',
-        //         array('717',$_cms_save)
+        //         array('20000',$_cms_save)
         //     );
-        // var_dump(session('soap'));
-        $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
-        foreach ($_page_translate_result as $k => $_page) {
-            //所有identifier
-            $_cms_page_identifier[] = $_page['identifier'];
-            //所有language
-            $_cms_page_language[] = $_page['lang_id'];
-            $_page_content = json_decode($_page['content'], true);
-            $_page_translate_result[$k]['content'] = $_page_content['content'];
-            $_page_translate_result[$k]['meta_keywords'] = $_page_content['meta_keywords'];
-            $_page_translate_result[$k]['meta_description'] = $_page_content['meta_description'];
-        }
-        $_cms_page_identifier = array_unique($_cms_page_identifier);
-        $_cms_page_language = array_unique($_cms_page_language);
-        foreach ($_cms_page_identifier as $_identifier) {
-            foreach ($_page_translate_result as $k => $_page) {
-                if($_page['identifier'] == $_identifier){
-                    $_cms_page[$_identifier][] = $_page;
-                }
-            }
-        }
-        foreach ($_cms_page_identifier as $_identifier) {
-            foreach ($_page_translate_result as $k => $_page) {
-                if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
-                    $_cms_page_kind[$_identifier] = $_page['title'];
-                    break;
-                }
-            }
-        }
-        $_website_language = D('website_lang')->where(array('website_id' => session('website_id')))->select();
-        // var_dump($_website_language);
-        // var_dump($_cms_page_language);
-        // var_dump($_cms_page_kind);
-        var_dump($_cms_page_identifier);
+        // var_dump($_result);
+        // $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
+        // foreach ($_page_translate_result as $k => $_page) {
+        //     //所有identifier
+        //     $_cms_page_identifier[] = $_page['identifier'];
+        //     //所有language
+        //     $_cms_page_language[] = $_page['lang_id'];
+        //     $_page_content = json_decode($_page['content'], true);
+        //     $_page_translate_result[$k]['content'] = $_page_content['content'];
+        //     $_page_translate_result[$k]['meta_keywords'] = $_page_content['meta_keywords'];
+        //     $_page_translate_result[$k]['meta_description'] = $_page_content['meta_description'];
+        // }
+        // $_cms_page_identifier = array_unique($_cms_page_identifier);
+        // $_cms_page_language = array_unique($_cms_page_language);
+        // foreach ($_cms_page_identifier as $_identifier) {
+        //     foreach ($_page_translate_result as $k => $_page) {
+        //         if($_page['identifier'] == $_identifier){
+        //             $_cms_page[$_identifier][] = $_page;
+        //         }
+        //     }
+        // }
+        // foreach ($_cms_page_identifier as $_identifier) {
+        //     foreach ($_page_translate_result as $k => $_page) {
+        //         if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
+        //             $_cms_page_kind[$_identifier] = $_page['title'];
+        //             break;
+        //         }
+        //     }
+        // }
+        // $_website_language = D('website_lang')->where(array('website_id' => session('website_id')))->select();
+        // // var_dump($_website_language);
+        // // var_dump($_cms_page_language);
+        // // var_dump($_cms_page_kind);
+        // var_dump($_cms_page_identifier);
         // var_dump($_cms_page);
     }
 }

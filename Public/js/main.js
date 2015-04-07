@@ -47,6 +47,7 @@
             if($(event.target).prop('checked') == true){
                 $('tbody tr input[type="checkbox"]').prop("checked",true);
                 $('tbody tr').addClass('selection');
+                $(event.target).parents('.block').find('.batch-app option')[0].selected = true;
             }else{
                 $('tbody tr input[type="checkbox"]').prop("checked",false);
                 $('tbody tr').removeClass('selection');
