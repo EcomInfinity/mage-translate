@@ -42,15 +42,15 @@
                     </tr>
                 <% }) %>
             <% }else{ %>
-                <tr><td colspan="3" align="center">No Records !</td></tr>
+                <tr><td colspan="5" align="center">No Records !</td></tr>
             <% } %>
             </tbody>
         </table>
     </div>
     <div class="line"></div>
     <div class="operation-view">
-        <a href="#" class="btn btn-block-translate btn-primary"><i class="glyphicon glyphicon-cloud-download"></i></a>
-        <a href="#" class="btn btn-block-magento btn-primary"><i class="glyphicon glyphicon-cloud-upload"></i></a>
+        <a href="#" class="btn btn-block-translate btn-primary" title="Sync To Translation"><i class="glyphicon glyphicon-cloud-download"></i></a>
+        <a href="#" class="btn btn-block-magento btn-primary" title="Sync To Magento"><i class="glyphicon glyphicon-cloud-upload"></i></a>
         <select name="operation" class="batch-app">
             <option value='0'>Batch operation</option>
             <!--<option value='translate'>Sync To Translation</option>-->

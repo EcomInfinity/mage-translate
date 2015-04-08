@@ -8,7 +8,13 @@ class MagentoCmsController extends BaseController {
     public function getPages(){
         $_params = json_decode(file_get_contents("php://input"),true);
         if(!empty($_params['page_search'])){
-            $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1, 'identifier' => array('like', '%'.$_params['page_search'].'%')))->relation(true)->select();
+            $_page_translate_result = D('cms_translate')->gets(
+                    array(
+                            'website_id' => session('website_id'), 
+                            'type' => 1, 
+                            'identifier' => array('like', '%'.$_params['page_search'].'%')
+                        )
+                );
             foreach ($_page_translate_result as $k => $_page) {
                 $_cms_page_identifier[] = $_page['identifier'];
             }
@@ -25,7 +31,12 @@ class MagentoCmsController extends BaseController {
                 }
             }
         }else{
-            $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
+            $_page_translate_result = D('cms_translate')->gets(
+                    array(
+                            'website_id' => session('website_id'), 
+                            'type' => 1
+                        )
+                );
             foreach ($_page_translate_result as $k => $_page) {
                 //所有identifier
                 $_cms_page_identifier[] = $_page['identifier'];
@@ -44,7 +55,12 @@ class MagentoCmsController extends BaseController {
             }
         }
         // var_dump($_cms_page_list);
-        $_page_translate_count = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->count();
+        $_page_translate_count = D('cms_translate')->total(
+                array(
+                        'website_id' => session('website_id'), 
+                        'type' => 1
+                    )
+            );
         // $_cms_page_identifier = array_unique($_cms_page_identifier);
         $this->ajaxReturn(
                 array(
@@ -130,7 +146,13 @@ class MagentoCmsController extends BaseController {
     public function getBlocks(){
         $_params = json_decode(file_get_contents("php://input"),true);
         if(!empty($_params['block_search'])){
-            $_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2, 'identifier' => array('like', '%'.$_params['block_search'].'%')))->relation(true)->select();
+            $_block_translate_result = D('cms_translate')->gets(
+                    array(
+                            'website_id' => session('website_id'), 
+                            'type' => 2, 
+                            'identifier' => array('like', '%'.$_params['block_search'].'%')
+                        )
+                );
             foreach ($_block_translate_result as $k => $_block) {
                 //所有identifier
                 $_cms_block_identifier[] = $_block['identifier'];
@@ -148,7 +170,12 @@ class MagentoCmsController extends BaseController {
                 }
             }
         }else{
-            $_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->relation(true)->select();
+            $_block_translate_result = D('cms_translate')->gets(
+                    array(
+                            'website_id' => session('website_id'), 
+                            'type' => 2
+                        )
+                );
             foreach ($_block_translate_result as $k => $_block) {
                 //所有identifier
                 $_cms_block_identifier[] = $_block['identifier'];
@@ -166,7 +193,12 @@ class MagentoCmsController extends BaseController {
                 }
             }
         }
-        $_block_translate_count = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->count();
+        $_block_translate_count = D('cms_translate')->total(
+                array(
+                        'website_id' => session('website_id'), 
+                        'type' => 2
+                    )
+            );
         // foreach ($_block_translate_result as $k => $_block) {
         //     //所有identifier
         //     $_cms_block_identifier[] = $_block['identifier'];

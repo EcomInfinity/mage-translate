@@ -660,7 +660,7 @@ jQuery(function() {
                 var _self = this;
                 var $form = this.$el.find('form');
                 // console.log($form.serializeObject());
-                alert('1');
+                // alert('1');
                 this.cmsModel.save(
                     $form.serializeObject(),
                     {url:UrlApi('_app')+'/MagentoCms/saveStoreBlock'}
