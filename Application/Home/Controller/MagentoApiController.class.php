@@ -154,6 +154,16 @@ class MagentoApiController extends BaseController {
             }
         }
         // truncate table
+        //删除magento上没有的
+        $_translate_page_result = D('cms_translate')->gets(array('type' => 1, 'website_id' => session('website_id')));
+        foreach ($_translate_page_result as $value) {
+            foreach ($_cms_page_all_result as $val) {
+                # code...
+                if($value['type_id'] != $val['id']){
+                    D('cms_translate')->delete($value['id']);
+                }
+            }
+        }
         foreach ($_cms_page_all_result as $k => $val) {
             if($val['store_id']['0'] != 0){
                 $_repeat_cms_page = D('cms_translate')->where(array('type_id' => $val['page_id'], 'website_id' => session('website_id'), 'type' => 1))->find();
@@ -234,11 +244,14 @@ class MagentoApiController extends BaseController {
         foreach ($_select_pages as $val) {
             $_cms_save = json_decode($val['content'], true);
             $_cms_save['title'] = $val['title'];
-            magentoApiSync(
+            $_result = magentoApiSync(
                     session('soap'),
                     'info_cmspage.update',
                     array($val['type_id'],$_cms_save)
                 );
+            if($_result === false){
+                D('cms_translate')->delete($val['id']);
+            }
         }
         $this->ajaxReturn(
                 array(
@@ -436,6 +449,16 @@ class MagentoApiController extends BaseController {
             }
         }
         // truncate table
+        //删除magento上没有的
+        $_translate_block_result = D('cms_translate')->gets(array('type' => 2, 'website_id' => session('website_id')));
+        foreach ($_translate_block_result as $value) {
+            foreach ($_cms_block_all_result as $val) {
+                # code...
+                if($value['type_id'] != $val['id']){
+                    D('cms_translate')->delete($value['id']);
+                }
+            }
+        }
         foreach ($_cms_block_all_result as $k => $val) {
             if($val['store_id']['0'] != 0){
                 $_repeat_cms_block = D('cms_translate')->where(array('type_id' => $val['block_id'], 'website_id' => session('website_id'), 'type' => 2))->find();
@@ -477,7 +500,7 @@ class MagentoApiController extends BaseController {
         $_cms_block_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 2))->select();
         foreach ($_cms_block_translate_result as $val) {
             # code...
-            $_cms_save = json_decode($val['content'], true);
+            $_cms_save['content'] = $val['content'];
             unset($_cms_save['block_id']);
             $_cms_save['title'] = $val['title'];
             $_result = magentoApiSync(
@@ -509,13 +532,16 @@ class MagentoApiController extends BaseController {
             $_select_block[] = D('cms_translate')->find($val);
         }
         foreach ($_select_block as $val) {
-            $_cms_save = json_decode($val['content'], true);
+            $_cms_save['content'] = $val['content'];
             $_cms_save['title'] = $val['title'];
-            magentoApiSync(
+            $_result = magentoApiSync(
                     session('soap'),
                     'info_cmsblock.update',
                     array($val['type_id'],$_cms_save)
                 );
+            if($_result === false){
+                D('cms_translate')->delete($val['id']);
+            }
         }
         $this->ajaxReturn(
                 array(

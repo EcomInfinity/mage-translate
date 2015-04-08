@@ -3,14 +3,14 @@ namespace Home\Controller;
 use Think\Controller;
 
 class UserController extends UserPermissionController {
-    // public function index(){
-    //     $_session_id = session('id');
-    //     if (isset($_session_id) && $_session_id > 0) {
-    //         $this->redirect('/lang');
-    //     } else {
-    //         $this->display();
-    //     }
-    // }
+    public function index(){
+        // $_session_id = session('id');
+        // if (isset($_session_id) && $_session_id > 0) {
+        //     $this->redirect('/lang');
+        // } else {
+            $this->display();
+        // }
+    }
 
     // public function login(){
     //     $_user = D('user');

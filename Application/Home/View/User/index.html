@@ -1,0 +1,76 @@
+<extend name="Public/base" />
+<block name="script">
+    <load href="__PUBLIC__/js/user.js" />
+</block>
+<block name="main-user-setting">
+    <main>
+        <div class="container-fluid page-width">
+            <h1>User Center</h1>
+            <div class="block block-user-sidebar" style="width:20%;float:left;">
+            </div>
+            <div class="block block-user-content" style="width:80%;float:left;">
+                <div class="block block-personal-setting"></div>
+
+                <div class="block block-website-setting"></div>
+
+                <div class="block block-sync-setting"></div>
+
+                <div class="block block-language-setting"></div>
+
+                <div class="block block-user">
+                    <div class="search-box search-box-user"></div>
+                    <div class="block-user-list">
+                    </div>
+
+                    <div class="block-user-add">
+                    </div>
+
+                    <div class="block-user-info">
+                    </div>
+                </div>
+
+                <div class="block block-role">
+                    <div class="search-box search-box-user"></div>
+                    <div class="block-role-list">
+                    </div>
+
+                    <div class="block-role-add">
+                    </div>
+
+                    <div class="block-role-info">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</block>
+
+<block name="template-user-setting">
+    <include file="Template/user/tpl-personal-sidebar" />
+
+    <include file="Template/user/tpl-website-setting" />
+
+    <include file="Template/user/tpl-personal-setting" />
+
+    <include file="Template/user/tpl-rest-sync" />
+
+    <include file="Template/user/tpl-site-language" />
+
+
+    <include file="Template/user/tpl-user-search" />
+
+    <include file="Template/user/tpl-user-add" />
+
+    <include file="Template/user/tpl-user-info" />
+
+    <include file="Template/user/tpl-user-list" />
+
+    <include file="Template/user/tpl-role-search" />
+
+    <include file="Template/user/tpl-role-list" />
+
+    <include file="Template/user/tpl-role-info" />
+
+    <include file="Template/user/tpl-role-add" />
+</block>

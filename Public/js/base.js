@@ -836,7 +836,7 @@ jQuery(function() {
                 'click .rest-sync': 'restSyncSetting',
                 'click .site-language': 'siteLanguageSetting'
             },
-            'websiteSetting': function (event){
+            websiteSetting: function (event){
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
                     $('.menu-selection').removeClass('menu-selection');
                     $(event.target).closest('li').addClass('menu-selection');
@@ -851,14 +851,14 @@ jQuery(function() {
                     });
                 }
             },
-            'personalSetting': function (event){
+            personalSetting: function (event){
                 $('.menu-selection').removeClass('menu-selection');
                 $(event.target).closest('li').addClass('menu-selection');
                 this._userEvents.trigger('refresh', 'personal-setting');
                 $('.block-personal-container .block').hide();
                 $('.block-personal-setting').show();
             },
-            'restSyncSetting': function (event){
+            restSyncSetting: function (event){
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
                     $('.menu-selection').removeClass('menu-selection');
                     $(event.target).closest('li').addClass('menu-selection');
@@ -873,7 +873,7 @@ jQuery(function() {
                     });
                 }
             },
-            'siteLanguageSetting': function (event){
+            siteLanguageSetting: function (event){
                 if(Purview('update') == '1'||PurviewVal() == '-1'){
                     $('.menu-selection').removeClass('menu-selection');
                     $(event.target).closest('li').addClass('menu-selection');
@@ -1769,6 +1769,7 @@ jQuery(function() {
                             break;
                         case 'personal-setting':
                             personalsettingView.render();
+                            break;
                         case 'rest-setting':
                             restsyncView.render();
                             break;

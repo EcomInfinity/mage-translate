@@ -251,10 +251,10 @@ class MagentoCmsController extends BaseController {
 
     public function saveStoreBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_block_translate = D('cms_translate')->find($_params['cms_id']);
-        $_block_content = json_decode($_block_translate['content'], true);
-        $_block_content['content'] = $_params['content'];
-        $_block_save['content'] = json_encode($_block_content);
+        // $_block_translate = D('cms_translate')->find($_params['cms_id']);
+        // $_block_content = json_decode($_block_translate['content'], true);
+        // $_block_content['content'] = $_params['content'];
+        $_block_save['content'] = $_params['content'];
         $_block_save['title'] = $_params['title'];
         $_block_save['id'] = $_params['cms_id'];
         $_result = D('cms_translate')->save($_block_save);

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Happy Translating! - <php>echo session('website_name');</php><php>echo session('purview');</php></title>
+    <title>Happy Translating! - <php>echo session('website_name');</php></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="__ROOT__/Public/favicon.ico" type="image/x-icon" rel="shortcut icon">
     <load href="__PUBLIC__/css/reset.css" />
@@ -128,6 +128,10 @@
         <div class="cms-block-view" style="display:none;">
             <block name="main-cms-block"></block>
             <block name="template-cms-block"></block>
+        </div>
+        <div class="block block-user-view">
+            <block name="main-user-setting"></block>
+            <block name="template-user-setting"></block>
         </div>
         <div class="page-width block-footer">
             <block name="footer"><!-- <php>echo rand(100000,999999);</php> --></block>

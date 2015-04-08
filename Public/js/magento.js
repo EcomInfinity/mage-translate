@@ -168,7 +168,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'success'
                             }
                         );
@@ -178,7 +178,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Failure',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'error'
                             }
                         );
@@ -187,7 +187,7 @@ jQuery(function() {
                 this.cmsModel.clear();
                 return false;
             },
-            syncToMagento: function (){
+            syncToMagento: function (event){
                 $(event.target).closest('a').removeClass('btn-page-magento');
                 $('.btn-page-translate').removeClass('btn-page-translate');
                 var _self = this;
@@ -198,7 +198,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'success'
                             }
                         );
@@ -207,7 +207,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Failure',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'error'
                             }
                         );
@@ -242,15 +242,17 @@ jQuery(function() {
                                 _self.$el.notify(
                                     'Success',
                                     {
-                                        position: 'bottom right',
+                                        position: 'top',
                                         className: 'success'
                                     }
                                 );
+                                $(event.target).find('option')[0].selected = true;
+                                _self.render();
                             }else{
                                 _self.$el.notify(
                                     'Failure',
                                     {
-                                        position: 'bottom right',
+                                        position: 'top',
                                         className: 'error'
                                     }
                                 );
@@ -490,7 +492,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'success'
                             }
                         );
@@ -499,7 +501,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Failure',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'error'
                             }
                         );
@@ -508,7 +510,7 @@ jQuery(function() {
                 this.cmsModel.clear();
                 return false;
             },
-            syncToMagento: function (){
+            syncToMagento: function (event){
                 $(event.target).closest('a').removeClass('btn-block-magento');
                 $('.btn-block-translate').removeClass('btn-block-translate');
                 var _self = this;
@@ -519,7 +521,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Success',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'success'
                             }
                         );
@@ -528,7 +530,7 @@ jQuery(function() {
                         _self.$el.notify(
                             'Failure',
                             {
-                                position: 'bottom',
+                                position: 'top',
                                 className: 'error'
                             }
                         );
@@ -563,16 +565,17 @@ jQuery(function() {
                                 _self.$el.notify(
                                     'Success',
                                     {
-                                        position: 'bottom right',
+                                        position: 'top',
                                         className: 'success'
                                     }
                                 );
+                                $(event.target).find('option')[0].selected = true;
                                 _self.render();
                             } else {
                                 _self.$el.notify(
                                     'Failure',
                                     {
-                                        position: 'bottom right',
+                                        position: 'top',
                                         className: 'error'
                                     }
                                 );

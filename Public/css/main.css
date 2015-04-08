@@ -82,6 +82,7 @@ select{text-transform: uppercase;}
 select[multiple], select[size] {height: 170px;}
 .menu-selection a {color: black;}
 .block-personal-sidebar ul li {padding: 10px 0;}
+.block-user-sidebar ul li {padding: 10px 0;}
 textarea {height: 62px;box-sizing: border-box;}
 .cms textarea {height: 280px;box-sizing: border-box;}
 /*table tbody tr {cursor:pointer}*/

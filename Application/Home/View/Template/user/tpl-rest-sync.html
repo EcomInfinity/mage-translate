@@ -1,0 +1,50 @@
+<script type="text/template" id="tpl-rest-sync">
+    <div class="modal-container">
+        <h2>Rest Sync</h2>
+        <div class="content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>User</th>
+                    <th>Api Key</th>
+                    <th>Communication</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#"><%= website.domain %></a></td>
+                    <td><a href="#"><%= website.rest_user %></a></td>
+                    <td><a href="#"><%= website.rest_password %></a></td>
+                    <td><% if(website.communication_status == 1){ %><span style="color:green;">Communication Success</span><% }else{ %><span style="color:red;">Communication Failure</span><% } %></td>
+                </tr>
+            </tbody>
+        </table>
+            <form action="" method="post" data-toggle="validator">
+                <div class="form-hoder">
+                    <div class="entry form-group">
+                        <label for="domain">Domain:</label>
+                        <input type="text" name="domain" id="domain" placeholder="For example: http://www.test.com" required pattern="[a-zA-z]+://[^\s]*" data-error="Domian is invalid." value="<%= website.domain %>" />
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                    <div class="entry form-group">
+                        <label for="rest-name">Rest Name:</label>
+                        <input type="text" name="rest_user" id="rest-name" value="<%= website.rest_user %>" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Rest name is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                    <div class="entry form-group">
+                        <label for="rest-password">Rest Password:</label>
+                        <input type="text" name="rest_password" id="rest-password" value="<%= website.rest_password %>" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Rest password is invalid." />
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                </div>
+                <div class="btn-set">
+                    <a href="#" class="btn btn-rest-sync btn-primary">Sync</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>

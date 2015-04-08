@@ -1,0 +1,40 @@
+<script type="text/template" id="tpl-role-list">
+    <div class="jump">
+        <a href="#roleadd" class="btn btn-primary btn-list-role-add" title="Role Add"><i class="glyphicon glyphicon-plus"></i></a>
+        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
+        <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <%}%>Records</span>
+    </div>
+    <div class="line"></div>
+    <table class="list-head tbl-role-list">
+        <thead>
+            <tr>
+                <th class="col-role">RoleName</th>
+                <th class="col-operation">Operation</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="data-list">
+        <table class="table table-hover" cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th class="col-role"> </th>
+                    <th class="col-operation"> </th>
+                </tr>
+            </thead>
+            <tbody>
+            <% if(roleList){ %>
+                <% _.each(roleList, function(role){ %>
+                    <tr data-id="<%= role.id %>">
+                        <td><%= role.role_name %></td>
+                        <td><a href="#roleedit/<%= role.id %>" class="btn btn-primary btn-role-detail" title="Edit"><i class="glyphicon glyphicon-edit"></i></a></td>
+                    </tr>
+                <% }) %>
+            <% }else{ %>
+                <tr><td colspan="2" align="center">No Records !</td></tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="line"></div>
+</script>
