@@ -241,7 +241,7 @@ jQuery(function() {
                         );
                         lang_add.reset();
                         $('.images_list ul li').hide();
-                        _self._events.trigger('refresh','add');
+                        _self._events.trigger('refresh','translate-list-view');
                     } else {
                         $form.notify(
                             response.message,
@@ -1857,12 +1857,15 @@ jQuery(function() {
                 _events.on('refresh', function (view){
                     switch (view)
                     {
-                        case 'add':
+                        case 'translate-list-view':
                             listView.render();
                             break;
-                        case 'edit':
-                            listView.render();
-                            break;
+                        // case 'add':
+                        //     listView.render();
+                        //     break;
+                        // case 'edit':
+                        //     listView.render();
+                        //     break;
                         // case 'list-export':
                         //     exportView.render();
                         //     break;

@@ -37,7 +37,7 @@ class MagentoApiController extends BaseController {
             $_base_store_view_flag[$_key_id] = false;
             foreach ($_cms_page_result as $key => $value) {
                 if($_identifier == $value['identifier']){
-                    //判断cms_page中的store_id是否有等于0的
+                    //判断cms_page中的store_id是否有等于0的,并且确定一哪个为基准复制
                     foreach ($value['store_id'] as $k => $val) {
                         if($val == 0){
                             $_all_store_view_page[$_key_id] = $value;
@@ -65,6 +65,7 @@ class MagentoApiController extends BaseController {
                         $_all_store_view_page[$_key_id] = $value;
                         // break;
                     }
+                    //该条page包含多个store_view
                     if(count($value['store_id']) > 1){
                         //去除store_id = 0的
                         $_all_store_view_checked = false;
@@ -74,6 +75,7 @@ class MagentoApiController extends BaseController {
                                 $_all_store_view_checked = true;
                             }
                         }
+                        //多个store_view，从哪个开始复制
                         if($_all_store_view_checked === true){
                             $_first = 1;
                         }else{

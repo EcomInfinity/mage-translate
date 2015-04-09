@@ -16,26 +16,31 @@ class WebsiteController extends WebsitePermissionController {
     }
 
     public function langInfo(){
-        $_store_view_result = magentoApiSync(
-                session('soap'),
-                'info_getwebinfo.storeViewList',
-                array()
-            );
-        $_store_view_result = json_decode($_store_view_result, true);
-        foreach ($_store_view_result as $val) {
-            $_lang_store = D('language')->where(array('simple_name' => $val['store_view_language']))->find();
-            $_checked[] = $_magento_store_view_lang_id[] = $_lang_store['id'];
+        $_website_result = D('website')->find(session('website_id'));
+        if($_website_result['communication_status'] == 1){
+            $_store_view_result = magentoApiSync(
+                    session('soap'),
+                    'info_getwebinfo.storeViewList',
+                    array()
+                );
+            $_store_view_result = json_decode($_store_view_result, true);
+            foreach ($_store_view_result as $val) {
+                $_lang_store = D('language')->where(array('simple_name' => $val['store_view_language']))->find();
+                $_checked[] = $_magento_store_view_lang_id[] = $_lang_store['id'];
+            }
+            $_magento_store_view_lang_id = array_unique($_magento_store_view_lang_id);
         }
-        $_magento_store_view_lang_id = array_unique($_magento_store_view_lang_id);
         $_lang_base = D('language')->where(array('simple_name' => 'en_us'))->find();
         $_web_lang_result = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
         $_checked[] = $_web_lang_id[] = $_lang_base['id'];
         foreach ($_web_lang_result as $val) {
             $_checked[] = $_web_lang_id[] = $val['lang_id'];
         }
-        $_need_add_lang_id = array_diff($_magento_store_view_lang_id, $_web_lang_id);
-        foreach ($_need_add_lang_id as $val) {
-            $_need_add_lang[] = D('language')->find($val);
+        if($_website_result['communication_status'] == 1){
+            $_need_add_lang_id = array_diff($_magento_store_view_lang_id, $_web_lang_id);
+            foreach ($_need_add_lang_id as $val) {
+                $_need_add_lang[] = D('language')->find($val);
+            }
         }
         $_checked = array_unique($_checked);
         $_checked = implode(',',$_checked );

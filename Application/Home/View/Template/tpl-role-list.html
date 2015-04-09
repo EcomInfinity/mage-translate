@@ -2,8 +2,8 @@
     <div class="jump">
         <a href="#roleadd" class="btn btn-primary btn-list-role-add" title="Role Add"><i class="glyphicon glyphicon-plus"></i></a>
         <a href="#" class="btn btn-primary btn-user-list" title="User List"><i class="glyphicon glyphicon-user"></i></a>
-        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
-        <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <span class="record"><% if(current_count){ %> <%= current_count %><% }else{ %> 0
+        <%}%> / <% if(count){ %> <%= count %> <% }else{ %> 0 
         <%}%>Records</span>
     </div>
     <div class="line"></div>

@@ -1,8 +1,8 @@
 <script type="text/template" id="tpl-user-list">
     <div class="record-view">
         <a href="#useradd" class="btn btn-primary btn-list-user-add" title="User Add"><i class="glyphicon glyphicon-plus"></i></a>
-        <span class="record"><% if(current_count){ %> <%= current_count %> / <% }else{ %>  
-        <%}%><% if(count){ %> <%= count %> <% }else{ %> 0 
+        <span class="record"><% if(current_count){ %> <%= current_count %><% }else{ %> 0
+        <%}%> / <% if(count){ %> <%= count %> <% }else{ %> 0 
         <%}%>Records</span>
     </div>
     <div class="line"></div>
@@ -43,6 +43,6 @@
             </tbody>
         </table>
     </div>
-    <div class="line"></div>
+    <!--<div class="line"></div>-->
 </script>
 

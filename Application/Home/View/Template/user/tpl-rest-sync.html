@@ -13,9 +13,9 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#"><%= website.domain %></a></td>
-                    <td><a href="#"><%= website.rest_user %></a></td>
-                    <td><a href="#"><%= website.rest_password %></a></td>
+                    <td><%= website.domain %></td>
+                    <td><%= website.rest_user %></td>
+                    <td><%= website.rest_password %></td>
                     <td><% if(website.communication_status == 1){ %><span style="color:green;">Communication Success</span><% }else{ %><span style="color:red;">Communication Failure</span><% } %></td>
                 </tr>
             </tbody>
@@ -29,13 +29,13 @@
                     </div>
 
                     <div class="entry form-group">
-                        <label for="rest-name">Rest Name:</label>
+                        <label for="rest-name">User Name:</label>
                         <input type="text" name="rest_user" id="rest-name" value="<%= website.rest_user %>" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Rest name is invalid." />
                         <div class="help-block with-errors"></div>
                     </div>
 
                     <div class="entry form-group">
-                        <label for="rest-password">Rest Password:</label>
+                        <label for="rest-password">Api Key:</label>
                         <input type="text" name="rest_password" id="rest-password" value="<%= website.rest_password %>" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Rest password is invalid." />
                         <div class="help-block with-errors"></div>
                     </div>

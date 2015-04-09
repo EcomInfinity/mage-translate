@@ -32,6 +32,63 @@ jQuery(function() {
             }
         });
 
+        var UserRouter = Backbone.Router.extend({
+            initialize: function(options){
+                options || (options = {});
+                this._userEvents = options._userEvents;
+            },
+            routes: {
+                "personal": "personalSetting",
+                "website": "websiteSetting",
+                "sync": "syncSetting",
+                "language": "languageSetting",
+                "user": "userSetting",
+                "role": "roleSetting",
+            },
+            personalSetting: function (){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(0)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'personal-setting');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(0)').show();
+            },
+            websiteSetting: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(1)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'website-setting');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(1)').show();
+            },
+            syncSetting: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(2)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'rest-setting');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(2)').show();
+            },
+            languageSetting: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(3)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'language-setting');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(3)').show();
+            },
+            userSetting: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(4)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'user-search-list-view');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(4)').show();
+            },
+            roleSetting: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(5)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'role-search-list-view');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(5)').show();
+            }
+        });
+
         user.View.UserSearchView = Backbone.View.extend({
             template: _.template($('#tpl-user-search').html()),
             events:{
@@ -83,95 +140,95 @@ jQuery(function() {
             }
         });
 
-        user.View.PersonalSidebar = Backbone.View.extend({
-            template: _.template($('#tpl-personal-sidebar').html()),
-            events: {
-                'click .website': 'websiteSetting',
-                'click .personal': 'personalSetting',
-                'click .sync': 'restSyncSetting',
-                'click .language': 'siteLanguageSetting',
-                'click .user': 'userSetting',
-                'click .role': 'roleSetting'
-            },
-            websiteSetting: function (event){
-                if(Purview('update') == '1'||PurviewVal() == '-1'){
-                    $('.menu-selection').removeClass('menu-selection');
-                    $(event.target).closest('li').addClass('menu-selection');
-                    this._userEvents.trigger('refresh', 'website-setting');
-                    $('.block-user-content .block').hide();
-                    $('.block-website-setting').show();
-                }else{
-                    $.fancybox($('.message'),{
-                       afterClose: function () {
-                            // window.history.back();
-                        }
-                    });
-                }
-            },
-            personalSetting: function (event){
-                $('.menu-selection').removeClass('menu-selection');
-                $(event.target).closest('li').addClass('menu-selection');
-                this._userEvents.trigger('refresh', 'personal-setting');
-                $('.block-user-content .block').hide();
-                $('.block-personal-setting').show();
-            },
-            restSyncSetting: function (event){
-                if(Purview('update') == '1'||PurviewVal() == '-1'){
-                    $('.menu-selection').removeClass('menu-selection');
-                    $(event.target).closest('li').addClass('menu-selection');
-                    this._userEvents.trigger('refresh', 'rest-setting');
-                    $('.block-user-content .block').hide();
-                    $('.block-sync-setting').show();
-                }else{
-                    $.fancybox($('.message'),{
-                       afterClose: function () {
-                            // window.history.back();
-                        }
-                    });
-                }
-            },
-            siteLanguageSetting: function (event){
-                if(Purview('update') == '1'||PurviewVal() == '-1'){
-                    $('.menu-selection').removeClass('menu-selection');
-                    $(event.target).closest('li').addClass('menu-selection');
-                    this._userEvents.trigger('refresh', 'language-setting');
-                    $('.block-user-content .block').hide();
-                    $('.block-language-setting').show();
-                }else{
-                    $.fancybox($('.message'),{
-                       afterClose: function () {
-                            // window.history.back();
-                        }
-                    });
-                }
-            },
-            userSetting: function(event){
-                console.log('user');
-                $('.menu-selection').removeClass('menu-selection');
-                $(event.target).closest('li').addClass('menu-selection');
-                // this._userEvents.trigger('refresh', 'language-setting');
-                $('.block-user-content .block').hide();
-                $('.block-user').show();
-                this._userEvents.trigger('refresh', 'user-list');
-            },
-            roleSetting: function(event){
-                console.log('role');
-                $('.menu-selection').removeClass('menu-selection');
-                $(event.target).closest('li').addClass('menu-selection');
-                // this._userEvents.trigger('refresh', 'language-setting');
-                $('.block-user-content .block').hide();
-                $('.block-role').show();
-                this._userEvents.trigger('refresh', 'role-list');
-            },
-            initialize: function(options){
-                options || (options = {});
-                this._userEvents = options._userEvents;
-                this.render();
-            },
-            render: function(){
-                this.$el.html(this.template({}));
-            }
-        });
+        // user.View.PersonalSidebar = Backbone.View.extend({
+        //     template: _.template($('#tpl-personal-sidebar').html()),
+        //     events: {
+        //         'click .website': 'websiteSetting',
+        //         'click .personal': 'personalSetting',
+        //         'click .sync': 'restSyncSetting',
+        //         'click .language': 'siteLanguageSetting',
+        //         'click .user': 'userSetting',
+        //         'click .role': 'roleSetting'
+        //     },
+        //     websiteSetting: function (event){
+        //         if(Purview('update') == '1'||PurviewVal() == '-1'){
+        //             $('.menu-selection').removeClass('menu-selection');
+        //             $(event.target).closest('li').addClass('menu-selection');
+        //             this._userEvents.trigger('refresh', 'website-setting');
+        //             $('.block-user-content .block').hide();
+        //             $('.block-website-setting').show();
+        //         }else{
+        //             $.fancybox($('.message'),{
+        //                afterClose: function () {
+        //                     // window.history.back();
+        //                 }
+        //             });
+        //         }
+        //     },
+        //     personalSetting: function (event){
+        //         $('.menu-selection').removeClass('menu-selection');
+        //         $(event.target).closest('li').addClass('menu-selection');
+        //         this._userEvents.trigger('refresh', 'personal-setting');
+        //         $('.block-user-content .block').hide();
+        //         $('.block-personal-setting').show();
+        //     },
+        //     restSyncSetting: function (event){
+        //         if(Purview('update') == '1'||PurviewVal() == '-1'){
+        //             $('.menu-selection').removeClass('menu-selection');
+        //             $(event.target).closest('li').addClass('menu-selection');
+        //             this._userEvents.trigger('refresh', 'rest-setting');
+        //             $('.block-user-content .block').hide();
+        //             $('.block-sync-setting').show();
+        //         }else{
+        //             $.fancybox($('.message'),{
+        //                afterClose: function () {
+        //                     // window.history.back();
+        //                 }
+        //             });
+        //         }
+        //     },
+        //     siteLanguageSetting: function (event){
+        //         if(Purview('update') == '1'||PurviewVal() == '-1'){
+        //             $('.menu-selection').removeClass('menu-selection');
+        //             $(event.target).closest('li').addClass('menu-selection');
+        //             this._userEvents.trigger('refresh', 'language-setting');
+        //             $('.block-user-content .block').hide();
+        //             $('.block-language-setting').show();
+        //         }else{
+        //             $.fancybox($('.message'),{
+        //                afterClose: function () {
+        //                     // window.history.back();
+        //                 }
+        //             });
+        //         }
+        //     },
+        //     userSetting: function(event){
+        //         console.log('user');
+        //         $('.menu-selection').removeClass('menu-selection');
+        //         $(event.target).closest('li').addClass('menu-selection');
+        //         // this._userEvents.trigger('refresh', 'language-setting');
+        //         $('.block-user-content .block').hide();
+        //         $('.block-user').show();
+        //         this._userEvents.trigger('refresh', 'user-search-list-view');
+        //     },
+        //     roleSetting: function(event){
+        //         console.log('role');
+        //         $('.menu-selection').removeClass('menu-selection');
+        //         $(event.target).closest('li').addClass('menu-selection');
+        //         // this._userEvents.trigger('refresh', 'language-setting');
+        //         $('.block-user-content .block').hide();
+        //         $('.block-role').show();
+        //         this._userEvents.trigger('refresh', 'role-search-list-view');
+        //     },
+        //     initialize: function(options){
+        //         options || (options = {});
+        //         this._userEvents = options._userEvents;
+        //         this.render();
+        //     },
+        //     render: function(){
+        //         this.$el.html(this.template({}));
+        //     }
+        // });
 
         user.View.WebsiteSettingView = Backbone.View.extend({
             template: _.template($('#tpl-website-setting').html()),
@@ -539,7 +596,7 @@ jQuery(function() {
                             );
                             role_add.reset();
                             setTimeout("$('.tip-roleadd').empty()",1000);
-                            _self._userEvents.trigger('refresh','roleAdd');
+                            _self._userEvents.trigger('refresh','role-list-view');
                         } else {
                             $form.notify(
                                 response.message,
@@ -648,7 +705,7 @@ jQuery(function() {
                                     className: 'success'
                                 }
                             );
-                            _self._userEvents.trigger('refresh','roleInfo');
+                            _self._userEvents.trigger('refresh','role-list-view');
                         } else {
                             $form.notify(
                                 response.message,
@@ -726,7 +783,7 @@ jQuery(function() {
                             }
                         );
                         user_add.reset();
-                            _self._userEvents.trigger('refresh', 'userAdd');
+                            _self._userEvents.trigger('refresh', 'user-list-view');
                     } else {
                         $form.notify(
                             response.message,
@@ -867,7 +924,7 @@ jQuery(function() {
                                 className: 'success'
                             }
                         );
-                        _self._userEvents.trigger('refresh','userInfo');
+                        _self._userEvents.trigger('refresh','user-list-view');
                     }else{
                         $form.notify(
                             response.message,
@@ -939,11 +996,11 @@ jQuery(function() {
                 //     _userEvents: _userEvents
                 // });
 
-                var personalsidebarView = new user.View.PersonalSidebar({
-                    el: '.block-user-sidebar',
-                    userModel: this.userModel,
-                    _userEvents: _userEvents
-                });
+                // var personalsidebarView = new user.View.PersonalSidebar({
+                //     el: '.block-user-sidebar',
+                //     userModel: this.userModel,
+                //     _userEvents: _userEvents
+                // });
 
                 var websitesettingView = new user.View.WebsiteSettingView({
                     el: '.block-website-setting',
@@ -1017,47 +1074,54 @@ jQuery(function() {
                     _userEvents: _userEvents
                 });
 
-                // var router = new UserRouter({
-                //     _userEvents: _userEvents
-                // });
+                var router = new UserRouter({
+                    _userEvents: _userEvents
+                });
 
                 _userEvents.on('refresh', function (view){
                     switch (view)
                     {
-                        case 'userAdd':
+                        case 'user-list-view':
                             userlistView.render();
                             break;
-                        case 'roleInfo':
+                        case 'user-search-list-view':
+                            usersearchView.render();
+                            userlistView.render();
+                            break;
+                        case 'role-list-view':
                             rolelistView.render();
                             break;
+                        // case 'userAdd':
+                        //     userlistView.render();
+                        //     break;
+                        // case 'roleInfo':
+                        //     rolelistView.render();
+                        //     break;
                         case 'list-user-add':
                             useraddView.render();
                             break;
-                        case 'role-list':
+                        case 'role-search-list-view':
                             rolelistView.render();
                             rolesearchView.render();
                             break;
-                        case 'roleAdd':
-                            rolelistView.render();
-                            break;
+                        // case 'roleAdd':
+                        //     rolelistView.render();
+                        //     break;
                         case 'list-role-add':
                             roleaddView.render();
                             break;
-                        case 'user-list':
-                            userlistView.render();
-                            usersearchView.render();
-                            break;
-                        case 'userInfo':
-                            userlistView.render();
-                            break;
-                        case 'personalCenter':
-                            // websitesettingView.render();
-                            personalsettingView.render();
-                            // restsyncView.render();
-                            // sitelanguageView.render();
-                            break;
+                        // case 'user-list':
+                        //     userlistView.render();
+                        //     usersearchView.render();
+                        //     break;
+                        // case 'userhandle':
+                        //     usersearchView.render();
+                        //     userlistView.render();
+                        //     break;
+                        // case 'userInfo':
+                        //     userlistView.render();
+                        //     break;
                         // case 'personalCenter':
-                        //     websitesettingView.render();
                         //     personalsettingView.render();
                         //     break;
                         case 'website-setting':
@@ -1071,10 +1135,6 @@ jQuery(function() {
                             break;
                         case 'language-setting':
                             sitelanguageView.render();
-                            break;
-                        case 'userhandle':
-                            usersearchView.render();
-                            userlistView.render();
                             break;
                     }
                 });
@@ -1105,6 +1165,7 @@ jQuery(function() {
         var userApp = new user.View.UserApp({
             userModel: new user.Model.Base()
         });
+        Backbone.history.start();
 
     }).call(self);
 

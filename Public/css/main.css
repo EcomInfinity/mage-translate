@@ -73,6 +73,8 @@ select{text-transform: uppercase;}
 .operation-view{margin-bottom: 10px;}
 .batch-app{float: right;color: white;background: rgb(43, 102, 153);height: 34px;}
 .search-icon{position: relative;top: 33px;left: 910px;}
+.block-user-content .search-icon {position: relative;top: 33px;left: 724px;}
+
 .word-black{color: black;text-decoration: underline;}
 /*a{text-decoration: underline;}*/
 /*.block-personal-setting{margin-bottom: 10px;}

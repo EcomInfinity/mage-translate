@@ -229,9 +229,9 @@ jQuery(function() {
                     _self.data[i] = $(this).val();
                 });
                 // console.log(this.data);
-                if(this.operation == 'translate'){
+                // if(this.operation == 'translate'){
 
-                }
+                // }
                 if(this.operation == 'magento'){
                     if(confirm('Are you sure update to magento?') == true){
                         this.cmsModel.save(
@@ -331,7 +331,7 @@ jQuery(function() {
         //     }
         // });
 
-        cms.View.StoreCmsPageView = Backbone.View.extend({
+        cms.View.CmsPageView = Backbone.View.extend({
             template: _.template($('#tpl-store-cms-page').html()),
             events: {
                 'click .btn-save-page': 'clickBtnPageSave'
@@ -406,6 +406,8 @@ jQuery(function() {
                 return this;
             }
         });
+
+        // cms.View.CmsBlockTestView = Backbone.View.extend({});
 
         cms.View.CmsBlockSearchView = Backbone.View.extend({
             template: _.template($('#tpl-cms-block-search').html()),
@@ -551,9 +553,9 @@ jQuery(function() {
                     _self.data[i] = $(this).val();
                 });
                 // console.log(this.data);
-                if(this.operation == 'translate'){
+                // if(this.operation == 'translate'){
 
-                }
+                // }
 
                 if(this.operation == 'magento'){
                     if(confirm('Are you sure update to magento?') == true){
@@ -654,7 +656,7 @@ jQuery(function() {
         //     }
         // });
 
-        cms.View.StoreCmsBlockView = Backbone.View.extend({
+        cms.View.CmsBlockView = Backbone.View.extend({
             template: _.template($('#tpl-store-cms-block').html()),
             events: {
                 'click .btn-save-block': 'clickBtnBlockSave'
@@ -781,13 +783,13 @@ jQuery(function() {
                 //     _cmsEvents: _cmsEvents
                 // });
 
-                var storepageView = new cms.View.StoreCmsPageView({
+                var cmspageView = new cms.View.CmsPageView({
                     el: '.block-store-cms-page',
                     cmsModel: this.cmsModel,
                     _cmsEvents: _cmsEvents
                 });
 
-                var storeblockView = new cms.View.StoreCmsBlockView({
+                var cmsblockView = new cms.View.CmsBlockView({
                     el: '.block-store-cms-block',
                     cmsModel: this.cmsModel,
                     _cmsEvents: _cmsEvents
@@ -816,7 +818,7 @@ jQuery(function() {
                         //     storepagelistView.setStorePageList(data).render();
                         //     break;
                         case 'storePage':
-                            storepageView.setStorePage(data).render();
+                            cmspageView.setStorePage(data).render();
                             break;
                         case 'cmsPages':
                             pagelistView.setCmsPageSerach(data).render();
@@ -826,7 +828,7 @@ jQuery(function() {
                         //     storeblocklistView.setStoreBlockList(data).render();
                         //     break;
                         case 'storeBlock':
-                            storeblockView.setStoreBlock(data).render();
+                            cmsblockView.setStoreBlock(data).render();
                             break;
                         case 'cmsBlocks':
                             blocklistView.setCmsBlockSerach(data).render();

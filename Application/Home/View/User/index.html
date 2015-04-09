@@ -7,6 +7,14 @@
         <div class="container-fluid page-width">
             <h1>User Center</h1>
             <div class="block block-user-sidebar" style="width:20%;float:left;">
+                <ul>
+                    <li><a href="#personal">Personal Setting</a></li>
+                    <li><a href="#website">Website   Setting</a></li>
+                    <li><a href="#sync">Sync         Setting</a></li>
+                    <li><a href="#language">Language Setting</a></li>
+                    <li><a href="#user">User         Setting</a></li>
+                    <li><a href="#role">Role         Setting</a></li>
+                </ul>
             </div>
             <div class="block block-user-content" style="width:80%;float:left;">
                 <div class="block block-personal-setting"></div>
@@ -47,7 +55,7 @@
 </block>
 
 <block name="template-user-setting">
-    <include file="Template/user/tpl-personal-sidebar" />
+    <!-- <include file="Template/user/tpl-personal-sidebar" /> -->
 
     <include file="Template/user/tpl-website-setting" />
 
@@ -65,6 +73,7 @@
     <include file="Template/user/tpl-user-info" />
 
     <include file="Template/user/tpl-user-list" />
+
 
     <include file="Template/user/tpl-role-search" />
 

@@ -13,9 +13,9 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#"><%= website.domain %></a></td>
-                    <td><a href="#"><%= website.rest_user %></a></td>
-                    <td><a href="#"><%= website.rest_password %></a></td>
+                    <td><%= website.domain %></td>
+                    <td><%= website.rest_user %></td>
+                    <td><%= website.rest_password %></td>
                     <td><% if(website.communication_status == 1){ %><span style="color:green;">Communication Success</span><% }else{ %><span style="color:red;">Communication Failure</span><% } %></td>
                 </tr>
             </tbody>

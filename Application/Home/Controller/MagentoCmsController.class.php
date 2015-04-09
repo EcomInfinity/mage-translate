@@ -113,33 +113,44 @@ class MagentoCmsController extends BaseController {
 
     public function saveStorePage(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_page_translate = D('cms_translate')->find($_params['cms_id']);
-        $_page_content = json_decode($_page_translate['content'], true);
-        $_page_content['content'] = $_params['content'];
-        // $_page_content['meta_keywords'] = $_params['meta_keywords'];
-        // $_page_content['meta_description'] = $_params['meta_description'];
-        $_page_save['content'] = json_encode($_page_content);
-        $_page_save['title'] = $_params['title'];
-        $_page_save['id'] = $_params['cms_id'];
-        $_result = D('cms_translate')->save($_page_save);
-        if($_result > 0){
+        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content'])){
             $this->ajaxReturn(
                     array(
-                        'success' => true,
-                        'message' => '',
+                        'success' => false,
+                        'message' => 'Title and Content not all spaces or empty.',
                         'data' => array(),
                     ),
                     'json'
                 );
         }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => 'Modify failure.',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
+            $_page_translate = D('cms_translate')->find($_params['cms_id']);
+            $_page_content = json_decode($_page_translate['content'], true);
+            $_page_content['content'] = $_params['content'];
+            // $_page_content['meta_keywords'] = $_params['meta_keywords'];
+            // $_page_content['meta_description'] = $_params['meta_description'];
+            $_page_save['content'] = json_encode($_page_content);
+            $_page_save['title'] = $_params['title'];
+            $_page_save['id'] = $_params['cms_id'];
+            $_result = D('cms_translate')->save($_page_save);
+            if($_result > 0){
+                $this->ajaxReturn(
+                        array(
+                            'success' => true,
+                            'message' => '',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }else{
+                $this->ajaxReturn(
+                        array(
+                            'success' => false,
+                            'message' => 'Modify failure.',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }
         }
     }
 
@@ -251,34 +262,49 @@ class MagentoCmsController extends BaseController {
 
     public function saveStoreBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        // $_block_translate = D('cms_translate')->find($_params['cms_id']);
-        // $_block_content = json_decode($_block_translate['content'], true);
-        // $_block_content['content'] = $_params['content'];
-        $_block_save['content'] = $_params['content'];
-        $_block_save['title'] = $_params['title'];
-        $_block_save['id'] = $_params['cms_id'];
-        $_result = D('cms_translate')->save($_block_save);
-        if($_result > 0){
+        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content'])){
             $this->ajaxReturn(
                     array(
-                        'success' => true,
-                        'message' => '',
-                        'data' => array(),
-                    ),
+                            'success' => false,
+                            'message' => 'Title and Content not all spaces or empty.',
+                            'data' => array()
+                        ),
                     'json'
                 );
         }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => 'Modify failure.',
-                        'data' => array(),
-                    ),
-                    'json'
-                );
+            $_block_save['content'] = $_params['content'];
+            $_block_save['title'] = $_params['title'];
+            $_block_save['id'] = $_params['cms_id'];
+            $_result = D('cms_translate')->save($_block_save);
+            if($_result > 0){
+                $this->ajaxReturn(
+                        array(
+                            'success' => true,
+                            'message' => '',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }else{
+                $this->ajaxReturn(
+                        array(
+                            'success' => false,
+                            'message' => 'Modify failure.',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
+            }
         }
     }
     public function test(){
+        // var_dump(session('soap'));
+        // $_test = '             s';
+        // if(preg_match('/.*[^ ].*/', $_test) == 0){
+        //     echo '0';
+        // }else{
+        //     echo '1';
+        // }
         // $_cms_save['title'] = '仁光堂 Ren Guang Do-uyuuyuyuy';
         // $_result = magentoApiSync(
         //         session('soap'),
