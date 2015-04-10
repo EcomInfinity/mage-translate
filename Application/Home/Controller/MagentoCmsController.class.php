@@ -113,7 +113,7 @@ class MagentoCmsController extends BaseController {
 
     public function saveStorePage(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content'])){
+        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content']) == 0){
             $this->ajaxReturn(
                     array(
                         'success' => false,
@@ -262,7 +262,7 @@ class MagentoCmsController extends BaseController {
 
     public function saveStoreBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content'])){
+        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content']) == 0){
             $this->ajaxReturn(
                     array(
                             'success' => false,
@@ -297,7 +297,46 @@ class MagentoCmsController extends BaseController {
             }
         }
     }
+
+    public function cmsExport(){
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_cms_result = D('cms_translate')->find($_params['cms_id']);
+        if($_cms_result['type'] == 1){
+            $_content = json_decode($_cms_result['content'], true);
+            S('data', $_content['content']);
+        }else{
+            S('data', $_cms_result['content']);
+        }
+        S('file_name',$_cms_result['store_view'].'-'.$_cms_result['identifier'].'-'.time());
+        $this->ajaxReturn(
+                array(
+                    'success' => true,
+                    'message' => '',
+                    'data' => array(),
+                ),
+                'json'
+        );
+    }
+    public function download(){
+        exportTxt(S('data'), S('file_name'));
+        S('data', null);
+        S('file_name', null);
+    }
+
+    public function cmsExportZip(){
+        $zip =new \ZipArchive;
+        var_dump($zip);
+        if ($zip -> open('./Uploads/csv/test.zip', \ZipArchive::CREATE) === TRUE) {
+            $zip->addFile('./Uploads/csv/csv_552799a323c90.csv');
+            var_dump($zip);
+            $zip -> close();
+            echo '<a href="http://localhost/redesign/Uploads/csv/test.zip">test</a>';
+        } else {
+            echo 'failed'; 
+        }
+    }
     public function test(){
+        // exportTxt();
         // var_dump(session('soap'));
         // $_test = '             s';
         // if(preg_match('/.*[^ ].*/', $_test) == 0){

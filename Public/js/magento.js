@@ -43,15 +43,19 @@ jQuery(function() {
             },
 
             pageRender: function(){
-                $('.cms-page-view').show();
-                $('.cms-block-view').hide();
+                $('.block-cms-sidebar ul li').removeClass('menu-selection');
+                $('.block-cms-sidebar ul li:eq(0)').addClass('menu-selection');
                 this._cmsEvents.trigger('refresh', 'page-view');
+                $('.block-cms-page').show();
+                $('.block-cms-block').hide();
                 // console.log('page');
             },
             blockRender: function(){
-                $('.cms-block-view').show();
-                $('.cms-page-view').hide();
+                $('.block-cms-sidebar ul li').removeClass('menu-selection');
+                $('.block-cms-sidebar ul li:eq(1)').addClass('menu-selection');
                 this._cmsEvents.trigger('refresh', 'block-view');
+                $('.block-cms-block').show();
+                $('.block-cms-page').hide();
                 // console.log('block');
             }
         });
@@ -138,7 +142,8 @@ jQuery(function() {
                 'click .btn-edit-page': 'storePage',
                 'click .btn-page-translate': 'syncToTranslate',
                 'click .btn-page-magento': 'syncToMagento',
-                'change .batch-app': 'appPage'
+                'change .batch-app': 'appPage',
+                'click .btn-export-txt': 'exportContent'
             },
             storePage: function (event){
                 var cms_id = $(event.target).closest('tr').data("id");
@@ -263,6 +268,19 @@ jQuery(function() {
                         $(event.target).find('option')[0].selected = true;
                     }
                 }
+            },
+            exportContent: function (event){
+                var cms_id = $(event.target).closest('tr').data("id");
+                this.cmsModel.save(
+                    {cms_id: cms_id},
+                    {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
+                ).done(function (response){
+                    if(response.success === true){
+                        window.open(UrlApi('_app')+'/MagentoCms/download');
+                    }
+                });
+                this.cmsModel.clear();
+                return false;
             },
             setCmsPageSerach: function(data){
                 this.page_search = data.page_search;
@@ -467,7 +485,8 @@ jQuery(function() {
                 'click .btn-edit-block': 'storeBlock',
                 'click .btn-block-translate': 'syncToTranslate',
                 'click .btn-block-magento': 'syncToMagento',
-                'change .batch-app': 'appBlock'
+                'change .batch-app': 'appBlock',
+                'click .btn-export-txt': 'exportContent'
             },
             storeBlock: function (event){
                 var cms_id = $(event.target).closest('tr').data("id");
@@ -588,6 +607,19 @@ jQuery(function() {
                         $(event.target).find('option')[0].selected = true;
                     }
                 }
+            },
+            exportContent: function (event){
+                var cms_id = $(event.target).closest('tr').data("id");
+                this.cmsModel.save(
+                    {cms_id: cms_id},
+                    {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
+                ).done(function (response){
+                    if(response.success === true){
+                        window.open(UrlApi('_app')+'/MagentoCms/download');
+                    }
+                });
+                this.cmsModel.clear();
+                return false;
             },
             setCmsBlockSerach: function(data){
                 this.block_search = data.block_search;

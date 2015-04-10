@@ -10,7 +10,7 @@ return array(
         array('langimport', 'Translation/import'),
         array('langadd', 'Translation/add'),
         array('langdel', 'Translation/del'),
-        array('langinfo', 'Translation/get'),
+        array('langinfo', 'Translation/load'),
         array('langedit', 'Translation/edit'),
         array('langdownload', 'Translation/download'),
         array('langsdel', 'Translation/dels'),
@@ -26,7 +26,7 @@ return array(
         array('logout', 'Admin/logout'),
         
         array('useradd', 'User/add'),
-        array('userinfo', 'User/get'),
+        array('userinfo', 'User/load'),
         array('userlist', 'User/gets'),
         array('useredit', 'User/edit'),
         array('personal-setting', 'User/personalSetting'),

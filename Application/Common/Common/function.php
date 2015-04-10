@@ -24,6 +24,17 @@ function exportexcel($data=array(),$filename='report'){
     }
 }
 
+function exportTxt($_data,$_filename='report'){
+    header("Content-type:application/octet-stream");
+    header("Accept-Ranges:bytes");
+    header("Content-type:application/txt");
+    //header("Content-type:application/vnd.ms-excel");  
+    header("Content-Disposition:attachment;filename=".$_filename.".txt");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo $_data;
+}
+
 function getPurviewJson($purNum){
     $rule_model = M('rule');
     $count = $rule_model->count();

@@ -3,46 +3,38 @@
     <!-- <load href="__PUBLIC__/js/translate.js" /> -->
     <load href="__PUBLIC__/js/magento.js" />
 </block>
-<block name="main-cms-page">
+<block name="main-cms">
     <main>
         <div class="container-fluid page-width">
-            <h1>Happy Translating! - Page</php></h1>
-            <div class="block block-user-sidebar" style="width: 20%;float:left;">
+            <h1>Happy Translating! - Cms</php></h1>
+            <div class="block block-sidebar block-cms-sidebar">
                 <ul>
-                    <li><a href="#page">Page</a></li>
-                    <li><a href="#block">Block</a></li>
+                    <li class="menu-selection"><a href="#page">Page List</a></li>
+                    <li><a href="#block">Block List</a></li>
                 </ul>
             </div>
-            <div class="content" style="width: 80%;float:left;">
-                <div class="search-box search-cms-page"  type-list="cms_page"></div>
-                <div class="search-box search-store-page"></div>
-                <div class="block block-cms-page-list"></div>
-                <div class="block block-store-cms-page-list"></div>
-                <div class="block cms block-store-cms-page" style="width: 960px;"></div>
+            <div class="block block-content block-cms-content">
+                <div class="block block-cms-page">
+                    <div class="search-box search-cms-page"  type-list="cms_page"></div>
+                    <div class="search-box search-store-page"></div>
+                    <div class="block block-cms-page-list"></div>
+                    <div class="block block-store-cms-page-list"></div>
+                    <div class="block cms block-store-cms-page" style="width: 960px;"></div>
+                </div>
+
+                <div class="block block-cms-block">
+                    <div class="search-box search-cms-block"  type-list="cms_page"></div>
+                    <div class="block block-cms-block-list"></div>
+                    <div class="block block-store-cms-block-list"></div>
+                    <div class="block cms block-store-cms-block" style="width: 960px;"></div>
+                </div>
+
             </div>
         </div>
     </main>
 </block>
-<block name="main-cms-block">
-    <main>
-        <div class="container-fluid page-width">
-            <h1>Happy Translating! - Block</h1>
-            <div class="block block-user-sidebar" style="width: 20%;float:left;">
-                <ul>
-                    <li><a href="#page">Page</a></li>
-                    <li><a href="#block">Block</a></li>
-                </ul>
-            </div>
-            <div class="content" style="width: 80%;float:left;">
-                <div class="search-box search-cms-block"  type-list="cms_page"></div>
-                <div class="block block-cms-block-list"></div>
-                <div class="block block-store-cms-block-list"></div>
-                <div class="block cms block-store-cms-block" style="width: 960px;"></div>
-            </div>
-        </div>
-    </main>
-</block>
-<block name="template-cms-block">
+
+<block name="template-cms">
     <include file="Template/cms/tpl-cms-block-search" />
 
     <include file="Template/cms/tpl-cms-block-list" />
@@ -50,8 +42,8 @@
     <include file="Template/cms/tpl-store-cms-block-list" />
 
     <include file="Template/cms/tpl-store-cms-block" />
-</block>
-<block name="template-cms-page">
+
+
     <include file="Template/cms/tpl-cms-page-search" />
 
     <include file="Template/cms/tpl-cms-page-list" />

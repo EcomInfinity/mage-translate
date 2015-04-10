@@ -135,7 +135,7 @@ class UserController extends UserPermissionController {
         );
     }
 
-    public function get(){
+    public function load(){
         $_params = json_decode(file_get_contents("php://input"), true);
         $_rolelist = D('role')->gets(
                         array('website_id' => session('website_id'))
