@@ -17,17 +17,17 @@
         {
             var patternRegex = new RegExp( "^" + pattern.replace("^\^|\$$") + "$", "g" );
 
-            hasError = !$(event.target).val().match( patternRegex );
+            hasError = !$(event.target).val().replace(/\r|\n/ig,"").match( patternRegex );
 
             if ( hasError )
             {
-                // console.log('1');
+                console.log('1');
                 $(event.target).closest('div').find('div').addClass('has-error-textarea');
                 $(event.target).closest('div').find('div').html('<ul class="list-unstyled"><li>'+errorMessage+'</li></ul>');
             }
             else
             {
-                // console.log('2');
+                console.log('2');
                 $(event.target).closest('div').find('div').html('');
                 $(event.target).closest('div').find('div').removeClass('has-error-textarea');
             }

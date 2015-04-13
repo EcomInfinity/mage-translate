@@ -227,16 +227,42 @@ jQuery(function() {
                 this.data = {};
                 this.operation = $(event.target).val();
                 // console.log(this.operation);
-                if($('input:checked').length < 1){
+                if($('.block-cms-page-list tbody input:checked').length < 1){
                     return;
                 }
-                $('input:checked').each(function (i){
+                $('.block-cms-page-list tbody input:checked').each(function (i){
                     _self.data[i] = $(this).val();
                 });
                 // console.log(this.data);
-                // if(this.operation == 'translate'){
-
-                // }
+                if(this.operation == 'download'){
+                    console.log(this.data);
+                    this.cmsModel.save(
+                        {page_ids: this.data, type: 1},
+                        {url: UrlApi('_app')+"/MagentoCms/cmsExportZip"}
+                    ).done(function (response){
+                        if(response.success === true){
+                            _self.$el.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            window.open(UrlApi('_app')+'/MagentoCms/downloadZip');
+                            $(event.target).find('option')[0].selected = true;
+                            _self.render();
+                        }else{
+                            _self.$el.notify(
+                                'Failure',
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
+                    this.cmsModel.clear();
+                }
                 if(this.operation == 'magento'){
                     if(confirm('Are you sure update to magento?') == true){
                         this.cmsModel.save(
@@ -276,7 +302,7 @@ jQuery(function() {
                     {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
                 ).done(function (response){
                     if(response.success === true){
-                        window.open(UrlApi('_app')+'/MagentoCms/download');
+                        window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
                     }
                 });
                 this.cmsModel.clear();
@@ -564,17 +590,43 @@ jQuery(function() {
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
-                // console.log(this.operation);
-                if($('input:checked').length < 1){
+                // console.log($(event.target).parents('.block'));
+                if($('.block-cms-block-list tbody input:checked').length < 1){
                     return;
                 }
-                $('input:checked').each(function (i){
+                $('.block-cms-block-list tbody input:checked').each(function (i){
                     _self.data[i] = $(this).val();
                 });
                 // console.log(this.data);
-                // if(this.operation == 'translate'){
-
-                // }
+                if(this.operation == 'download'){
+                    console.log(this.data);
+                    this.cmsModel.save(
+                        {page_ids: this.data, type: 2},
+                        {url: UrlApi('_app')+"/MagentoCms/cmsExportZip"}
+                    ).done(function (response){
+                        if(response.success === true){
+                            _self.$el.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            window.open(UrlApi('_app')+'/MagentoCms/downloadZip');
+                            $(event.target).find('option')[0].selected = true;
+                            _self.render();
+                        }else{
+                            _self.$el.notify(
+                                'Failure',
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
+                    this.cmsModel.clear();
+                }
 
                 if(this.operation == 'magento'){
                     if(confirm('Are you sure update to magento?') == true){
@@ -615,7 +667,7 @@ jQuery(function() {
                     {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
                 ).done(function (response){
                     if(response.success === true){
-                        window.open(UrlApi('_app')+'/MagentoCms/download');
+                        window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
                     }
                 });
                 this.cmsModel.clear();

@@ -262,7 +262,7 @@ class UserController extends UserPermissionController {
                         'rest_password' => $_params['rest_password']
                     )
             );
-        if($_communication === true){
+        if($_communication !== true){
             $_save['id'] = session('website_id');
             // if(!empty($_params['domain'])){
                 $_save['domain'] = $_params['domain'];

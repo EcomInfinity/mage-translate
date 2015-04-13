@@ -456,10 +456,10 @@ jQuery(function() {
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
-                if($('input:checked').length < 1){
+                if($('tbody input:checked').length < 1){
                     return;
                 }
-                $('input:checked').each(function (i){
+                $('tbody input:checked').each(function (i){
                     _self.data[i] = $(this).val();
                 });
 

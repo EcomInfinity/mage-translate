@@ -317,23 +317,66 @@ class MagentoCmsController extends BaseController {
                 'json'
         );
     }
-    public function download(){
+    public function downloadTxt(){
         exportTxt(S('data'), S('file_name'));
         S('data', null);
         S('file_name', null);
     }
 
     public function cmsExportZip(){
-        $zip =new \ZipArchive;
-        var_dump($zip);
-        if ($zip -> open('./Uploads/csv/test.zip', \ZipArchive::CREATE) === TRUE) {
-            $zip->addFile('./Uploads/csv/csv_552799a323c90.csv');
-            var_dump($zip);
-            $zip -> close();
-            echo '<a href="http://localhost/redesign/Uploads/csv/test.zip">test</a>';
-        } else {
-            echo 'failed'; 
+        $_params = json_decode(file_get_contents("php://input"),true);
+        $_file_exit = false;
+        foreach ($_params['page_ids'] as $val) {
+            $_cms_result = D('cms_translate')->find($val);
+            if($_cms_result){
+                $_file_exit = true;
+                $_cms_store_view = iconv(mb_detect_encoding($_cms_result['store_view'], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "GBK" , $_cms_result['store_view']);
+                $_file_name = $_cms_store_view.'-'.$_cms_result['identifier'].'-'.time().'.txt';
+                $_file_path = './Uploads/cms/'.$_file_name;
+                $_file = fopen($_file_path, "w");
+                if($_params['type'] == 1){
+                    $_cms_content = json_decode($_cms_result['content'], true);
+                    $_txt_content = $_cms_content['content'];
+                }else{
+                    $_txt_content = $_cms_result['content'];
+                }
+                fwrite($_file, $_txt_content);
+                fclose($_file);
+                $_file_names[] = $_file_name;
+            }
         }
+        if($_params['type'] == 1){
+            $_zip_name = 'page'.'-'.time().'.zip';
+        }else{
+            $_zip_name = 'block'.'-'.time().'.zip';
+        }
+        if($_file_exit === true){
+            S('file_names', $_file_names);
+            S('zip_name', $_zip_name);
+            // exportZip($_file_names, $_zip_name);
+            $this->ajaxReturn(
+                    array(
+                        'success' => true,
+                        'message' => '',
+                        'data' => array(),
+                    ),
+                    'json'
+            );
+        }else {
+            $this->ajaxReturn(
+                    array(
+                        'success' => false,
+                        'message' => 'Download Failure.',
+                        'data' => array(),
+                    ),
+                    'json'
+            );
+        }
+    }
+    public function downloadZip(){
+        exportZip(S('file_names'), S('zip_name'));
+        S('file_names', null);
+        S('zip_name', null);
     }
     public function test(){
         // exportTxt();

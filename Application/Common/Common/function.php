@@ -2,16 +2,10 @@
 function exportexcel($data=array(),$filename='report'){
     header("Content-type:application/octet-stream");
     header("Accept-Ranges:bytes");
-    header("Content-type:application/csv");
-    //header("Content-type:application/vnd.ms-excel");  
+    header("Content-type:application/csv"); 
     header("Content-Disposition:attachment;filename=".$filename.".csv");
     header("Pragma: no-cache");
     header("Expires: 0");
-    //导出xls 开始
-    // if (!empty($title)){
-    //     $title= implode(",", $title);
-    //     echo "$title\n";
-    // }
     if (!empty($data)){
         foreach($data as $key=>$val){
             // foreach ($val as $ck => $cv) {
@@ -28,11 +22,24 @@ function exportTxt($_data,$_filename='report'){
     header("Content-type:application/octet-stream");
     header("Accept-Ranges:bytes");
     header("Content-type:application/txt");
-    //header("Content-type:application/vnd.ms-excel");  
     header("Content-Disposition:attachment;filename=".$_filename.".txt");
     header("Pragma: no-cache");
     header("Expires: 0");
     echo $_data;
+}
+
+function exportZip($_data, $_filename='report'){
+    $zip =new \ZipArchive;
+    if ($zip -> open('./Uploads/cms/'.$_filename, \ZipArchive::CREATE) === TRUE) {
+        foreach ($_data as $val) {
+            $zip->addFile('./Uploads/cms/'.$val);
+        }
+        $zip -> close();
+    }
+    $filename = './Uploads/cms/'.$_filename; //文件路径
+    header("Content-Type: application/force-download");
+    header("Content-Disposition: attachment; filename=".basename($_filename));
+    readfile($filename); 
 }
 
 function getPurviewJson($purNum){
@@ -76,7 +83,9 @@ function magentoApi($_website_api){
         // var_dump($e);
         return false;
     }
-    return true;
+    $_result['client'] = $_client;
+    $_result['session_id'] = $_sessionId;
+    return $_result;
 }
 //同步magento数据
 function magentoApiSync($_website_api, $_website_info_type, $_website_info_id){

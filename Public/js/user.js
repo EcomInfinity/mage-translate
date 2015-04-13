@@ -362,6 +362,7 @@ jQuery(function() {
                                 className: 'success'
                             }
                         );
+                        _self.render();
                     }else{
                         $form.notify(
                             response.message,
