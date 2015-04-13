@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ecominfinity_Translator>
+            <version>0.1.0</version>
+        </Ecominfinity_Translator>
+    </modules>
+    <global>
+        <models>
+            <translator>
+                <class>Ecominfinity_Translator_Model</class>
+            </translator> 
+            <cms_resource>
+                <rewrite>
+                    <page>Ecominfinity_Translator_Model_Resource_Cmspage</page>
+                </rewrite>
+            </cms_resource>
+        </models>
+        <helpers>
+            <translator>
+                <class>Ecominfinity_Translator_Helper</class>
+            </translator>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <translator>
+                <use>standard</use>
+                <args>
+                    <module>Ecominfinity_Translator</module>
+                    <frontName>translator</frontName>
+                </args>
+            </translator>
+        </routers>
+    </frontend>
+</config>

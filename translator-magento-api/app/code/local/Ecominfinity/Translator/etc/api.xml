@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<config>
+    <api>
+        <resources>
+            <translator_getwebinfo translate="title" module="translator">
+                <title>Translator API</title>
+                <model>translator/getwebinfo_api</model>
+                <acl>translator/getwebinfo</acl>
+                <methods>
+                    <list translate="title" module="translator">
+                        <title>Retrieve list of webinfo</title>
+                        <method>items</method>
+                        <acl>translator/getwebinfo/list</acl>
+                    </list>
+                    <info translate="title" module="translator">
+                        <title>Single Website Information</title>
+                        <acl>translator/getwebinfo/info</acl>
+                    </info>
+                    <storeViewList translate="title" module="translator">
+                        <title>All StoreView Informations</title>
+                        <acl>translator/getwebinfo/storeViewList</acl>
+                    </storeViewList>
+                    <storeViewInfo translate="title" module="translator">
+                        <title>Single StoreView Informations</title>
+                        <acl>translator/getwebinfo/storeViewInfo</acl>
+                    </storeViewInfo>
+                </methods>
+                <faults module="translator">
+                    <data_not_exists>
+                        <code>0</code>
+                        <message>Request store does not exist.</message>
+                    </data_not_exists>
+                    <data_invalid>
+                        <code>1</code>
+                        <message>Data Invalid.</message>
+                    </data_invalid>
+                </faults>
+            </translator_getwebinfo>
+
+            <translator_cmspage translate="title" module="translator">
+                <title>CMS Page API</title>
+                <model>translator/cmspage_api</model>
+                <acl>translator/cmspage</acl>
+                <methods>
+                    <list translate="title" module="translator">
+                        <title>Retrieve list of cmspage</title>
+                        <method>items</method>
+                        <acl>translator/cmspage/list</acl>
+                    </list>
+                    <info translate="title" module="translator">
+                        <title>Single CMS Page Information</title>
+                        <acl>translator/cmspage/info</acl>
+                    </info>
+                    <create translate="title" module="translator">
+                        <title>Create</title>
+                        <acl>translator/cmspage/create</acl>
+                    </create>
+                    <update translate="title" module="translator">
+                        <title>Update</title>
+                        <acl>translator/cmspage/update</acl>
+                    </update>
+                    <delete translate="title" module="translator">
+                        <title>Delete</title>
+                        <acl>translator/cmspage/delete</acl>
+                    </delete>
+                </methods>
+                <faults module="translator">
+                    <data_not_exists>
+                        <code>100</code>
+                        <message>Request CMS page does not exist.</message>
+                    </data_not_exists>
+                    <data_invalid>
+                        <code>101</code>
+                        <message>Data Invalid.</message>
+                    </data_invalid>
+                    <not_delete>
+                        <code>102</code>
+                        <message>CMS page not delete,Details in error message</message>
+                    </not_delete>
+                </faults>
+            </translator_cmspage>
+
+            <translator_cmsblock translate="title" module="translator">
+                <title>CMS Block API</title>
+                <model>translator/cmsblock_api</model>
+                <acl>translator/cmsblock</acl>
+                <methods>
+                    <list translate="title" module="translator">
+                        <title>Retrieve list of cmsblock</title>
+                        <method>items</method>
+                        <acl>translator/cmsblock/list</acl>
+                    </list>
+                    <info translate="title" module="translator">
+                        <title>Single cms Block Information</title>
+                        <acl>translator/cmsblock/info</acl>
+                    </info>
+                    <create translate="title" module="translator">
+                        <title>Create</title>
+                        <acl>translator/cmsblock/create</acl>
+                    </create>
+                    <update translate="title" module="translator">
+                        <title>Update</title>
+                        <acl>translator/cmsblock/update</acl>
+                    </update>
+                    <delete translate="title" module="translator">
+                        <title>Delete</title>
+                        <acl>translator/cmsblock/delete</acl>
+                    </delete>
+                </methods>
+                <faults module="translator">
+                    <data_not_exists>
+                        <code>100</code>
+                        <message>Request CMS block does not exist.</message>
+                    </data_not_exists>
+                    <data_invalid>
+                        <code>101</code>
+                        <message>Data Invalid.</message>
+                    </data_invalid>
+                    <not_delete>
+                        <code>102</code>
+                        <message>CMS block not delete,Details in error message</message>
+                    </not_delete>
+                </faults>
+            </translator_cmsblock>
+        </resources>
+       <resources_alias>
+            <getwebinfo>translator_getwebinfo</getwebinfo>
+            <cmspage>translator_cmspage</cmspage>
+            <cmsblock>translator_cmsblock</cmsblock>
+        </resources_alias>
+        <v2>
+            <resources_function_prefix>
+                <getwebinfo>translatorGetwebinfo</getwebinfo>
+                <cmspage>translatorCmspage</cmspage>
+                <cmsblock>translatorCmsblock</cmsblock>
+            </resources_function_prefix>
+        </v2>
+        <acl>
+            <resources>
+                <translator translate="title" module="translator">
+                 <title>Translator Api</title>
+                 <sort_order>100</sort_order>
+                    <getwebinfo translate="title" module="translator">
+                        <title>Get web Information</title>
+                        <list translate="title" module="translator">
+                            <title>Retrieve Web Information</title>
+                        </list>
+                        <info translate="title" module="translator">
+                            <title>Retrieve Single Web Information</title>
+                        </info>
+                        <storeviewlist translate="title" module="translator">
+                            <title>Retrieve All StoreView Informations</title>
+                        </storeviewlist>
+                        <storeviewinfo translate="title" module="translator">
+                            <title>Retrieve Single StoreView Information</title>
+                        </storeviewinfo>
+                    </getwebinfo>
+
+                    <cmspage translate="title" module="translator">
+                        <title>CMS Page</title>
+                        <list translate="title" module="translator">
+                            <title>Retrieve All CMS Page Information</title>
+                        </list>
+                        <info translate="title" module="translator">
+                            <title>Retrieve Single CMS Page Information</title>
+                        </info>
+                        <create translate="title" module="translator">
+                            <title>Create</title>
+                        </create>
+                        <update translate="title" module="translator">
+                            <title>Update</title>
+                        </update>
+                        <delete translate="title" module="translator">
+                            <title>Delete</title>
+                        </delete>
+                    </cmspage>
+
+                    <cmsblock translate="title" module="translator">
+                        <title>CMS Block</title>
+                        <list translate="title" module="translator">
+                            <title>Retrieve All CMS Block Information</title>
+                        </list>
+                        <info translate="title" module="translator">
+                            <title>Retrieve Single CMS Block Information</title>
+                        </info>
+                        <create translate="title" module="translator">
+                            <title>Create</title>
+                        </create>
+                        <update translate="title" module="translator">
+                            <title>Update</title>
+                        </update>
+                        <delete translate="title" module="translator">
+                            <title>Delete</title>
+                        </delete>
+                    </cmsblock>
+                </translator>
+            </resources>
+        </acl>
+    </api>
+</config>

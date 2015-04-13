@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:typens="urn:{{var wsdl.name}}"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
+            <import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+                    schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+			<complexType name="translatorCmspageInfoEntity">
+                <all>
+					<element name="page_id" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_keywords" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_description" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="content_heading" type="xsd:string" minOccurs="0"/>
+                    <element name="creation_time" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="update_time" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="store_id" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_from" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_to" type="xsd:string" minOccurs="0"/>
+                    <element name="created_at" type="xsd:string" minOccurs="0"/>
+                    <element name="updated_at" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmspageListEntity">
+                <all>
+                    <element name="page_id" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_keywords" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_description" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="content_heading" type="xsd:string" minOccurs="0"/>
+                    <element name="creation_time" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="update_time" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="store_id" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_from" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_to" type="xsd:string" minOccurs="0"/>
+                    <element name="created_at" type="xsd:string" minOccurs="0"/>
+                    <element name="updated_at" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmspageListEntityArray">
+            <complexContent>
+                <restriction base="soapenc:Array">
+                    <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:translatorCmspageListEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType> 
+            <complexType name="translatorCmspageCreateEntity">
+                <all>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_keywords" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_description" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="content_heading" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="store_id" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_from" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_to" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmspageUpdateEntity">
+                <all>
+                    <element name="page_id" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_keywords" type="xsd:string" minOccurs="0"/>
+                    <element name="meta_description" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="content_heading" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="store_id" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_root_template" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_layout_update_xml" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_from" type="xsd:string" minOccurs="0"/>
+                    <element name="custom_theme_to" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmsblockInfoEntity">
+                <all>
+                    <element name="block_id" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="creation_time" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="update_time" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="stores" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="created_at" type="xsd:string" minOccurs="0"/>
+                    <element name="updated_at" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmsblockListEntity">
+                <all>
+                     <element name="block_id" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="creation_time" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="update_time" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="stores" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="created_at" type="xsd:string" minOccurs="0"/>
+                    <element name="updated_at" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmsblockListEntityArray">
+            <complexContent>
+                <restriction base="soapenc:Array">
+                    <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:translatorCmsblockListEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType> 
+            <complexType name="translatorCmsblockCreateEntity">
+                <all>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="stores" type="typens:ArrayOfString" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorCmsblockUpdateEntity">
+                <all>
+                    <element name="block_id" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="identifier" type="xsd:string" minOccurs="0"/>
+                    <element name="content" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="stores" type="typens:ArrayOfString" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorGetwebinfoInfoEntity">
+                <all>
+                    <element name="website_id" type="xsd:string" minOccurs="0"/>
+                    <element name="website_name" type="xsd:string" minOccurs="0"/>
+                    <element name="website_code" type="xsd:string" minOccurs="0"/>
+                    <element name="stores" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="store_id" type="xsd:string" minOccurs="0"/>
+                    <element name="store_name" type="xsd:string" minOccurs="0"/>
+                    <element name="store_views" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="store_view_id" type="typens:ArrayOfString" minOccurs="0"/>
+                    <element name="store_view_name" type="xsd:string" minOccurs="0"/>
+                    <element name="store_view_code" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorGetwebinfoStoreViewListEntity">
+                <all>
+                    <element name="store_id" type="xsd:string" minOccurs="0"/>
+                    <element name="code" type="xsd:string" minOccurs="0"/>
+                    <element name="website_id" type="xsd:string" minOccurs="0"/>
+                    <element name="group_id" type="xsd:string" minOccurs="0"/>
+                    <element name="name" type="xsd:string" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="store_view_language" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+            <complexType name="translatorGetwebinfoStoreViewListEntityArray">
+            <complexContent>
+                <restriction base="soapenc:Array">
+                    <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:translatorGetwebinfoStoreViewListEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType> 
+            <complexType name="translatorGetwebinfoStoreViewInfoEntity">
+                <all>
+                    <element name="store_id" type="xsd:string" minOccurs="0"/>
+                    <element name="code" type="xsd:string" minOccurs="0"/>
+                    <element name="website_id" type="xsd:string" minOccurs="0"/>
+                    <element name="group_id" type="xsd:string" minOccurs="0"/>
+                    <element name="name" type="xsd:string" minOccurs="0"/>
+                    <element name="sort_order" type="xsd:string" minOccurs="0"/>
+                    <element name="is_active" type="xsd:string" minOccurs="0"/>
+                    <element name="store_view_language" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+        </schema>
+    </types>
+	<message name="translatorCmspageInfoRequest">
+        <part name="sessionId" type="xsd:string"/>
+		<part name="page_id" type="xsd:string" />
+    </message>
+    <message name="translatorCmspageInfoResponse">
+        <part name="result" type="typens:translatorCmspageInfoEntity"/>
+    </message>
+    <message name="translatorCmspageListRequest">
+        <part name="sessionId" type="xsd:string"/>
+    </message>
+    <message name="translatorCmspageListResponse">
+        <part name="result" type="typens:translatorCmspageListEntityArray"/>
+    </message>
+    <message name="translatorCmspageCreateRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="pageData" type="typens:translatorCmspageCreateEntity"/>
+    </message>
+    <message name="translatorCmspageCreateResponse">
+        <part name="result" type="xsd:int"/>
+    </message>
+    <message name="translatorCmspageUpdateRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="page_id" type="xsd:string"/>
+        <part name="pageData" type="typens:translatorCmspageUpdateEntity"/>
+    </message>
+    <message name="translatorCmspageUpdateResponse">
+        <part name="result" type="xsd:boolean"/>
+    </message>
+    <message name="translatorCmspageDeleteRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="page_id" type="xsd:string"/>
+    </message>
+    <message name="translatorCmspageDeleteResponse">
+        <part name="result" type="xsd:boolean"/>
+    </message>
+    <message name="translatorCmsblockInfoRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="block_id" type="xsd:string"/>
+    </message>
+    <message name="translatorCmsblockInfoResponse">
+        <part name="result" type="typens:translatorCmsblockInfoEntity"/>
+    </message>
+    <message name="translatorCmsblockListRequest">
+        <part name="sessionId" type="xsd:string"/>
+    </message>
+    <message name="translatorCmsblockListResponse">
+        <part name="result" type="typens:translatorCmsblockListEntityArray"/>
+    </message>
+    <message name="translatorCmsblockCreateRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="blockData" type="typens:translatorCmsblockCreateEntity"/>
+    </message>
+    <message name="translatorCmsblockCreateResponse">
+        <part name="result" type="xsd:int"/>
+    </message>
+    <message name="translatorCmsblockUpdateRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="block_id" type="xsd:string"/>
+        <part name="blockData" type="typens:translatorCmsblockUpdateEntity"/>
+    </message>
+    <message name="translatorCmsblockUpdateResponse">
+        <part name="result" type="xsd:boolean"/>
+    </message>
+    <message name="translatorCmsblockDeleteRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="block_id" type="xsd:string"/>
+    </message>
+    <message name="translatorCmsblockDeleteResponse">
+        <part name="result" type="xsd:boolean"/>
+    </message>
+    <message name="translatorGetwebinfoStoreViewListRequest">
+        <part name="sessionId" type="xsd:string"/>
+    </message>
+    <message name="translatorGetwebinfoStoreViewListResponse">
+        <part name="result" type="typens:translatorGetwebinfoStoreViewListEntityArray"/>
+    </message>
+    <message name="translatorGetwebinfoStoreViewInfoRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="store_id" type="xsd:string"/>
+    </message>
+    <message name="translatorGetwebinfoStoreViewInfoResponse">
+        <part name="result" type="typens:translatorGetwebinfoStoreViewInfoEntity"/>
+    </message>
+    <portType name="{{var wsdl.handler}}PortType">
+		<operation name="translatorCmspageInfo">
+            <documentation>cms page information</documentation>
+            <input message="typens:translatorCmspageInfoRequest" />
+            <output message="typens:translatorCmspageInfoResponse" />
+        </operation>
+        <operation name="translatorCmspageList">
+            <documentation>cms page information</documentation>
+            <input message="typens:translatorCmspageListRequest" />
+            <output message="typens:translatorCmspageListResponse" />
+        </operation>
+        <operation name="translatorCmspageCreate">
+            <documentation>Create CMS Page</documentation>
+            <input message="typens:translatorCmspageCreateRequest" />
+            <output message="typens:translatorCmspageCreateResponse" />
+        </operation>
+        <operation name="translatorCmspageUpdate">
+            <documentation>Update CMS Page</documentation>
+            <input message="typens:translatorCmspageUpdateRequest" />
+            <output message="typens:translatorCmspageUpdateResponse" />
+        </operation>
+        <operation name="translatorCmspageDelete">
+            <documentation>Delete CMS Page</documentation>
+            <input message="typens:translatorCmspageDeleteRequest" />
+            <output message="typens:translatorCmspageDeleteResponse" />
+        </operation>
+        <operation name="translatorCmsblockInfo">
+            <documentation>Cms Block Information</documentation>
+            <input message="typens:translatorCmsblockInfoRequest" />
+            <output message="typens:translatorCmsblockInfoResponse" />
+        </operation>
+        <operation name="translatorCmsblockList">
+            <documentation>List of Cms Block</documentation>
+            <input message="typens:translatorCmsblockListRequest" />
+            <output message="typens:translatorCmsblockListResponse" />
+        </operation>
+        <operation name="translatorCmsblockCreate">
+            <documentation>Create Cms Block</documentation>
+            <input message="typens:translatorCmsblockCreateRequest" />
+            <output message="typens:translatorCmsblockCreateResponse" />
+        </operation>
+        <operation name="translatorCmsblockUpdate">
+            <documentation>Update Cms Block</documentation>
+            <input message="typens:translatorCmsblockUpdateRequest" />
+            <output message="typens:translatorCmsblockUpdateResponse" />
+        </operation>
+        <operation name="translatorCmsblockDelete">
+            <documentation>Delete Cms Block</documentation>
+            <input message="typens:translatorCmsblockDeleteRequest" />
+            <output message="typens:translatorCmsblockDeleteResponse" />
+        </operation>
+        <operation name="translatorGetwebinfoStoreViewList">
+            <documentation>Retrieve WEB information </documentation>
+            <input message="typens:translatorGetwebinfoStoreViewListRequest" />
+            <output message="typens:translatorGetwebinfoStoreViewListResponse" />
+        </operation>
+        <operation name="translatorGetwebinfoStoreViewInfo">
+            <documentation>Retrieve Single WEB information </documentation>
+            <input message="typens:translatorGetwebinfoStoreViewInfoRequest" />
+            <output message="typens:translatorGetwebinfoStoreViewInfoResponse" />
+        </operation>
+    </portType>
+
+    <binding name="{{var wsdl.handler}}Binding" type="typens:{{var wsdl.handler}}PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="translatorCmspageInfo">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmspageList">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmspageCreate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmspageUpdate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmspageDelete">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmsblockInfo">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmsblockList">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmsblockCreate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmsblockUpdate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorCmsblockDelete">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorGetwebinfoStoreViewList">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="translatorGetwebinfoStoreViewInfo">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}"
+                           use="encoded"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+    </binding>
+    <service name="{{var wsdl.name}}Service">
+        <port name="{{var wsdl.handler}}Port" binding="typens:{{var wsdl.handler}}Binding">
+            <soap:address location="{{var wsdl.url}}" />
+        </port>
+    </service>
+</definitions> 
