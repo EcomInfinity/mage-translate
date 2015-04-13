@@ -585,49 +585,42 @@ class MagentoApiController extends BaseController {
     //             );
     //     }
     // }
-    public function test(){
-        // $_cms_save['title'] = 'test13233';
-        // $_result = magentoApiSync(
-        //         session('soap'),
-        //         'info_cmspage.update',
-        //         array('166', $_cms_save)
-        //     );
-        // var_dump($_result);
-        // $_page_translate_result = D('cms_translate')->where(array('website_id' => session('website_id'), 'type' => 1))->relation(true)->select();
-        // foreach ($_page_translate_result as $k => $_page) {
-        //     # code...
-        //     $_cms_page_identifier[] = $_page['identifier'];
-        //     $_page_content = json_decode($_page['content'], true);
-        //     $_page_translate_result[$k]['content'] = $_page_content['content'];
-        //     $_page_translate_result[$k]['meta_keywords'] = $_page_content['meta_keywords'];
-        //     $_page_translate_result[$k]['meta_description'] = $_page_content['meta_description'];
-        // }
-        // $_cms_page_identifier = array_unique($_cms_page_identifier);
-        // foreach ($_cms_page_identifier as $_identifier) {
-        //     # code...
-        //     foreach ($_page_translate_result as $k => $_page) {
-        //         # code...
-        //         if($_page['identifier'] == $_identifier){
-        //             $_cms_page[$_identifier][] = $_page;
-        //         }
-        //     }
-        // }
-        // foreach ($_cms_page_identifier as $_identifier) {
-        //     # code...
-        //     foreach ($_page_translate_result as $k => $_page) {
-        //         # code...
-        //         if($_page['identifier'] == $_identifier && strtolower($_page['simple_name']) == 'en_us'){
-        //             $_cms_page_kind[$_identifier] = $_page['title'];
-        //             break;
-        //         }
-        //     }
-        // }
-        // foreach ($_cms_page_kind as $k => $val) {
-        //     # code...
-        //     echo $val.'/'.$k.'<br/>';
-        // }
-        // var_dump($_cms_page_kind);
-        // var_dump($_cms_page_identifier);
-        // var_dump($_cms_page);
+    public function testPage(){
+        $_cms_page_result = magentoApiSync(
+                session('soap'),
+                'info_cmspage.list',
+                array()
+            );
+        $_cms_page_result = json_decode($_cms_page_result, true);
+        var_dump($_cms_page_result);
+    }
+    public function testBlock(){
+        $_cms_block_result = magentoApiSync(
+                session('soap'),
+                'info_cmsblock.list',
+                array()
+            );
+        $_cms_block_result = json_decode($_cms_block_result, true);
+        var_dump($_cms_block_result);
+    }
+
+    public function testStore(){
+        $_store_view_result = magentoApiSync(
+                session('soap'),
+                'info_getwebinfo.storeViewList',
+                array()
+            );
+        $_store_view_result = json_decode($_store_view_result, true);
+        var_dump($_store_view_result);
+    }
+
+    public function testWeb(){
+        $_web_view_result = magentoApiSync(
+                session('soap'),
+                'info_getwebinfo.list',
+                array()
+            );
+        $_web_view_result = json_decode($_web_view_result, true);
+        var_dump($_web_view_result);
     }
 }
