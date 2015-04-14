@@ -1,0 +1,12 @@
+<div class="page-title">
+<h1>Abonnieren Sie unseren Newsletter und profitieren Sie von den folgenden Vorteilen:</h1>
+</div>
+<ul class="benefits">
+<li>Erfahren Sie von Angeboten und Aktionen als Erstes</li>
+<li>Erhalten Sie 10% Rabatt auf Ihre erste Bestellung als exklusives Willkommensgeschenk</li>
+<li>Bleiben Sie immer über die neusten Nachrichten informiert</li>
+</ul>
+
+<div class="cms-box cms-content">
+{{block type="core/template" template="page/subscriber.phtml"}}
+</div>
