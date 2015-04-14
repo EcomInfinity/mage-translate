@@ -307,7 +307,7 @@ class MagentoCmsController extends BaseController {
         }else{
             S('data', $_cms_result['content']);
         }
-        S('file_name',$_cms_result['store_view'].'-'.$_cms_result['identifier'].'-'.time());
+        S('file_name',str_replace(" ", "", $_cms_result['store_view']).'-'.str_replace(" ","", $_cms_result['identifier']).'-'.time());
         $this->ajaxReturn(
                 array(
                     'success' => true,
@@ -331,7 +331,7 @@ class MagentoCmsController extends BaseController {
             if($_cms_result){
                 $_file_exit = true;
                 $_cms_store_view = iconv(mb_detect_encoding($_cms_result['store_view'], array('ASCII','UTF-8','GB2312','GBK','BIG5')), "GBK" , $_cms_result['store_view']);
-                $_file_name = $_cms_store_view.'-'.$_cms_result['identifier'].'-'.time().'.txt';
+                $_file_name = str_replace(" ", "", $_cms_store_view).'-'.str_replace(" ", "", $_cms_result['identifier']).'-'.time().'.txt';
                 $_file_path = './Uploads/cms/'.$_file_name;
                 $_file = fopen($_file_path, "w");
                 if($_params['type'] == 1){
