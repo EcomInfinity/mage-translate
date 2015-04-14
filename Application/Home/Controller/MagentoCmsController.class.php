@@ -113,7 +113,7 @@ class MagentoCmsController extends BaseController {
 
     public function saveStorePage(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content']) == 0){
+        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['content'])) == 0){
             $this->ajaxReturn(
                     array(
                         'success' => false,
@@ -262,7 +262,7 @@ class MagentoCmsController extends BaseController {
 
     public function saveStoreBlock(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', $_params['content']) == 0){
+        if(preg_match('/.*[^ ].*/', $_params['title']) == 0 || preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['content'])) == 0){
             $this->ajaxReturn(
                     array(
                             'success' => false,

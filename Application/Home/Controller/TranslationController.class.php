@@ -164,7 +164,7 @@ class TranslationController extends TranslationPermissionController {
 
     public function add(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(preg_match('/.*[^ ].*/', $_params['en_us']) == 0){
+        if(preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['en_us'])) == 0){
             $this->ajaxReturn(
                     array(
                             'success' => false,
@@ -432,7 +432,7 @@ class TranslationController extends TranslationPermissionController {
 
     public function edit(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if(preg_match('/.*[^ ].*/', $_params['en_us']) == 0){
+        if(preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['en_us'])) == 0){
             $this->ajaxReturn(
                     array(
                             'success' => false,

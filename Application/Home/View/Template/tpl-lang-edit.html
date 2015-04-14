@@ -8,7 +8,7 @@
                         <input type="hidden" value="<%= base_info['id'] %>" name="base_id" />
                         <div class="entry textarea form-group">
                             <label for="edit-en_US">en_US</label>
-                            <textarea name="en_us" id="edit-en_US" required pattern=".*[^ ].*" data-error="English can not be empty."><%= base_info['content'] %></textarea>
+                            <textarea name="en_us" id="edit-en_US" pattern=".*[^ ].*" data-error="English can not be empty."><%= base_info['content'] %></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                         <% if(other_info){ %>
