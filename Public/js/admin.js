@@ -40,6 +40,7 @@ jQuery(function() {
                 'click .link-register': 'clickBtnRegister'
             },
             _login: function() {
+                this.userModel.clear();
                 var _self = this,
                     $form = this.$el.find('form'),
                     data = $form.serializeObject();
@@ -71,7 +72,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             },
             clickBtnLogin: function(event){
                 this.$el.find('form').submit();
@@ -117,6 +118,7 @@ jQuery(function() {
                 'click .link-back': 'clickBtnBack'
             },
             _register: function() {
+                this.userModel.clear();
                 var _self = this,
                     $form = this.$el.find('form');
                 this.userModel.save(
@@ -147,7 +149,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             },
             clickBtnRegister: function(event){
                 this.$el.find('form').submit();

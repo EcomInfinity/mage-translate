@@ -224,6 +224,7 @@ jQuery(function() {
                 }
             },
             _add: function(){
+                this.translate.clear();
                 var _self = this;
                 var $form = $('.btn-add').closest('form');
                 // console.log($form.serializeObject());
@@ -252,7 +253,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.translate.clear();
+                // this.translate.clear();
                 return false;
             },
             clickBtnLangAdd: function(event){
@@ -315,6 +316,7 @@ jQuery(function() {
                 );
             },
             imgageDel: function(event){
+                this.translate.clear();
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
@@ -327,7 +329,7 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
-                this.translate.clear();
+                // this.translate.clear();
                 return false;
             },
             initialize: function(options){
@@ -336,6 +338,7 @@ jQuery(function() {
                 this.translate = options.translate;
             },
             render: function(){
+                this.translate.clear();
                 var _self = this;
                 this.translate.save({}, 
                     {url: UrlApi('_app')+'/weblang'}
@@ -357,7 +360,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.translate.clear();
+                // this.translate.clear();
             }
         });
 
@@ -453,6 +456,7 @@ jQuery(function() {
                 }
             },
             appLang: function(event){
+                this.translate.clear();
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
@@ -480,7 +484,7 @@ jQuery(function() {
                                     _self.render();
                                 }
                             });
-                            this.translate.clear();
+                            // this.translate.clear();
                         }else{
                             $(event.target).find('option')[0].selected = true;
                         }
@@ -504,7 +508,7 @@ jQuery(function() {
                                         _self.render();
                                     }
                                 });
-                                this.translate.clear();
+                                // this.translate.clear();
                             }else{
                                 $(event.target).find('option')[0].selected = true;
                             }
@@ -518,6 +522,7 @@ jQuery(function() {
                 }
             },
             deleteLanguage: function(id){
+                this.translate.clear();
                 if(confirm('Are you sure to delete?') == true){
                     var _self = this;
                     this.translate.save(
@@ -528,12 +533,13 @@ jQuery(function() {
                             _self.render();
                         }
                     });
-                    this.translate.clear();
+                    // this.translate.clear();
                 }
                 window.history.back();
                 return false;
             },
             exportList: function(event){
+                this.translate.clear();
                 //导出权限
                 if(Purview('export') == '1'||PurviewVal() == '-1'){
                     // this._events.trigger('alernately',$('.lang-list').val(),'export-list');
@@ -547,7 +553,7 @@ jQuery(function() {
                                 window.open(UrlApi('_app')+'/langdownload');
                             }
                         });
-                        this.translate.clear();
+                        // this.translate.clear();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -558,6 +564,7 @@ jQuery(function() {
                 return false;
             },
             addRender: function(){
+                this.translate.clear();
                 var _self = this;
                 this.translate.save(
                     {},
@@ -565,7 +572,7 @@ jQuery(function() {
                     ).done(function (response){
                         _self._events.trigger('refresh','list-add');
                     });
-                    this.translate.clear();
+                    // this.translate.clear();
                 return false;
             },
             setList: function(data){
@@ -583,6 +590,7 @@ jQuery(function() {
                 this.render();
             },
             render: function(){
+                this.translate.clear();
                 var _self = this;
                 this.translate.save(
                     {
@@ -605,7 +613,7 @@ jQuery(function() {
                     _self.$el.html(_self.template(data));
                     // _self.record = -1;
                 });
-                this.translate.clear();
+                // this.translate.clear();
                 return this;
             }
         });
@@ -618,6 +626,7 @@ jQuery(function() {
                 'change #images': 'imagesAdd',
             },
             _edit: function(){
+                this.translate.clear();
                 var _self = this;
                 var _change = $('.btn-lang-save');
                 var $form = _change.closest('form');
@@ -649,7 +658,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.translate.clear();
+                // this.translate.clear();
                 return false;
             },
             clickBtnEditInfo: function(event){
@@ -657,6 +666,7 @@ jQuery(function() {
                 return false;
             },
             imgageDel: function(event){
+                this.translate.clear();
                 var _self = this;
                 var _click = $(event.target);
                 this.imageId = _click.attr('image-id');
@@ -669,7 +679,7 @@ jQuery(function() {
                         $('#enlarge_images').html('');
                     }
                 });
-                this.translate.clear();
+                // this.translate.clear();
                 return false;
             },
             imagesAdd: function(event){
@@ -711,6 +721,7 @@ jQuery(function() {
                 return this;
             },
             render: function(){
+                this.translate.clear();
                 var _self = this;
                 this.translate.save(
                     {base_id:this.base_id, other_id:this.other_id},
@@ -735,7 +746,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.translate.clear();
+                // this.translate.clear();
             }
         });
         // //export

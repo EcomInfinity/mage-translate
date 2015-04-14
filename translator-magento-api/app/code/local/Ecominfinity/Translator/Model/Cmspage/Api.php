@@ -28,7 +28,8 @@
         public function create($datas){
             try{
                 foreach($datas as $key =>$data){
-                    $page = Mage::getModel('cms/page')->setData($data);
+                    $page = Mage::getModel('cms/page');
+                    $page->setData($data);
                     $page->save();
                     $pageId[] = $page->getId();
                 }

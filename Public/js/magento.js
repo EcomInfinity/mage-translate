@@ -160,6 +160,7 @@ jQuery(function() {
             //     return false;
             // },
             syncToTranslate: function (event){
+                this.cmsModel.clear();
                 $(event.target).closest('a').removeClass('btn-page-translate');
                 $('.btn-page-magento').removeClass('btn-block-magento');
                 var _self = this;
@@ -189,10 +190,11 @@ jQuery(function() {
                         );
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return false;
             },
             syncToMagento: function (event){
+                this.cmsModel.clear();
                 $(event.target).closest('a').removeClass('btn-page-magento');
                 $('.btn-page-translate').removeClass('btn-page-translate');
                 var _self = this;
@@ -218,10 +220,11 @@ jQuery(function() {
                         );
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return false;
             },
             appPage: function (event){
+                this.cmsModel.clear();
                 // this.operation = $(event.target).val();
                 var _self = this;
                 this.data = {};
@@ -261,7 +264,7 @@ jQuery(function() {
                             );
                         }
                     });
-                    this.cmsModel.clear();
+                    // this.cmsModel.clear();
                 }
                 if(this.operation == 'magento'){
                     if(confirm('Are you sure update to magento?') == true){
@@ -289,13 +292,14 @@ jQuery(function() {
                                 );
                             }
                         });
-                        this.cmsModel.clear();
+                        // this.cmsModel.clear();
                     }else{
                         $(event.target).find('option')[0].selected = true;
                     }
                 }
             },
             exportContent: function (event){
+                this.cmsModel.clear();
                 var cms_id = $(event.target).closest('tr').data("id");
                 this.cmsModel.save(
                     {cms_id: cms_id},
@@ -305,7 +309,7 @@ jQuery(function() {
                         window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return false;
             },
             setCmsPageSerach: function(data){
@@ -320,6 +324,7 @@ jQuery(function() {
                 this.render();
             },
             render: function(){
+                this.cmsModel.clear();
                 var _self = this;
                 this.cmsModel.save(
                     {page_search: this.page_search},
@@ -332,7 +337,7 @@ jQuery(function() {
                     data['pages_count'] = response.data.count;
                     _self.$el.html(_self.template(data));
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 // return this;
             }
         });
@@ -381,6 +386,7 @@ jQuery(function() {
                 'click .btn-save-page': 'clickBtnPageSave'
             },
             _save: function(){
+                this.cmsModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                 // console.log($form.serializeObject());
@@ -407,7 +413,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
             },
             clickBtnPageSave: function(event){
                 $(event.target).closest('form').submit();
@@ -424,6 +430,7 @@ jQuery(function() {
                 return this;
             },
             render: function(){
+                this.cmsModel.clear();
                 var _self = this;
                 this.cmsModel.save(
                     {cms_id: this.cms_id},
@@ -446,7 +453,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return this;
             }
         });
@@ -529,6 +536,7 @@ jQuery(function() {
             //     return false;
             // },
             syncToTranslate: function (event){
+                this.cmsModel.clear();
                 $(event.target).closest('a').removeClass('btn-block-translate');
                 $('.btn-block-magento').removeClass('btn-block-magento');
                 var _self = this;
@@ -554,10 +562,11 @@ jQuery(function() {
                         );
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return false;
             },
             syncToMagento: function (event){
+                this.cmsModel.clear();
                 $(event.target).closest('a').removeClass('btn-block-magento');
                 $('.btn-block-translate').removeClass('btn-block-translate');
                 var _self = this;
@@ -583,10 +592,11 @@ jQuery(function() {
                         );
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return false;
             },
             appBlock: function (event){
+                this.cmsModel.clear();
                 var _self = this;
                 this.data = {};
                 this.operation = $(event.target).val();
@@ -625,7 +635,7 @@ jQuery(function() {
                             );
                         }
                     });
-                    this.cmsModel.clear();
+                    // this.cmsModel.clear();
                 }
 
                 if(this.operation == 'magento'){
@@ -654,13 +664,14 @@ jQuery(function() {
                                 );
                             }
                         });
-                        this.cmsModel.clear();
+                        // this.cmsModel.clear();
                     }else{
                         $(event.target).find('option')[0].selected = true;
                     }
                 }
             },
             exportContent: function (event){
+                this.cmsModel.clear();
                 var cms_id = $(event.target).closest('tr').data("id");
                 this.cmsModel.save(
                     {cms_id: cms_id},
@@ -670,7 +681,7 @@ jQuery(function() {
                         window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return false;
             },
             setCmsBlockSerach: function(data){
@@ -685,6 +696,7 @@ jQuery(function() {
                 // this.render();
             },
             render: function(){
+                this.cmsModel.clear();
                 var _self = this;
                 this.cmsModel.save(
                     {block_search: this.block_search},
@@ -697,7 +709,7 @@ jQuery(function() {
                     data['blocks_count'] = response.data.count;
                     _self.$el.html(_self.template(data));
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return this;
             }
         });
@@ -746,6 +758,7 @@ jQuery(function() {
                 'click .btn-save-block': 'clickBtnBlockSave'
             },
             _save: function(){
+                this.cmsModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                 // console.log($form.serializeObject());
@@ -773,7 +786,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
             },
             clickBtnBlockSave: function(event){
                 $(event.target).closest('form').submit();
@@ -790,6 +803,7 @@ jQuery(function() {
                 return this;
             },
             render: function(){
+                this.cmsModel.clear();
                 var _self = this;
                 this.cmsModel.save(
                     {cms_id: this.cms_id},
@@ -812,7 +826,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.cmsModel.clear();
+                // this.cmsModel.clear();
                 return this;
             }
         });

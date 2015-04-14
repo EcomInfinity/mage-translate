@@ -46,7 +46,7 @@ th.col-checkbox { width: 5%; }
 /*table.tbl-translation-list th.col-operation { width: 13%; }*/
 table.tbl-translation-list th.col-language { width: 35%; }
 /*table {width: 913px !important;}*/
-table.tbl-cms-list th.col-content {width: 27%;}
+table.tbl-cms-list th.col-content {width: 26%;}
 table.tbl-translation-list tbody td { word-break: break-all; vertical-align: middle; }
 table th{padding: 8px;}
 table a{color: #333;}

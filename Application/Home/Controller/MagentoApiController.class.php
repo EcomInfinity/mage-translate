@@ -131,7 +131,7 @@ class MagentoApiController extends BaseController {
             }
         }
         // var_dump($_over_page_update);
-        // var_dump($_over_adds);
+        // var_dump($_over_page_add);
         if(count($_over_page_update) > 0){
             magentoApiSync(
                     session('soap'),
@@ -339,7 +339,7 @@ class MagentoApiController extends BaseController {
             );
         $_store_view_result = magentoApiSync(
                 session('soap'),
-                'info_getwebinfo.storeViewList',
+                'translator_getwebinfo.storeViewList',
                 array()
             );
         $_cms_block_result = json_decode($_cms_block_result, true);
@@ -529,6 +529,7 @@ class MagentoApiController extends BaseController {
                 }
             }
         }
+        // var_dump($_cms_block_all_result);
         // var_dump($_store_view_result);
         $this->ajaxReturn(
                 array(
@@ -678,7 +679,7 @@ class MagentoApiController extends BaseController {
     public function testStore(){
         $_store_view_result = magentoApiSync(
                 session('soap'),
-                'info_getwebinfo.storeViewList',
+                'translator_getwebinfo.storeViewList',
                 array()
             );
         $_store_view_result = json_decode($_store_view_result, true);
@@ -688,7 +689,7 @@ class MagentoApiController extends BaseController {
     public function testWeb(){
         $_web_view_result = magentoApiSync(
                 session('soap'),
-                'info_getwebinfo.list',
+                'translator_getwebinfo.list',
                 array()
             );
         $_web_view_result = json_decode($_web_view_result, true);

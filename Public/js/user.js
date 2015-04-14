@@ -236,6 +236,7 @@ jQuery(function() {
                 'click .btn-website-setting': 'clickBtnWebsiteSetting',
             },
             changeWebsiteName: function(){
+                this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                 this.userModel.save(
@@ -260,7 +261,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             },
             clickBtnWebsiteSetting: function(event){
                 $(event.target).closest('form').submit();
@@ -289,6 +290,7 @@ jQuery(function() {
                 'click .btn-personal-setting': 'clickBtnPersonalSetting',
             },
             _edit: function(){
+                this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                 // console.log($form.serializeObject());
@@ -314,7 +316,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             clickBtnPersonalSetting: function(event){
@@ -347,6 +349,7 @@ jQuery(function() {
                 'click .btn-rest-sync': 'clickBtnRestSync'
             },
             _edit: function(){
+                this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                 // console.log($form.serializeObject());
@@ -373,7 +376,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             clickBtnRestSync: function(event){
@@ -386,6 +389,7 @@ jQuery(function() {
                 this.userModel = options.userModel;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save({},
                     {url: UrlApi('_app')+'/websiteinfo'}
@@ -399,7 +403,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -411,6 +415,7 @@ jQuery(function() {
                 // 'click .btn-personal-setting': 'clickBtnPersonalSetting'
             },
             addLang: function (){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save(
                     {'site_lang_id': $('.language-unchecked select').val()},
@@ -435,10 +440,11 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             delLang: function (){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save(
                     {'site_lang_id': $('.language-checked select').val()},
@@ -463,10 +469,11 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             _edit: function(){
+                this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                 // console.log($form.serializeObject());
@@ -492,7 +499,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             // clickBtnPersonalSetting: function(event){
@@ -505,7 +512,8 @@ jQuery(function() {
                 this.userModel = options.userModel;
             },
             render: function(){
-                console.log('1');
+                this.userModel.clear();
+                // console.log('1');
                 var _self = this;
                 this.userModel.save({},
                     {url: UrlApi('_app')+'/lang-info'}
@@ -523,7 +531,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -581,6 +589,7 @@ jQuery(function() {
                 'click .btn-role-add': 'clickBtnRoleAdd'
             },
             _add: function(){
+                this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                     this.userModel.save(
@@ -608,7 +617,7 @@ jQuery(function() {
                             );
                         }
                     });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             clickBtnRoleAdd: function(event){
@@ -621,6 +630,7 @@ jQuery(function() {
                 this._userEvents = options._userEvents;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 var data = {};
                 this.userModel.save(
@@ -641,7 +651,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -675,6 +685,7 @@ jQuery(function() {
                 this._userEvents = options._userEvents;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save(
                     { search: this.search },
@@ -682,7 +693,7 @@ jQuery(function() {
                 ).done(function (response){
                     _self.$el.html(_self.template({roleList: response.data.roles,current_count:response.data.count,'count':response.data.total}));
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -692,6 +703,7 @@ jQuery(function() {
                 'click .btn-edit': 'clickBtnRoleEdit'
             },
             _edit: function(){
+                this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
                     this.userModel.save(
@@ -717,7 +729,7 @@ jQuery(function() {
                             );
                         }
                     });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             clickBtnRoleEdit: function(event){
@@ -734,6 +746,7 @@ jQuery(function() {
                 return this;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 var data = {};
                 this.userModel.save(
@@ -758,7 +771,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -768,6 +781,7 @@ jQuery(function() {
                 'click .btn-user-add': 'clickBtnUserAdd'
             },
             _add: function() {
+                this.userModel.clear();
                 var _self = this,
                     $form = this.$el.find('form');
 
@@ -795,7 +809,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             },
             clickBtnUserAdd: function(event) {
                 this.$el.find('form').submit();
@@ -807,6 +821,7 @@ jQuery(function() {
                 this._userEvents = options._userEvents;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save(
                     {},
@@ -828,7 +843,7 @@ jQuery(function() {
                         }
                     });
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -847,22 +862,24 @@ jQuery(function() {
                 this._userEvents.trigger('refresh','list-user-add');
             },
             enable: function(elem) {
+                this.userModel.clear();
                 var user_id = $(elem).closest('tr').data('id');
                 this.userModel.save(
                     { user_id: user_id },
                     { url: UrlApi('_app')+'/User/enable' }
                 ).done(function(response) {
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             },
             disable: function(elem) {
+                this.userModel.clear();
                 var user_id = $(elem).closest('tr').data('id');
                 this.userModel.save(
                     { user_id: user_id },
                     { url: UrlApi('_app')+'/User/disable' }
                 ).done(function(response) {
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             },
             // roleList: function(){
             //     this._userEvents.trigger('refresh','role-list');
@@ -884,6 +901,7 @@ jQuery(function() {
                 // }
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save(
                     {search:this.search},
@@ -901,7 +919,7 @@ jQuery(function() {
                         });
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
@@ -911,6 +929,7 @@ jQuery(function() {
                 'click .btn-edit': 'clickBtnUserEdit'
             },
             _edit: function(){
+                this.userModel.clear();
                 var _self = this,
                     $form=this.$el.find('form');
                 this.userModel.save(
@@ -936,7 +955,7 @@ jQuery(function() {
                         );
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
                 return false;
             },
             clickBtnUserEdit: function(event){
@@ -953,6 +972,7 @@ jQuery(function() {
                 return this;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
                 this.userModel.save(
                     {user_id:this.user_id},
@@ -979,7 +999,7 @@ jQuery(function() {
                         });
                     }
                 });
-                this.userModel.clear();
+                // this.userModel.clear();
             }
         });
 
