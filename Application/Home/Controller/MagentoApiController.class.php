@@ -692,7 +692,24 @@ class MagentoApiController extends BaseController {
                 'translator_getwebinfo.list',
                 array()
             );
+        $_store_view_result = magentoApiSync(
+                session('soap'),
+                'translator_getwebinfo.storeViewList',
+                array()
+            );
+        $_store_view_result = json_decode($_store_view_result, true);
         $_web_view_result = json_decode($_web_view_result, true);
+        foreach ($_web_view_result as $k1 => $val) {
+            foreach ($val['stores'] as $k2 => $val2) {
+                foreach ($_store_view_result as $k3 => $val3) {
+                    if($val3['group_id'] == $val2['store_id']){
+                        $_web_view_result[$k1]['stores'][$k2]['store_views'][] = $val3;
+                    }
+                }
+            }
+        }
         var_dump($_web_view_result);
+        var_dump($_web_view_result['1']['stores']);
+        var_dump($_web_view_result['1']['stores']['1']['store_views']);
     }
 }

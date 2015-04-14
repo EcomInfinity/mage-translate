@@ -307,6 +307,23 @@ class UserController extends UserPermissionController {
         }
     }
 
+    public function magentoStore(){
+        $_web_view_result = magentoApiSync(
+                session('soap'),
+                'translator_getwebinfo.list',
+                array()
+            );
+        $_web_view_result = json_decode($_web_view_result, true);
+        $this->ajaxReturn(
+            array(
+                'success' => true,
+                'message' => '',
+                'data' => $_web_view_result,
+            ),
+            'json'
+        );
+    }
+
     public function edit() {
         $_params = json_decode(file_get_contents("php://input"),true);
         $_user_id = $_params['user_id'];

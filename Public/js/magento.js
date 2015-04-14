@@ -59,7 +59,7 @@ jQuery(function() {
                 $('.block-cms-block').show();
                 $('.block-cms-page').hide();
                 // console.log('block');
-            },
+            }
             // eidtPage: function (id){
             //     console.log(id);
             // },

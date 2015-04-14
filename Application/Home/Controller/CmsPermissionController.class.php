@@ -33,7 +33,6 @@ class CmsPermissionController extends BaseController {
         }
     }
 
-
     public function _before_cmsExport(){
         $_purview = json_decode(session('purview'), true);
         if($_purview >= 0 && $_purview['export'] == 0){

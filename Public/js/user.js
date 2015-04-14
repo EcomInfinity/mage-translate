@@ -44,6 +44,7 @@ jQuery(function() {
                 "language": "languageSetting",
                 "user": "userSetting",
                 "role": "roleSetting",
+                "magento": "magentoStore"
             },
             personalSetting: function (){
                 $('.block-user-sidebar ul li').removeClass('menu-selection');
@@ -126,6 +127,13 @@ jQuery(function() {
                         }
                     });
                 }
+            },
+            magentoStore: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(6)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'magento-store-view');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(6)').show();
             }
         });
 
@@ -572,6 +580,26 @@ jQuery(function() {
                     });
                 });
                 // this.userModel.clear();
+            }
+        });
+
+        user.ViewMagentoStoreView = Backbone.View.extend({
+            template: _.template($('#tpl-magento-store').html()),
+            initialize: function (options){
+                options || (options = {});
+                this.userModel = options.userModel;
+            },
+            render: function(){
+                this.userModel.clear();
+                var _self = this;
+                this.userModel.save(
+                    {},
+                    {url: UrlApi('_app')+'/User/magentoStore'}
+                ).done(function (response){
+                    var data = {};
+                    data['store_list'] = response.data;
+                    _self.$el.html(_self.template(data));
+                });
             }
         });
 
@@ -1087,6 +1115,12 @@ jQuery(function() {
                     _userEvents: _userEvents
                 });
 
+                var magentostoreView = new user.ViewMagentoStoreView({
+                    el: '.block-magento-store',
+                    userModel: this.userModel,
+                    _userEvents: _userEvents
+                });
+
                 var usersearchView = new user.View.UserSearchView({
                     el: '.search-box-user',
                     userModel: this.userModel,
@@ -1196,6 +1230,9 @@ jQuery(function() {
                             break;
                         case 'language-setting':
                             sitelanguageView.render();
+                            break;
+                        case 'magento-store-view':
+                            magentostoreView.render();
                             break;
                     }
                 });

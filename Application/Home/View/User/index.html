@@ -12,8 +12,11 @@
                     <li><a href="#website">Website   Setting</a></li>
                     <li><a href="#sync">Sync         Setting</a></li>
                     <li><a href="#language">Language Setting</a></li>
+                    <php>if(session('purview') == '-1'){</php>
                     <li><a href="#user">User         Setting</a></li>
                     <li><a href="#role">Role         Setting</a></li>
+                    <php>}</php>
+                    <li><a href="#magento">Magento Store</a></li>
                 </ul>
             </div>
             <div class="block block-content block-user-content">
@@ -44,6 +47,8 @@
                     <div class="block-role-info">
                     </div>
                 </div>
+
+                <div class="block block-magento-store"></div>
 
             </div>
         </div>
@@ -78,4 +83,6 @@
     <include file="Template/user/tpl-role-info" />
 
     <include file="Template/user/tpl-role-add" />
+
+    <include file="Template/cms/tpl-magento-store" />
 </block>
