@@ -79,7 +79,6 @@ select{text-transform: uppercase;}
 
 .block-personal-container .block{margin-bottom: 30px;}
 select[multiple], select[size] {height: 170px;}
-.menu-selection a {color: black;}
 .block-personal-sidebar ul li {padding: 10px 0;}
 .block-sidebar ul li {padding: 10px 0;}
 textarea {height: 62px;box-sizing: border-box;}
@@ -87,5 +86,7 @@ textarea {height: 62px;box-sizing: border-box;}
 .has-error-textarea {color: #a94442;}
 
 .block-sidebar {width: 20%;float: left;}
+.block-sidebar a {color: black;}
 .block-content {width: 80%;float: left;}
+.menu-selection a {color: #337ab7;text-decoration: underline;}
 /*table tbody tr {cursor:pointer}*/

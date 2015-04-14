@@ -40,6 +40,8 @@ jQuery(function() {
             routes: {
                 "page": "pageRender",
                 "block": "blockRender",
+                // "edit-page/:id\d": "eidtPage",
+                // "edit-block/:id\d": "editBlock",
             },
 
             pageRender: function(){
@@ -57,7 +59,13 @@ jQuery(function() {
                 $('.block-cms-block').show();
                 $('.block-cms-page').hide();
                 // console.log('block');
-            }
+            },
+            // eidtPage: function (id){
+            //     console.log(id);
+            // },
+            // editBlock: function (id){
+            //     console.log(id);
+            // }
         });
 
         cms.View.CmsPageSearchView = Backbone.View.extend({
@@ -146,9 +154,16 @@ jQuery(function() {
                 'click .btn-export-txt': 'exportContent'
             },
             storePage: function (event){
-                var cms_id = $(event.target).closest('tr').data("id");
-                // console.log(cms_id);
-                this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storePage');
+                 if(PurviewVal() == '-1' || Purview('update') == '1'){
+                    var cms_id = $(event.target).closest('tr').data("id");
+                    this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storePage');
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 return false;
             },
             // storePages: function (event){
@@ -160,66 +175,82 @@ jQuery(function() {
             //     return false;
             // },
             syncToTranslate: function (event){
-                this.cmsModel.clear();
-                $(event.target).closest('a').removeClass('btn-page-translate');
-                $('.btn-page-magento').removeClass('btn-block-magento');
-                var _self = this;
-                // this.test = $(event.target).closest('div');
-                // console.log(this.test);
-                this.cmsModel.save({}, 
-                    {url: UrlApi('_app')+'/MagentoApi/syncTranslatePage'}
-                ).done(function (response){
-                    if (response.success === true) {
-                        // console.log(_self.test);
-                        _self.$el.notify(
-                            'Success',
-                            {
-                                position: 'top',
-                                className: 'success'
-                            }
-                        );
-                        // setTimeout(_self.render(),10000);
-                        _self.render();
-                    } else {
-                        _self.$el.notify(
-                            'Failure',
-                            {
-                                position: 'top',
-                                className: 'error'
-                            }
-                        );
-                    }
-                });
+                if(PurviewVal() == '-1' || Purview('update') == '1' || Purview('create') == '1'){
+                    this.cmsModel.clear();
+                    $(event.target).closest('a').removeClass('btn-page-translate');
+                    $('.btn-page-magento').removeClass('btn-block-magento');
+                    var _self = this;
+                    // this.test = $(event.target).closest('div');
+                    // console.log(this.test);
+                    this.cmsModel.save({}, 
+                        {url: UrlApi('_app')+'/MagentoApi/syncTranslatePage'}
+                    ).done(function (response){
+                        if (response.success === true) {
+                            // console.log(_self.test);
+                            _self.$el.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            // setTimeout(_self.render(),10000);
+                            _self.render();
+                        } else {
+                            _self.$el.notify(
+                                'Failure',
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 // this.cmsModel.clear();
                 return false;
             },
             syncToMagento: function (event){
-                this.cmsModel.clear();
-                $(event.target).closest('a').removeClass('btn-page-magento');
-                $('.btn-page-translate').removeClass('btn-page-translate');
-                var _self = this;
-                this.cmsModel.save({}, 
-                    {url: UrlApi('_app')+'/MagentoApi/syncMagentoPage'}
-                ).done(function (response){
-                    if (response.success === true) {
-                        _self.$el.notify(
-                            'Success',
-                            {
-                                position: 'top',
-                                className: 'success'
-                            }
-                        );
-                        _self.render();
-                    } else {
-                        _self.$el.notify(
-                            'Failure',
-                            {
-                                position: 'top',
-                                className: 'error'
-                            }
-                        );
-                    }
-                });
+                if(PurviewVal() == '-1' || Purview('update') == '1'){
+                    this.cmsModel.clear();
+                    $(event.target).closest('a').removeClass('btn-page-magento');
+                    $('.btn-page-translate').removeClass('btn-page-translate');
+                    var _self = this;
+                    this.cmsModel.save({}, 
+                        {url: UrlApi('_app')+'/MagentoApi/syncMagentoPage'}
+                    ).done(function (response){
+                        if (response.success === true) {
+                            _self.$el.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            _self.render();
+                        } else {
+                            _self.$el.notify(
+                                'Failure',
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 // this.cmsModel.clear();
                 return false;
             },
@@ -238,39 +269,10 @@ jQuery(function() {
                 });
                 // console.log(this.data);
                 if(this.operation == 'download'){
-                    console.log(this.data);
-                    this.cmsModel.save(
-                        {page_ids: this.data, type: 1},
-                        {url: UrlApi('_app')+"/MagentoCms/cmsExportZip"}
-                    ).done(function (response){
-                        if(response.success === true){
-                            _self.$el.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            window.open(UrlApi('_app')+'/MagentoCms/downloadZip');
-                            $(event.target).find('option')[0].selected = true;
-                            _self.render();
-                        }else{
-                            _self.$el.notify(
-                                'Failure',
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
-                    });
-                    // this.cmsModel.clear();
-                }
-                if(this.operation == 'magento'){
-                    if(confirm('Are you sure update to magento?') == true){
+                    if(PurviewVal() == '-1' || Purview('export') == '1'){
                         this.cmsModel.save(
-                            {page_ids: this.data},
-                            {url: UrlApi('_app')+"/MagentoApi/syncSelectPage"}
+                            {page_ids: this.data, type: 1},
+                            {url: UrlApi('_app')+"/MagentoCms/cmsExportZip"}
                         ).done(function (response){
                             if(response.success === true){
                                 _self.$el.notify(
@@ -280,6 +282,7 @@ jQuery(function() {
                                         className: 'success'
                                     }
                                 );
+                                window.open(UrlApi('_app')+'/MagentoCms/downloadZip');
                                 $(event.target).find('option')[0].selected = true;
                                 _self.render();
                             }else{
@@ -292,23 +295,74 @@ jQuery(function() {
                                 );
                             }
                         });
-                        // this.cmsModel.clear();
                     }else{
-                        $(event.target).find('option')[0].selected = true;
+                        $.fancybox($('.message'),{
+                           afterClose: function () {
+                                // window.history.back();
+                            }
+                        });
+                    }
+                    // this.cmsModel.clear();
+                }
+                if(this.operation == 'magento'){
+                    if(PurviewVal() == '-1' || Purview('update') == '1'){
+                        if(confirm('Are you sure update to magento?') == true){
+                            this.cmsModel.save(
+                                {page_ids: this.data},
+                                {url: UrlApi('_app')+"/MagentoApi/syncSelectPage"}
+                            ).done(function (response){
+                                if(response.success === true){
+                                    _self.$el.notify(
+                                        'Success',
+                                        {
+                                            position: 'top',
+                                            className: 'success'
+                                        }
+                                    );
+                                    $(event.target).find('option')[0].selected = true;
+                                    _self.render();
+                                }else{
+                                    _self.$el.notify(
+                                        'Failure',
+                                        {
+                                            position: 'top',
+                                            className: 'error'
+                                        }
+                                    );
+                                }
+                            });
+                            // this.cmsModel.clear();
+                        }else{
+                            $(event.target).find('option')[0].selected = true;
+                        }
+                    }else{
+                        $.fancybox($('.message'),{
+                           afterClose: function () {
+                                // window.history.back();
+                            }
+                        });
                     }
                 }
             },
             exportContent: function (event){
-                this.cmsModel.clear();
-                var cms_id = $(event.target).closest('tr').data("id");
-                this.cmsModel.save(
-                    {cms_id: cms_id},
-                    {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
-                ).done(function (response){
-                    if(response.success === true){
-                        window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
-                    }
-                });
+                if(PurviewVal() == '-1' || Purview('export') == '1'){
+                    this.cmsModel.clear();
+                    var cms_id = $(event.target).closest('tr').data("id");
+                    this.cmsModel.save(
+                        {cms_id: cms_id},
+                        {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
+                    ).done(function (response){
+                        if(response.success === true){
+                            window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
+                        }
+                    });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 // this.cmsModel.clear();
                 return false;
             },
@@ -522,9 +576,16 @@ jQuery(function() {
                 'click .btn-export-txt': 'exportContent'
             },
             storeBlock: function (event){
-                var cms_id = $(event.target).closest('tr').data("id");
-                // console.log(cms_id);
-                this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storeBlock');
+                if(PurviewVal() == '-1' || Purview('update') == '1'){
+                    var cms_id = $(event.target).closest('tr').data("id");
+                    this._cmsEvents.trigger('alernately',{cms_id:cms_id},'storeBlock');
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 return false;
             },
             // storeBlocks: function (event){
@@ -536,62 +597,78 @@ jQuery(function() {
             //     return false;
             // },
             syncToTranslate: function (event){
-                this.cmsModel.clear();
-                $(event.target).closest('a').removeClass('btn-block-translate');
-                $('.btn-block-magento').removeClass('btn-block-magento');
-                var _self = this;
-                this.cmsModel.save({}, 
-                    {url: UrlApi('_app')+'/MagentoApi/syncTranslateBlock'}
-                ).done(function (response){
-                    if (response.success === true) {
-                        _self.$el.notify(
-                            'Success',
-                            {
-                                position: 'top',
-                                className: 'success'
-                            }
-                        );
-                        _self.render();
-                    } else {
-                        _self.$el.notify(
-                            'Failure',
-                            {
-                                position: 'top',
-                                className: 'error'
-                            }
-                        );
-                    }
-                });
+                if(PurviewVal() == '-1' || Purview('update') == '1' || Purview('create') == '1'){
+                    this.cmsModel.clear();
+                    $(event.target).closest('a').removeClass('btn-block-translate');
+                    $('.btn-block-magento').removeClass('btn-block-magento');
+                    var _self = this;
+                    this.cmsModel.save({}, 
+                        {url: UrlApi('_app')+'/MagentoApi/syncTranslateBlock'}
+                    ).done(function (response){
+                        if (response.success === true) {
+                            _self.$el.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            _self.render();
+                        } else {
+                            _self.$el.notify(
+                                'Failure',
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 // this.cmsModel.clear();
                 return false;
             },
             syncToMagento: function (event){
-                this.cmsModel.clear();
-                $(event.target).closest('a').removeClass('btn-block-magento');
-                $('.btn-block-translate').removeClass('btn-block-translate');
-                var _self = this;
-                this.cmsModel.save({}, 
-                    {url: UrlApi('_app')+'/MagentoApi/syncMagentoBlock'}
-                ).done(function (response){
-                    if (response.success === true) {
-                        _self.$el.notify(
-                            'Success',
-                            {
-                                position: 'top',
-                                className: 'success'
-                            }
-                        );
-                        _self.render();
-                    } else {
-                        _self.$el.notify(
-                            'Failure',
-                            {
-                                position: 'top',
-                                className: 'error'
-                            }
-                        );
-                    }
-                });
+                if(PurviewVal() == '-1' || Purview('update') == '1'){
+                    this.cmsModel.clear();
+                    $(event.target).closest('a').removeClass('btn-block-magento');
+                    $('.btn-block-translate').removeClass('btn-block-translate');
+                    var _self = this;
+                    this.cmsModel.save({}, 
+                        {url: UrlApi('_app')+'/MagentoApi/syncMagentoBlock'}
+                    ).done(function (response){
+                        if (response.success === true) {
+                            _self.$el.notify(
+                                'Success',
+                                {
+                                    position: 'top',
+                                    className: 'success'
+                                }
+                            );
+                            _self.render();
+                        } else {
+                            _self.$el.notify(
+                                'Failure',
+                                {
+                                    position: 'top',
+                                    className: 'error'
+                                }
+                            );
+                        }
+                    });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 // this.cmsModel.clear();
                 return false;
             },
@@ -609,42 +686,13 @@ jQuery(function() {
                 });
                 // console.log(this.data);
                 if(this.operation == 'download'){
-                    console.log(this.data);
-                    this.cmsModel.save(
-                        {page_ids: this.data, type: 2},
-                        {url: UrlApi('_app')+"/MagentoCms/cmsExportZip"}
-                    ).done(function (response){
-                        if(response.success === true){
-                            _self.$el.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            window.open(UrlApi('_app')+'/MagentoCms/downloadZip');
-                            $(event.target).find('option')[0].selected = true;
-                            _self.render();
-                        }else{
-                            _self.$el.notify(
-                                'Failure',
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
-                    });
-                    // this.cmsModel.clear();
-                }
-
-                if(this.operation == 'magento'){
-                    if(confirm('Are you sure update to magento?') == true){
+                    if(PurviewVal() == '-1' || Purview('export') == '1'){
+                        console.log(this.data);
                         this.cmsModel.save(
-                            {block_ids: this.data},
-                            {url: UrlApi('_app')+"/MagentoApi/syncSelectBlock"}
+                            {page_ids: this.data, type: 2},
+                            {url: UrlApi('_app')+"/MagentoCms/cmsExportZip"}
                         ).done(function (response){
-                            if (response.success === true) {
+                            if(response.success === true){
                                 _self.$el.notify(
                                     'Success',
                                     {
@@ -652,9 +700,10 @@ jQuery(function() {
                                         className: 'success'
                                     }
                                 );
+                                window.open(UrlApi('_app')+'/MagentoCms/downloadZip');
                                 $(event.target).find('option')[0].selected = true;
                                 _self.render();
-                            } else {
+                            }else{
                                 _self.$el.notify(
                                     'Failure',
                                     {
@@ -664,23 +713,75 @@ jQuery(function() {
                                 );
                             }
                         });
-                        // this.cmsModel.clear();
                     }else{
-                        $(event.target).find('option')[0].selected = true;
+                        $.fancybox($('.message'),{
+                           afterClose: function () {
+                                // window.history.back();
+                            }
+                        });
+                    }
+                    // this.cmsModel.clear();
+                }
+
+                if(this.operation == 'magento'){
+                    if(PurviewVal() == '-1' || Purview('update') == '1'){
+                        if(confirm('Are you sure update to magento?') == true){
+                            this.cmsModel.save(
+                                {block_ids: this.data},
+                                {url: UrlApi('_app')+"/MagentoApi/syncSelectBlock"}
+                            ).done(function (response){
+                                if (response.success === true) {
+                                    _self.$el.notify(
+                                        'Success',
+                                        {
+                                            position: 'top',
+                                            className: 'success'
+                                        }
+                                    );
+                                    $(event.target).find('option')[0].selected = true;
+                                    _self.render();
+                                } else {
+                                    _self.$el.notify(
+                                        'Failure',
+                                        {
+                                            position: 'top',
+                                            className: 'error'
+                                        }
+                                    );
+                                }
+                            });
+                            // this.cmsModel.clear();
+                        }else{
+                            $(event.target).find('option')[0].selected = true;
+                        }
+                    }else{
+                        $.fancybox($('.message'),{
+                           afterClose: function () {
+                                // window.history.back();
+                            }
+                        });
                     }
                 }
             },
             exportContent: function (event){
-                this.cmsModel.clear();
-                var cms_id = $(event.target).closest('tr').data("id");
-                this.cmsModel.save(
-                    {cms_id: cms_id},
-                    {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
-                ).done(function (response){
-                    if(response.success === true){
-                        window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
-                    }
-                });
+                if(PurviewVal() == '-1' || Purview('export') == '1'){
+                    this.cmsModel.clear();
+                    var cms_id = $(event.target).closest('tr').data("id");
+                    this.cmsModel.save(
+                        {cms_id: cms_id},
+                        {url: UrlApi('_app')+"/MagentoCms/cmsExport"}
+                    ).done(function (response){
+                        if(response.success === true){
+                            window.open(UrlApi('_app')+'/MagentoCms/downloadTxt');
+                        }
+                    });
+                }else{
+                    $.fancybox($('.message'),{
+                       afterClose: function () {
+                            // window.history.back();
+                        }
+                    });
+                }
                 // this.cmsModel.clear();
                 return false;
             },

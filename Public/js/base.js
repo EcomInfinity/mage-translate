@@ -267,7 +267,7 @@ jQuery(function() {
                     UrlApi('_app')+'/langimport',
                     'batch-import',
                     function() {
-                        _self._events.trigger('refresh','edit');
+                        _self._events.trigger('refresh','translate-list-view');
                         $.fancybox.hideLoading();
                         $('.batch-import').notify(
                             'Success',

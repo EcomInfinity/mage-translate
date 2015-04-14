@@ -1,7 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-class MagentoCmsController extends BaseController {
+class MagentoCmsController extends CmsPermissionController {
     public function index(){
         $this->display();
     }
