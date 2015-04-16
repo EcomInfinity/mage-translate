@@ -1,23 +1,42 @@
 <script type="text/template" id="tpl-magento-store">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Website Name</th>
-                <th>Store Name</th>
-                <th>Store View Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% _.each(store_list,function (so){ %>
+<div class="modal-container">
+    <h2>Magento Store</h2>
+    <div class="content">
+        <table class="table-bordered">
+            <thead>
                 <tr>
-                    <td><%= so.website_name %></td>
-                    <% _.each(so.stores,function (st){ %>
-                        <td><%= st.store_name %></td>
-                        <% _.each(so.stores,function (sth){ %>
-                        <%})%>
-                    <%})%>
+                    <th>Website Name</th>
+                    <th>Store Name</th>
+                    <th>Store View Name</th>
                 </tr>
-            <%})%>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% _.each(store_list,function (so){ %>
+                        <% _.each(so.stores,function (st, kt){ %>
+                            <% _.each(st.store_views,function (sth, kth){ %>
+                                    <tr>
+                                        <% if(kt == 0 && kth == 0){ %>
+                                            <td rowspan="<%= so.count %>">
+                                                <%= so.website_name %><br/>
+                                                (Code: <%= so.website_code %>)
+                                            </td>
+                                        <% } %>
+                                        <% if(kth == 0){ %>
+                                            <td rowspan="<%= st.count %>">
+                                                <%= st.store_name %><br/>
+                                                (Root Category: <%= st.root_category%>)
+                                            </td>
+                                        <% } %>
+                                        <td>
+                                            <%= sth.name %><br/>
+                                            (Code: <%= sth.code %>)
+                                        </td>
+                                    </tr>
+                            <%})%>
+                        <%})%>
+                <%})%>
+            </tbody>
+        </table>
+    </div>
+</div>
 </script>

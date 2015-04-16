@@ -5,7 +5,7 @@ use Think\Controller;
 class WebsiteLangPermissionController extends Controller {
     public function _before_del(){
         $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['delete'] == 0 && $_purview['update'] == 0){
+        if($_purview >= 0 && $_purview['delete'] == 0 && $_purview['update'] == 0 && $_purview['create'] == 0){
             $this->ajaxReturn(
                 array(
                     'success' => false,

@@ -20,7 +20,7 @@ class WebsiteController extends WebsitePermissionController {
         if($_website_result['communication_status'] == 1){
             $_store_view_result = magentoApiSync(
                     session('soap'),
-                    'info_getwebinfo.storeViewList',
+                    'translator_getwebinfo.storeViewList',
                     array()
                 );
             $_store_view_result = json_decode($_store_view_result, true);
@@ -45,6 +45,7 @@ class WebsiteController extends WebsitePermissionController {
         $_checked = array_unique($_checked);
         $_checked = implode(',',$_checked );
         $_lang_result = D('language')->where(array('id' => array('not in', $_checked)))->select();
+        // var_dump($_store_view_result);
         $this->ajaxReturn(
             array(
                 'success' => true,

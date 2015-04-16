@@ -83,9 +83,7 @@ function magentoApi($_website_api){
         // var_dump($e);
         return false;
     }
-    $_result['client'] = $_client;
-    $_result['session_id'] = $_sessionId;
-    return $_result;
+    return true;
 }
 //同步magento数据
 function magentoApiSync($_website_api, $_website_info_type, $_website_info_id){
