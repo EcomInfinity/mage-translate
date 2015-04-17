@@ -40,8 +40,8 @@ jQuery(function() {
             routes: {
                 "page": "pageRender",
                 "block": "blockRender",
-                // "edit-page/:id\d": "eidtPage",
-                // "edit-block/:id\d": "editBlock",
+                "edit-page/:id\d": "eidtPage",
+                "edit-block/:id\d": "editBlock",
             },
 
             pageRender: function(){
@@ -59,13 +59,15 @@ jQuery(function() {
                 $('.block-cms-block').show();
                 $('.block-cms-page').hide();
                 // console.log('block');
+            },
+            eidtPage: function (id){
+                console.log(id);
+                this._cmsEvents.trigger('alernately',{cms_id:id},'storePage');
+            },
+            editBlock: function (id){
+                console.log(id);
+                this._cmsEvents.trigger('alernately',{cms_id:id},'storeBlock');
             }
-            // eidtPage: function (id){
-            //     console.log(id);
-            // },
-            // editBlock: function (id){
-            //     console.log(id);
-            // }
         });
 
         cms.View.CmsPageSearchView = Backbone.View.extend({
@@ -147,7 +149,7 @@ jQuery(function() {
             template: _.template($('#tpl-cms-page-list').html()),
             events:{
                 // 'click tbody tr': 'storePages',
-                'click .btn-edit-page': 'storePage',
+                // 'click .btn-edit-page': 'storePage',
                 'click .btn-page-translate': 'syncToTranslate',
                 'click .btn-page-magento': 'syncToMagento',
                 'change .batch-app': 'appPage',
@@ -503,7 +505,7 @@ jQuery(function() {
                     });
                     $.fancybox(_self.$el, {
                        afterClose: function () {
-                            // window.history.back();
+                            window.history.back();
                         }
                     });
                 });
@@ -569,7 +571,7 @@ jQuery(function() {
             template: _.template($('#tpl-cms-block-list').html()),
             events:{
                 // 'click tbody tr': 'storeBlocks',
-                'click .btn-edit-block': 'storeBlock',
+                // 'click .btn-edit-block': 'storeBlock',
                 'click .btn-block-translate': 'syncToTranslate',
                 'click .btn-block-magento': 'syncToMagento',
                 'change .batch-app': 'appBlock',

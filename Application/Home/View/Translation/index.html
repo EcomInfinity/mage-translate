@@ -2,7 +2,7 @@
 <block name="script">
     <load href="__PUBLIC__/js/base.js" />
 </block>
-    <block name="main-translate">
+    <block name="content">
         <main>
             <div class="container-fluid page-width">
 
@@ -21,73 +21,7 @@
         </main>
     </block>
 
-    <block name="main-user">
-        <main>
-            <div class="container-fluid page-width">
-
-                <h1>Mage User</h1>
-
-                <div class="search-box search-box-user">
-                </div>
-
-                <div class="user-center">
-                </div>
-
-                <div class="block-user">
-                    <div class="block block-user-list">
-                    </div>
-
-                    <div class="block block-user-add">
-                    </div>
-
-                    <div class="block block-user-info">
-                    </div>
-                </div>
-
-                <div class="block-role">
-                    <div class="block block-role-list">
-                    </div>
-
-                    <div class="block block-role-add">
-                    </div>
-
-                    <div class="block block-role-info">
-                    </div>
-
-                </div>
-
-            </div>
-        </main>
-    </block>
-
-    <block name="main-personal">
-        <main>
-            <div class="container-fluid page-width">
-                <h1>Mage Personal</h1>
-            <div>
-                <div class="block block-personal-sidebar" style="width:30%;float:left;">
-                </div>
-
-                <div class="block block-personal-container" style="width:70%;float:left;">
-                    <div class="block block-website-setting" style="display:none;">
-                    </div>
-
-                    <div class="block block-personal-setting">
-                    </div>
-
-                    <div class="block block-rest-sync" style="display:none;">
-                    </div>
-
-                    <div class="block block-site-language" style="display:none;">
-                    </div>
-                </div>
-            </div>
-
-            </div>
-        </main>
-    </block>
-
-    <block name="template-translate">
+    <block name="template">
 
         <include file="Template/tpl-lang-add" />
 
@@ -99,38 +33,6 @@
 
         <include file="Template/tpl-lang-search" />
 
-    </block>
-
-    <block name="template-user">
-
-        <include file="Template/tpl-user-search" />
-
-        <include file="Template/tpl-user-add" />
-
-        <include file="Template/tpl-user-info" />
-
-        <include file="Template/tpl-user-list" />
-
-        <include file="Template/tpl-role-search" />
-
-        <include file="Template/tpl-role-list" />
-
-        <include file="Template/tpl-role-info" />
-
-        <include file="Template/tpl-role-add" />
-
-    </block>
-
-    <block name="template-personal">
-        <include file="Template/tpl-personal-sidebar" />
-
-        <include file="Template/tpl-website-setting" />
-
-        <include file="Template/tpl-personal-setting" />
-
-        <include file="Template/tpl-rest-sync" />
-
-        <include file="Template/tpl-site-language" />
     </block>
 
 </body>
