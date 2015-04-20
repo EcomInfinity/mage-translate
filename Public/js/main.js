@@ -1,39 +1,46 @@
 (function($) {
     $(function(){
+        // console.log($(window).height());
         // $(window).resize(function () {
+        //     console.log($(window).height());
         //     var other = $('.navbar').outerHeight(true)
-        //     +$('h1').outerHeight(true)
-        //     +$('.search-box').outerHeight(true)
-        //     +$('.record-view').outerHeight(true)
-        //     +$('.list-head').outerHeight(true)
-        //     +$('.operation-view').outerHeight(true)
-        //     +$('.line').outerHeight(true)*2;
-        //     $('.data-list').height($(window).height() - other);
+        //     $('h1').outerHeight(true)
+        //     $('.search-box').outerHeight(true)
+        //     $('.record-view').outerHeight(true)
+        //     $('.list-head').outerHeight(true)
+        //     $('.operation-view').outerHeight(true)
+        //     $('.line').outerHeight(true)*2;
+        //     $('.data-list').height($(window).height()/2);
         // });
-    $( "body" ).on( "keyup", 'textarea', function (event) {
-        var pattern = $(event.target).attr( "pattern" ),
-            errorMessage = $(event.target).attr("data-error");
-        if(typeof pattern !== typeof undefined && pattern !== false)
-        {
-            var patternRegex = new RegExp( "^" + pattern.replace("^\^|\$$") + "$", "g" );
-
-            hasError = !$(event.target).val().replace(/\r|\n/ig,"").match( patternRegex );
-
-            if ( hasError )
+        $("body").on("click", ".navbar-nav li", function (event){
+            console.log('1');
+            $('.navbar-nav li').removeClass('menu-selection');
+            $(event.target).addClass('menu-selection');
+        });
+        $( "body" ).on( "keyup", 'textarea', function (event) {
+            var pattern = $(event.target).attr( "pattern" ),
+                errorMessage = $(event.target).attr("data-error");
+            if(typeof pattern !== typeof undefined && pattern !== false)
             {
-                // console.log('1');
-                $(event.target).closest('div').find('div').addClass('has-error-textarea');
-                $(event.target).closest('div').find('div').html('<ul class="list-unstyled"><li>'+errorMessage+'</li></ul>');
-            }
-            else
-            {
-                // console.log('2');
-                $(event.target).closest('div').find('div').html('');
-                $(event.target).closest('div').find('div').removeClass('has-error-textarea');
-            }
-        }
+                var patternRegex = new RegExp( "^" + pattern.replace("^\^|\$$") + "$", "g" );
 
-    });
+                hasError = !$(event.target).val().replace(/\r|\n/ig,"").match( patternRegex );
+
+                if ( hasError )
+                {
+                    // console.log('1');
+                    $(event.target).closest('div').find('div').addClass('has-error-textarea');
+                    $(event.target).closest('div').find('div').html('<ul class="list-unstyled"><li>'+errorMessage+'</li></ul>');
+                }
+                else
+                {
+                    // console.log('2');
+                    $(event.target).closest('div').find('div').html('');
+                    $(event.target).closest('div').find('div').removeClass('has-error-textarea');
+                }
+            }
+
+        });
 
         //Enlarge Image
         $('body').on('click', 'ul img', function(){

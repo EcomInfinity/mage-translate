@@ -3,9 +3,9 @@ namespace Home\Model;
 use Think\Model;
 class TranslationImageModel extends Model{
     //
-    public function saveImage($_lang_id){
-        $save['lang_id'] = $_lang_id;
-        return $this->where(array('lang_id'=>'0'))->save($save);
+    public function saveImage($_params){
+        // $save['lang_id'] = $_lang_id;
+        return $this->save($_params);
     }
 
     public function addImage($_tid,$imageName){
@@ -24,10 +24,10 @@ class TranslationImageModel extends Model{
         return $this->where(array('lang_id'=>$_tid))->save($save);
     }
 
-    public function gets($_tid){
-        $where['lang_id'] = $_tid;
-        $where['status'] = '1';
-        return $this->where($where)->select();
+    public function gets($_where){
+        // $where['lang_id'] = $_tid;
+        // $where['status'] = '1';
+        return $this->where($_where)->select();
     }
 
     // public function getOneImage($_iid){

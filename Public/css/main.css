@@ -41,7 +41,7 @@ table td, table th { padding: 5px; }
 .register-container{ width: 60%; margin: 200px auto 0; }
 
 .tip{color:red;}
-th.col-operation { width: 15%; }
+th.col-operation { width: 16%; }
 th.col-checkbox { width: 5%; }
 /*table.tbl-translation-list th.col-operation { width: 13%; }*/
 table.tbl-translation-list th.col-language { width: 35%; }
@@ -73,20 +73,24 @@ select{text-transform: uppercase;}
 .operation-view{margin-bottom: 10px;}
 .batch-app{float: right;color: white;background: rgb(43, 102, 153);height: 34px;}
 .search-icon{position: relative;top: 33px;left: 910px;}
-.block-content .search-icon {position: relative;top: 33px;left: 724px;}
+.block-content .search-icon {position: relative;top: 33px;left: 683px;}
 
 .word-black{color: black;text-decoration: underline;}
 
 .block-personal-container .block{margin-bottom: 30px;}
 select[multiple], select[size] {height: 170px;}
-.block-personal-sidebar ul li {padding: 10px 0;}
-.block-sidebar ul li {padding: 10px 0;}
+/*.block-personal-sidebar ul li {padding: 10px 0;}*/
+/*.block-sidebar ul li {padding: 10px 0;}*/
 textarea {height: 62px;box-sizing: border-box;}
 .cms textarea {height: 280px;box-sizing: border-box;}
 .has-error-textarea {color: #a94442;}
 
 .block-sidebar {width: 20%;float: left;}
-.block-sidebar a {color: black;}
-.block-content {width: 80%;float: left;}
-.menu-selection a {color: #337ab7;text-decoration: underline;}
+.block-sidebar a {color: black;margin-left: 20%;}
+.block-sidebar ul li {padding: 10px 0;box-shadow: 1px 1px 1px #888888;}
+.block-content {width: 78%;float: left;margin-left: 2%;border: 1px solid #888888;border-radius: 5px;padding: 10px;}
+.block-content .modal-container{background-color: #fff;border: 0px solid #7a858d; }
+.menu-selection{background-color: #E7EFEF;}
+a{text-decoration: none;}
+/*.menu-selection a {color: #337ab7;text-decoration: underline;}*/
 /*table tbody tr {cursor:pointer}*/

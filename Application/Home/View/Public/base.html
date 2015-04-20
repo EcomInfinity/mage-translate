@@ -52,9 +52,6 @@
     <load href="__PUBLIC__/js/utility.js" />
     <load href="__PUBLIC__/js/ajaxfileupload.js" />
     <load href="__PUBLIC__/js/main.js" />
-    <!-- <load href="__PUBLIC__/js/base.js" /> -->
-<!--<load href="__PUBLIC__/js/user.js" />
-    <load href="__PUBLIC__/js/translate.js" /> -->
 
     <block name="css"></block>
 
@@ -71,13 +68,7 @@
                         </button>
                     </div>
                     <div class="collapse navbar-collapse">
-                        <div style="float:left;">
-<!--                             <ul class="nav navbar-nav">
-                                <li><a href="__APP__/lang" class="btn-list">List</a></li>
-                                <li><a href="#page">Page</a></li>
-                                <li><a href="#block">Block</a></li>
-                                <li><a href="__APP__/User">User</a></li>
-                            </ul> -->
+                        <div style="float:left;" class="main-nav">
                             <ul class="nav navbar-nav">
                                 <li><a href="__APP__/Translation">Csv</a></li>
                                 <li><a href="__APP__/MagentoCms">Cms</a></li>
@@ -94,54 +85,9 @@
                 </div>
             </nav>
         </block>
-        <!--<script type="text/template" id="tpl-lang-nav">
-            <div style="float:left;">
-                <ul class="nav navbar-nav">
-                    <li><a href="#" class="btn-list">List</a></li>
-                    <php>if(session('purview') == '-1'){</php>
-                    <li><a href="#" class="btn-user">User</a></li>
-                    <php>}</php>
-                    <li><a href="__APP__/MagentoCms">Cms</a></li>
-                </ul>
-            </div>
-            <div class="user" style="float:right;">
-                <ul class="nav navbar-nav">
-                    <li><a href="#" class="btn-user-center"><php>echo session('username');</php></a></li>
-                    <li><a href="__APP__/logout" class="logout">Sign out</a></li>
-                </ul>
-            </div>
-        </script>-->
-            <block name="sidebar"></block>
-            <block name="content"></block>
-            <block name="template"></block>
-<!--         <div class="block block-view-translate">
-            <block name="main-translate"></block>
-            <block name="template-translate"></block>
-        </div>
-
-        <div class="block block-view-user" style="display: none;">
-            <block name="main-user"></block>
-            <block name="template-user"></block>
-        </div>
-
-        <div class="block block-view-personal" style="display: none;">
-            <block name="main-personal"></block>
-            <block name="template-personal"></block>
-        </div>
-
-        <div class="cms-view">
-            <block name="main-cms"></block>
-            <block name="template-cms"></block>
-        </div>
-
-         <div class="cms-block-view" style="display:none;">
-            <block name="main-cms-block"></block>
-            <block name="template-cms-block"></block>
-        </div> 
-        <div class="block block-user-view">
-            <block name="main-user-setting"></block>
-            <block name="template-user-setting"></block>
-        </div> -->
+        <block name="sidebar"></block>
+        <block name="content"></block>
+        <block name="template"></block>
         <div class="page-width block-footer">
             <block name="footer"><!-- <php>echo rand(100000,999999);</php> --></block>
         </div>

@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class RoleController extends RolePermissionController {
+class RoleController extends PermissionController {
 
     public function add() {
         $_params = json_decode(file_get_contents("php://input"), true);
@@ -81,7 +81,7 @@ class RoleController extends RolePermissionController {
             );
     }
 
-    public function get() {
+    public function load() {
         $_params = json_decode(file_get_contents("php://input"),true);
         $_rule_count = D('rule')->total();
         $_rules = D('rule')->gets();

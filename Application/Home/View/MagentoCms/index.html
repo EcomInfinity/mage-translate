@@ -2,11 +2,18 @@
 <block name="script">
     <!-- <load href="__PUBLIC__/js/translate.js" /> -->
     <load href="__PUBLIC__/js/magento.js" />
+    <script>
+        (function($) {
+            $(function(){
+                $('.main-nav ul li:eq(1)').addClass('menu-selection');
+            });
+        })(jQuery);
+    </script>
 </block>
 <block name="sidebar">
     <main>
         <div class="container-fluid page-width">
-            <h1>Happy Translating! - Cms</php></h1>
+            <h1>Manage Cms Translation</php></h1>
             <div class="block block-sidebar block-cms-sidebar">
                 <ul>
                     <li class="menu-selection"><a href="#page">Page List</a></li>

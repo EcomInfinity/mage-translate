@@ -2,105 +2,10 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class UserController extends UserPermissionController {
+class UserController extends PermissionController {
     public function index(){
-        // $_session_id = session('id');
-        // if (isset($_session_id) && $_session_id > 0) {
-        //     $this->redirect('/lang');
-        // } else {
-            $this->display();
-        // }
+        $this->display();
     }
-
-    // public function login(){
-    //     $_user = D('user');
-        
-    //     $_uid = session('id');
-    //     if (isset($_uid) === false) {
-    //         $_params = json_decode(file_get_contents("php://input"), true);
-    //         $_username = $_params['username'];
-    //         $_password = $_params['password'];
-
-    //         $_uid = $_user->login($_username, $_password);
-    //     }
-
-    //     if ($_uid === false) {
-    //         $this->ajaxReturn(
-    //             array(
-    //                 'success' => false,
-    //                 'message' => 'Incorrect Username or Password',
-    //                 'data' => array(),
-    //             ),
-    //             'json'
-    //         );
-    //     } else {
-    //         $_relation = D('relation')->get($_uid);
-    //         session('website_id', $_relation['website_id']);
-    //         session('website_name', D('website')->getWebsiteName($_relation['website_id']));
-    //         session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
-
-    //         $this->ajaxReturn(
-    //             array(
-    //                 'success' => true,
-    //                 'message' => '',
-    //                 'data' => array(),
-    //             ),
-    //             'json'
-    //         );
-    //     }
-    // }
-    // public function logout(){
-    //     $_session_id = session('id');
-    //     if (isset($_session_id) && $_session_id > 0) {
-    //         D('user')->logout();
-    //         session('[destroy]');
-    //     }
-    //     $this->redirect('/admin');
-    // }
-
-    // public function register(){
-    //     $_params = json_decode(file_get_contents("php://input"),true);
-    //     $_params['username'] = $_params['username'];
-    //     $_params['password'] = $_params['password'];
-    //     $_params['repeat-password'] = $_params['password-rpt'];
-
-    //     $_user_id = D('user')->register($_params);
-    //     if (is_string($_user_id)) {
-    //         $this->ajaxReturn(
-    //             array(
-    //                 'success' => false,
-    //                 'message' => $_user_id,
-    //                 'data' => array(),
-    //             ),
-    //             'json'
-    //         );
-    //         return;
-    //     }
-
-    //     $_website_id = D('website')->addWebsite($_params['website_name']);
-        
-    //     $_relation_id = D('relation')->addRelation(
-    //         array(
-    //             'user_id' => $_user_id,
-    //             'website_id' => $_website_id,
-    //             'role_id' => 1
-    //         )
-    //     );
-
-    //     $_relation = D('relation')->get($_user_id);
-    //     session('website_id', $_relation['website_id']);
-    //     session('website_name', D('website')->getWebsiteName($_relation['website_id']));
-    //     session('purview', getPurviewJson(D('role')->getPurview($_relation['role_id'])));
-
-    //     $this->ajaxReturn(
-    //             array(
-    //                 'success' => true,
-    //                 'message' => '',
-    //                 'data' => array(),
-    //             ),
-    //             'json'
-    //         );
-    // }
 
     public function add(){
         $_params = json_decode(file_get_contents("php://input"), true);
@@ -200,19 +105,6 @@ class UserController extends UserPermissionController {
 
     public function personalSetting() {
         $_params = json_decode(file_get_contents("php://input"),true);
-        // $user = D('user')->get($_params['id']);
-        // if(md5($_params['original-password']) != $user['password']) {
-        //     $this->ajaxReturn(
-        //         array(
-        //             'success' => false,
-        //             'message' => 'The password is incorrect.',
-        //             'data' => array(),
-        //         ),
-        //         'json'
-        //     );
-        //     return;
-        // }
-
         if($_params['new-password'] != $_params['confirm-new-password']) {
             $this->ajaxReturn(
                 array(
@@ -224,11 +116,6 @@ class UserController extends UserPermissionController {
             );
             return;
         }
-        // $_website = D('website')->get(array('id' => session('website_id')));
-        // if($_params['website-name'] != $_website['name'] && !empty($_params['website-name'])){
-        //     $_website_result = D('website')->save(array('id'=>session('website_id'), 'name' => $_params['website-name']));
-        //     session('website_name',$_params['website-name']);
-        // }
         if(strlen($_params['new-password']) > 5 && strlen($_params['new-password']) < 31) {
             $_result = D('user')->setPassword($_params['new-password'], $_params['id']);
         }
@@ -255,25 +142,28 @@ class UserController extends UserPermissionController {
 
     public function restSync() {
         $_params = json_decode(file_get_contents("php://input"),true);
-        $_communication = magentoApi(
+        $_communication = magentoApiSync(
                 array(
                         'domain' => $_params['domain'],
                         'rest_user' => $_params['rest_user'],
                         'rest_password' => $_params['rest_password']
                     )
             );
-        if($_communication === true){
+        if($_communication === false){
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Communication Failure.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+        }else{
             $_save['id'] = session('website_id');
-            // if(!empty($_params['domain'])){
-                $_save['domain'] = $_params['domain'];
-            // }
-            // if(!empty($_params['rest_user'])){
-                $_save['rest_user'] = $_params['rest_user'];
-            // }
-            // if(!empty($_params['rest_password'])){
-                $_save['rest_password'] = $_params['rest_password'];
-            // }
-                $_save['communication_status'] = 1;
+            $_save['domain'] = $_params['domain'];
+            $_save['rest_user'] = $_params['rest_user'];
+            $_save['rest_password'] = $_params['rest_password'];
+            $_save['communication_status'] = 1;
             $_result = D('website')->save($_save);
             if($_result > 0){
                 session('soap',array('domain' => $_params['domain'], 'rest_user' => $_params['rest_user'], 'rest_password' => $_params['rest_password']));
@@ -295,15 +185,6 @@ class UserController extends UserPermissionController {
                     'json'
                 );
             }
-        }else{
-            $this->ajaxReturn(
-                array(
-                    'success' => false,
-                    'message' => 'Communication Failure.',
-                    'data' => array(),
-                ),
-                'json'
-            );
         }
     }
 
