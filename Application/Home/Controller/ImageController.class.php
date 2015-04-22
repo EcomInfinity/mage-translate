@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class ImageController extends PermissionController {
+class ImageController extends ImagePermissionController {
     public function del(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $_result = D('translation_image')->del(
@@ -32,7 +32,7 @@ class ImageController extends PermissionController {
     }
 
     public function clear(){
-        $_result = D('translation_image')->clear('0');
+        $_result = D('translation_image')->clear(array('lang_id' => 0, 'user_id' => session('id')));
         if($_result){
              $this->ajaxReturn(
                     array(
@@ -69,7 +69,13 @@ class ImageController extends PermissionController {
         if(!$info){
             die();
         }else{
-            $_image_id = D('translation_image')->addImage($_GET['lang_id'],$info['savename']);
+            $_image_id = D('translation_image')->addImage(
+                                                    array(
+                                                            'lang_id' => $_GET['lang_id'],
+                                                            'image_name' => $info['savename'],
+                                                            'user_id' => session('id')
+                                                        )
+                                                );
             $image['image_name'] = $info['savename'];
             $image['id'] = $_image_id;
             echo json_encode($image);

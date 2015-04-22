@@ -550,4 +550,10 @@ class MagentoApiController extends PermissionController {
     //     var_dump($_cms_page_identifier);
 
     // }
+
+    public function test(){
+        $_domain = "http://repeat3.ecominfinity.com/a";
+        $_result = magentoTest($_domain);
+        var_dump($_result);
+    }
 }

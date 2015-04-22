@@ -18,9 +18,9 @@ jQuery(function() {
         lang.Collection = {};
         lang.View = {};
 
-        user.Model = {};
-        user.Collection = {};
-        user.View = {};
+        // user.Model = {};
+        // user.Collection = {};
+        // user.View = {};
 
         lang.Model.Base = Backbone.Model.extend({
             defaults:{
@@ -43,20 +43,20 @@ jQuery(function() {
             },
         });
 
-        user.Model.Base = Backbone.Model.extend({
-            defaults:{
-                'timestamp':-1
-            },
-            save: function(attributes, options) {
-                $.fancybox.showLoading();
-                var _success = options.success;
-                options.success = function(resp) {
-                    $.fancybox.hideLoading();
-                    if (_success) _success(model, resp, options);
-                };
-                return Backbone.Model.prototype.save.call(this, attributes, options);
-            }
-        });
+        // user.Model.Base = Backbone.Model.extend({
+        //     defaults:{
+        //         'timestamp':-1
+        //     },
+        //     save: function(attributes, options) {
+        //         $.fancybox.showLoading();
+        //         var _success = options.success;
+        //         options.success = function(resp) {
+        //             $.fancybox.hideLoading();
+        //             if (_success) _success(model, resp, options);
+        //         };
+        //         return Backbone.Model.prototype.save.call(this, attributes, options);
+        //     }
+        // });
 
         lang.Collection.LangList = Backbone.Collection.extend({
             model: lang.Model.Language,
@@ -452,9 +452,9 @@ jQuery(function() {
                         {id: id},
                         {url:UrlApi('_app')+'/langdel'}
                     ).done(function (response){
-                        if(response.success === true){
+                        // if(response.success === true){
                             _self.render();
-                        }
+                        // }
                     });
                     // this.translate.clear();
                 }
@@ -597,10 +597,20 @@ jQuery(function() {
                     { imageId:this.imageId },
                     { url:UrlApi('_app')+'/langimgdel' }
                 ).done(function (response){
-                    if(response.success === true){
+                    // if(response.success === true){
+                    if(response){
                         _click.closest('li').hide();
                         $('#enlarge_images').html('');
                     }
+                    // }else{
+                    //     $('.images_list').notify(
+                    //             'Has been deleted.', 
+                    //             { 
+                    //                 position: 'top',
+                    //                 className: 'error'
+                    //             }
+                    //         );
+                    // }
                 });
                 // this.translate.clear();
                 return false;

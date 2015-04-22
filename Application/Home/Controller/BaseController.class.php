@@ -10,13 +10,16 @@ class BaseController extends RestController {
     }
 
     protected function _initialize(){
-        if(session('id')<0||!session('id')){
+        if(session('id') < 0 || !session('id')){
             $this->redirect('/admin');
         }
-        if(session('id')>0&&session('id')){
+        if(session('id') > 0 && session('id')){
             if(getAllow(session('id')) == '0'){
                 $this->redirect('/logout');
             }
+        }
+        if(!empty(session('website_id'))){
+            session('website_name', D('website')->getWebsiteName(session('website_id')));
         }
     }
 }

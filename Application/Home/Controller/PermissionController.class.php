@@ -48,20 +48,20 @@ class PermissionController extends BaseController {
         }
     }
     //image
-    public function _before_clear(){
-        $_purview = json_decode(session('purview'), true);
-        if($_purview >= 0 && $_purview['delete'] == 0){
-            $this->ajaxReturn(
-                array(
-                    'success' => false,
-                    'message' => 'Illegal delete data.',
-                    'data' => array(),
-                ),
-                'json'
-            );
-            return;
-        }
-    }
+    // public function _before_clear(){
+    //     $_purview = json_decode(session('purview'), true);
+    //     if($_purview >= 0 && $_purview['delete'] == 0){
+    //         $this->ajaxReturn(
+    //             array(
+    //                 'success' => false,
+    //                 'message' => 'Illegal delete data.',
+    //                 'data' => array(),
+    //             ),
+    //             'json'
+    //         );
+    //         return;
+    //     }
+    // }
     //magento api
     public function _before_syncTranslatePage(){
         $_purview = json_decode(session('purview'), true);

@@ -42,6 +42,7 @@ table td, table th { padding: 5px; }
 
 .tip{color:red;}
 th.col-operation { width: 16%; }
+.tbl-translation-list th.col-operation{width: 10%;}
 th.col-checkbox { width: 5%; }
 /*table.tbl-translation-list th.col-operation { width: 13%; }*/
 table.tbl-translation-list th.col-language { width: 35%; }

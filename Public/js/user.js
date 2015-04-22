@@ -53,13 +53,20 @@ jQuery(function() {
                 $('.block-user-content .block').hide();
                 $('.block-user-content .block:eq(0)').show();
             },
+            magentoStore: function(){
+                $('.block-user-sidebar ul li').removeClass('menu-selection');
+                $('.block-user-sidebar ul li:eq(1)').addClass('menu-selection');
+                this._userEvents.trigger('refresh', 'magento-store-view');
+                $('.block-user-content .block').hide();
+                $('.block-user-content .block:eq(1)').show();
+            },
             websiteSetting: function(){
                 if(Purview('create') == '1' || PurviewVal() == '-1' || Purview('update') == '1'){
                     $('.block-user-sidebar ul li').removeClass('menu-selection');
-                    $('.block-user-sidebar ul li:eq(1)').addClass('menu-selection');
+                    $('.block-user-sidebar ul li:eq(2)').addClass('menu-selection');
                     this._userEvents.trigger('refresh', 'website-setting');
                     $('.block-user-content .block').hide();
-                    $('.block-user-content .block:eq(1)').show();
+                    $('.block-user-content .block:eq(2)').show();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -71,10 +78,10 @@ jQuery(function() {
             syncSetting: function(){
                 if(PurviewVal() == '-1' || Purview('update') == '1' || Purview('create') == '1'){
                     $('.block-user-sidebar ul li').removeClass('menu-selection');
-                    $('.block-user-sidebar ul li:eq(2)').addClass('menu-selection');
+                    $('.block-user-sidebar ul li:eq(3)').addClass('menu-selection');
                     this._userEvents.trigger('refresh', 'rest-setting');
                     $('.block-user-content .block').hide();
-                    $('.block-user-content .block:eq(2)').show();
+                    $('.block-user-content .block:eq(3)').show();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -86,10 +93,10 @@ jQuery(function() {
             languageSetting: function(){
                 if(PurviewVal() == '-1' || Purview('update') == '1' || Purview('create') == '1'){
                     $('.block-user-sidebar ul li').removeClass('menu-selection');
-                    $('.block-user-sidebar ul li:eq(3)').addClass('menu-selection');
+                    $('.block-user-sidebar ul li:eq(4)').addClass('menu-selection');
                     this._userEvents.trigger('refresh', 'language-setting');
                     $('.block-user-content .block').hide();
-                    $('.block-user-content .block:eq(3)').show();
+                    $('.block-user-content .block:eq(4)').show();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -101,10 +108,10 @@ jQuery(function() {
             userSetting: function(){
                 if(PurviewVal() == '-1'){
                     $('.block-user-sidebar ul li').removeClass('menu-selection');
-                    $('.block-user-sidebar ul li:eq(4)').addClass('menu-selection');
+                    $('.block-user-sidebar ul li:eq(5)').addClass('menu-selection');
                     this._userEvents.trigger('refresh', 'user-search-list-view');
                     $('.block-user-content .block').hide();
-                    $('.block-user-content .block:eq(4)').show();
+                    $('.block-user-content .block:eq(5)').show();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -116,10 +123,10 @@ jQuery(function() {
             roleSetting: function(){
                 if(PurviewVal() == '-1'){
                     $('.block-user-sidebar ul li').removeClass('menu-selection');
-                    $('.block-user-sidebar ul li:eq(5)').addClass('menu-selection');
+                    $('.block-user-sidebar ul li:eq(6)').addClass('menu-selection');
                     this._userEvents.trigger('refresh', 'role-search-list-view');
                     $('.block-user-content .block').hide();
-                    $('.block-user-content .block:eq(5)').show();
+                    $('.block-user-content .block:eq(6)').show();
                 }else{
                     $.fancybox($('.message'),{
                        afterClose: function () {
@@ -127,13 +134,6 @@ jQuery(function() {
                         }
                     });
                 }
-            },
-            magentoStore: function(){
-                $('.block-user-sidebar ul li').removeClass('menu-selection');
-                $('.block-user-sidebar ul li:eq(6)').addClass('menu-selection');
-                this._userEvents.trigger('refresh', 'magento-store-view');
-                $('.block-user-content .block').hide();
-                $('.block-user-content .block:eq(6)').show();
             }
         });
 
@@ -320,14 +320,22 @@ jQuery(function() {
                 this.userModel = options.userModel;
             },
             render: function(){
+                this.userModel.clear();
                 var _self = this;
-                this.$el.html(this.template({}));
-                this.$el.find('form').validator().on('submit', function(e) {
-                    if (e.isDefaultPrevented()) {
-                    } else {
-                        _self.changeWebsiteName.call(_self);
-                        return false;
-                    }
+                this.userModel.save(
+                    {},
+                    {url: UrlApi('_app')+"/websiteinfo"}
+                ).done(function (response){
+                    var data = {};
+                    data['web_info'] = response.data;
+                    _self.$el.html(_self.template(data));
+                    _self.$el.find('form').validator().on('submit', function(e) {
+                        if (e.isDefaultPrevented()) {
+                        } else {
+                            _self.changeWebsiteName.call(_self);
+                            return false;
+                        }
+                    });
                 });
             }
         });

@@ -194,7 +194,7 @@ class TranslationController extends PermissionController {
                 }
                 $_result = D('base_translate')->save($_base_save);
                 if($_result === true){
-                    $_images = D('translation_image')->gets(array('lang_id' => '0', 'status' => 1));
+                    $_images = D('translation_image')->gets(array('lang_id' => '0', 'status' => 1, 'user_id' => session('id')));
                     foreach ($_images as $val) {
                         # code...
                         D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_repeat_lang_info['id']));
@@ -237,14 +237,12 @@ class TranslationController extends PermissionController {
             $_base_add['remarks'] = $_params['remarks'];
             $_base_result = D('base_translate')->createBase($_base_add);
             if($_base_result > 0){
-                $_images = D('translation_image')->where(array('lang_id' => '0', 'status' => 1))->select();
+                $_images = D('translation_image')->where(array('lang_id' => '0', 'status' => 1, 'user_id' => session('id')))->select();
                 foreach ($_images as $val) {
-                    # code...
                     D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_base_result));
                 }
                 $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
                 foreach ($_website_lang as $val) {
-                    # code...
                     $_other_add['content'] = $_params[strtolower($val['simple_name'])];
                     $_other_add['base_id'] = $_base_result;
                     $_other_add['lang_id'] = $val['lang_id'];
@@ -402,7 +400,7 @@ class TranslationController extends PermissionController {
         $_params = json_decode(file_get_contents("php://input"),true);
         $base_info = D('base_translate')->get($_params['base_id']);
         $other_info = D('other_translate')->get(array('id' => $_params['other_id']));
-        $images = D('translation_image')->gets(array('lang_id' => $_params['base_id']));
+        $images = D('translation_image')->gets(array('lang_id' => $_params['base_id'], 'status' => 1));
         if($base_info){
             $this->ajaxReturn(
                     array(

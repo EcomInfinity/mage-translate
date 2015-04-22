@@ -6,7 +6,7 @@
         <div class="form-hoder">
             <div class="entry form-group">
                 <label for="website-name">Website Name:</label>
-                <input type="text" name="website_name" id="website-name" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Website name is invalid." value="<php>echo session('website_name');</php>" />
+                <input type="text" name="website_name" id="website-name" placeholder="Can not be empty." required pattern=".*[^ ].*" data-error="Website name is invalid." value="<%= web_info.name %>" />
                 <div class="help-block with-errors"></div>
             </div>
         </div>
