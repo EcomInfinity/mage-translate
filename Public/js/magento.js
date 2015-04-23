@@ -38,12 +38,16 @@ jQuery(function() {
                 this._cmsEvents = options._cmsEvents;
             },
             routes: {
+                "cms": "cmsRender",
                 "page": "pageRender",
                 "block": "blockRender",
                 "edit-page/:id\d": "eidtPage",
                 "edit-block/:id\d": "editBlock",
             },
 
+            cmsRender: function(){
+                this._cmsEvents.trigger('refresh', 'page-view');
+            },
             pageRender: function(){
                 $('.block-cms-sidebar ul li').removeClass('menu-selection');
                 $('.block-cms-sidebar ul li:eq(0)').addClass('menu-selection');
@@ -123,7 +127,7 @@ jQuery(function() {
                 options || (options = {});
                 this.cmsModel = options.cmsModel;
                 this._cmsEvents = options._cmsEvents;
-                this.render();
+                // this.render();
             },
             render: function(){
                 var data = {};
@@ -328,7 +332,7 @@ jQuery(function() {
                 options || (options = {});
                 this.cmsModel = options.cmsModel;
                 this._cmsEvents = options._cmsEvents;
-                this.render();
+                // this.render();
             },
             render: function(){
                 this.cmsModel.clear();
