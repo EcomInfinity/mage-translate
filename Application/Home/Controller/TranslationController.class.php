@@ -340,13 +340,25 @@ class TranslationController extends PermissionController {
         $_params = json_decode(file_get_contents("php://input"),true);
         if($_params['record'] === 0){
             //已完成
-            $_translate_list = D('base_translate')->gets(array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
+            $_translate_list = D('base_translate')->gets(
+                    array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),
+                    'id desc',
+                    'id,content'
+                );
         }elseif($_params['record'] === 1){
             //未完成
-            $_translate_list = D('base_translate')->gets(array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
+            $_translate_list = D('base_translate')->gets(
+                    array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),
+                    'id desc',
+                    'id, content'
+                );
         }else{
             //全部
-            $_translate_list = D('base_translate')->gets(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),'id desc');
+            $_translate_list = D('base_translate')->gets(
+                    array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),
+                    'id desc',
+                    'id,content'
+                );
         }
         $_language_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
         
@@ -359,7 +371,7 @@ class TranslationController extends PermissionController {
         $_empty = false;
         foreach ($_translate_list as $k => $val) {
             # code...
-            $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']));
+            $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']), 'id, content');
             foreach ($_empty_other as $value) {
                 # code...
                 if(empty($value['content'])){
@@ -367,7 +379,7 @@ class TranslationController extends PermissionController {
                 }
             }
             $_translate_list[$k]['other_empty'] = $_empty;
-            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id));
+            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id), 'id, content');
         }
         foreach ($_translate_list as $key => $value) {
             # code...

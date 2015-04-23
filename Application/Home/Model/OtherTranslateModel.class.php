@@ -13,8 +13,8 @@ class OtherTranslateModel extends RelationModel{
                 'as_fields' => 'simple_name',
             ),
         );
-    public function gets($_where, $_order_by){
-        return $this->where($_where)->order($_order_by)->relation(true)->select();
+    public function gets($_where, $_field){
+        return $this->where($_where)->field($_field)->relation(true)->select();
     }
 
     public function get($_where){
