@@ -368,17 +368,17 @@ class TranslationController extends PermissionController {
         }else{
             $_lang_id = $_params['language'];
         }
-        $_empty = false;
+        // $_empty = false;
         foreach ($_translate_list as $k => $val) {
             # code...
-            $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']), 'id, content');
-            foreach ($_empty_other as $value) {
-                # code...
-                if(empty($value['content'])){
-                    $_empty = true;
-                }
-            }
-            $_translate_list[$k]['other_empty'] = $_empty;
+            // $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']), 'id, content');
+            // foreach ($_empty_other as $value) {
+            //     # code...
+            //     if(empty($value['content'])){
+            //         $_empty = true;
+            //     }
+            // }
+            // $_translate_list[$k]['other_empty'] = $_empty;
             $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id), 'id, content');
         }
         foreach ($_translate_list as $key => $value) {
@@ -411,7 +411,9 @@ class TranslationController extends PermissionController {
     public function load(){
         $_params = json_decode(file_get_contents("php://input"),true);
         $base_info = D('base_translate')->get($_params['base_id']);
+        $base_info['content'] = htmlentities($base_info['content']);
         $other_info = D('other_translate')->get(array('id' => $_params['other_id']));
+        $other_info['content'] = htmlentities($other_info['content']);
         $images = D('translation_image')->gets(array('lang_id' => $_params['base_id'], 'status' => 1));
         if($base_info){
             $this->ajaxReturn(
