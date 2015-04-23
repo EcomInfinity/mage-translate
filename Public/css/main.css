@@ -11,8 +11,8 @@ textarea{ width: 100%; padding: 10px; resize: none; }
 .clear { clear: both; }
 .page-width { width: 960px; margin: 0 auto; }
 
-body { background-color: #f6f9fc; }
-
+body { background-color: #F8F3EF;font: 14px/17px Helvetica Neue, Arial, Helvetica, sans-serif;color:#351611;}
+.navbar-default .navbar-nav > li > a {color: #351611;}
 main { margin-top: 60px; }
 main .search-box { width: 100%; margin-bottom: 10px; }
 
@@ -90,7 +90,8 @@ textarea {height: 62px;box-sizing: border-box;}
 .block-sidebar a {color: black;margin-left: 20%;}
 .block-sidebar ul li {padding: 10px 0;box-shadow: 1px 1px 1px #888888;}
 .block-content {width: 78%;float: left;margin-left: 2%;border: 1px solid #888888;border-radius: 5px;padding: 10px;}
-.block-content .modal-container{background-color: #fff;border: 0px solid #7a858d; }
+.block-content .modal-container{background-color: #F8F3EF;border: 0px solid #7a858d; }
+.block-content .modal-container .content{background-color: #F8F3EF;}
 .menu-selection{background-color: #E7EFEF;}
 a{text-decoration: none;}
 /*.menu-selection a {color: #337ab7;text-decoration: underline;}*/
