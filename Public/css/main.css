@@ -92,7 +92,7 @@ textarea {height: 62px;box-sizing: border-box;}
 .block-content {width: 78%;float: left;margin-left: 2%;border: 1px solid #888888;border-radius: 5px;padding: 10px;}
 .block-content .modal-container{border: 0px solid #7a858d; }
 /*.block-content .modal-container .content{background-color: #F8F3EF;}*/
-.menu-selection{background-color: #E7EFEF;}
+.menu-selection{background-color: #E7EFEF;margin-top: 2px;margin-bottom: 2px;}
 a{text-decoration: none;}
 /*.menu-selection a {color: #337ab7;text-decoration: underline;}*/
 /*table tbody tr {cursor:pointer}*/
