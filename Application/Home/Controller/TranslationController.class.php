@@ -193,7 +193,7 @@ class TranslationController extends PermissionController {
                     $_base_save['remarks'] = $_params['remarks'];
                 }
                 $_result = D('base_translate')->save($_base_save);
-                if($_result === true){
+                // if($_result === true){
                     $_images = D('translation_image')->gets(array('lang_id' => '0', 'status' => 1, 'user_id' => session('id')));
                     foreach ($_images as $val) {
                         # code...
@@ -219,16 +219,16 @@ class TranslationController extends PermissionController {
                             ),
                             'json'
                         );
-                }else{
-                    $this->ajaxReturn(
-                            array(
-                                'success' => false,
-                                'message' => $_result,
-                                'data' => array(),
-                            ),
-                            'json'
-                        );
-                }
+                // }else{
+                //     $this->ajaxReturn(
+                //             array(
+                //                 'success' => false,
+                //                 'message' => $_result,
+                //                 'data' => array(),
+                //             ),
+                //             'json'
+                //         );
+                // }
             }
         }else{
             $_base_add['modify'] = $_params['modify'];
