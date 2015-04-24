@@ -11,6 +11,7 @@
                 </tr>
             </thead>
             <tbody>
+            <% if(store_list){ %>
                 <% _.each(store_list,function (so){ %>
                         <% _.each(so.stores,function (st, kt){ %>
                             <% _.each(st.store_views,function (sth, kth){ %>
@@ -35,6 +36,9 @@
                             <%})%>
                         <%})%>
                 <%})%>
+            <% }else{ %>
+                <tr><td colspan="3" align="center">You have not yet communicate with magento.</td></tr>
+            <% } %>
             </tbody>
         </table>
     </div>
