@@ -14,7 +14,7 @@ class OtherTranslateModel extends RelationModel{
             ),
         );
     public function gets($_where, $_field){
-        return $this->where($_where)->field($_field)->select();
+        return $this->where($_where)->relation(true)->field($_field)->select();
     }
 
     public function get($_where){

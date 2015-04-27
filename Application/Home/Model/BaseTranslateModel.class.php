@@ -37,11 +37,11 @@ class BaseTranslateModel extends Model {
         }else{
             $_result = $this->save($_params);
         }
-        // if($_result > 0){
-        return true;
-        // }else{
-        //     return 'Modify Failure.';
-        // }
+        if($_result > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function del($_tid){

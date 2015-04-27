@@ -154,6 +154,7 @@ jQuery(function() {
                         {url: UrlApi('_app')+'/create-page'}
                     ).done(function (response){
                         if (response.success === true) {
+                            // $('input[name="notify"]').val('Success');
                             _self.$el.notify(
                                 'Success',
                                 {
@@ -161,8 +162,9 @@ jQuery(function() {
                                     className: 'success'
                                 }
                             );
-                            _self.render();
+                            _self.render('Success');
                         } else {
+                            $('input[name="notify"]').val('Failure');
                             _self.$el.notify(
                                 'Failure',
                                 {
@@ -191,6 +193,7 @@ jQuery(function() {
                         {url: UrlApi('_app')+'/sync-all-page'}
                     ).done(function (response){
                         if (response.success === true) {
+                            // $('input[name="notify"]').val('Success');
                             _self.$el.notify(
                                 'Success',
                                 {
@@ -198,8 +201,9 @@ jQuery(function() {
                                     className: 'success'
                                 }
                             );
-                            _self.render();
+                            _self.render('Success');
                         } else {
+                            $('input[name="notify"]').val('Failure');
                             _self.$el.notify(
                                 'Failure',
                                 {
@@ -236,6 +240,7 @@ jQuery(function() {
                             {url: UrlApi('_app')+"/export-contents"}
                         ).done(function (response){
                             if(response.success === true){
+                                // $('input[name="notify"]').val('Success');
                                 _self.$el.notify(
                                     'Success',
                                     {
@@ -245,8 +250,9 @@ jQuery(function() {
                                 );
                                 window.open(UrlApi('_app')+'/download-contents');
                                 $(event.target).find('option')[0].selected = true;
-                                _self.render();
+                                _self.render('Success');
                             }else{
+                                $('input[name="notify"]').val('Failure');
                                 _self.$el.notify(
                                     'Failure',
                                     {
@@ -272,6 +278,7 @@ jQuery(function() {
                                 {url: UrlApi('_app')+"/sync-checked-page"}
                             ).done(function (response){
                                 if(response.success === true){
+                                    // $('input[name="notify"]').val('Success');
                                     _self.$el.notify(
                                         'Success',
                                         {
@@ -280,8 +287,9 @@ jQuery(function() {
                                         }
                                     );
                                     $(event.target).find('option')[0].selected = true;
-                                    _self.render();
+                                    _self.render('Success');
                                 }else{
+                                    $('input[name="notify"]').val('Failure');
                                     _self.$el.notify(
                                         'Failure',
                                         {
@@ -334,7 +342,7 @@ jQuery(function() {
                 this._cmsEvents = options._cmsEvents;
                 // this.render();
             },
-            render: function(){
+            render: function(notify){
                 this.cmsModel.clear();
                 var _self = this;
                 this.cmsModel.save(
@@ -342,6 +350,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/page-list'}
                 ).done(function (response){
                     var data = {};
+                    data['notify'] = notify;
                     data['page_list'] = response.data.list;
                     data['pages_total'] = response.data.total;
                     data['pages_count'] = response.data.count;
@@ -364,6 +373,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/page-save'}
                 ).done(function (response){
                     if (response.success === true) {
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -373,6 +383,7 @@ jQuery(function() {
                         );
                         _self._cmsEvents.trigger('refresh', 'page-view');
                     } else {
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {
@@ -492,6 +503,7 @@ jQuery(function() {
                         {url: UrlApi('_app')+'/create-block'}
                     ).done(function (response){
                         if (response.success === true) {
+                            // $('input[name="notify"]').val('Success');
                             _self.$el.notify(
                                 'Success',
                                 {
@@ -499,8 +511,9 @@ jQuery(function() {
                                     className: 'success'
                                 }
                             );
-                            _self.render();
+                            _self.render('Success');
                         } else {
+                            $('input[name="notify"]').val('Failure');
                             _self.$el.notify(
                                 'Failure',
                                 {
@@ -529,6 +542,7 @@ jQuery(function() {
                         {url: UrlApi('_app')+'/sync-all-block'}
                     ).done(function (response){
                         if (response.success === true) {
+                            // $('input[name="notify"]').val('Success');
                             _self.$el.notify(
                                 'Success',
                                 {
@@ -536,8 +550,9 @@ jQuery(function() {
                                     className: 'success'
                                 }
                             );
-                            _self.render();
+                            _self.render('Success');
                         } else {
+                            $('input[name="notify"]').val('Failure');
                             _self.$el.notify(
                                 'Failure',
                                 {
@@ -575,6 +590,7 @@ jQuery(function() {
                             {url: UrlApi('_app')+"/export-contents"}
                         ).done(function (response){
                             if(response.success === true){
+                                // $('input[name="notify"]').val('Success');
                                 _self.$el.notify(
                                     'Success',
                                     {
@@ -584,8 +600,9 @@ jQuery(function() {
                                 );
                                 window.open(UrlApi('_app')+'/download-contents');
                                 $(event.target).find('option')[0].selected = true;
-                                _self.render();
+                                _self.render('Success');
                             }else{
+                                $('input[name="notify"]').val('Failure');
                                 _self.$el.notify(
                                     'Failure',
                                     {
@@ -612,6 +629,7 @@ jQuery(function() {
                                 {url: UrlApi('_app')+"/sync-checked-block"}
                             ).done(function (response){
                                 if (response.success === true) {
+                                    // $('input[name="notify"]').val('Success');
                                     _self.$el.notify(
                                         'Success',
                                         {
@@ -620,8 +638,9 @@ jQuery(function() {
                                         }
                                     );
                                     $(event.target).find('option')[0].selected = true;
-                                    _self.render();
+                                    _self.render('Success');
                                 } else {
+                                    $('input[name="notify"]').val('Failure');
                                     _self.$el.notify(
                                         'Failure',
                                         {
@@ -673,7 +692,7 @@ jQuery(function() {
                 this.cmsModel = options.cmsModel;
                 this._cmsEvents = options._cmsEvents;
             },
-            render: function(){
+            render: function(notify){
                 this.cmsModel.clear();
                 var _self = this;
                 this.cmsModel.save(
@@ -681,6 +700,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/block-list'}
                 ).done(function (response){
                     var data = {};
+                    data['notify'] = notify;
                     data['block_list'] = response.data.list;
                     data['blocks_total'] = response.data.total;
                     data['blocks_count'] = response.data.count;
@@ -704,6 +724,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/block-save'}
                 ).done(function (response){
                     if (response.success === true) {
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -713,6 +734,7 @@ jQuery(function() {
                         );
                         _self._cmsEvents.trigger('refresh', 'block-view');
                     } else {
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {

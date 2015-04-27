@@ -314,4 +314,9 @@ class UserController extends PermissionController {
             'json'
         );
     }
+
+    public function test(){
+        $_result = D('other_translate')->relation(true)->field('id')->select();
+        var_dump($_result);
+    }
 }

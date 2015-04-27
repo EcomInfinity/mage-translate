@@ -65,13 +65,15 @@
         });
 
         $('body').on('change', '[name="checked-all"]', function (event){
-            if($(event.target).prop('checked') == true){
-                $('tbody tr input[type="checkbox"]').prop("checked",true);
-                $('tbody tr').addClass('selection');
-                $(event.target).parents('.block').find('.batch-app option')[0].selected = true;
-            }else{
-                $('tbody tr input[type="checkbox"]').prop("checked",false);
-                $('tbody tr').removeClass('selection');
+            if($('tbody tr').attr('operation') != 'no-records'){
+                if($(event.target).prop('checked') == true){
+                    $('tbody tr input[type="checkbox"]').prop("checked",true);
+                    $('tbody tr').addClass('selection');
+                    $(event.target).parents('.block').find('.batch-app option')[0].selected = true;
+                }else{
+                    $('tbody tr input[type="checkbox"]').prop("checked",false);
+                    $('tbody tr').removeClass('selection');
+                }
             }
             return false;
         });
@@ -89,7 +91,7 @@
         });
 
         $('body').on('click', "tbody tr", function (event){
-            if($(event.target).closest('table').attr('operation') == 'batch'){
+            if($(event.target).closest('table').attr('operation') == 'batch' && $(event.target).closest('tr').attr('operation') != 'no-records'){
                 $(event.target).parents('.block').find('.batch-app option')[0].selected = true;
                 $('[name="checked-all"]').prop("checked",false);
                 if(_ctrl_click === true){

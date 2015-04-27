@@ -379,7 +379,7 @@ class TranslationController extends PermissionController {
             //     }
             // }
             // $_translate_list[$k]['other_empty'] = $_empty;
-            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id), 'id, content');
+            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id));
         }
         foreach ($_translate_list as $key => $value) {
             # code...
@@ -472,10 +472,20 @@ class TranslationController extends PermissionController {
                 'remarks' => $_params['remarks'], 
                 'modify' => $_params['modify'])
             );
-        if($_base_result === true){
+        // if($_base_result === true){
             if($_params['other_id'] != -1){
                 $_other = D('other_translate')->get(array('id' => $_params['other_id']));
                 $_other_result = D('other_translate')->save(array('id' => $_params['other_id'], 'content' => $_params[strtolower($_other['simple_name'])]));
+                // $this->ajaxReturn(
+                //         array(
+                //             'success' => true,
+                //             'message' => '',
+                //             'data' => array(),
+                //         ),
+                //         'json'
+                //     );
+            }
+            if($_base_result === true || $_other_result > 0){
                 $this->ajaxReturn(
                         array(
                             'success' => true,
@@ -484,16 +494,15 @@ class TranslationController extends PermissionController {
                         ),
                         'json'
                     );
+            }else{
+                $this->ajaxReturn(
+                        array(
+                            'success' => false,
+                            'message' => 'Modify Failure',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
             }
-        }else{
-            $this->ajaxReturn(
-                    array(
-                        'success' => false,
-                        'message' => $_base_result,
-                        'data' => array(),
-                    ),
-                    'json'
-                );
-        }
     }
 }

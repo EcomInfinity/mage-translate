@@ -188,96 +188,6 @@ jQuery(function() {
             }
         });
 
-        // user.View.PersonalSidebar = Backbone.View.extend({
-        //     template: _.template($('#tpl-personal-sidebar').html()),
-        //     events: {
-        //         'click .website': 'websiteSetting',
-        //         'click .personal': 'personalSetting',
-        //         'click .sync': 'restSyncSetting',
-        //         'click .language': 'siteLanguageSetting',
-        //         'click .user': 'userSetting',
-        //         'click .role': 'roleSetting'
-        //     },
-        //     websiteSetting: function (event){
-        //         if(Purview('update') == '1'||PurviewVal() == '-1'){
-        //             $('.menu-selection').removeClass('menu-selection');
-        //             $(event.target).closest('li').addClass('menu-selection');
-        //             this._userEvents.trigger('refresh', 'website-setting');
-        //             $('.block-user-content .block').hide();
-        //             $('.block-website-setting').show();
-        //         }else{
-        //             $.fancybox($('.message'),{
-        //                afterClose: function () {
-        //                     // window.history.back();
-        //                 }
-        //             });
-        //         }
-        //     },
-        //     personalSetting: function (event){
-        //         $('.menu-selection').removeClass('menu-selection');
-        //         $(event.target).closest('li').addClass('menu-selection');
-        //         this._userEvents.trigger('refresh', 'personal-setting');
-        //         $('.block-user-content .block').hide();
-        //         $('.block-personal-setting').show();
-        //     },
-        //     restSyncSetting: function (event){
-        //         if(Purview('update') == '1'||PurviewVal() == '-1'){
-        //             $('.menu-selection').removeClass('menu-selection');
-        //             $(event.target).closest('li').addClass('menu-selection');
-        //             this._userEvents.trigger('refresh', 'rest-setting');
-        //             $('.block-user-content .block').hide();
-        //             $('.block-sync-setting').show();
-        //         }else{
-        //             $.fancybox($('.message'),{
-        //                afterClose: function () {
-        //                     // window.history.back();
-        //                 }
-        //             });
-        //         }
-        //     },
-        //     siteLanguageSetting: function (event){
-        //         if(Purview('update') == '1'||PurviewVal() == '-1'){
-        //             $('.menu-selection').removeClass('menu-selection');
-        //             $(event.target).closest('li').addClass('menu-selection');
-        //             this._userEvents.trigger('refresh', 'language-setting');
-        //             $('.block-user-content .block').hide();
-        //             $('.block-language-setting').show();
-        //         }else{
-        //             $.fancybox($('.message'),{
-        //                afterClose: function () {
-        //                     // window.history.back();
-        //                 }
-        //             });
-        //         }
-        //     },
-        //     userSetting: function(event){
-        //         console.log('user');
-        //         $('.menu-selection').removeClass('menu-selection');
-        //         $(event.target).closest('li').addClass('menu-selection');
-        //         // this._userEvents.trigger('refresh', 'language-setting');
-        //         $('.block-user-content .block').hide();
-        //         $('.block-user').show();
-        //         this._userEvents.trigger('refresh', 'user-search-list-view');
-        //     },
-        //     roleSetting: function(event){
-        //         console.log('role');
-        //         $('.menu-selection').removeClass('menu-selection');
-        //         $(event.target).closest('li').addClass('menu-selection');
-        //         // this._userEvents.trigger('refresh', 'language-setting');
-        //         $('.block-user-content .block').hide();
-        //         $('.block-role').show();
-        //         this._userEvents.trigger('refresh', 'role-search-list-view');
-        //     },
-        //     initialize: function(options){
-        //         options || (options = {});
-        //         this._userEvents = options._userEvents;
-        //         this.render();
-        //     },
-        //     render: function(){
-        //         this.$el.html(this.template({}));
-        //     }
-        // });
-
         user.View.WebsiteSettingView = Backbone.View.extend({
             template: _.template($('#tpl-website-setting').html()),
             events: {
@@ -292,6 +202,7 @@ jQuery(function() {
                     {url: UrlApi('_app')+'/save-name'}
                 ).done(function (response){
                     if(response.success === true){
+                        $('input[name="notify"]').val('Success');
                         _self.$el.notify(
                             'Success',
                             {
@@ -300,6 +211,7 @@ jQuery(function() {
                             }
                         );
                     }else{
+                        $('input[name="notify"]').val(response.message);
                         _self.$el.notify(
                             response.message,
                             {
@@ -355,6 +267,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/personal-setting'}
                 ).done(function (response){
                     if(response.success === true){
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -363,6 +276,7 @@ jQuery(function() {
                             }
                         );
                     }else{
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {
@@ -414,16 +328,18 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/rest-sync'}
                 ).done(function (response){
                     if(response.success === true){
-                        $form.notify(
+                        // $('input[name="notify"]').val('Success');
+                        _self.$el.notify(
                             response.message,
                             {
                                 position: 'top',
                                 className: 'success'
                             }
                         );
-                        _self.render();
+                        _self.render('Success');
                     }else{
-                        $form.notify(
+                        $('input[name="notify"]').val(response.message);
+                        _self.$el.notify(
                             response.message,
                             {
                                 position: 'top',
@@ -444,13 +360,13 @@ jQuery(function() {
                 this._userEvents = options._userEvents;
                 this.userModel = options.userModel;
             },
-            render: function(){
+            render: function(notify){
                 this.userModel.clear();
                 var _self = this;
                 this.userModel.save({},
                     {url: UrlApi('_app')+'/websiteinfo'}
                 ).done(function (response){
-                    _self.$el.html(_self.template({'website': response.data}));
+                    _self.$el.html(_self.template({'website': response.data, 'notify': notify}));
                     _self.$el.find('form').validator().on('submit', function(e) {
                         if (e.isDefaultPrevented()) {
                         } else {
@@ -485,8 +401,9 @@ jQuery(function() {
                                 className: 'success'
                             }
                         );
-                        setTimeout(_self.render(),2000);
+                        setTimeout(_self.render('Success'),2000);
                     }else{
+                        $('input[name="notify"]').val(response.message);
                         _self.$el.notify(
                             response.message,
                             {
@@ -514,8 +431,9 @@ jQuery(function() {
                                 className: 'success'
                             }
                         );
-                        setTimeout(_self.render(),2000);
+                        setTimeout(_self.render('Success'),2000);
                     }else{
+                        $('input[name="notify"]').val(response.message);
                         _self.$el.notify(
                             response.message,
                             {
@@ -528,36 +446,36 @@ jQuery(function() {
                 // this.userModel.clear();
                 return false;
             },
-            _edit: function(){
-                this.userModel.clear();
-                var _self = this;
-                var $form = this.$el.find('form');
-                // console.log($form.serializeObject());
-                this.userModel.save(
-                    $form.serializeObject(),
-                    {url:UrlApi('_app')+'/personal-setting'}
-                ).done(function (response){
-                    if(response.success === true){
-                        $form.notify(
-                            'Success',
-                            {
-                                position: 'top',
-                                className: 'success'
-                            }
-                        );
-                    }else{
-                        $form.notify(
-                            response.message,
-                            {
-                                position: 'top',
-                                className: 'error'
-                            }
-                        );
-                    }
-                });
-                // this.userModel.clear();
-                return false;
-            },
+            // _edit: function(){
+            //     this.userModel.clear();
+            //     var _self = this;
+            //     var $form = this.$el.find('form');
+            //     // console.log($form.serializeObject());
+            //     this.userModel.save(
+            //         $form.serializeObject(),
+            //         {url:UrlApi('_app')+'/personal-setting'}
+            //     ).done(function (response){
+            //         if(response.success === true){
+            //             $form.notify(
+            //                 'Success',
+            //                 {
+            //                     position: 'top',
+            //                     className: 'success'
+            //                 }
+            //             );
+            //         }else{
+            //             $form.notify(
+            //                 response.message,
+            //                 {
+            //                     position: 'top',
+            //                     className: 'error'
+            //                 }
+            //             );
+            //         }
+            //     });
+            //     // this.userModel.clear();
+            //     return false;
+            // },
             // clickBtnPersonalSetting: function(event){
             //     $(event.target).closest('form').submit();
             //     return false;
@@ -567,7 +485,7 @@ jQuery(function() {
                 this._userEvents = options._userEvents;
                 this.userModel = options.userModel;
             },
-            render: function(){
+            render: function(notify){
                 this.userModel.clear();
                 // console.log('1');
                 var _self = this;
@@ -575,6 +493,7 @@ jQuery(function() {
                     {url: UrlApi('_app')+'/lang-info'}
                 ).done(function (response){
                     var data = {};
+                    data['notify'] = notify;
                     data['lang_checked'] = response.data.checked;
                     data['lang_unchecked'] = response.data.unchecked;
                     data['lang_needchecked'] = response.data.needchecked;
@@ -673,6 +592,7 @@ jQuery(function() {
                         {url:UrlApi('_app')+'/roleadd'}
                     ).done(function (response){
                         if (response.success === true) {
+                            $('input[name="notify"]').val('Success');
                             $form.notify(
                                 'Success',
                                 {
@@ -684,6 +604,7 @@ jQuery(function() {
                             setTimeout("$('.tip-roleadd').empty()",1000);
                             _self._userEvents.trigger('refresh','role-list-view');
                         } else {
+                            $('input[name="notify"]').val(response.messages);
                             $form.notify(
                                 response.message,
                                 {
@@ -787,6 +708,7 @@ jQuery(function() {
                         { url:UrlApi('_app')+'/roleedit' }
                     ).done(function (response){
                        if (response.success === true) {
+                            $('input[name="notify"]').val('Success');
                             $form.notify(
                                 'Success',
                                 {
@@ -796,6 +718,7 @@ jQuery(function() {
                             );
                             _self._userEvents.trigger('refresh','role-list-view');
                         } else {
+                            $('input[name="notify"]').val(response.message);
                             $form.notify(
                                 response.message,
                                 {
@@ -866,6 +789,7 @@ jQuery(function() {
                     { url: UrlApi('_app') + '/useradd' }
                 ).done(function(response) {
                     if (response.success === true) {
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -876,6 +800,7 @@ jQuery(function() {
                         user_add.reset();
                             _self._userEvents.trigger('refresh', 'user-list-view');
                     } else {
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {
@@ -1013,6 +938,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/useredit'}
                 ).done(function (response){
                     if(response.success === true){
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -1022,6 +948,7 @@ jQuery(function() {
                         );
                         _self._userEvents.trigger('refresh','user-list-view');
                     }else{
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {

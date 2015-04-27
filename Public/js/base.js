@@ -156,6 +156,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/langadd'}
                 ).done(function (response){
                     if (response.success === true) {
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -167,6 +168,7 @@ jQuery(function() {
                         $('.images_list ul li').hide();
                         _self._events.trigger('refresh','translate-list-view');
                     } else {
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {
@@ -192,6 +194,7 @@ jQuery(function() {
                     function() {
                         _self._events.trigger('refresh','translate-list-view');
                         $.fancybox.hideLoading();
+                        $('input[name="notify"]').val('Success');
                         $('.batch-import').notify(
                             'Success',
                             {
@@ -202,6 +205,7 @@ jQuery(function() {
                     },
                     function() {
                         $.fancybox.hideLoading();
+                        $('input[name="notify"]').val(response.message);
                         $('.batch-import').notify(
                             'Import Failure.',
                             {
@@ -218,8 +222,9 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd',
                     'images-add',
                     function(data) {
+                        $('input[name="notify"]').val('Success');
                         $('.images_list').notify(
-                                'Success.', 
+                                'Success', 
                                 { 
                                     position: 'top',
                                     className: 'success'
@@ -228,8 +233,9 @@ jQuery(function() {
                         $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+data['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+data['id']+'">X</a></div></li>');
                     },
                     function() {
+                        $('input[name="notify"]').val('Upload Failure');
                         $('.images_list').notify(
-                                'Upload Failure.', 
+                                'Upload Failure', 
                                 { 
                                     position: 'top',
                                     className: 'error'
@@ -563,6 +569,7 @@ jQuery(function() {
                     {url:UrlApi('_app')+'/langedit'}
                 ).done(function (response){
                     if (response.success === true) {
+                        $('input[name="notify"]').val('Success');
                         $form.notify(
                             'Success',
                             {
@@ -572,6 +579,7 @@ jQuery(function() {
                         );
                         _self._events.trigger('refresh','translate-list-view');
                     } else {
+                        $('input[name="notify"]').val(response.message);
                         $form.notify(
                             response.message,
                             {
@@ -622,8 +630,9 @@ jQuery(function() {
                     UrlApi('_app')+'/langimgadd/lang_id/'+this.langId,
                     'images',
                     function(response) {
+                        $('input[name="notify"]').val('Success');
                         $('.images_list').notify(
-                                'Success.', 
+                                'Success', 
                                 { 
                                     position: 'top',
                                     className: 'success'
@@ -632,8 +641,9 @@ jQuery(function() {
                         $('.images_list ul').append('<li><a href="#"><img src="'+UrlApi('_uploads')+'/Translation/'+response['image_name']+'" alt=""></a><div class="btn-set"><a href="#" class="btn btn-image-delete" image-id="'+response['id']+'">X</a></div></li>');
                     }, 
                     function() {
+                        $('input[name="notify"]').val('Upload Failure');
                         $('.images_list').notify(
-                                'Upload Failure.', 
+                                'Upload Failure', 
                                 { 
                                     position: 'top',
                                     className: 'error'

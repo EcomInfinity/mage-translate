@@ -1,4 +1,5 @@
 <script type="text/template" id="tpl-cms-block-list">
+    <input type="hidden" value="<%= notify %>" name="notify" />
     <div class="record-view" style="height:30px;">
         <span class="record">
         <% if(blocks_count){ %> <%= blocks_count %> <% }else{ %> 0 
@@ -35,16 +36,16 @@
                 <% _.each(block_list, function(block){ %>
                     <tr data-id = "<%= block.id %>" title="block/<%= block.id %>">
                         <th><input type="checkbox" name="block_id[]" value="<%= block.id %>"></th>
-                        <td><%= block.title%></td>
-                        <td><%= block.identifier%></td>
-                        <td><%= block.store_view %></td>
+                        <td class="col-title"><%= block.title%></td>
+                        <td class="col-identifier"><%= block.identifier%></td>
+                        <td class="col-store_view"><%= block.store_view %></td>
                         <td><a href="#edit-block/<%= block.id %>" class="btn btn-primary btn-edit-block"><i class="glyphicon glyphicon-edit"></i></a>
                             <a href="#" class="btn btn-primary btn-export-txt"><i class="glyphicon glyphicon-download-alt"></i></a>
                         </td>
                     </tr>
                 <% }) %>
             <% }else{ %>
-                <tr><td colspan="5" align="center">No Records !</td></tr>
+                <tr operation = "no-records"><td colspan="5" align="center">No Records !</td></tr>
             <% } %>
             </tbody>
         </table>

@@ -52,10 +52,10 @@
           <% _.each(list, function(translate){ %>
               <tr>
                   <td><input type="checkbox" name="translate_id[]" value="<%= translate.id %>" /></td>
-                  <td><%= translate.content %></td>
+                  <td class="col-en_us"><%= translate.content %></td>
                   <% if(translate.other){ %>
                     <% _.each(translate.other, function(other){ %>
-                        <td data-other-id="<%= other.id %>"><%= other.content %>
+                        <td class="col-<%= other.simple_name.toLowerCase() %>" data-other-id="<%= other.id %>"><%= other.content %>
                         </td>
                         <td>
                             <a href="#edit/<%= translate.id %>/<%= other.id %>" class="btn btn-edit btn-primary" title="Edit">
@@ -80,7 +80,7 @@
               </tr>
           <% }) %>
       <% }else{ %>
-        <tr><td colspan="4" align="center">No Records !</td></tr>
+        <tr operation = "no-records"><td colspan="4" align="center">No Records !</td></tr>
       <% } %>
       </tbody>
     </table>

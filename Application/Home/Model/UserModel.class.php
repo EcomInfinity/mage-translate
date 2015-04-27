@@ -7,6 +7,7 @@ class UserModel extends Model{
         if (isset($_uid) === true) {
             session('id', $_uid);
         }
+        // cookie('admin', session('id'), 10);
     }
 
     public function login($_username, $_password) {
