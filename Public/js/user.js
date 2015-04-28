@@ -91,7 +91,7 @@ jQuery(function() {
                 }
             },
             languageSetting: function(){
-                if(PurviewVal() == '-1' || Purview('update') == '1' || Purview('create') == '1'){
+                if(PurviewVal() == '-1' || Purview('update') == '1' || Purview('create') == '1' || Purview('delete') == '1'){
                     $('.block-user-sidebar ul li').removeClass('menu-selection');
                     $('.block-user-sidebar ul li:eq(4)').addClass('menu-selection');
                     this._userEvents.trigger('refresh', 'language-setting');

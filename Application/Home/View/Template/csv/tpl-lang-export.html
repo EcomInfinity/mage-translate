@@ -1,0 +1,18 @@
+<script type="text/template" id="tpl-lang-export">
+    <div class="modal-container">
+        <h2>Export as CSV</h2>
+        <div class="content">
+            <div class="entry select">
+                <select id="export" class="form-control">
+                    <% _.each(allField,function(field){ %>
+                        <option value="<%= field %>"><%= field %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="btn-set">
+                <a href="#" class="btn btn-export btn-primary">Export</a>
+                <span style="float:right;">Please choose the translation you want to export and click the Export button</span>
+            </div>
+        </div>
+    </div>
+</script>

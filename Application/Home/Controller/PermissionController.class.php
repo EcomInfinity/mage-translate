@@ -69,7 +69,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
                     'data' => array(),
                 ),
                 'json'
@@ -84,7 +84,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
                     'data' => array(),
                 ),
                 'json'
@@ -99,7 +99,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
                     'data' => array(),
                 ),
                 'json'
@@ -114,7 +114,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
                     'data' => array(),
                 ),
                 'json'
@@ -129,7 +129,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
                     'data' => array(),
                 ),
                 'json'
@@ -144,7 +144,37 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
+        }
+    }
+
+    public function _before_exportTxt(){
+        $_purview = json_decode(session('purview'), true);
+        if($_purview >= 0 && $_purview['export'] == 0){
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Illegal export data.',
+                    'data' => array(),
+                ),
+                'json'
+            );
+            return;
+        }
+    }
+
+    public function _before_exportZip(){
+        $_purview = json_decode(session('purview'), true);
+        if($_purview >= 0 && $_purview['export'] == 0){
+            $this->ajaxReturn(
+                array(
+                    'success' => false,
+                    'message' => 'Illegal export data.',
                     'data' => array(),
                 ),
                 'json'
@@ -160,7 +190,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal export data.',
                     'data' => array(),
                 ),
                 'json'
@@ -175,7 +205,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal import data.',
                     'data' => array(),
                 ),
                 'json'
@@ -205,7 +235,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal update data.',
                     'data' => array(),
                 ),
                 'json'
@@ -220,7 +250,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal sync data.',
                     'data' => array(),
                 ),
                 'json'
@@ -235,7 +265,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal update data.',
                     'data' => array(),
                 ),
                 'json'
@@ -250,7 +280,7 @@ class PermissionController extends BaseController {
             $this->ajaxReturn(
                 array(
                     'success' => false,
-                    'message' => 'Illegal delete data.',
+                    'message' => 'Illegal update data.',
                     'data' => array(),
                 ),
                 'json'

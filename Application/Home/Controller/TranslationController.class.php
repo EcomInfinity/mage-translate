@@ -164,6 +164,7 @@ class TranslationController extends PermissionController {
 
     public function add(){
         $_params = json_decode(file_get_contents("php://input"),true);
+        $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
         $_base = D('base_translate')->gets(array('content' => $_params['en_us'], 'website_id' => session('website_id')));
         $_repeat_lang =false;
         foreach ($_base as $val) {
@@ -199,9 +200,8 @@ class TranslationController extends PermissionController {
                         # code...
                         D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_repeat_lang_info['id']));
                     }
-                    $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
+                    // $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
                     foreach ($_website_lang as $val) {
-                        # code...
                         $_other_where['base_id'] = $_repeat_lang_info['id'];
                         $_other_where['lang_id'] = $val['lang_id'];
                         $_other_id = D('other_translate')->where($_other_where)->find();
@@ -241,7 +241,6 @@ class TranslationController extends PermissionController {
                 foreach ($_images as $val) {
                     D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_base_result));
                 }
-                $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
                 foreach ($_website_lang as $val) {
                     $_other_add['content'] = $_params[strtolower($val['simple_name'])];
                     $_other_add['base_id'] = $_base_result;
@@ -379,7 +378,7 @@ class TranslationController extends PermissionController {
             //     }
             // }
             // $_translate_list[$k]['other_empty'] = $_empty;
-            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id));
+            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id), 'id , content,lang_id');
         }
         foreach ($_translate_list as $key => $value) {
             # code...

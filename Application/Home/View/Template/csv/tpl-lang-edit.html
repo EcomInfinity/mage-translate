@@ -1,0 +1,71 @@
+<script type="text/template" id="tpl-lang-edit">
+    <div class="modal-container">
+        <h2>Edit</h2>
+        <div class="content">
+            <input type="hidden" value="" name="notify" />
+            <div class="col col5 fl">
+                <form action="" method="post"  data-toggle="validator">
+                    <div class="form-holder">
+                        <input type="hidden" value="<%= base_info['id'] %>" name="base_id" />
+                        <div class="entry textarea form-group">
+                            <label for="edit-en_US">en_US</label>
+                            <textarea name="en_us" id="edit-en_US" pattern=".*[^ ].*" data-error="English can not be empty."><%= base_info['content'] %></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <% if(other_info){ %>
+                            <input type="hidden" value="<%= other_info['id'] %>" name="other_id" />
+                            <div class="entry textarea form-group">
+                                <label for="edit-<%= other_info['simple_name'] %>"><%= other_info['simple_name'] %></label>
+                                <textarea name="<%= other_info['simple_name'].toLowerCase() %>" id="edit-<%= other_info['simple_name'] %>"><%= other_info['content'] %></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        <% } %>
+                        <div class="entry textarea form-group">
+                            <label for="edit-remarks">Remarks</label>
+                            <textarea name="remarks" id="edit-remarks"><%= base_info['remarks'] %></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="entry">
+                            <label>Need Update</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" value="1" name="modify" id="modify-yes" <%if(base_info['modify'] == '1'){%>checked<%}%> />Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="0" name="modify" id="modify-no" <%if(base_info['modify'] == '0'){%>checked<%}%> />No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-set">
+                        <a href="#" class="btn btn-lang-save btn-primary up">Save</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="images_list col col5 fr" data-id="<%= base_info['id'] %>">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="form-holder">
+                        <div class="entry file">
+                            <label>Images:</label>
+                            <input type="file" name="images" id="images" />
+                            <p style="margin-top: 10px;">Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
+                        </div>
+                    </div>
+                </form>
+                <ul>
+                    <% _.each(langImages, function(image){ %>
+                        <li>
+                            <a href="#"><img src="__UPLOADS__/Translation/<%= image.image_name %>" alt=""></a>
+                            <div class="btn-set">
+                                <a href="#" class="btn btn-image-delete" image-id="<%= image.id %>" >X</a>
+                            </div>
+                        </li>
+                    <% })%>
+                </ul>
+                <div id="enlarge_images"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</script>

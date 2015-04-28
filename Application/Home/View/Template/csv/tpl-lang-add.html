@@ -1,0 +1,83 @@
+<script type="text/template" id="tpl-lang-add">
+    <div class="modal-container">
+        <h2>Add Entries</h2>
+        <div class="content">
+            <input type="hidden" value="" name="notify" />
+            <div class="batch-import section">
+                <h3>Method #1: Import</h3>
+                <form class="form-inline" action="" method="post" enctype="multipart/form-data">
+                    <div class="form-holder">
+                        <div class="entry file form-group">
+                            <label>Batch Import :</label>
+                            <input type="file" name="csv" id="batch-import">
+                        </div>
+                    </div>
+                </form>
+                <p>Please select the *.csv file format batch import</p>
+            </div>
+
+            <div class="section">
+                <h3>Method #2: Input Manually</h3>
+                <div class="col col5 fl">
+                    <form action="" method="post" name="lang_add" data-toggle="validator" role="form">
+                        <div class="form-holder">
+                            <div class="entry textarea form-group">
+                                <label for="en_us">en_US:</label>
+                                <textarea name="en_us" id="en_us" pattern=".*[^ ].*" data-error="English can not be empty."></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="entry">
+                                <select class="create-language">
+                                    <option value='-1'>Please select</option>
+                                    <% _.each(weblanglist, function(list){ %>
+                                        <option value="<%= list.simple_name %>"><%= list.simple_name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <!--<% _.each(weblanglist, function(list){ %>
+                                <div class="entry textarea form-group">
+                                    <label for="<%= list.simple_name %>"><%= list.simple_name %>:</label>
+                                    <textarea name="<%= list.simple_name.toLowerCase() %>" id="<%= list.simple_name %>"></textarea>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            <% }) %>-->
+                            <div class="entry textarea form-group">
+                                <label for="remarks">Remarks</label>
+                                <textarea name="remarks" id="remarks"></textarea>
+                            </div>
+                            <div class="entry">
+                            <label>Need Update</label>
+                                <div>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="1" name="modify" id="modify-yes" checked />Yes
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="0" name="modify" id="modify-no" />No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-set">
+                            <a href="#" class="btn btn-add btn-primary up">Add</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="images_list col col5 fr">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="form-holder">
+                            <div class="entry file">
+                                <label>Images:</label>
+                                <input type="file" name="images" id="images-add" />
+                                <p>Please select the .jpg .gif .png .jpeg file format and The size of no more than 3M to upload</p>
+                            </div>
+                        </div>
+                    </form>
+                    <ul></ul>
+                    <div id="enlarge_images"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</script>
