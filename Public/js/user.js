@@ -587,33 +587,33 @@ jQuery(function() {
                 this.userModel.clear();
                 var _self = this;
                 var $form = this.$el.find('form');
-                    this.userModel.save(
-                        $form.serializeObject(),
-                        {url:UrlApi('_app')+'/roleadd'}
-                    ).done(function (response){
-                        if (response.success === true) {
-                            $('input[name="notify"]').val('Success');
-                            $form.notify(
-                                'Success',
-                                {
-                                    position: 'top',
-                                    className: 'success'
-                                }
-                            );
-                            role_add.reset();
-                            setTimeout("$('.tip-roleadd').empty()",1000);
-                            _self._userEvents.trigger('refresh','role-list-view');
-                        } else {
-                            $('input[name="notify"]').val(response.messages);
-                            $form.notify(
-                                response.message,
-                                {
-                                    position: 'top',
-                                    className: 'error'
-                                }
-                            );
-                        }
-                    });
+                this.userModel.save(
+                    $form.serializeObject(),
+                    {url:UrlApi('_app')+'/roleadd'}
+                ).done(function (response){
+                    if (response.success === true) {
+                        $('input[name="notify"]').val('Success');
+                        $form.notify(
+                            'Success',
+                            {
+                                position: 'top',
+                                className: 'success'
+                            }
+                        );
+                        role_add.reset();
+                        setTimeout("$('.tip-roleadd').empty()",1000);
+                        _self._userEvents.trigger('refresh','role-list-view');
+                    } else {
+                        $('input[name="notify"]').val(response.messages);
+                        $form.notify(
+                            response.message,
+                            {
+                                position: 'top',
+                                className: 'error'
+                            }
+                        );
+                    }
+                });
                 // this.userModel.clear();
                 return false;
             },
