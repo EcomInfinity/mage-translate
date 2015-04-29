@@ -103,17 +103,4 @@ function magentoApiSync($_website_api, $_website_info_type, $_website_info_id){
         return $_result;
     }
 }
-
-// function magentoTest($_domain){
-//     try{
-//         $_client = new \SoapClient($_domain.'/api/soap/?wsdl', array('trace' => 1, "exceptions" => 0));
-//         // try{
-//         //     $_client->call('.....');
-//         // } catch(SOAPFault $sp){
-
-//         // }
-//     } catch(SOAPFault $e){
-//         return $e;
-//     }
-// }
 ?>

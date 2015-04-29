@@ -20,5 +20,18 @@ class OtherTranslateModel extends RelationModel{
     public function get($_where){
         return $this->where($_where)->relation(true)->find();
     }
+
+    public function saveOther($_params, $_where){
+        if(!empty($_where)){
+            $_result = $this->where($_where)->save($_params);
+        }else{
+            $_result = $this->save($_params);
+        }
+        if($_result > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 ?>

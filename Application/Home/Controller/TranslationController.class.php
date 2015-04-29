@@ -90,7 +90,7 @@ class TranslationController extends PermissionController {
                             }
                             if($_repeat_lang === true){
                                 //base content重复
-                                D('base_translate')->save(array('id' =>$_repeat_lang_id, 'status' => 1));
+                                D('base_translate')->saveBase(array('id' =>$_repeat_lang_id, 'status' => 1));
                                 foreach ($value['other'] as $k => $val) {
                                     # code...
                                     $_language = D('language')->where(array('simple_name' => trim($k)))->find();
@@ -99,7 +99,7 @@ class TranslationController extends PermissionController {
                                     //     //覆盖已有的其他语言
                                     $_other_save['content'] = $val;
                                     $_other_save['id'] = $_repeat_other['id'];
-                                    D('other_translate')->save($_other_save);
+                                    D('other_translate')->saveOther($_other_save);
                                     // }else{
                                     //     //创建没有的其他语言
                                     //     $_other_add['lang_id'] = $_language['id'];
@@ -193,7 +193,7 @@ class TranslationController extends PermissionController {
                 if(!empty($_params['remarks'])){
                     $_base_save['remarks'] = $_params['remarks'];
                 }
-                $_result = D('base_translate')->save($_base_save);
+                $_result = D('base_translate')->saveBase($_base_save);
                 // if($_result === true){
                     $_images = D('translation_image')->gets(array('lang_id' => '0', 'status' => 1, 'user_id' => session('id')));
                     foreach ($_images as $val) {
@@ -208,7 +208,7 @@ class TranslationController extends PermissionController {
                         if(!empty($_params[strtolower($val['simple_name'])])){
                             $_other_save['content'] = $_params[strtolower($val['simple_name'])];
                             $_other_save['id'] = $_other_id['id'];
-                            D('other_translate')->save($_other_save);
+                            D('other_translate')->saveOther($_other_save);
                         }
                     }
                     $this->ajaxReturn(
@@ -272,7 +272,7 @@ class TranslationController extends PermissionController {
         $_params = json_decode(file_get_contents("php://input"),true);
         $_save['id'] = $_params['id'];
         $_save['status'] = 0;
-        $_result = D('base_translate')->save($_save);
+        $_result = D('base_translate')->saveBase($_save);
         if($_result){
             $this->ajaxReturn(
                     array(
@@ -297,7 +297,7 @@ class TranslationController extends PermissionController {
     public function dels(){
         $_params = json_decode(file_get_contents("php://input"),true);
         foreach ($_params['ids'] as $val) {
-            D('base_translate')->save(array('id' => $val, 'status' => 0));
+            D('base_translate')->saveBase(array('id' => $val, 'status' => 0));
             D('translation_image')->del(
                     array(
                         'lang_id' => intval($val)
@@ -323,7 +323,7 @@ class TranslationController extends PermissionController {
             }else{
                 $_modify = 0;
             }
-            D('base_translate')->save(array('id' => $val, 'modify' => $_modify));
+            D('base_translate')->saveBase(array('id' => $val, 'modify' => $_modify));
         }
         $this->ajaxReturn(
                 array(
@@ -465,7 +465,6 @@ class TranslationController extends PermissionController {
             }
         }
         $_base_result = D('base_translate')->saveBase(
-            array(),
             array('id' => $_params['base_id'], 
                 'content' => $_params['en_us'], 
                 'remarks' => $_params['remarks'], 
@@ -474,7 +473,7 @@ class TranslationController extends PermissionController {
         // if($_base_result === true){
             if($_params['other_id'] != -1){
                 $_other = D('other_translate')->get(array('id' => $_params['other_id']));
-                $_other_result = D('other_translate')->save(array('id' => $_params['other_id'], 'content' => $_params[strtolower($_other['simple_name'])]));
+                $_other_result = D('other_translate')->saveOther(array('id' => $_params['other_id'], 'content' => $_params[strtolower($_other['simple_name'])]));
                 // $this->ajaxReturn(
                 //         array(
                 //             'success' => true,
@@ -484,7 +483,7 @@ class TranslationController extends PermissionController {
                 //         'json'
                 //     );
             }
-            if($_base_result === true || $_other_result > 0){
+            if($_base_result === true || $_other_result === true){
                 $this->ajaxReturn(
                         array(
                             'success' => true,

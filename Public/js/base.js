@@ -205,7 +205,7 @@ jQuery(function() {
                     },
                     function() {
                         $.fancybox.hideLoading();
-                        $('input[name="notify"]').val(response.message);
+                        $('input[name="notify"]').val('Failure');
                         $('.batch-import').notify(
                             'Import Failure.',
                             {

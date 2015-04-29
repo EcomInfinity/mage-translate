@@ -11,15 +11,6 @@ class BaseTranslateModel extends Model {
         return $this->find($_base_id);
     }
 
-    //$_params数组(各种语言，remarks,status,website_id,modify)
-    // public function addTranslate($_params){
-    //     return $this->add($_params);
-    // }
-
-    // public function setTranslate($_params){
-    //     return $this->save($_params);
-    // }
-
     public function createBase($_params){
         if(preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['content'])) == 0){
             return 'English not all spaces or empty.';
@@ -28,8 +19,8 @@ class BaseTranslateModel extends Model {
         }
     }
 
-    public function saveBase($_where, $_params){
-        if(preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['content'])) == 0){
+    public function saveBase($_params, $_where){
+        if(isset($_params['content']) && preg_match('/.*[^ ].*/', str_replace("\r\n", "", $_params['content'])) == 0){
             return 'English not all spaces or empty.';
         }
         if(!empty($_where)){
