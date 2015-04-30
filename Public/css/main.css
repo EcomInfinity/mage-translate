@@ -74,7 +74,7 @@ select{text-transform: uppercase;}
 .operation-view{margin-bottom: 10px;}
 .batch-app{float: right;color: white;background: rgb(43, 102, 153);height: 34px;}
 .search-icon{position: relative;top: 33px;left: 910px;}
-.block-content .search-icon {position: relative;top: 33px;left: 683px;}
+.block-content .search-icon {position: relative;top: 30px;left: 683px;}
 
 .word-black{color: black;text-decoration: underline;}
 

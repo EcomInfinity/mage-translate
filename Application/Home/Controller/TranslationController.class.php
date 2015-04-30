@@ -193,42 +193,30 @@ class TranslationController extends PermissionController {
                 if(!empty($_params['remarks'])){
                     $_base_save['remarks'] = $_params['remarks'];
                 }
+                $_base_save['modify'] = $_params['modify'];
                 $_result = D('base_translate')->saveBase($_base_save);
-                // if($_result === true){
-                    $_images = D('translation_image')->gets(array('lang_id' => '0', 'status' => 1, 'user_id' => session('id')));
-                    foreach ($_images as $val) {
-                        # code...
-                        D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_repeat_lang_info['id']));
+                $_images = D('translation_image')->gets(array('lang_id' => '0', 'status' => 1, 'user_id' => session('id')));
+                foreach ($_images as $val) {
+                    D('translation_image')->save(array('id' =>$val['id'] , 'lang_id' => $_repeat_lang_info['id']));
+                }
+                foreach ($_website_lang as $val) {
+                    $_other_where['base_id'] = $_repeat_lang_info['id'];
+                    $_other_where['lang_id'] = $val['lang_id'];
+                    $_other_id = D('other_translate')->where($_other_where)->find();
+                    if(!empty($_params[strtolower($val['simple_name'])])){
+                        $_other_save['content'] = $_params[strtolower($val['simple_name'])];
+                        $_other_save['id'] = $_other_id['id'];
+                        D('other_translate')->saveOther($_other_save);
                     }
-                    // $_website_lang = D('website_lang')->gets(array('website_id' => session('website_id')));
-                    foreach ($_website_lang as $val) {
-                        $_other_where['base_id'] = $_repeat_lang_info['id'];
-                        $_other_where['lang_id'] = $val['lang_id'];
-                        $_other_id = D('other_translate')->where($_other_where)->find();
-                        if(!empty($_params[strtolower($val['simple_name'])])){
-                            $_other_save['content'] = $_params[strtolower($val['simple_name'])];
-                            $_other_save['id'] = $_other_id['id'];
-                            D('other_translate')->saveOther($_other_save);
-                        }
-                    }
-                    $this->ajaxReturn(
-                            array(
-                                'success' => true,
-                                'message' => '',
-                                'data' => array(),
-                            ),
-                            'json'
-                        );
-                // }else{
-                //     $this->ajaxReturn(
-                //             array(
-                //                 'success' => false,
-                //                 'message' => $_result,
-                //                 'data' => array(),
-                //             ),
-                //             'json'
-                //         );
-                // }
+                }
+                $this->ajaxReturn(
+                        array(
+                            'success' => true,
+                            'message' => '',
+                            'data' => array(),
+                        ),
+                        'json'
+                    );
             }
         }else{
             $_base_add['modify'] = $_params['modify'];
