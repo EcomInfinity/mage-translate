@@ -325,28 +325,6 @@ class TranslationController extends PermissionController {
 
     public function gets(){
         $_params = json_decode(file_get_contents("php://input"),true);
-        if($_params['record'] === 0){
-            //已完成
-            $_translate_list = D('base_translate')->gets(
-                    array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),
-                    'id desc',
-                    'id,content'
-                );
-        }elseif($_params['record'] === 1){
-            //未完成
-            $_translate_list = D('base_translate')->gets(
-                    array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),
-                    'id desc',
-                    'id, content'
-                );
-        }else{
-            //全部
-            $_translate_list = D('base_translate')->gets(
-                    array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')),
-                    'id desc',
-                    'id,content'
-                );
-        }
         $_language_list = D('website_lang')->gets(array('website_id' => session('website_id'), 'status' => 1));
         
         if($_params['language'] === false){
@@ -355,26 +333,27 @@ class TranslationController extends PermissionController {
         }else{
             $_lang_id = $_params['language'];
         }
-        // $_empty = false;
-        foreach ($_translate_list as $k => $val) {
-            # code...
-            // $_empty_other = D('other_translate')->gets(array('base_id' => $val['id']), 'id, content');
-            // foreach ($_empty_other as $value) {
-            //     # code...
-            //     if(empty($value['content'])){
-            //         $_empty = true;
-            //     }
-            // }
-            // $_translate_list[$k]['other_empty'] = $_empty;
-            $_translate_list[$k]['other'] = D('other_translate')->gets(array('base_id' => $val['id'], 'lang_id' => $_lang_id), 'id , content,lang_id');
+        // session('lang_id', $_lang_id);
+        if($_params['record'] === 0){
+            //已完成
+            $Model = M('base_translate')->where(
+                    array('status' => 1, 'modify' => 0, 'website_id' => session('website_id'), 'rs_base_translate.content' => array('like', '%'.$_params['search'].'%'))
+                );
+        }elseif($_params['record'] === 1){
+            //未完成
+            $Model = M('base_translate')->where(
+                    array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'rs_base_translate.content' => array('like', '%'.$_params['search'].'%'))
+                );
+        }else{
+            //全部
+            $Model = M('base_translate')->where(
+                    array('status' => 1, 'website_id' => session('website_id'), 'rs_base_translate.content' => array('like', '%'.$_params['search'].'%'))
+                );
         }
-        foreach ($_translate_list as $key => $value) {
-            # code...
-            $_translate_list[$key]['content'] = htmlentities($value['content']);
-            foreach ($value['other'] as $k => $val) {
-                # code...
-                $_translate_list[$key]['other'][$k]['content'] = htmlentities($val['content']);
-            }
+        $_translate_list = $Model->join('rs_other_translate ON rs_other_translate.base_id = rs_base_translate.id AND lang_id='.$_lang_id)->field('rs_base_translate.id,rs_base_translate.content,rs_other_translate.content as other_content, rs_other_translate.id as other_id, rs_other_translate.lang_id')->select();
+        foreach ($_translate_list as $k => $val) {
+            $_translate_list[$k]['content'] = htmlentities($val['content']);
+            $_translate_list[$k]['other_content'] = htmlentities($val['other_content']);
         }
         $_search_count = D('base_translate')->where(array('status' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();
         $_need_modify_count = D('base_translate')->where(array('status' => 1, 'modify' => 1, 'website_id' => session('website_id'), 'content' => array('like', '%'.$_params['search'].'%')))->count();

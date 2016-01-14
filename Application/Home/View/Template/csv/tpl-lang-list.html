@@ -53,30 +53,16 @@
               <tr>
                   <td><input type="checkbox" name="translate_id[]" value="<%= translate.id %>" /></td>
                   <td class="col-en_us"><%= translate.content %></td>
-                  <% if(translate.other){ %>
-                    <% _.each(translate.other, function(other){ %>
-                        <td class="col-<%= other.lang_id %>" data-other-id="<%= other.id %>"><%= other.content %>
-                        </td>
-                        <td>
-                            <a href="#edit/<%= translate.id %>/<%= other.id %>" class="btn btn-edit btn-primary" title="Edit">
-                                <i class="glyphicon glyphicon-edit"></i>
-                            </a>
-                            <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
-                                <i class="glyphicon glyphicon-remove"></i>
-                            </a>
-                        </td>
-                    <% }) %>
-                  <% }else{ %>
-                    <td> </td>
-                    <td>
-                        <a href="#edit/<%= translate.id %>/-1" class="btn btn-edit btn-primary" title="Edit">
-                            <i class="glyphicon glyphicon-edit"></i>
-                        </a>
-                        <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </a>
-                    </td>
-                  <% } %>
+                  <td class="col-<%= translate.lang_id %>" data-other-id="<%= translate.other_id %>"><%= translate.other_content %>
+                  </td>
+                  <td>
+                      <a href="#edit/<%= translate.id %>/<%= translate.other_id %>" class="btn btn-edit btn-primary" title="Edit">
+                          <i class="glyphicon glyphicon-edit"></i>
+                      </a>
+                      <a href="#delete/<%= translate.id %>" class="btn btn-delete btn-danger" title="Delete">
+                          <i class="glyphicon glyphicon-remove"></i>
+                      </a>
+                  </td>
               </tr>
           <% }) %>
       <% }else{ %>
